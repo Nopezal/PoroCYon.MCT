@@ -1,0 +1,17 @@
+﻿{
+	"stats" :
+	{
+		"size" : [16, 16],
+		"displayName" : "Item",
+		"maxStack" : 250
+	}
+	"recipe" :
+	{
+		"items" :
+		[
+			"1 Dirt Block"
+		],
+		"tiles" : "@Water",
+		"makes" : 1
+	}
+}

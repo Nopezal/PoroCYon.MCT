@@ -1,0 +1,13 @@
+﻿{
+	"name": "tAPI SDK",
+	"author": "PoroCYon",
+	"version": "1.0.0.0",
+	"info": "The tAPI SDK",
+
+	"code": {
+		"modName": "TAPI.SDK",
+
+		"modBaseName": "TAPI.SDK.Internal.SdkClasses.Mod",
+		"modInterfaceName": "TAPI.SDK.GUI.Interface"
+	}
+}

@@ -1,0 +1,20 @@
+﻿{
+	"name"    : "$projectname$",
+	"author"  : "$registeredorganization$",
+	"version" : "1.0.0.0",
+	"info"    : "$projectname$ by $registeredorganization$ v1.0.0.0",
+
+	"code" :
+	{
+		"modName"           : "$projectname$",
+
+		"modBaseName"       : "TAPI.$safeprojectname$.ModBase1",
+		"modItemName"       : "TAPI.$safeprojectname$.ModItem1",
+		"modInterfaceName"  : "TAPI.$safeprojectname$.ModUI1",
+		"modNPCName"        : "TAPI.$safeprojectname$.ModNPC1",
+		"modPlayerName"     : "TAPI.$safeprojectname$.ModPlayer1",
+		"modProjectileName" : "TAPI.$safeprojectname$.ModProjectile1",
+		"modTileName"       : "TAPI.$safeprojectname$.ModTile1",
+		"modWorldName"      : "TAPI.$safeprojectname$.ModWorld1"
+	}
+}

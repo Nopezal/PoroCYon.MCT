@@ -1,0 +1,11 @@
+﻿{
+	"stats" :
+	{
+		"size" : [16, 16],
+		"displayName" : "NPC1",
+		"aiStyle" : 1,
+		"lifeMax" : 20,
+		"damage" : 5,
+		"frameCount" : 2
+	}
+}
