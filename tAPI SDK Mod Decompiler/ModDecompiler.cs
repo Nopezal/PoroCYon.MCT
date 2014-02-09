@@ -32,7 +32,7 @@ namespace TAPI.SDK.ModDecompiler
             BinBuffer bb = new BinBuffer(new BinBufferByte(File.ReadAllBytes(modFile)));
 
             // first 4 bytes is the version
-            int versionAssembly = bb.ReadInt();
+            uint versionAssembly = bb.ReadUInt();
 
             // write tAPI version
             if (!File.Exists(decompPath + "\\tAPI Version " + versionAssembly))

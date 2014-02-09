@@ -188,7 +188,7 @@ namespace TAPI.Packer.Extended
             /*
              * How a .tapimod file looks like:
              * 
-             *   - version (int)
+             *   - version (uint)
              * 
              *   - modinfo (string)
              * 

@@ -1,6 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Threading;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -10,74 +14,120 @@ namespace TAPI.SDK.Installer
 {
     public partial class Installing : UserControl
     {
-        static DispatcherTimer timer;
+        readonly static string steamDir = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam").GetValue("SourceModInstallPath").ToString();
+
+        static Queue<Tuple<string, byte[]>> downloaded = new Queue<Tuple<string, byte[]>>();
+		static bool finishedDownloading = false;
+		static int total = 0;
+
+        static Installing()
+        {
+            steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+        }
 
         public Installing()
         {
             InitializeComponent();
 
-            Progress.ValueChanged += (s, e) =>
+			finishedDownloading = false;
+
+            AquireProgress.ValueChanged += (s, e) =>
             {
-                ProgressPercent.Text = Progress.Value + "%";
+                AquireProgressPercent.Text = AquireProgress.Value + "%";
+            };
+            ApplyProgress.ValueChanged += (s, e) =>
+            {
+                ApplyProgressPercent.Text = ApplyProgress.Value + "%";
             };
 
-            timer = new DispatcherTimer()
-            {
-                Interval = new TimeSpan(1)
-            };
-            timer.Tick += (s, e) =>
+            new Thread(() => // aquire
             {
                 Action<int, string> UpdateProgress = (procent, text) =>
                 {
-                    Progress.Value = procent;
-                    ProgressText.Text = text;
-
-                    Dispatcher.Invoke(((Action)delegate { }), DispatcherPriority.Render);
-                };
-                Action<string, string> WriteToFile = (resource, path) =>
-                {
-                    MemoryStream ms = new MemoryStream();
-                    Assembly.GetCallingAssembly().GetManifestResourceStream(resource).CopyTo(ms);
-                    File.WriteAllBytes(path, ms.ToArray());
-                    ms.Dispose();
+                    Dispatcher.Invoke(((Action)delegate
+                    {
+						if (procent >= 0 && procent <= 100)
+							AquireProgress.Value = procent;
+						if (!String.IsNullOrEmpty(text))
+							AquireProgressText.Text = "Aquiring: " + text;
+                    }), DispatcherPriority.Render);
                 };
 
-                string steamDir = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam").GetValue("SourceModInstallPath").ToString();
-                steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+				WebClient client = new WebClient();
 
-                UpdateProgress(0, "Deploying library PoroCYon.XnaExtensions...");
-                WriteToFile("TAPI.SDK.Installer.Binaries.PoroCYon.XnaExtensions.dll", steamDir + "\\PoroCYon.XnaExtensions.dll");
+				const string baseUri = "https://dl.dropboxusercontent.com/u/151130168/tAPI%20SDK/";
 
-                UpdateProgress(20, "Deploying the SDK Library...");
-                WriteToFile("TAPI.SDK.Installer.Binaries.TAPI.SDK.dll", steamDir + "\\TAPI.SDK.dll");
-
-                UpdateProgress(50, "Deploying the .dll mod builder...");
-                WriteToFile("TAPI.SDK.Installer.Binaries.tAPI SDK Mod Builder.exe", steamDir + "\\tAPI SDK Mod Builder.exe");
-
-                UpdateProgress(60, "Deploying the .tapimod decompiler...");
-                WriteToFile("TAPI.SDK.Installer.Binaries.tAPI SDK Mod Decompiler.exe", steamDir + "\\tAPI SDK Mod Decompiler.exe");
-
-                //UpdateProgress(70, "Deploying the .tapi extractor...");
-                //WriteToFile("TAPI.SDK.Installer.Binaries.tAPI SDK Mod Extractor.exe", steamDir + "\\tAPI SDK Mod Extractor.exe");
-
-                UpdateProgress(80, "Deploying the extended .tapimod packer (multi-language support)...");
-                WriteToFile("TAPI.SDK.Installer.Binaries.tAPI Extended Packer.exe", steamDir + "\\tAPI Extended Packer.exe");
-
-                //UpdateProgress(90, "Deploying the tAPI SDK Tools...");
-                //WriteToFile("TAPI.SDK.Installer.Binaries.tAPI SDK Tools.exe", steamDir + "\\tAPI SDK Tools.exe");
-
-                UpdateProgress(100, "Finished installing");
-
-                MainWindow.instance.Dispatcher.Invoke(((Action)delegate
+				List<string> ToDownload = new List<string>()
                 {
-                    MainWindow.currentPage++;
-                    MainWindow.instance.UpdateGrid();
-                }), DispatcherPriority.Render);
+					"PoroCYon.XnaExtensions.dll", "PoroCYon.XnaExtensions.xml",
+					
+					"TAPI.SDK.dll", "TAPI.SDK.xml",
+					
+					"tAPI Extended Packer.exe",
+					"tAPI SDK Debugger.exe",
+					"tAPI SDK Mod Builder.exe",
+					"tAPI SDK Mod Decompiler.exe",
+                };
+				if (License.InstallPdb)
+				{
+					ToDownload.Add("PoroCYon.XnaExtensions.pdb");
 
-                timer.Stop();
-            };
+					ToDownload.Add("TAPI.SDK.pdb");
 
-            timer.Start();
+					ToDownload.Add("tAPI Extended Packer.pdb");
+					ToDownload.Add("tAPI SDK Debugger.pdb");
+					ToDownload.Add("tAPI SDK Mod Builder.pdb");
+					ToDownload.Add("tAPI SDK Mod Decompiler.pdb");
+				}
+
+				total = ToDownload.Count;
+
+				for (int i = 0; i < ToDownload.Count; i++)
+				{
+					UpdateProgress(-1, Path.GetFileName(ToDownload[i]));
+					downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
+					UpdateProgress(100 / (total / (i + 1)), null);
+				}
+
+				client.Dispose();
+
+				finishedDownloading = true;
+            }).Start();
+            new Thread(() => // apply
+            {
+                Action<int, string> UpdateProgress = (procent, text) =>
+                {
+                    Dispatcher.Invoke(((Action)delegate
+					{
+						if (procent >= 0 && procent <= 100)
+							ApplyProgress.Value = procent;
+						if (!String.IsNullOrEmpty(text))
+							ApplyProgressText.Text = text;
+                    }), DispatcherPriority.Render);
+                };
+
+				int i = 0;
+
+				while (!finishedDownloading || downloaded.Count > 0)
+				{
+					if (downloaded.Count <= 0)
+						continue;
+
+					Tuple<string, byte[]> t = downloaded.Dequeue();
+
+					UpdateProgress(-1, steamDir + Path.GetFileName(t.Item1));
+					File.WriteAllBytes(t.Item1, t.Item2);
+					UpdateProgress(100 / (total / (i + 1)), null);
+
+					i++;
+				}
+
+				MainWindow.instance.Dispatcher.Invoke(((Action)delegate
+				{
+					MainWindow.currentPage++;
+					MainWindow.instance.UpdateGrid();
+				}), DispatcherPriority.Render);
+            }).Start();
         }
     }
 }

@@ -34,6 +34,7 @@
     <DefineConstants>TRACE</DefineConstants>
     <ErrorReport>prompt</ErrorReport>
     <WarningLevel>4</WarningLevel>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
   </PropertyGroup>
   <PropertyGroup />
   <PropertyGroup>
@@ -126,22 +127,16 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="Binaries\tAPI SDK Mod Builder.exe" />
-    <EmbeddedResource Include="Binaries\tAPI SDK Mod Decompiler.exe" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Binaries\tAPI Extended Packer.exe" />
-    <EmbeddedResource Include="Binaries\TAPI.SDK.dll" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="Binaries\PoroCYon.XnaExtensions.dll" />
-  </ItemGroup>
-  <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>copy "C:\Users\%25username%25\Dropbox\PoroCYon.XnaExtensions\PoroCYon.XnaExtensions\bin\Debug\PoroCYon.XnaExtensions.dll" "$(ProjectDir)Binaries\PoroCYon.XnaExtensions.dll" /y</PreBuildEvent>
+    <PreBuildEvent>if "%25username%25"=="Pieter" (
+    copy "$(SolutionDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.dll" /y
+    copy "$(SolutionDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.xml" /y
+    copy "$(SolutionDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.pdb" /y
+)
+</PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

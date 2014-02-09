@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.IO;
+using System.Net;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Threading;
 using System.Windows;
@@ -225,6 +227,9 @@ namespace TAPI.SDK.Installer
 
         static bool CheckCanInstall()
         {
+			if (!NetworkInterface.GetIsNetworkAvailable())
+				return false;
+
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
             if (regKey == null)
                 return false;
