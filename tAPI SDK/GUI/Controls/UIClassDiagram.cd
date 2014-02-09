@@ -3,7 +3,7 @@
   <Class Name="TAPI.SDK.GUI.Controls.Control" Collapsed="true">
     <Position X="4" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAIAEAACAEgoQgAAIAQAAAAoBAAAAAAAAGABgCAJE=</HashCode>
+      <HashCode>AAQBIAEAACAEgoQgAAtAQAAAMoBAAAQAAQAGADlCAJE=</HashCode>
       <FileName>GUI\Controls\Control.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -11,7 +11,7 @@
   <Class Name="TAPI.SDK.GUI.Controls.Primitives.Focusable" Collapsed="true">
     <Position X="6" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQgEAAAAAABgAAAAABAAAAAAAgAAAAAAAgABEAAAAA=</HashCode>
+      <HashCode>IIRgEAAAAAABgAAQAARAAAAACAgAAAAAAggABGAAAIA=</HashCode>
       <FileName>GUI\Controls\Primitives\Focusable.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -26,7 +26,7 @@
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAEAAAgA=</HashCode>
+      <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAACAAAAAAAEAIAgA=</HashCode>
       <FileName>GUI\Controls\Primitives\Button.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -87,20 +87,20 @@
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TAPI.SDK.GUI.Controls.Primitives.ControlContainer" Collapsed="true">
-    <Position X="13" Y="4.5" Width="1.5" />
+    <Position X="18.25" Y="4.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAACAAAgAAAAAAAAAAIAAAAAAAAAAiAAAAAAQ=</HashCode>
+      <HashCode>AEQAABAAACAAAgAAAAAAAgAAIAAAgAAAAAAiAAAAAAQ=</HashCode>
       <FileName>GUI\Controls\Primitives\ControlContainer.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TAPI.SDK.GUI.Controls.ControlGroup" Collapsed="true">
-    <Position X="14.5" Y="6" Width="1.5" />
+    <Position X="19.75" Y="6" Width="1.5" />
     <InheritanceLine Type="TAPI.SDK.GUI.Controls.Primitives.ControlContainer" ManuallyRouted="true">
       <Path>
-        <Point X="13.75" Y="5.191" />
-        <Point X="13.75" Y="5.469" />
-        <Point X="15.25" Y="5.469" />
-        <Point X="15.25" Y="6" />
+        <Point X="19" Y="5.191" />
+        <Point X="19" Y="5.469" />
+        <Point X="20.5" Y="5.469" />
+        <Point X="20.5" Y="6" />
       </Path>
     </InheritanceLine>
     <TypeIdentifier>
@@ -109,53 +109,111 @@
     </TypeIdentifier>
   </Class>
   <Class Name="TAPI.SDK.GUI.Controls.Window" Collapsed="true">
-    <Position X="11.5" Y="6" Width="1.5" />
+    <Position X="16.75" Y="6" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AARAAAAAAAAAAgAIAAAAAAAAAAAAAAAAAIACCAACAAA=</HashCode>
+      <HashCode>AARAAAAAAAAAAgAIiAAAAEgIIAAAAAAAAIACDACCAAI=</HashCode>
       <FileName>GUI\Controls\Window.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
   <Class Name="TAPI.SDK.GUI.Controls.Primitives.ListeningControl&lt;T&gt;" Collapsed="true">
     <Position X="8.5" Y="5.75" Width="1.75" />
-    <InheritanceLine Type="TAPI.SDK.GUI.Controls.Primitives.Focusable" ManuallyRouted="true">
-      <Path>
-        <Point X="6.75" Y="5.191" />
-        <Point X="6.75" Y="5.479" />
-        <Point X="9.375" Y="5.479" />
-        <Point X="9.375" Y="5.75" />
-      </Path>
-    </InheritanceLine>
     <TypeIdentifier>
-      <HashCode>AAAgAAAAAAAAAAAAAAAEAAAAAAAAAIAAAACAAEAAAAA=</HashCode>
+      <HashCode>AAAgAAAAAQAAAAAAAAAEAAAAAAAAAIAAAACAAEAAAgA=</HashCode>
       <FileName>GUI\Controls\Primitives\ListeningControl.cs</FileName>
     </TypeIdentifier>
-  </Class>
-  <Class Name="TAPI.SDK.GUI.Controls.MenuButtonWrapper" Collapsed="true">
-    <Position X="7.5" Y="3.25" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AACAAAAEACAAAgAAAAAAAAAAQgAAAAAAAAAAAAAAAFA=</HashCode>
-      <FileName>GUI\Controls\MenuButtonWrapper.cs</FileName>
-    </TypeIdentifier>
-    <Lollipop Position="0.1" />
   </Class>
   <Class Name="System.Object" Collapsed="true">
     <Position X="4" Y="0.5" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="TAPI.MenuButton" Collapsed="true">
-    <Position X="7.5" Y="1" Width="1.5" />
+    <Position X="10.75" Y="1" Width="1.5" />
     <TypeIdentifier />
   </Class>
-  <Class Name="TAPI.SDK.GUI.Interface" Collapsed="true">
-    <Position X="11.75" Y="3.25" Width="1.5" />
+  <Class Name="TAPI.SDK.GUI.SdkUI" Collapsed="true">
+    <Position X="16.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQAAAAAAAAAAAAAgAAACAAAIAAAIAAAAAAgAAAAAAQ=</HashCode>
-      <FileName>GUI\Interface.cs</FileName>
+      <HashCode>AAQAAAAAIAAAAAAAgAAACAAAIAAAIAAAAAAgAAAAAAQ=</HashCode>
+      <FileName>GUI\SdkUI.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TAPI.ModInterface" Collapsed="true">
-    <Position X="11.75" Y="1" Width="1.5" />
+    <Position X="16.75" Y="1" Width="1.5" />
+    <TypeIdentifier />
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Interop.ControlWrapper" Collapsed="true">
+    <Position X="11" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AACBAAIEACAAAgAAAABAAAAAIgAAAAAAAAAAAAEAAFA=</HashCode>
+      <FileName>GUI\Controls\Interop\ControlWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Primitives.Checkable" Collapsed="true">
+    <Position X="13.5" Y="5.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAgAACAEEACAAAIAAAAAAAAAABACIABACEAiAAA=</HashCode>
+      <FileName>GUI\Controls\Primitives\Checkable.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.RadioButton" Collapsed="true">
+    <Position X="15" Y="7" Width="1.5" />
+    <InheritanceLine Type="TAPI.SDK.GUI.Controls.Primitives.Checkable" ManuallyRouted="true">
+      <Path>
+        <Point X="14.25" Y="6.441" />
+        <Point X="14.25" Y="6.718" />
+        <Point X="15.75" Y="6.718" />
+        <Point X="15.75" Y="7" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgCACAAAAAAAAAAAAAAAAABAAAAAAAE=</HashCode>
+      <FileName>GUI\Controls\RadioButton.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.CheckBox" Collapsed="true">
+    <Position X="12" Y="7" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAgAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUI\Controls\CheckBox.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Interop.MenuPageWrapper" Collapsed="true">
+    <Position X="7.5" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAACCAAgAAAAAAAAAAAAAAAAAAAAAAAAAAACA=</HashCode>
+      <FileName>GUI\Controls\Interop\MenuPageWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Interop.MenuButtonWrapper" Collapsed="true">
+    <Position X="9.25" Y="3.25" Width="1.5" />
+    <InheritanceLine Type="TAPI.SDK.GUI.Controls.Control" FixedFromPoint="true">
+      <Path>
+        <Point X="5.5" Y="3.25" />
+        <Point X="7.418" Y="3.25" />
+        <Point X="7.418" Y="3.168" />
+        <Point X="9.127" Y="3.168" />
+        <Point X="9.127" Y="3.596" />
+        <Point X="9.25" Y="3.596" />
+      </Path>
+    </InheritanceLine>
+    <TypeIdentifier>
+      <HashCode>EAAAAAAIACAAAgAAAAAAAAAAQAAAAAAAAAAAACAAAAA=</HashCode>
+      <FileName>GUI\Controls\Interop\MenuButtonWrapper.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Interop.ControlContainerWrapper" Collapsed="true">
+    <Position X="12.75" Y="3.25" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>EAAAAAAAACAAAgEAAAAAAAAAAAAAAAAAAAAAAAACAEA=</HashCode>
+      <FileName>GUI\Controls\Interop\ControlContainerWrapper.cs</FileName>
+    </TypeIdentifier>
+    <Lollipop Position="0.2" />
+  </Class>
+  <Class Name="TAPI.MenuPage" Collapsed="true">
+    <Position X="12.5" Y="1" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Interface Name="TAPI.SDK.GUI.Controls.Primitives.ITextControl" Collapsed="true">
@@ -195,11 +253,18 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="TAPI.SDK.GUI.Controls.Primitives.ICaretControl" Collapsed="true">
-    <Position X="10" Y="3" Width="1.5" />
+    <Position X="15.25" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GUI\Controls\Primitives\ICaretControl.cs</FileName>
     </TypeIdentifier>
   </Interface>
+  <Enum Name="TAPI.SDK.GUI.Controls.Primitives.BoxLocation" Collapsed="true">
+    <Position X="13.5" Y="4.75" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAAAAAAAAAAAQAAAAAAAIAAAACACAAAAAAAA=</HashCode>
+      <FileName>GUI\Controls\Primitives\Checkable.cs</FileName>
+    </TypeIdentifier>
+  </Enum>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

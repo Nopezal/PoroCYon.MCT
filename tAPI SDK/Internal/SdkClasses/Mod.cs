@@ -13,10 +13,6 @@ using TAPI.SDK.Net;
 
 namespace TAPI.SDK
 {
-    using SdkUI = TAPI.SDK.GUI.SdkInterface;
-    using TUI = TAPI.Interface;
-
-    [CLSCompliant(false)]
     sealed class Mod : ModBase
     {
         internal static bool Inited
@@ -61,70 +57,70 @@ namespace TAPI.SDK
             Inited = true;
         }
 
-        [CallPriority(Single.PositiveInfinity)]
-        public override void ReceiveMessage(int msg, params object[] data)
-        {
-            int i = 0;
+		//[CallPriority(Single.PositiveInfinity)]
+		//public override void ReceiveMessage(int msg, params object[] data)
+		//{
+		//	int i = 0;
 
-            Func<object> NextObject = () =>
-            {
-                return data[i++];
-            };
+		//	Func<object> NextObject = () =>
+		//	{
+		//		return data[i++];
+		//	};
 
-            if (msg >= IEConsts.ENUM_OFFSET)
-                switch ((InternalNetMessages)msg)
-                {
-                    #region INIT_SDK
-                    case InternalNetMessages.INIT_SDK:
-                        Init();
-                        break;
-                    #endregion
+		//	if (msg >= IEConsts.ENUM_OFFSET)
+		//		switch ((InternalNetMessages)msg)
+		//		{
+		//			#region INIT_SDK
+		//			case InternalNetMessages.INIT_SDK:
+		//				Init();
+		//				break;
+		//			#endregion
 
-                    #region SyncRandom_CTOR
-                    case InternalNetMessages.SyncRandom_CTOR:
-                        {
-                            string groupName = NextObject().ToString();
-                            int seed = (int)NextObject();
+		//			#region SyncRandom_CTOR
+		//			case InternalNetMessages.SyncRandom_CTOR:
+		//				{
+		//					string groupName = NextObject().ToString();
+		//					int seed = (int)NextObject();
 
-                            SyncedRandom.rands[groupName] = new Random(seed);
+		//					SyncedRandom.rands[groupName] = new Random(seed);
 
-                            SyncedRandom.refs[groupName]++;
-                        }
-                        break;
-                    #endregion
-                    #region SyncRandom_DTOR
-                    case InternalNetMessages.SyncRandom_DTOR:
-                        {
-                            string groupName = NextObject().ToString();
+		//					SyncedRandom.refs[groupName]++;
+		//				}
+		//				break;
+		//			#endregion
+		//			#region SyncRandom_DTOR
+		//			case InternalNetMessages.SyncRandom_DTOR:
+		//				{
+		//					string groupName = NextObject().ToString();
 
-                            SyncedRandom.refs[groupName]--;
+		//					SyncedRandom.refs[groupName]--;
 
-                            if (SyncedRandom.refs[groupName] <= 0)
-                                SyncedRandom.rands.Remove(groupName);
-                        }
-                        break;
-                    #endregion
-                    #region SyncRandom_Sync
-                    case InternalNetMessages.SyncRandom_Sync:
-                        {
-                            string groupName = NextObject().ToString();
-                            Random rand = (Random)NextObject();
-                            int refs = (int)NextObject();
+		//					if (SyncedRandom.refs[groupName] <= 0)
+		//						SyncedRandom.rands.Remove(groupName);
+		//				}
+		//				break;
+		//			#endregion
+		//			#region SyncRandom_Sync
+		//			case InternalNetMessages.SyncRandom_Sync:
+		//				{
+		//					string groupName = NextObject().ToString();
+		//					Random rand = (Random)NextObject();
+		//					int refs = (int)NextObject();
 
-                            SyncedRandom.rands[groupName] = rand;
-                            SyncedRandom.refs[groupName] = refs;
-                        }
-                        break;
-                    #endregion
-                }
-            else
-                switch ((NetMessages)msg)
-                {
+		//					SyncedRandom.rands[groupName] = rand;
+		//					SyncedRandom.refs[groupName] = refs;
+		//				}
+		//				break;
+		//			#endregion
+		//		}
+		//	else
+		//		switch ((NetMessages)msg)
+		//		{
 
-                }
+		//		}
 
-            base.ReceiveMessage(msg, data);
-        }
+		//	base.ReceiveMessage(msg, data);
+		//}
 
         [CallPriority(Single.PositiveInfinity)]
         public override object OnModCall(ModBase mod, params object[] arguments)

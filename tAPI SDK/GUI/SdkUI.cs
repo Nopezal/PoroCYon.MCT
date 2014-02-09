@@ -8,8 +8,10 @@ using TAPI.SDK.GUI.Controls;
 
 namespace TAPI.SDK.GUI
 {
-    [CLSCompliant(false)]
-    public sealed class SdkInterface : ModInterface
+	/// <summary>
+	/// This class cannot be inherited.
+	/// </summary>
+    public sealed class SdkUI : ModInterface
     {
         public static Texture2D WhitePixel
         {
@@ -25,12 +27,12 @@ namespace TAPI.SDK.GUI
 
         public static Action<Control> OnControlAdded, OnControlRemoved;
 
-        static SdkInterface()
+        static SdkUI()
         {
             Controls = new List<Control>();
         }
 
-        public SdkInterface(ModBase @base)
+        public SdkUI(ModBase @base)
             : base(@base)
         {
             Controls = new List<Control>();

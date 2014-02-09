@@ -4,7 +4,6 @@ using System.Linq;
 
 namespace TAPI.SDK.Internal.SdkClasses
 {
-    [CLSCompliant(false)]
     sealed class MPrefix : ModPrefix
     {
         public MPrefix(Prefix p, ModBase @base)

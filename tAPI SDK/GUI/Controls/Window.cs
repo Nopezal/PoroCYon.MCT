@@ -130,7 +130,7 @@ namespace TAPI.SDK.GUI.Controls
             // window border/bg
             DrawBackground(sb);
 
-            sb.Draw(SdkInterface.WhitePixel, new Vector2(2f, topBar.Y), null, new Color(18, 18, 38), Rotation, Origin, new Vector2(Scale.X - 4f, 2f), SpriteEffects, LayerDepth);
+            sb.Draw(SdkUI.WhitePixel, new Vector2(2f, topBar.Y), null, new Color(18, 18, 38), Rotation, Origin, new Vector2(Scale.X - 4f, 2f), SpriteEffects, LayerDepth);
 
             // title
             sb.DrawString(Font, Text, Position + padding, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);

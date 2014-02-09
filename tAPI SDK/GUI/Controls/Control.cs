@@ -18,6 +18,11 @@ namespace TAPI.SDK.GUI.Controls
 
         public bool IsDrawnAfter = false, HasBackground = true, Enabled = true;
 
+		/// <summary>
+		/// Null is TAPI.SDK.SdkUI
+		/// </summary>
+		public WeakReference<ControlContainer> Parent; // WeakReference so we don't create a memory leak
+
         public int ID = -1;
 
         /// <summary>
@@ -27,7 +32,7 @@ namespace TAPI.SDK.GUI.Controls
         /// <summary>
         /// Sometimes used a size (eg. Window)
         /// </summary>
-        public Vector2 Scale = new Vector2(1);
+        public Vector2 Scale = new Vector2(1f);
         public Color Colour = Color.White;
         /// <summary>
         /// Might not be used by every type of Control
@@ -76,6 +81,13 @@ namespace TAPI.SDK.GUI.Controls
                 return new Rectangle((int)Position.X, (int)Position.Y, (int)Scale.X, (int)Scale.Y);
             }
         }
+		public virtual Vector2 DrawnPosition
+		{
+			get
+			{
+				return Hitbox.Position();
+			}
+		}
 
         public virtual void Init()
         {
@@ -106,6 +118,8 @@ namespace TAPI.SDK.GUI.Controls
         public void Dispose()
         {
             Dispose(true);
+
+			GC.SuppressFinalize(this);
         }
         protected virtual void Dispose(bool forced) { }
 
@@ -114,39 +128,43 @@ namespace TAPI.SDK.GUI.Controls
             if (!HasBackground)
                 return;
 
-            Rectangle?
-                topLeft = new Rectangle(0, 0, 8, 8),
-                topRight = new Rectangle(492, 0, 8, 8),
-                bottomLeft = new Rectangle(0, 492, 8, 8),
-                bottomRight = new Rectangle(492, 492, 8, 8);
-
-            int a = GInput.Mouse.Rectangle.Intersects(Hitbox) ? 200 : 150;
-            Color
-                corner = new Color(255, 255, 255, a),
-                border = new Color(18, 18, 38, a),
-                inner = new Color(63, 65, 151, a);
-
-            // corners
-            sb.Draw(Main.chatBackTexture, Position, topLeft, corner);
-            sb.Draw(Main.chatBackTexture, Position + Hitbox.Size() - new Vector2(8f, 0f), topRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-            sb.Draw(Main.chatBackTexture, Position + Hitbox.Size() - new Vector2(0f, 80f), bottomLeft, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-            sb.Draw(Main.chatBackTexture, Position + Hitbox.Size() - new Vector2(8f), bottomRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-
-            // borders
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(8f, 0f), null, border, Rotation, Origin, new Vector2(Hitbox.Width - 16f,  2f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(0f, 8f), null, border, Rotation, Origin, new Vector2(2f, Hitbox.Height - 16f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(8f, Hitbox.Height - 2f), null, border, Rotation, Origin, new Vector2(Hitbox.Width - 16f,  2f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(Hitbox.Width - 2f,  8f), null, border, Rotation, Origin, new Vector2(2f, Hitbox.Height - 16f), SpriteEffects, LayerDepth);
-
-            // inner (centre)
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(8f), null, inner, Rotation, Origin, Hitbox.Size() - new Vector2(16f), SpriteEffects, LayerDepth);
-
-            // inner (missing parts)
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(8f, 2f), null, inner, Rotation, Origin, new Vector2(Hitbox.Width - 16f, 6f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(8f, Hitbox.Height - 8f), null, inner, Rotation, Origin, new Vector2(Hitbox.Width - 16f,  6f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(2f, 8f), null, inner, Rotation, Origin, new Vector2(6f, Hitbox.Height - 16f), SpriteEffects, LayerDepth);
-            sb.Draw(SdkInterface.WhitePixel, Position + new Vector2(Hitbox.Width - 8f,  8f), null, inner, Rotation, Origin, new Vector2(6f, Hitbox.Height - 16f), SpriteEffects, LayerDepth);
+			DrawBackground(sb, Hitbox);
         }
+		protected void DrawBackground(SpriteBatch sb, Rectangle bg)
+		{
+			Rectangle?
+				topLeft = new Rectangle(0, 0, 8, 8),
+				topRight = new Rectangle(492, 0, 8, 8),
+				bottomLeft = new Rectangle(0, 492, 8, 8),
+				bottomRight = new Rectangle(492, 492, 8, 8);
+
+			int a = GInput.Mouse.Rectangle.Intersects(bg) ? 200 : 150;
+			Color
+				corner = new Color(255, 255, 255, a),
+				border = new Color(18, 18, 38, a),
+				inner = new Color(63, 65, 151, a);
+
+			// corners
+			sb.Draw(Main.chatBackTexture, Position, topLeft, corner);
+			sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(8f, 0f), topRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
+			sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(0f, 80f), bottomLeft, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
+			sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(8f), bottomRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
+
+			// borders
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, 0f), null, border, Rotation, Origin, new Vector2(bg.Width - 16f, 2f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(0f, 8f), null, border, Rotation, Origin, new Vector2(2f, bg.Height - 16f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, bg.Height - 2f), null, border, Rotation, Origin, new Vector2(bg.Width - 16f, 2f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(bg.Width - 2f, 8f), null, border, Rotation, Origin, new Vector2(2f, bg.Height - 16f), SpriteEffects, LayerDepth);
+
+			// inner (centre)
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f), null, inner, Rotation, Origin, bg.Size() - new Vector2(16f), SpriteEffects, LayerDepth);
+
+			// inner (missing parts)
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, 2f), null, inner, Rotation, Origin, new Vector2(bg.Width - 16f, 6f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, bg.Height - 8f), null, inner, Rotation, Origin, new Vector2(bg.Width - 16f, 6f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(2f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
+			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(bg.Width - 8f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
+		}
 
         public object Clone()
         {

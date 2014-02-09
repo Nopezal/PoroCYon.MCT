@@ -21,6 +21,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             private set;
         }
 
+		public bool CanFocus = true;
         public bool IsHovered
         {
             get
@@ -31,10 +32,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             {
                 Hovered = value ? ID : -1;
 
-                for (int i = 0; i < SdkInterface.Controls.Count; i++)
-                    if (SdkInterface.Controls[i] is Focusable)
+                for (int i = 0; i < SdkUI.Controls.Count; i++)
+                    if (SdkUI.Controls[i] is Focusable)
                     {
-                        Focusable f = (Focusable)SdkInterface.Controls[i];
+                        Focusable f = (Focusable)SdkUI.Controls[i];
 
                         if (f.ID == Hovered)
                             f.BeginHover();
@@ -55,10 +56,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
                 Main.PlaySound("vanilla:menuTick");
 
-                for (int i = 0; i < SdkInterface.Controls.Count; i++)
-                    if (SdkInterface.Controls[i] is Focusable)
+                for (int i = 0; i < SdkUI.Controls.Count; i++)
+                    if (SdkUI.Controls[i] is Focusable)
                     {
-                        Focusable f = (Focusable)SdkInterface.Controls[i];
+                        Focusable f = (Focusable)SdkUI.Controls[i];
 
                         if (f.ID == Focused)
                             f.FocusGot();
@@ -94,6 +95,9 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
         public override void Update()
         {
+			if (!CanFocus)
+				return;
+
             if (GInput.Mouse.Rectangle.Intersects(Hitbox) || ForceHover)
             {
                 if (!IsHovered)

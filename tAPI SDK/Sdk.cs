@@ -65,10 +65,10 @@ namespace TAPI.SDK
             Mods.loadOrder.Add(MODNAME);
             Mods.modBases.Add(modBase);
 
-            // r2
-            File.Copy(code.Location, code.Location + ".tmp");
-            Mods.modAssemblyData.Add(DISPLAYNAME, File.ReadAllBytes(code.Location + ".tmp"));
-            File.Delete(code.Location + ".tmp");
+			//// r2?
+			//File.Copy(code.Location, code.Location + ".tmp");
+			//Mods.modAssemblyData.Add(DISPLAYNAME, File.ReadAllBytes(code.Location + ".tmp"));
+			//File.Delete(code.Location + ".tmp");
 
             #region instantiate mod[...]
             modBase.modPlayer = new MPlayer(modBase, null);
@@ -76,7 +76,7 @@ namespace TAPI.SDK
             modBase.modItem = new MItem(modBase, null);
             modBase.modNPC = new MNPC(modBase, null);
             modBase.modProjectile = new MProj(modBase, null);
-            modBase.modInterface = new SdkInterface(modBase);
+            modBase.modInterface = new SdkUI(modBase);
             modBase.modPrefix = new MPrefix(null, modBase);
 
             if (modBase.modPlayer != null)

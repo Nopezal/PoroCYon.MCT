@@ -86,7 +86,7 @@ namespace TAPI.SDK.Installer
 				{
 					UpdateProgress(-1, Path.GetFileName(ToDownload[i]));
 					downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
-					UpdateProgress(100 / (total / (i + 1)), null);
+					UpdateProgress(100 / ((total + 1) / (i + 1)), null);
 				}
 
 				client.Dispose();
@@ -115,9 +115,9 @@ namespace TAPI.SDK.Installer
 
 					Tuple<string, byte[]> t = downloaded.Dequeue();
 
-					UpdateProgress(-1, steamDir + Path.GetFileName(t.Item1));
-					File.WriteAllBytes(t.Item1, t.Item2);
-					UpdateProgress(100 / (total / (i + 1)), null);
+					UpdateProgress(-1, t.Item1);
+					File.WriteAllBytes(steamDir + t.Item1, t.Item2);
+					UpdateProgress(100 / ((total + 1) / (i + 1)), null);
 
 					i++;
 				}
