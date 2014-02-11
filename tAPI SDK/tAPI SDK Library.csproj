@@ -114,7 +114,6 @@
     <Compile Include="Internal\SdkClasses\MItem.cs" />
     <Compile Include="Internal\SdkClasses\MPlayer.cs" />
     <Compile Include="Internal\SdkClasses\Mod.cs" />
-    <Compile Include="Net\SyncedRandom.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VanillaData\BuffData.cs" />
     <Compile Include="VanillaData\ItemData.cs" />

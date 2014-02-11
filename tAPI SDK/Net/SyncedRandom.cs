@@ -5,6 +5,10 @@ using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.Net
 {
+	/*
+	 * Requires custom NetMessage support
+	 */
+
     /// <summary>
     /// A synced Pseudo-Random Number Generator.
     /// Values are global.

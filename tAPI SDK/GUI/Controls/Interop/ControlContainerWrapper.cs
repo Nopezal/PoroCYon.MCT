@@ -12,7 +12,7 @@ namespace TAPI.SDK.GUI.Controls.Interop
 	/// A ContorlContainer as a MenuPage
 	/// This class cannot be inherited
 	/// </summary>
-	public sealed class ControlContainerWrapper : MenuPage, IDisposable, ICloneable<MenuButtonWrapper>
+	public sealed class ControlContainerWrapper : MenuPage, IDisposable, ICloneable<ControlContainerWrapper>
 	{
 		bool inited = false;
 
@@ -68,6 +68,15 @@ namespace TAPI.SDK.GUI.Controls.Interop
 				ControlContainer.Dispose();
 
 			GC.SuppressFinalize(this);
+		}
+
+		public object Clone()
+		{
+			return MemberwiseClone();
+		}
+		public ControlContainerWrapper Copy()
+		{
+			return (ControlContainerWrapper)MemberwiseClone();
 		}
 
 		public static explicit operator ControlContainer(ControlContainerWrapper wrapper)

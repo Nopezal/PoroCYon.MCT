@@ -132,14 +132,14 @@
     <TypeIdentifier />
   </Class>
   <Class Name="TAPI.SDK.GUI.SdkUI" Collapsed="true">
-    <Position X="16.75" Y="3.25" Width="1.5" />
+    <Position X="17.25" Y="3.25" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAQAAAAAIAAAAAAAgAAACAAAIAAAIAAAAAAgAAAAAAQ=</HashCode>
       <FileName>GUI\SdkUI.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TAPI.ModInterface" Collapsed="true">
-    <Position X="16.75" Y="1" Width="1.5" />
+    <Position X="17.25" Y="1" Width="1.5" />
     <TypeIdentifier />
   </Class>
   <Class Name="TAPI.SDK.GUI.Controls.Interop.ControlWrapper" Collapsed="true">
@@ -207,7 +207,7 @@
   <Class Name="TAPI.SDK.GUI.Controls.Interop.ControlContainerWrapper" Collapsed="true">
     <Position X="12.75" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>EAAAAAAAACAAAgEAAAAAAAAAAAAAAAAAAAAAAAACAEA=</HashCode>
+      <HashCode>EAAAAAAAACAAAgEAAAAAAAAAAgAAAAAAAAAAAAACAFA=</HashCode>
       <FileName>GUI\Controls\Interop\ControlContainerWrapper.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -253,7 +253,7 @@
     </TypeIdentifier>
   </Interface>
   <Interface Name="TAPI.SDK.GUI.Controls.Primitives.ICaretControl" Collapsed="true">
-    <Position X="15.25" Y="2.75" Width="1.5" />
+    <Position X="15.5" Y="2.75" Width="1.5" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAIAAAAAAAAAACAAAAAAAAAAAAAAAAAA=</HashCode>
       <FileName>GUI\Controls\Primitives\ICaretControl.cs</FileName>

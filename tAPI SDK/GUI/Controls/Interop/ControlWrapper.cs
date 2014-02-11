@@ -11,7 +11,7 @@ namespace TAPI.SDK.GUI.Controls.Interop
 	/// A Control as a MenuButton
     /// This class cannot be inherited
     /// </summary>
-    public sealed class ControlWrapper : MenuButton, IDisposable, ICloneable<MenuButtonWrapper>
+	public sealed class ControlWrapper : MenuButton, IDisposable, ICloneable<ControlWrapper>
     {
         bool inited = false;
 
