@@ -13,10 +13,14 @@ namespace TAPI.SDK.Input
 
     public struct MouseHandler
     {
+        bool l;
+
         public bool Left
         {
-            get;
-            private set;
+            get
+            {
+                return l && Constants.mainInstance.blockMouse;
+            }
         }
         public bool Right
         {
@@ -78,7 +82,7 @@ namespace TAPI.SDK.Input
         {
             MouseHandler ret = new MouseHandler()
             {
-                Left = AvalonMouse.LeftButton == MouseButtonState.Pressed,
+                l = AvalonMouse.LeftButton == MouseButtonState.Pressed,
                 Right = AvalonMouse.RightButton == MouseButtonState.Pressed,
                 Middle = AvalonMouse.RightButton == MouseButtonState.Pressed,
                 XButton1 = AvalonMouse.XButton1 == MouseButtonState.Pressed,

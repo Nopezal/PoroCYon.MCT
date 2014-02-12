@@ -76,6 +76,8 @@
     <Compile Include="Content\LoadParameters.cs" />
     <Compile Include="Content\ObjectLoader.cs" />
     <Compile Include="GUI\Controls\CheckBox.cs" />
+    <Compile Include="GUI\Controls\ColourChooser.cs" />
+    <Compile Include="GUI\Controls\IncreaseDecreaseButton.cs" />
     <Compile Include="GUI\Controls\Interop\ControlContainerWrapper.cs" />
     <Compile Include="GUI\Controls\Interop\MenuButtonWrapper.cs" />
     <Compile Include="GUI\Controls\Interop\MenuPageWrapper.cs" />
@@ -95,6 +97,7 @@
     <Compile Include="GUI\Controls\Primitives\ITextControl.cs" />
     <Compile Include="GUI\Controls\Primitives\ListeningControl.cs" />
     <Compile Include="GUI\Controls\RadioButton.cs" />
+    <Compile Include="GUI\Controls\Slider.cs" />
     <Compile Include="GUI\Controls\TextBlock.cs" />
     <Compile Include="GUI\Controls\TextBox.cs" />
     <Compile Include="GUI\Controls\TextButton.cs" />

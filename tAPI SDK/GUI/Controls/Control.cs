@@ -45,6 +45,7 @@ namespace TAPI.SDK.GUI.Controls
         /// </summary>
         public Rectangle? Frame = null;
         public float LayerDepth = 0f;
+        public string Tooltip = "";
 
         public Action<Control> OnInit, OnUpdate;
         public Action<Control, SpriteBatch> OnDraw;
@@ -74,6 +75,9 @@ namespace TAPI.SDK.GUI.Controls
                 return new Vector2(Hitbox.Width, Hitbox.Height) / 2f + padding;
             }
         }
+        /// <summary>
+        /// If not overridden in a deriving class, it uses the Scale fields as width/height
+        /// </summary>
         public virtual Rectangle Hitbox
         {
             get
@@ -109,6 +113,9 @@ namespace TAPI.SDK.GUI.Controls
                 OnDraw(this, sb);
             if (GlobalDraw != null)
                 GlobalDraw(this, sb);
+
+            if (!String.IsNullOrEmpty(Tooltip) && GInput.Mouse.Rectangle.Intersects(Hitbox))
+                Constants.mainInstance.MouseText(Tooltip);
         }
 
         ~Control()

@@ -73,6 +73,11 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             private get;
             set;
         }
+		public bool ForceFocus
+		{
+			private get;
+			set;
+		}
 
         public Action<Focusable> OnGotFocus, OnLostFocus, OnBeginHover, OnEndHover;
         public static Action<Focusable> GlobalGotFocus, GlobalLostFocus, GlobalBeginHover, GlobalEndHover;
@@ -112,7 +117,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
                 IsHovered = true;
 
-                if (GInput.Mouse.Left)
+                if (GInput.Mouse.Left || ForceFocus)
                 {
                     if (!IsFocused)
                     {
@@ -136,7 +141,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                         GlobalLostFocus(this);
                 }
 
-                ForceHover = false;
+				ForceHover = ForceFocus = false;
             }
             else if (IsHovered)
             {
