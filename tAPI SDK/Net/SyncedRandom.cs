@@ -5,10 +5,6 @@ using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.Net
 {
-	/*
-	 * Requires custom NetMessage support
-	 */
-
     /// <summary>
     /// A synced Pseudo-Random Number Generator.
     /// Values are global.
@@ -18,6 +14,9 @@ namespace TAPI.SDK.Net
         internal static WrapperDictionary<string, Random> rands = new WrapperDictionary<string, Random>();
         internal static WrapperDictionary<string, int> refs = new WrapperDictionary<string, int>();
 
+        /// <summary>
+        /// The group name of the <see cref="TAPI.SDK.Net.SyncedRandom"/> instance
+        /// </summary>
         public string GroupName
         {
             get;
@@ -39,13 +38,13 @@ namespace TAPI.SDK.Net
             refs[GroupName]++;
 
             if (Main.netMode != 0)
-                NetMessage.SendModData("TAPI.SDK", (int)InternalNetMessages.SyncRandom_CTOR, GroupName, seed);
+                NetMessageHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_CTOR, GroupName, seed);
         }
 
         ~SyncedRandom()
         {
             if (Main.netMode != 0)
-                NetMessage.SendModData("TAPI.SDK", (int)InternalNetMessages.SyncRandom_DTOR, GroupName);
+                NetMessageHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_DTOR, GroupName);
 
             refs[GroupName]--;
 
@@ -107,7 +106,7 @@ namespace TAPI.SDK.Net
             if (Main.netMode == 0)
                 return;
 
-            NetMessage.SendModData("TAPI.SDK", (int)InternalNetMessages.SyncRandom_Sync, GroupName, rands[GroupName], refs[GroupName]);
+            NetMessageHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_Sync, GroupName, rands[GroupName], refs[GroupName]);
         }
     }
 }

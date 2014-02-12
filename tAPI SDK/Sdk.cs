@@ -16,17 +16,15 @@ using TAPI.SDK.Net;
 
 namespace TAPI.SDK
 {
+    /// <summary>
+    /// The main SDK class.
+    /// This is the entry point of the SDK.
+    /// </summary>
     public static class Sdk
     {
-        static string ReadResource(string resourceName)
-        {
-            using (MemoryStream ms = new MemoryStream())
-            {
-                Assembly.GetExecutingAssembly().GetManifestResourceStream("TAPI.SDK." + resourceName).CopyTo(ms);
-                return Encoding.UTF8.GetString(ms.ToArray());
-            }
-        }
-
+        /// <summary>
+        /// Wether the SDK is initalized or not
+        /// </summary>
         public static bool Inited
         {
             get;
@@ -98,6 +96,15 @@ namespace TAPI.SDK
             modBase.OnLoad();
 
             Inited = true;
+        }
+
+        static string ReadResource(string resourceName)
+        {
+            using (MemoryStream ms = new MemoryStream())
+            {
+                Assembly.GetExecutingAssembly().GetManifestResourceStream("TAPI.SDK." + resourceName).CopyTo(ms);
+                return Encoding.UTF8.GetString(ms.ToArray());
+            }
         }
     }
 }

@@ -25,6 +25,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\TAPI.SDK.XML</DocumentationFile>
+    <NoWarn>1591</NoWarn>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -36,6 +37,8 @@
     <DocumentationFile>bin\Release\TAPI.SDK.xml</DocumentationFile>
     <PlatformTarget>x86</PlatformTarget>
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <NoWarn>
+    </NoWarn>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
@@ -112,7 +115,9 @@
     <Compile Include="Internal\SdkClasses\MProj.cs" />
     <Compile Include="Internal\SdkClasses\MWorld.cs" />
     <Compile Include="Interop\ModMessages.cs" />
+    <Compile Include="Net\NetMessageHelper.cs" />
     <Compile Include="Net\NetMessages.cs" />
+    <Compile Include="Net\SyncedRandom.cs" />
     <Compile Include="Sdk.cs" />
     <Compile Include="Internal\SdkClasses\MItem.cs" />
     <Compile Include="Internal\SdkClasses\MPlayer.cs" />
@@ -130,6 +135,7 @@
   <ItemGroup>
     <None Include="GUI\Controls\UIClassDiagram.cd" />
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" (

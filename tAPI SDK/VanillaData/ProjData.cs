@@ -4,13 +4,20 @@ using System.Linq;
 
 namespace TAPI.SDK.VanillaData
 {
+    // Because 'Projectile' is too long
     /// <summary>
-    /// Because 'Projectile' is too long
+    /// Contains vanilla Projectile data
     /// </summary>
     public static class ProjData
     {
+        #region Projectile Types
+        /// <summary>
+        /// All vanilla Projectile types as an enumeration (derives from System.Int32)
+        /// </summary>
         public enum Types : int
         {
+            // fml summary-ing this
+#pragma warning disable 1591
             WoodenArrow = 1,
             FireArrow = 2,
             Shuriken = 3,
@@ -364,6 +371,13 @@ namespace TAPI.SDK.VanillaData
             Present = 351,
             Spike = 352,
             BabyGrinch = 353,
+#pragma warning restore 1591
         }
+        #endregion
+
+        /// <summary>
+        /// The default AI codes as an Action
+        /// </summary>
+        public static Dictionary<int, Action> AICode = new Dictionary<int, Action>();
     }
 }

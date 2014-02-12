@@ -4,10 +4,19 @@ using System.Linq;
 
 namespace TAPI.SDK.VanillaData
 {
+    /// <summary>
+    /// Contains vanilla NPC data
+    /// </summary>
     public static class NPCData
     {
+        #region NPC NetIDs
+        /// <summary>
+        /// All vanilla NPC types as an enumeration (derives from System.Int32)
+        /// </summary>
         public enum NetIDs : int
         {
+            // fml summary-ing this
+#pragma warning disable 1591
             BigHornetStingy = -65,
             LittleHornetStingy = -64,
             BigHornetSpikey = -63,
@@ -423,8 +432,13 @@ namespace TAPI.SDK.VanillaData
             ElfArcher = 350,
             Krampus = 351,
             Flocko = 352,
+#pragma warning restore 1591
         }
+        #endregion
 
+        /// <summary>
+        /// The default AI codes as an Action
+        /// </summary>
         public static Dictionary<int, Action> AICode = new Dictionary<int, Action>();
     }
 }

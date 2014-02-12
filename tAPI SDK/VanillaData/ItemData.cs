@@ -4,10 +4,19 @@ using System.Linq;
 
 namespace TAPI.SDK.VanillaData
 {
+    /// <summary>
+    /// Contains vanilla Item data
+    /// </summary>
     public static class ItemData
     {
+        #region Item NetIDs
+        /// <summary>
+        /// All vanilla Item netIDs as an enumeration (derives from System.Int32)
+        /// </summary>
         public enum NetIDs : int
         {
+            // fml summary-ing this
+#pragma warning disable 1591
             PlatinumBow = -48,
             PlatinumHammer = -47,
             PlatinumAxe = -46,
@@ -2021,6 +2030,8 @@ namespace TAPI.SDK.VanillaData
             MusicBoxPumpkinMoon = 1963,
             MusicBoxAltUngerground = 1964,
             MusicBoxFrostMoon = 1965
+#pragma warning restore 1591
         }
+        #endregion
     }
 }

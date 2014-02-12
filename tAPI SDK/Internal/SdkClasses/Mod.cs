@@ -15,6 +15,8 @@ namespace TAPI.SDK
 {
     sealed class Mod : ModBase
     {
+        internal static Mod instance;
+
         internal static bool Inited
         {
             get;
@@ -29,7 +31,7 @@ namespace TAPI.SDK
         public Mod()
             : base()
         {
-            
+            instance = this;
         }
 
         public override void OnLoad()
@@ -131,14 +133,11 @@ namespace TAPI.SDK
                 arguments[0] = 0;
 
             int id = (int)arguments[0];
+
             if (id >= IEConsts.ENUM_OFFSET)
                 switch ((InternalModMessages)id)
                 {
-                    #region INIT_SDK
-                    case InternalModMessages.INIT_SDK:
-                        Init();
-                        break;
-                    #endregion
+
                 }
             else
                 switch ((ModMessages)id)
@@ -147,6 +146,50 @@ namespace TAPI.SDK
                 }
 
             return base.OnModCall(mod, arguments);
+        }
+
+        [CallPriority(Single.PositiveInfinity)]
+        public override void NetReceive(int id, BinBuffer bb)
+        {
+            if (id >= IEConsts.ENUM_OFFSET)
+                switch ((InternalNetMessages)id)
+                {
+                    case InternalNetMessages.SyncRandom_Sync:
+                        {
+                            string group = bb.ReadString();
+                            Random rand = (Random)NetMessageHelper.ReadObject(typeof(Random), bb);
+                            int @ref = bb.ReadInt();
+
+                            SyncedRandom.rands[group] = rand;
+                            SyncedRandom.refs[group] = @ref;
+                        }
+                        break;
+                    case InternalNetMessages.SyncRandom_CTOR:
+                        {
+                            string group = bb.ReadString();
+                            int seed = bb.ReadInt();
+
+                            SyncedRandom.rands[group] = new Random(seed);
+                            SyncedRandom.refs[group]++;
+                        }
+                        break;
+                    case InternalNetMessages.SyncRandom_DTOR:
+                        {
+                            string group = bb.ReadString();
+
+                            SyncedRandom.refs[group]--;
+                            if (SyncedRandom.refs[group] <= 0)
+                                SyncedRandom.rands.Remove(group);
+                        }
+                        break;
+                }
+            else
+                switch ((NetMessages)id)
+                {
+
+                }
+
+            base.NetReceive(id, bb);
         }
 
         [CallPriority(Single.PositiveInfinity)]

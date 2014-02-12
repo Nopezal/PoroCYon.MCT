@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 [assembly: Guid("af310c8e-783e-4aa0-a9cf-09aa1f41632f")]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
-[assembly: CLSCompliant(true)]
 
 // hehe..
 [assembly: InternalsVisibleTo("tAPI Extended Packer")]

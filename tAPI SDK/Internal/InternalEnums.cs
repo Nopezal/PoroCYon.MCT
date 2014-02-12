@@ -11,14 +11,12 @@ namespace TAPI.SDK.Internal
 
     enum InternalNetMessages : int
     {
-        INIT_SDK        = IEConsts.ENUM_OFFSET + 0,
-
-        SyncRandom_Sync = IEConsts.ENUM_OFFSET + 1,
-        SyncRandom_CTOR = IEConsts.ENUM_OFFSET + 2,
-        SyncRandom_DTOR = IEConsts.ENUM_OFFSET + 3
+        SyncRandom_Sync = IEConsts.ENUM_OFFSET + 0,
+        SyncRandom_CTOR = IEConsts.ENUM_OFFSET + 1,
+        SyncRandom_DTOR = IEConsts.ENUM_OFFSET + 2
     }
     enum InternalModMessages : int
     {
-        INIT_SDK = IEConsts.ENUM_OFFSET + 0
+
     }
 }
