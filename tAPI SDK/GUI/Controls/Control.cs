@@ -10,7 +10,22 @@ using TAPI.SDK.GUI.Controls.Primitives;
 
 namespace TAPI.SDK.GUI.Controls
 {
-    public abstract class Control : IDisposable, ICloneable<Control>
+    /// <summary>
+    /// Enumeration has the Flags attribute
+    /// </summary>
+    [Flags]
+    public enum Visibility : int
+    {
+        Menu = 1,
+        IngameNoInv = 2,
+        IngameInv = 4,
+        Ingame = IngameInv | IngameNoInv,
+
+        None = 0,
+        All = Menu | Ingame
+    }
+
+    public abstract class Control : ModableObject, IDisposable, ICloneable<Control>
     {
         protected static readonly Vector2 padding = new Vector2(8f);
 
@@ -46,6 +61,10 @@ namespace TAPI.SDK.GUI.Controls
         public Rectangle? Frame = null;
         public float LayerDepth = 0f;
         public string Tooltip = "";
+        /// <summary>
+        /// Default is Visibility.IngameInv
+        /// </summary>
+        public Visibility Visibility = Visibility.IngameInv;
 
         public Action<Control> OnInit, OnUpdate;
         public Action<Control, SpriteBatch> OnDraw;

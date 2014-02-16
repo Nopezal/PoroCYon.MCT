@@ -8,8 +8,8 @@ using Microsoft.Xna.Framework.Input;
 
 namespace TAPI.SDK.Input
 {
-    using AvalonMouse = System.Windows.Input.Mouse;
     using XnaMouse = Microsoft.Xna.Framework.Input.Mouse;
+    using XnaExtMouse = PoroCYon.XnaExtensions.Input.MouseHandler;
 
     /// <summary>
     /// Custom structure to make calculations with the Mouse easier
@@ -118,21 +118,19 @@ namespace TAPI.SDK.Input
         /// <returns>The current mouse state</returns>
         public static MouseHandler GetState()
         {
+            XnaExtMouse xem = XnaExtMouse.GetState();
+
             MouseHandler ret = new MouseHandler()
             {
-                l = AvalonMouse.LeftButton == MouseButtonState.Pressed,
-                Right = AvalonMouse.RightButton == MouseButtonState.Pressed,
-                Middle = AvalonMouse.RightButton == MouseButtonState.Pressed,
-                XButton1 = AvalonMouse.XButton1 == MouseButtonState.Pressed,
-                XButton2 = AvalonMouse.XButton2 == MouseButtonState.Pressed
+                l = xem.Left,
+                Right = xem.Right,
+                Middle = xem.Middle,
+                XButton1 = xem.XButton1,
+                XButton2 = xem.XButton2
             };
 
-            ret.ScrollWheel = XnaMouse.GetState().ScrollWheelValue;
-
-            Point pt;
-            GetCursorPos(out pt);
-
-            ret.Position = new Vector2(pt.X, pt.Y);
+            ret.Position = xem.Position;
+            ret.ScrollWheel = xem.ScrollWheel;
 
             return ret;
         }
@@ -145,9 +143,5 @@ namespace TAPI.SDK.Input
         {
             XnaMouse.SetPosition((int)position.X, (int)position.Y);
         }
-
-        [DllImport("user32.dll")]
-        [return: MarshalAs(UnmanagedType.Bool)]
-        static extern bool GetCursorPos(out Point lpPoint);
     }
 }

@@ -115,6 +115,9 @@ namespace TAPI.SDK.GUI.Controls
 
             if (Listening)
             {
+                Main.inputTextEnter = true;
+                Main.chatText = "";
+
                 string add = KeyboardText.ReadToEnd();
                 if (add != "")
                 {
@@ -155,6 +158,39 @@ namespace TAPI.SDK.GUI.Controls
                     }
 
                     Main.PlaySound("vanilla:menuTick");
+                }
+
+                // ctrl + ...
+                if (GInput.Keyboard.IsKeyDown(Key.LeftCtrl) || GInput.Keyboard.IsKeyDown(Key.RightCtrl))
+                {
+                    // ctrl + c (copy)
+                    if (GInput.Keyboard.IsKeyDown(Key.C) && GInput.OldKeyboard.IsKeyUp(Key.C))
+                        if (Text != "")
+                            Clipboard.SetText(Text);
+                        else
+                            Clipboard.Clear();
+
+                    // ctrl + v (paste)
+                    if (GInput.Keyboard.IsKeyDown(Key.V) && GInput.OldKeyboard.IsKeyUp(Key.V))
+                    {
+                        string str = Clipboard.GetText();
+
+                        for (int i = 0; i < str.Length; i++)
+                            if ((int)str[i] < 32 || (int)str[i] == 127)
+                                str = str.Replace(str[i--].ToString(), "");
+
+                        Text = str;
+                    }
+
+                    // ctrl + x (cut)
+                    if (GInput.Keyboard.IsKeyDown(Key.X) && GInput.OldKeyboard.IsKeyUp(Key.X))
+                        if (Text != "")
+                        {
+                            Clipboard.SetText(Text);
+                            Text = "";
+                        }
+                        else
+                            Clipboard.Clear();
                 }
             }
         }

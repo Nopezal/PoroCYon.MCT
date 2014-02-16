@@ -84,6 +84,7 @@
     <Compile Include="GUI\Controls\Interop\ControlContainerWrapper.cs" />
     <Compile Include="GUI\Controls\Interop\MenuButtonWrapper.cs" />
     <Compile Include="GUI\Controls\Interop\MenuPageWrapper.cs" />
+    <Compile Include="GUI\Controls\ItemContainer.cs" />
     <Compile Include="GUI\Controls\KeyBox.cs" />
     <Compile Include="GUI\Controls\Interop\ControlWrapper.cs" />
     <Compile Include="GUI\Controls\Primitives\Button.cs" />
@@ -110,24 +111,24 @@
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
     <Compile Include="Internal\InternalEnums.cs" />
-    <Compile Include="Internal\SdkClasses\MNPC.cs" />
-    <Compile Include="Internal\SdkClasses\MPrefix.cs" />
-    <Compile Include="Internal\SdkClasses\MProj.cs" />
-    <Compile Include="Internal\SdkClasses\MWorld.cs" />
+    <Compile Include="Internal\ModClasses\MNPC.cs" />
+    <Compile Include="Internal\ModClasses\MPrefix.cs" />
+    <Compile Include="Internal\ModClasses\MProj.cs" />
+    <Compile Include="Internal\ModClasses\MWorld.cs" />
     <Compile Include="Interop\ModMessages.cs" />
-    <Compile Include="Net\NetMessageHelper.cs" />
-    <Compile Include="Net\NetMessages.cs" />
+    <Compile Include="ModableObject.cs" />
+    <Compile Include="Net\NetHelper.cs" />
     <Compile Include="Net\SyncedRandom.cs" />
     <Compile Include="Sdk.cs" />
-    <Compile Include="Internal\SdkClasses\MItem.cs" />
-    <Compile Include="Internal\SdkClasses\MPlayer.cs" />
-    <Compile Include="Internal\SdkClasses\Mod.cs" />
+    <Compile Include="Internal\ModClasses\MItem.cs" />
+    <Compile Include="Internal\ModClasses\MPlayer.cs" />
+    <Compile Include="Internal\ModClasses\Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="VanillaData\BuffData.cs" />
     <Compile Include="VanillaData\ItemData.cs" />
     <Compile Include="VanillaData\NPCData.cs" />
     <Compile Include="VanillaData\ProjData.cs" />
-    <Compile Include="WeakReference.cs" />
+    <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="ModInfo.json" />
