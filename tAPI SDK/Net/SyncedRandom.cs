@@ -50,6 +50,10 @@ namespace TAPI.SDK.Net
                 NetHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_CTOR, GroupName, seed);
         }
 
+        /// <summary>
+        /// Disposes the SyncedRandom instance by sending a NetMessage that decreases the group reference counter on the server/other clients,
+        /// decreases the group reference counter, and checks wether the group's random instance can be removed or not.
+        /// </summary>
         ~SyncedRandom()
         {
             if (Main.netMode != 0)
