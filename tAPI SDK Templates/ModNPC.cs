@@ -8,6 +8,7 @@ using PoroCYon.XnaExtensions;
 
 namespace TAPI.$safeprojectname$
 {
+    [GlobalMod]
     public class ModNPC : TAPI.ModNPC
     {
         public ModNPC(TAPI.ModBase @base, TAPI.NPC n)

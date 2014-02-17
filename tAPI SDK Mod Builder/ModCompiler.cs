@@ -27,6 +27,8 @@ namespace TAPI.SDK.ModBuilder
             List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
             #endregion
 
+            string modInfo = null;
+
             #region load all resources into the list
             foreach (string res in asm.GetManifestResourceNames())
                 using (Stream stream = asm.GetManifestResourceStream(res))
@@ -50,7 +52,31 @@ namespace TAPI.SDK.ModBuilder
                                 foundExt = true;
                     }
 
-                    files.Add(new Tuple<string, byte[]>(res.Substring(index), ms.ToArray()));
+                    // not putting ModInfo.json in it
+                    if (res.Substring(index) != "ModInfo.json")
+                        files.Add(new Tuple<string, byte[]>(res.Substring(index), ms.ToArray()));
+                    else
+                    {
+                        StreamReader r = new StreamReader(new MemoryStream(ms.ToArray()));
+                        modInfo = r.ReadToEnd();
+
+                        if (modInfo == null)
+                            modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                        else
+                            try
+                            {
+                                JsonData j = JsonMapper.ToObject(modInfo);
+
+                                if (!j.Has("displayName") || !j.Has("author"))
+                                    modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                            }
+                            catch (JsonException) // invalid JSON thrown in JsonMapper.ToObject
+                            {
+                                modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                            }
+
+                        r.Close();
+                    }
                     ms.Dispose();
                 }
             #endregion
@@ -63,19 +89,6 @@ namespace TAPI.SDK.ModBuilder
             // write version
             bb.Write(Constants.versionAssembly);
 
-            string modInfo = null;
-
-            foreach (Tuple<string, byte[]> pfile in files)
-                if (pfile.Item1.EndsWith("ModInfo.json"))
-                {
-                    StreamReader r = new StreamReader(new MemoryStream(pfile.Item2));
-                    modInfo = r.ReadToEnd();
-                    r.Close();
-                }
-
-            if (modInfo == null)
-                modInfo = "{\n\t\"name\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
-
             // write modinfo
             bb.Write(modInfo);
 
@@ -83,28 +96,28 @@ namespace TAPI.SDK.ModBuilder
             bb.Write(files.Count);
             foreach (Tuple<string, byte[]> pfile in files)
             {
-                // don't want to write modinfo here
-                if (pfile.Item1.EndsWith("ModInfo.json"))
-                    continue;
-
                 bb.Write(pfile.Item1);
                 bb.Write(pfile.Item2.Length);
             }
 
             // write file data
             foreach (Tuple<string, byte[]> pfile in files)
-                bb.Write(pfile.Item2);
+                    bb.Write(pfile.Item2);
 
             // write assembly
-            bb.Write(new BinBuffer(new BinBufferByte(File.ReadAllBytes(dllFile))));
+            bb.Write(File.ReadAllBytes(dllFile));
 
+            // reset
             bb.Pos = 0;
+
             // write it all to the .tapimod file
             File.WriteAllBytes(modFile, bb.ReadBytes(bb.GetSize()));
             #endregion
 
             #region generate false folders & files to foul the hash checker, and generate hashes
-            if (!Directory.Exists(modPath))
+            // not checked anymore in r4
+
+            /*if (!Directory.Exists(modPath))
                 Directory.CreateDirectory(modPath);
 
             // get info to write to modinfo.cs
@@ -152,7 +165,7 @@ namespace TAPI.SDK.ModBuilder
             // write .dll file, you'll never know if...
             File.Copy(dllFile, modPath + "\\" + Path.GetFileName(dllFile), true);
 
-            CommonToolUtilities.AddHashes(modName, modPath);
+            CommonToolUtilities.AddHashes(modName, modPath);*/
             #endregion
         }
     }

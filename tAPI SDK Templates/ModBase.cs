@@ -8,6 +8,7 @@ using PoroCYon.XnaExtensions;
 
 namespace TAPI.$safeprojectname$
 {
+    [GlobalMod]
     public class ModBase : TAPI.ModBase
     {
         public ModBase()
@@ -42,24 +43,6 @@ namespace TAPI.$safeprojectname$
             base.OnUnload();
 
             // TODO: add your OnUnload logic here
-        }
-
-        /// <summary>
-        /// Called when the game is updated (Main.Update is called)
-        /// </summary>
-        public override void OnGameUpdate()
-        {
-            base.OnGameUpdate();
-        }
-        /// <summary>
-        /// Called when the game is drawn (Main.Draw is called)
-        /// </summary>
-        /// <param name="sb">The SpriteBatch used to draw the game</param>
-        public override void OnGameDraw(SpriteBatch sb)
-        {
-            base.OnGameDraw(sb);
-
-            // TODO: add your OnGameDraw logic here
         }
 
         /// <summary>

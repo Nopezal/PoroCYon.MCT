@@ -35,8 +35,8 @@ namespace TAPI.SDK.ModDecompiler
             uint versionAssembly = bb.ReadUInt();
 
             // write tAPI version
-            if (!File.Exists(decompPath + "\\tAPI Version " + versionAssembly))
-                File.Create(decompPath + "\\tAPI Version " + versionAssembly);
+            if (!File.Exists(decompPath + "\\tAPI r" + versionAssembly))
+                File.Create(decompPath + "\\tAPI r" + versionAssembly);
 
             // write modinfo
             File.WriteAllText(decompPath + "\\ModInfo.json", bb.ReadString());

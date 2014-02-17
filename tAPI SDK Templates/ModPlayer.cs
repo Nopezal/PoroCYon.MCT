@@ -8,6 +8,7 @@ using PoroCYon.XnaExtensions;
 
 namespace TAPI.$safeprojectname$
 {
+    [GlobalMod]
     public class ModPlayer : TAPI.ModPlayer
     {
         public ModPlayer(TAPI.ModBase modBase)

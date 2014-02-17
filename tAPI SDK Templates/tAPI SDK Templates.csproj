@@ -59,6 +59,7 @@
     <Compile Include="ModNPC.cs" />
     <Compile Include="ModPlayer.cs" />
     <Compile Include="ModBase.cs" />
+    <Compile Include="ModPrefix.cs" />
     <Compile Include="ModProjectile.cs" />
     <Compile Include="ModTile.cs" />
     <Compile Include="ModInterface.cs" />

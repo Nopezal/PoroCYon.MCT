@@ -106,19 +106,40 @@ namespace TAPI.Packer.Extended
                         switch (jCode["codeType"].ToString().ToLower().Trim())
                         {
                             case "vb":
+                            case "vb.net":
                             case "basic":
+                            case "basic.net":
                             case "vbasic":
+                            case "vbasic.net":
                             case "visualbasic":
+                            case "visualbasic.net":
+                            case "visual basic":
+                            case "visual basic.net":
                                 cdcp = new VBCodeProvider();
                                 ext = "*.vb";
+                                Console.WriteLine("Using Visual Basic.NET (VBCodeDomProvider)...");
                                 break;
                             case "js":
+                            case "js.net":
                             case "jscript":
                             case "jscript.net":
                             case "javascript":
                             case "javascript.net":
                                 cdcp = new JScriptCodeProvider();
                                 ext = "*.js";
+                                Console.WriteLine("Using JScript.NET (JScriptCodeProvider)...");
+                                break;
+                            case "cs":
+                            case "c#":
+                            case "csharp":
+                            case "visual cs":
+                            case "visual c#":
+                            case "visual csharp":
+                                // inited as C#
+                                Console.WriteLine("Using C# (CSharpCodeProvider)...");
+                                break;
+                            default:
+                                Console.WriteLine("Language not explicitely defined, using C# (CSharpCodeProvider)...");
                                 break;
                         }
                 }
