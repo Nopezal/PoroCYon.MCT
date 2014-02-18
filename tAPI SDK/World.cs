@@ -31,6 +31,9 @@ namespace TAPI.SDK
         Pirates = 3
     }
 
+    /// <summary>
+    /// Provides easy event invocation
+    /// </summary>
     public static class World
     {
         /// <summary>
