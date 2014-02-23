@@ -14,6 +14,9 @@ using TAPI.SDK.GUI.Controls;
 
 namespace TAPI.SDK.GUI
 {
+    /// <summary>
+    /// A service to convert an XML document to a <see cref="TAPI.SDK.GUI.CustomUI"/>
+    /// </summary>
     public class XmlUIConstructor : CustomUI
     {
         XmlUIConstructor()
@@ -26,10 +29,20 @@ namespace TAPI.SDK.GUI
         static List<string> namespaces = new List<string>();
         static List<Tuple<string, object>> objects = new List<Tuple<string, object>>();
 
+        /// <summary>
+        /// Create a CustomUI from an .xml file
+        /// </summary>
+        /// <param name="file">The path to the .xml file</param>
+        /// <returns>The <see cref="TAPI.SDK.GUI.XmlUIConstructor"/> created from the .xml file</returns>
         public static XmlUIConstructor FromFile(string file)
         {
             return FromString(File.ReadAllText(file));
         }
+        /// <summary>
+        /// Creates a CustomUI from XML code
+        /// </summary>
+        /// <param name="xml">The XML code</param>
+        /// <returns>The <see cref="TAPI.SDK.GUI.XmlUIConstructor"/> created from the XML code</returns>
         public static XmlUIConstructor FromString(string xml)
         {
             XmlDocument xd = new XmlDocument();
@@ -37,6 +50,11 @@ namespace TAPI.SDK.GUI
 
             return FromDocument(xd);
         }
+        /// <summary>
+        /// Creates a CustomUI from an XmlDocument
+        /// </summary>
+        /// <param name="document">The XmlDocument</param>
+        /// <returns>The <see cref="TAPI.SDK.GUI.XmlUIConstructor"/> created from the XmlDocument</returns>
         public static XmlUIConstructor FromDocument(XmlDocument document)
         {
             if (document.FirstChild.Name.ToLower() != "sdkxmlui")

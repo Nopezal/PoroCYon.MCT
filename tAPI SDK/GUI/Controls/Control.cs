@@ -5,6 +5,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using PoroCYon.XnaExtensions.Geometry;
 using TAPI.SDK.Input;
 using TAPI.SDK.GUI.Controls.Primitives;
 
