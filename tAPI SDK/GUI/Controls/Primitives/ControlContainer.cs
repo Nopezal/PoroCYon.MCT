@@ -6,7 +6,7 @@ using Microsoft.Xna.Framework.Graphics;
 
 namespace TAPI.SDK.GUI.Controls.Primitives
 {
-    public abstract class ControlContainer : Control
+    public abstract class ControlContainer : Control, IControlParent
     {
         /// <summary>
         /// Control positions are relative to the ControlContainer position
@@ -131,6 +131,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                 Control.GlobalRemoved(control, null);
 
             control.Dispose();
+        }
+        public void RemoveControlAt(int index)
+        {
+            RemoveControl(Controls[index]);
         }
     }
 }

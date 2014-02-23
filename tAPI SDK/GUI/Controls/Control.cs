@@ -16,12 +16,13 @@ namespace TAPI.SDK.GUI.Controls
     [Flags]
     public enum Visibility : int
     {
+        None = 0,
+
         Menu = 1,
         IngameNoInv = 2,
         IngameInv = 4,
         Ingame = IngameInv | IngameNoInv,
 
-        None = 0,
         All = Menu | Ingame
     }
 
@@ -36,7 +37,7 @@ namespace TAPI.SDK.GUI.Controls
 		/// <summary>
 		/// Null is TAPI.SDK.SdkUI
 		/// </summary>
-		public WeakReference<ControlContainer> Parent; // WeakReference so we don't create a memory leak
+        public WeakReference<IControlParent> Parent; // WeakReference so we don't create a memory leak
 
         public int ID = -1;
 
@@ -71,21 +72,21 @@ namespace TAPI.SDK.GUI.Controls
         /// <summary>
         /// Null as second argument is TAPI.SDK.GUI.Interface
         /// </summary>
-        public Action<Control, ControlContainer> OnAdded;
+        public Action<Control, IControlParent> OnAdded;
         /// <summary>
         /// Null as second argument is TAPI.SDK.GUI.Interface
         /// </summary>
-        public Action<Control, ControlContainer> OnRemoved;
+        public Action<Control, IControlParent> OnRemoved;
         public static Action<Control> GlobalInit, GlobalUpdate;
         public static Action<Control, SpriteBatch> GlobalDraw;
         /// <summary>
         /// Null as second argument is TAPI.SDK.GUI.Interface
         /// </summary>
-        public static Action<Control, ControlContainer> GlobalAdded;
+        public static Action<Control, IControlParent> GlobalAdded;
         /// <summary>
         /// Null as second argument is TAPI.SDK.GUI.Interface
         /// </summary>
-        public static Action<Control, ControlContainer> GlobalRemoved;
+        public static Action<Control, IControlParent> GlobalRemoved;
 
         public virtual Vector2 Origin
         {

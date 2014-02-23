@@ -16,6 +16,15 @@ namespace TAPI.SDK.GUI
     [GlobalMod]
     public sealed class SdkUI : ModInterface
     {
+        static SdkCustomUI customUI;
+        internal static SdkCustomUI CustomUI
+        {
+            get
+            {
+                return customUI ?? (customUI = new SdkCustomUI());
+            }
+        }
+
         /// <summary>
         /// A 1-by-1 white pixel texture
         /// </summary>
@@ -26,15 +35,38 @@ namespace TAPI.SDK.GUI
         }
 
         /// <summary>
+        /// The controls in the (global) GUI.
+        /// Adding or removing a control by calling Controls.Add/Remove is not a good idea.
+        /// </summary>
+        public static List<CustomUI> CustomUIs
+        {
+            get;
+            internal set;
+        }
+        /// <summary>
         /// The controls in the GUI.
         /// Adding or removing a control by calling Controls.Add/Remove is not a good idea.
         /// </summary>
         public static List<Control> Controls
         {
-            get;
-            internal set;
+            get
+            {
+                return CustomUI.Controls;
+            }
+            internal set
+            {
+                CustomUI.Controls = value;
+            }
         }
 
+        /// <summary>
+        /// Called when a control is added from the Controls list
+        /// </summary>
+        public static Action<CustomUI> OnUIAdded;
+        /// <summary>
+        /// Called when a control is removed from the Controls list
+        /// </summary>
+        public static Action<CustomUI> OnUIRemoved;
         /// <summary>
         /// Called when a control is added from the Controls list
         /// </summary>
@@ -43,6 +75,9 @@ namespace TAPI.SDK.GUI
         /// Called when a control is removed from the Controls list
         /// </summary>
         public static Action<Control> OnControlRemoved;
+        /// <summary>
+        /// The current visibility state of the game
+        /// </summary>
         public static Visibility CurrentVisibility
         {
             get
@@ -62,37 +97,21 @@ namespace TAPI.SDK.GUI
 
         static SdkUI()
         {
-            Controls = new List<Control>();
+            CustomUIs = new List<CustomUI>();
+            CustomUIs.Add(CustomUI);
         }
 
         internal SdkUI(ModBase @base)
             : base(@base)
         {
-            Controls = new List<Control>();
+
         }
 
         internal static void Update()
         {
-            for (int i = 0; i < Controls.Count; i++)
-            {
-                if (Controls[i].Destroyed)
-                {
-                    if (OnControlRemoved != null)
-                        OnControlRemoved(Controls[i]);
-                    if (Controls[i].OnRemoved != null)
-                        Controls[i].OnRemoved(Controls[i], null);
-                    if (Control.GlobalRemoved != null)
-                        Control.GlobalRemoved(Controls[i], null);
-
-                    Controls[i].Dispose();
-
-                    Controls.RemoveAt(i--);
-                    continue;
-                }
-
-                if (Controls[i].Enabled && (Controls[i].Visibility & CurrentVisibility) == CurrentVisibility)
-                    Controls[i].Update();
-            }
+            for (int i = 0; i < CustomUIs.Count; i++)
+                if ((CustomUIs[i].Visibility & CurrentVisibility) == CurrentVisibility)
+                    CustomUIs[i].Update();
         }
 
         /// <summary>
@@ -121,28 +140,45 @@ namespace TAPI.SDK.GUI
 
         static void Draw(SpriteBatch sb, bool after)
         {
-            for (int i = 0; i < Controls.Count; i++)
-            {
-                if (Controls[i].Destroyed)
-                {
-                    if (OnControlRemoved != null)
-                        OnControlRemoved(Controls[i]);
-                    if (Controls[i].OnRemoved != null)
-                        Controls[i].OnRemoved(Controls[i], null);
-                    if (Control.GlobalRemoved != null)
-                        Control.GlobalRemoved(Controls[i], null);
-
-                    Controls[i].Dispose();
-
-                    Controls.RemoveAt(i--);
-                    continue;
-                }
-
-                if (Controls[i].IsDrawnAfter == after && Controls[i].Enabled && (Controls[i].Visibility & CurrentVisibility) == CurrentVisibility)
-                    Controls[i].Draw(sb);
-            }
+            for (int i = 0; i < CustomUIs.Count; i++)
+                if ((CustomUIs[i].Visibility & CurrentVisibility) == CurrentVisibility && CustomUIs[i].IsDrawnAfter == after)
+                    CustomUIs[i].Update();
         }
 
+        /// <summary>
+        /// Adds a control to the GUI
+        /// </summary>
+        /// <param name="ui">The control to add</param>
+        public static void AddUI(CustomUI ui)
+        {
+            CustomUIs.Add(ui);
+
+            ui.Init();
+
+            if (OnUIAdded != null)
+                OnUIAdded(ui);
+        }
+        /// <summary>
+        /// Removes a control from the GUI
+        /// </summary>
+        /// <param name="ui">The CustomUI to remove</param>
+        public static void RemoveUI(CustomUI ui)
+        {
+            CustomUIs.Remove(ui);
+
+            if (OnUIRemoved != null)
+                OnUIRemoved(ui);
+
+            ui.Dispose();
+        }
+        /// <summary>
+        /// Removes a CustomUI from the GUI
+        /// </summary>
+        /// <param name="index">The index of the CustomUI to remove</param>
+        public static void RemoveUIAt(int index)
+        {
+            RemoveUI(CustomUIs[index]);
+        }
 
         /// <summary>
         /// Adds a control to the GUI
@@ -150,9 +186,9 @@ namespace TAPI.SDK.GUI
         /// <param name="control">The control to add</param>
         public static void AddControl(Control control)
         {
-            control.ID = Controls.Count;
+            control.ID = CustomUI.Controls.Count;
 
-            Controls.Add(control);
+            CustomUI.Controls.Add(control);
 
             control.Init();
 
@@ -169,7 +205,7 @@ namespace TAPI.SDK.GUI
         /// <param name="control">The control to remove</param>
         public static void RemoveControl(Control control)
         {
-            Controls.Remove(control);
+            CustomUI.Controls.Remove(control);
 
             if (OnControlRemoved != null)
                 OnControlRemoved(control);
@@ -186,7 +222,7 @@ namespace TAPI.SDK.GUI
         /// <param name="index">The index of the control to remove</param>
         public static void RemoveControlAt(int index)
         {
-            RemoveControl(Controls[index]);
+            RemoveControl(CustomUI.Controls[index]);
         }
     }
 }

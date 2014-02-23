@@ -46,6 +46,7 @@
     <Reference Include="extensibility, Version=7.0.3300.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a">
       <EmbedInteropTypes>True</EmbedInteropTypes>
     </Reference>
+    <Reference Include="Microsoft.CSharp" />
     <Reference Include="Microsoft.Xna.Framework, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
@@ -87,6 +88,8 @@
     <Compile Include="GUI\Controls\ItemContainer.cs" />
     <Compile Include="GUI\Controls\KeyBox.cs" />
     <Compile Include="GUI\Controls\Interop\ControlWrapper.cs" />
+    <Compile Include="GUI\Controls\CustomUI.cs" />
+    <Compile Include="GUI\IControlParent.cs" />
     <Compile Include="GUI\MessageBox.cs" />
     <Compile Include="GUI\Controls\Primitives\Button.cs" />
     <Compile Include="GUI\Controls\Control.cs" />
@@ -107,7 +110,9 @@
     <Compile Include="GUI\Controls\TextBox.cs" />
     <Compile Include="GUI\Controls\TextButton.cs" />
     <Compile Include="GUI\Controls\Window.cs" />
+    <Compile Include="GUI\SdkCustomUI.cs" />
     <Compile Include="GUI\SdkUI.cs" />
+    <Compile Include="GUI\XmlUIConstructor.cs" />
     <Compile Include="Input\GInput.cs" />
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
@@ -137,7 +142,9 @@
   <ItemGroup>
     <None Include="GUI\Controls\UIClassDiagram.cd" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <EmbeddedResource Include="GUI\TemplateXmlUI.xml" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" (

@@ -32,10 +32,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             {
                 Hovered = value ? ID : -1;
 
-                for (int i = 0; i < SdkUI.Controls.Count; i++)
-                    if (SdkUI.Controls[i] is Focusable)
+                for (int i = 0; i < Parent.Target.Controls.Count; i++)
+                    if (Parent.Target.Controls[i] is Focusable)
                     {
-                        Focusable f = (Focusable)SdkUI.Controls[i];
+                        Focusable f = (Focusable)Parent.Target.Controls[i];
 
                         if (f.ID == Hovered)
                             f.BeginHover();
@@ -56,10 +56,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
                 Main.PlaySound("vanilla:menuTick");
 
-                for (int i = 0; i < SdkUI.Controls.Count; i++)
-                    if (SdkUI.Controls[i] is Focusable)
+                for (int i = 0; i < Parent.Target.Controls.Count; i++)
+                    if (Parent.Target.Controls[i] is Focusable)
                     {
-                        Focusable f = (Focusable)SdkUI.Controls[i];
+                        Focusable f = (Focusable)Parent.Target.Controls[i];
 
                         if (f.ID == Focused)
                             f.FocusGot();

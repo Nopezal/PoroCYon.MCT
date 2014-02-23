@@ -14,7 +14,13 @@ namespace TAPI.SDK.GUI
     /// </summary>
     public enum MessageBoxButton
     {
+        /// <summary>
+        /// 'OK' button
+        /// </summary>
         OK,
+        /// <summary>
+        /// 'Yes' and 'No' buttons
+        /// </summary>
         YesNo
     }
 
@@ -26,7 +32,7 @@ namespace TAPI.SDK.GUI
         Action<MessageBox, bool?> Result = (mb, res) => { };
 
         /// <summary>
-        /// <param name="copyable">Wether the text of the message box can be copied to the clipboard or not</param>
+        /// Wether the text of the message box can be copied to the clipboard or not
         /// </summary>
         public bool TextIsCopyable = false;
 
