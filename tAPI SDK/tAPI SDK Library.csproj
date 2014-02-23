@@ -110,7 +110,7 @@
     <Compile Include="GUI\Controls\TextBox.cs" />
     <Compile Include="GUI\Controls\TextButton.cs" />
     <Compile Include="GUI\Controls\Window.cs" />
-    <Compile Include="GUI\SdkCustomUI.cs" />
+    <Compile Include="Internal\SdkCustomUI.cs" />
     <Compile Include="GUI\SdkUI.cs" />
     <Compile Include="GUI\XmlUIConstructor.cs" />
     <Compile Include="Input\GInput.cs" />

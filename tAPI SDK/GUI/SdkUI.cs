@@ -7,6 +7,7 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using TAPI.SDK.GUI.Controls;
 using TAPI.SDK.Input;
+using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.GUI
 {
