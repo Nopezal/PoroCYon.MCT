@@ -88,7 +88,7 @@
     <Compile Include="GUI\Controls\ItemContainer.cs" />
     <Compile Include="GUI\Controls\KeyBox.cs" />
     <Compile Include="GUI\Controls\Interop\ControlWrapper.cs" />
-    <Compile Include="GUI\Controls\CustomUI.cs" />
+    <Compile Include="GUI\CustomUI.cs" />
     <Compile Include="GUI\IControlParent.cs" />
     <Compile Include="GUI\MessageBox.cs" />
     <Compile Include="GUI\Controls\Primitives\Button.cs" />

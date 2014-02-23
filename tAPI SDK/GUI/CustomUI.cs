@@ -12,7 +12,7 @@ namespace TAPI.SDK.GUI
     /// <summary>
     /// The base class for all custom UIs
     /// </summary>
-    public abstract class CustomUI : IControlParent, IDisposable, ICloneable<CustomUI>
+    public abstract class CustomUI : ModableObject, IControlParent, IDisposable, ICloneable<CustomUI>
     {
         /// <summary>
         /// The controls in the GUI.
