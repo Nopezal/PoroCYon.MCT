@@ -64,14 +64,14 @@ namespace TAPI.SDK.GUI
         /// </summary>
         ~CustomUI()
         {
-            Disposing(false);
+            Dispose(false);
         }
         /// <summary>
         /// Disposes the CustomUI instance
         /// </summary>
         public void Dispose()
         {
-            Disposing(true);
+            Dispose(true);
             GC.SuppressFinalize(this);
         }
 
@@ -138,7 +138,7 @@ namespace TAPI.SDK.GUI
         /// When the control is disposing
         /// </summary>
         /// <param name="forced">Wether the control is disposing by IDisposable.Dispose or the constructor</param>
-        protected virtual void Disposing(bool forced)
+        protected virtual void Dispose(bool forced)
         {
             foreach (Control c in Controls)
                 c.Dispose();

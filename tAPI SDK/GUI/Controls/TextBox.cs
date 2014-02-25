@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Windows.Forms;
 using System.Windows.Input;
@@ -35,6 +36,8 @@ namespace TAPI.SDK.GUI.Controls
         ThreeSpaces = 3,
         FourSpaces = 4
     }
+
+    [ComVisible(false)]
     public class TextBox : ListeningControl<char>, ITextControl, ICaretControl
     {
         public EnterMode EnterMode = EnterMode.StopWhenEnter;

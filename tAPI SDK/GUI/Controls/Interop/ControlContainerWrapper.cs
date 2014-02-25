@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
@@ -12,6 +13,7 @@ namespace TAPI.SDK.GUI.Controls.Interop
 	/// A ContorlContainer as a MenuPage
 	/// This class cannot be inherited
 	/// </summary>
+    [ComVisible(false)]
 	public sealed class ControlContainerWrapper : MenuPage, IDisposable, ICloneable<ControlContainerWrapper>
 	{
 		bool inited = false;

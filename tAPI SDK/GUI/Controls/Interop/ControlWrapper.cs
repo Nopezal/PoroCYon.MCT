@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.InteropServices;
 using PoroCYon.XnaExtensions;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -11,6 +12,7 @@ namespace TAPI.SDK.GUI.Controls.Interop
 	/// A Control as a MenuButton
     /// This class cannot be inherited
     /// </summary>
+    [ComVisible(false)]
 	public sealed class ControlWrapper : MenuButton, IDisposable, ICloneable<ControlWrapper>
     {
         bool inited = false;

@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
@@ -14,7 +15,7 @@ namespace TAPI.SDK.GUI
 	/// <summary>
 	/// This class cannot be inherited.
     /// </summary>
-    [GlobalMod]
+    [GlobalMod, ComVisible(false)]
     public sealed class SdkUI : ModInterface
     {
         static SdkCustomUI customUI;

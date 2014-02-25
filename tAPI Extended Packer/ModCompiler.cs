@@ -18,6 +18,7 @@ namespace TAPI.Packer.Extended
     using CompilerParameters = System.CodeDom.Compiler.CompilerParameters;
 
     // easier to use than a return value
+    [Serializable]
     public class CompilerException : Exception
     {
         const string DEFAULT_MESSAGE = "Failed to compile a mod";
