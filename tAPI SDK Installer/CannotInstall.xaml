@@ -3,11 +3,11 @@
     <Grid>
         <TextBlock TextWrapping="Wrap" Text="You cannot install the tAPI SDK on your PC." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="36" Foreground="Red">
             <TextBlock.Effect>
-                <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="12" Color="Red"/>
+                <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="12" Color="Red" />
             </TextBlock.Effect>
         </TextBlock>
-        <TextBlock Margin="10,92,10,0" TextWrapping="Wrap" Text="You need to have Steam, Terraria and Microsoft Visual Studio 2010 or higher installed in order to install the tAPI SDK." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="22"/>
-        <TextBlock HorizontalAlignment="Left" Margin="10,203,0,0" TextWrapping="Wrap" Text="Press 'X' to exit." VerticalAlignment="Top" FontSize="16" FontFamily="Xolonium"/>
+        <TextBlock Margin="10,92,10,0" TextWrapping="Wrap" Text="You need to have Steam, Terraria and tAPI installed in order to install the tAPI SDK." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="22" />
+        <TextBlock HorizontalAlignment="Left" Margin="10,203,0,0" TextWrapping="Wrap" Text="Press 'X' to exit." VerticalAlignment="Top" FontSize="16" FontFamily="Xolonium" />
 
     </Grid>
 </UserControl>

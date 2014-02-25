@@ -1,0 +1,6 @@
+﻿<UserControl x:Class="TAPI.SDK.Installer.ToInstall" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+             mc:Ignorable="d" d:DesignHeight="255" d:DesignWidth="505">
+    <Grid>
+        <CheckBox Name="PDBs" Content="Install .pdb files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" FontFamily="Xolonium" FontSize="18" />
+    </Grid>
+</UserControl>

@@ -68,6 +68,9 @@
     <Compile Include="License.xaml.cs">
       <DependentUpon>License.xaml</DependentUpon>
     </Compile>
+    <Compile Include="ToInstall.xaml.cs">
+      <DependentUpon>ToInstall.xaml</DependentUpon>
+    </Compile>
     <Compile Include="VsVersions.xaml.cs">
       <DependentUpon>VsVersions.xaml</DependentUpon>
     </Compile>
@@ -105,6 +108,10 @@
       <DependentUpon>MainWindow.xaml</DependentUpon>
       <SubType>Code</SubType>
     </Compile>
+    <Page Include="ToInstall.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
     <Page Include="VsVersions.xaml">
       <SubType>Designer</SubType>
       <Generator>MSBuild:Compile</Generator>

@@ -40,24 +40,24 @@ namespace TAPI.SDK.Installer
                 ApplyProgressPercent.Text = ApplyProgress.Value + "%";
             };
 
-            new Thread(() => // aquire
+            Thread aquire = new Thread(() =>
             {
                 Action<int, string> UpdateProgress = (procent, text) =>
                 {
                     Dispatcher.Invoke(((Action)delegate
                     {
-						if (procent >= 0 && procent <= 100)
-							AquireProgress.Value = procent;
-						if (!String.IsNullOrEmpty(text))
-							AquireProgressText.Text = "Aquiring: " + text;
+                        if (procent >= 0 && procent <= 100)
+                            AquireProgress.Value = procent;
+                        if (!String.IsNullOrEmpty(text))
+                            AquireProgressText.Text = "Aquiring: " + text;
                     }), DispatcherPriority.Render);
                 };
 
-				WebClient client = new WebClient();
+                WebClient client = new WebClient();
 
-				const string baseUri = "https://dl.dropboxusercontent.com/u/151130168/tAPI%20SDK/";
+                const string baseUri = "https://dl.dropboxusercontent.com/u/151130168/tAPI%20SDK/";
 
-				List<string> ToDownload = new List<string>()
+                List<string> ToDownload = new List<string>()
                 {
 					"PoroCYon.XnaExtensions.dll", "PoroCYon.XnaExtensions.xml",
 					
@@ -68,32 +68,35 @@ namespace TAPI.SDK.Installer
 					"tAPI SDK Mod Builder.exe",
 					"tAPI SDK Mod Decompiler.exe",
                 };
-				if (License.InstallPdb)
-				{
-					ToDownload.Add("PoroCYon.XnaExtensions.pdb");
+                if (ToInstall.InstallPdb)
+                {
+                    ToDownload.Add("PoroCYon.XnaExtensions.pdb");
 
-					ToDownload.Add("TAPI.SDK.pdb");
+                    ToDownload.Add("TAPI.SDK.pdb");
 
-					ToDownload.Add("tAPI Extended Packer.pdb");
-					ToDownload.Add("tAPI SDK Debugger.pdb");
-					ToDownload.Add("tAPI SDK Mod Builder.pdb");
-					ToDownload.Add("tAPI SDK Mod Decompiler.pdb");
-				}
+                    ToDownload.Add("tAPI Extended Packer.pdb");
+                    ToDownload.Add("tAPI SDK Debugger.pdb");
+                    ToDownload.Add("tAPI SDK Mod Builder.pdb");
+                    ToDownload.Add("tAPI SDK Mod Decompiler.pdb");
+                }
 
-				total = ToDownload.Count;
+                total = ToDownload.Count;
 
-				for (int i = 0; i < ToDownload.Count; i++)
-				{
-					UpdateProgress(-1, Path.GetFileName(ToDownload[i]));
-					downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
-					UpdateProgress(100 / ((total + 1) / (i + 1)), null);
-				}
+                for (int i = 0; i < ToDownload.Count; i++)
+                {
+                    UpdateProgress(-1, Path.GetFileName(ToDownload[i]));
+                    downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
+                    UpdateProgress(100 / ((total + 1) / (i + 1)), null);
+                }
 
-				client.Dispose();
+                client.Dispose();
 
-				finishedDownloading = true;
-            }).Start();
-            new Thread(() => // apply
+                finishedDownloading = true;
+            });
+            aquire.SetApartmentState(ApartmentState.STA);
+            aquire.Start();
+
+            Thread apply = new Thread(() =>
             {
                 Action<int, string> UpdateProgress = (procent, text) =>
                 {
@@ -127,7 +130,9 @@ namespace TAPI.SDK.Installer
 					MainWindow.currentPage++;
 					MainWindow.instance.UpdateGrid();
 				}), DispatcherPriority.Render);
-            }).Start();
+            });
+            apply.SetApartmentState(ApartmentState.STA);
+            apply.Start();
         }
     }
 }

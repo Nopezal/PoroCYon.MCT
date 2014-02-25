@@ -21,11 +21,12 @@ namespace TAPI.SDK.Installer
 
         Welcome = 1,
         License = 2,
-        VsVersion = 3,
-        Install = 4,
-        Finished = 5,
+        ToInstall = 3,
+        VsVersion = 4,
+        Install = 5,
+        Finished = 6,
 
-        Count = 6
+        Count = 7
     }
 
     public partial class MainWindow : Window
@@ -207,6 +208,9 @@ namespace TAPI.SDK.Installer
                     Next.Visibility = NextBorder.Visibility = Visibility.Collapsed;
                     Contents.Children.Add(new License());
                     break;
+                case Page.ToInstall:
+                    Contents.Children.Add(new ToInstall());
+                    break;
                 case Page.VsVersion:
                     Contents.Children.Add(new VsVersions());
                     break;
@@ -230,13 +234,14 @@ namespace TAPI.SDK.Installer
 			if (!NetworkInterface.GetIsNetworkAvailable())
 				return false;
 
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam");
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
             if (regKey == null)
                 return false;
 
-            string steamDir = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam").GetValue("SourceModInstallPath").ToString();
+            string steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
             steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
-            if (!Directory.Exists(steamDir))
+
+            if (!Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
                 return false;
 
             #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
@@ -279,7 +284,7 @@ namespace TAPI.SDK.Installer
                         VsVersions.canInstallVS |= (VSVersion)i;
             }
 
-            return VsVersions.canInstallVS != 0;
+            return true;
         }
 
         protected override void OnClosing(CancelEventArgs e)

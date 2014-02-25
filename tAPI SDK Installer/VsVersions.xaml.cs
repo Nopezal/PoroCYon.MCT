@@ -4,6 +4,9 @@ using System.Windows.Controls;
 
 namespace TAPI.SDK.Installer
 {
+    /// <summary>
+    /// Enumeration is marked as Flags
+    /// </summary>
     [Flags]
     public enum VSVersion : uint
     {
@@ -55,15 +58,15 @@ namespace TAPI.SDK.Installer
             switch (version)
             {
                 case VSVersion.VCSExpress:
-                    return Cs10E;
+                    return VCs10;
                 case VSVersion.VisualStudio10:
                     return Vs10;
                 case VSVersion.WDExpress11:
-                    return Wd11E;
+                    return WdE11;
                 case VSVersion.VisualStudio11:
                     return Vs11;
                 case VSVersion.WDExpress12:
-                    return Wd12E;
+                    return WdE12;
                 case VSVersion.VisualStudio12:
                     return Vs12;
             }

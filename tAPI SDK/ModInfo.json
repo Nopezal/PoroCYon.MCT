@@ -3,10 +3,10 @@
 	"author": "PoroCYon",
 	"version": "1.0.0.0",
 	"info": "The tAPI SDK",
+    
+	"internalName": "TAPI.SDK",
 
 	"code": {
-		"internalName": "TAPI.SDK",
-
 		"modBaseName": "TAPI.SDK.Internal.SdkClasses.Mod"
 	}
 }

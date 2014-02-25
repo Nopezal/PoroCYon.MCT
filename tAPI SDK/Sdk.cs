@@ -82,21 +82,21 @@ namespace TAPI.SDK
             modBase.modProjectiles.Add(new MProj(modBase, null));
             modBase.modInterfaces.Add(new SdkUI(modBase));
 
-            foreach (ModBase m in Mods.modBases)
+            Defs.FillCallPriorities(modBase.GetType());
+
+            foreach (ModWorld m in modBase.modWorlds)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModWorld m in Mods.globalModWorlds)
+            foreach (ModPlayer m in modBase.modPlayers)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModPlayer m in Mods.globalModPlayers)
+            foreach (ModItem m in modBase.modItems)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModItem m in Mods.globalModItems)
+            foreach (ModNPC m in modBase.modNPCs)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModNPC m in Mods.globalModNPCs)
+            foreach (ModProjectile m in modBase.modProjectiles)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModProjectile m in Mods.globalModProjectiles)
+            foreach (ModInterface m in modBase.modInterfaces)
                 Defs.FillCallPriorities(m.GetType());
-            foreach (ModInterface m in Mods.globalModInterfaces)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModPrefix m in Mods.globalModPrefixes)
+            foreach (ModPrefix m in modBase.modPrefixes)
                 Defs.FillCallPriorities(m.GetType());
             #endregion
 
@@ -105,7 +105,7 @@ namespace TAPI.SDK
             Inited = true;
         }
 
-        static string ReadResource(string resourceName)
+        internal static string ReadResource(string resourceName)
         {
             using (MemoryStream ms = new MemoryStream())
             {

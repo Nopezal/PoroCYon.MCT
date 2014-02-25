@@ -9,8 +9,6 @@
 
         <RadioButton Name="Agree" Content="I agree" HorizontalAlignment="Left" Margin="10,0,0,31" VerticalAlignment="Bottom" BorderBrush="{x:Null}" Background="{x:Null}" GroupName="License" FontFamily="Xolonium" />
         <RadioButton Name="Disagree" Content="I disagree" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" GroupName="License" IsChecked="True" BorderBrush="{x:Null}" Background="{x:Null}" FontFamily="Xolonium" />
-        
-        <CheckBox Name="PDBs" Content="Install .pdb files" HorizontalAlignment="Right" Margin="0,0,10,10" VerticalAlignment="Bottom" IsChecked="True" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="Black" FontFamily="Xolonium"/>
 
     </Grid>
 </UserControl>
