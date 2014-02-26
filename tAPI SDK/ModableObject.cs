@@ -137,5 +137,14 @@ namespace TAPI.SDK
             if (GlobalHookRemoved != null)
                 GlobalHookRemoved(this, key);
         }
+
+        internal static void Reset()
+        {
+            GlobalFieldAdded = null;
+            GlobalFieldRemoved = null;
+            GlobalHookAdded = null;
+            GlobalHookRemoved = null;
+            GlobalInvoke = null;
+        }
     }
 }

@@ -52,6 +52,17 @@ namespace TAPI.SDK.GUI
         public bool IsDrawnAfter = false;
 
         /// <summary>
+        /// Gets wether the interface is visible or not
+        /// </summary>
+        public virtual bool IsVisible
+        {
+            get
+            {
+                return (Visibility & SdkUI.CurrentVisibility) != 0;
+            }
+        }
+
+        /// <summary>
         /// Creates a new instance of the CustomUI class
         /// </summary>
         public CustomUI()

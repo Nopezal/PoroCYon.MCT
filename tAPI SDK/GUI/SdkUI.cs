@@ -7,6 +7,8 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using TAPI.SDK.GUI.Controls;
+using TAPI.SDK.GUI.Controls.Interop;
+using TAPI.SDK.GUI.Controls.Primitives;
 using TAPI.SDK.Input;
 using TAPI.SDK.Internal;
 
@@ -225,6 +227,64 @@ namespace TAPI.SDK.GUI
         public static void RemoveControlAt(int index)
         {
             RemoveControl(CustomUI.Controls[index]);
+        }
+
+        internal static void Reset()
+        {
+            Controls.Clear();
+            CustomUIs.Clear();
+
+            WhitePixel.Dispose();
+
+            OnControlAdded = null;
+            OnControlRemoved = null;
+            OnUIAdded = null;
+            OnUIRemoved = null;
+
+            GUI.CustomUI.GlobalControlAdded = null;
+            GUI.CustomUI.GlobalControlRemoved = null;
+
+            // ---
+
+            Control.GlobalAdded = null;
+            Control.GlobalDraw = null;
+            Control.GlobalInit = null;
+            Control.GlobalRemoved = null;
+            Control.GlobalUpdate = null;
+
+            // ---
+
+            ControlWrapper.GlobalDraw = null;
+            ControlWrapper.GlobalUpdate = null;
+
+            // ---
+
+            Button.GlobalClick = null;
+
+            Checkable.GlobalChecked = null;
+            Checkable.GlobalUnchecked = null;
+
+            ControlContainer.GlobalAddControl = null;
+            ControlContainer.GlobalRemoveControl = null;
+
+            Focusable.GlobalGotFocus = null;
+            Focusable.GlobalLostFocus = null;
+            Focusable.GlobalBeginHover = null;
+            Focusable.GlobalEndHover = null;
+
+            ListeningControl.GlobalInputGot = null;
+
+            // ---
+
+            ItemContainer.GlobalItemChanged = null;
+            ItemContainer.GlobalTrySetItem = null;
+
+            Slider.GlobalValueChanged = null;
+
+            Window.GlobalClosed = null;
+            Window.GlobalDragging = null;
+            Window.GlobalDraggingStarted = null;
+            Window.GlobalDraggingStopped = null;
         }
     }
 }

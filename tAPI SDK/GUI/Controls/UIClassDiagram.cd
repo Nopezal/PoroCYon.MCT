@@ -3,7 +3,7 @@
   <Class Name="TAPI.SDK.GUI.Controls.Control" Collapsed="true">
     <Position X="6" Y="3" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEQBIAEAACAEgoQgAAtAQAAAMoBAAAQAAQAGIDlCAJE=</HashCode>
+      <HashCode>AEQBIAEAACAEkoQgAAtAQAAAMoBAAAQAAQAGIDlCAJE=</HashCode>
       <FileName>GUI\Controls\Control.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -117,13 +117,6 @@
     </TypeIdentifier>
     <Lollipop Position="0.2" />
   </Class>
-  <Class Name="TAPI.SDK.GUI.Controls.Primitives.ListeningControl&lt;T&gt;" Collapsed="true">
-    <Position X="9" Y="5.75" Width="1.75" />
-    <TypeIdentifier>
-      <HashCode>AAAgAAAAAQAAAAAAAAAEAAAAAAAAAIAAAACAAEAAAgA=</HashCode>
-      <FileName>GUI\Controls\Primitives\ListeningControl.cs</FileName>
-    </TypeIdentifier>
-  </Class>
   <Class Name="System.Object" Collapsed="true">
     <Position X="6" Y="0.5" Width="1.5" />
     <TypeIdentifier />
@@ -135,7 +128,7 @@
   <Class Name="TAPI.SDK.GUI.SdkUI" Collapsed="true">
     <Position X="17.5" Y="3.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AAQACAAaIAAACgQAgAAACgAAIAAAIAAAAAEgAAAAAAQ=</HashCode>
+      <HashCode>AAQACAAaIAAADgQAgAAACgAAIAAAIAAAAAEgAAAAAAQ=</HashCode>
       <FileName>GUI\SdkUI.cs</FileName>
     </TypeIdentifier>
   </Class>
@@ -246,14 +239,14 @@
   <Class Name="TAPI.SDK.ModableObject" Collapsed="true">
     <Position X="6" Y="1.5" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>gAgAAIAECgAKAAAgAIhAAAABAECAAAAAQAAAAAAAgAA=</HashCode>
+      <HashCode>gAgAAIAECgAKBAAgAIhAAAABAECAAAAAQAAAAAAAgAA=</HashCode>
       <FileName>ModableObject.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Class Name="TAPI.SDK.GUI.CustomUI" Collapsed="true">
     <Position X="19.25" Y="2.25" Width="1.5" />
     <TypeIdentifier>
-      <HashCode>AEQAIAAAICAACgAAAAAACAAAIgAAABIAAAAiAAAAABQ=</HashCode>
+      <HashCode>AEQAIAAAICAAGgAAAAAACAAAIgAAABIAAAAiAAAAABQ=</HashCode>
       <FileName>GUI\CustomUI.cs</FileName>
     </TypeIdentifier>
     <Lollipop Position="0.2" />
@@ -270,6 +263,20 @@
     <TypeIdentifier>
       <HashCode>AQEBAAgAAACAAAEAkAQABQIEAQAAAgAEAAAAAAAAAAE=</HashCode>
       <FileName>GUI\XmlUIConstructor.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Primitives.ListeningControl" Collapsed="true">
+    <Position X="9" Y="4.5" Width="1.5" />
+    <TypeIdentifier>
+      <HashCode>AAAgAAAAAQAAAAAAAAAEAAAAAAAAAIAAAACAAEAAAgA=</HashCode>
+      <FileName>GUI\Controls\Primitives\ListeningControl.cs</FileName>
+    </TypeIdentifier>
+  </Class>
+  <Class Name="TAPI.SDK.GUI.Controls.Primitives.ListeningControl&lt;T&gt;" Collapsed="true">
+    <Position X="9" Y="5.75" Width="1.75" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAAAQAAAAAAAAAEAAAAAAAAAAAAAAAAAAAAAAA=</HashCode>
+      <FileName>GUI\Controls\Primitives\ListeningControl.cs</FileName>
     </TypeIdentifier>
   </Class>
   <Interface Name="TAPI.SDK.GUI.Controls.Primitives.ITextControl" Collapsed="true">
@@ -337,7 +344,7 @@
     </TypeIdentifier>
   </Enum>
   <Enum Name="TAPI.SDK.GUI.MessageBoxButton" Collapsed="true">
-    <Position X="3.5" Y="0.5" Width="1.5" />
+    <Position X="3.25" Y="0.5" Width="1.75" />
     <TypeIdentifier>
       <HashCode>AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAACAABAAAAAAA=</HashCode>
       <FileName>GUI\MessageBox.cs</FileName>

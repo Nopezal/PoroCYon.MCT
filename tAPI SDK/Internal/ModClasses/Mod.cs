@@ -16,17 +16,6 @@ namespace TAPI.SDK.Internal.ModClasses
     {
         internal static Mod instance;
 
-        internal static bool Inited
-        {
-            get;
-            private set;
-        }
-        public static bool IsAsMod
-        {
-            get;
-            private set;
-        }
-
         public Mod()
             : base()
         {
@@ -35,27 +24,17 @@ namespace TAPI.SDK.Internal.ModClasses
 
         public override void OnLoad()
         {
-            IsAsMod = true;
+            (SdkUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { Color.White });
 
-            Init();
+            instance = this;
 
             base.OnLoad();
         }
         public override void OnUnload()
         {
-            Sdk.Inited = Inited = false;
+            Sdk.Uninit();
 
             base.OnUnload();
-        }
-
-        static void Init()
-        {
-            if (Inited)
-                return;
-
-            (SdkUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { Color.White });
-
-            Inited = true;
         }
 
 		//[CallPriority(Single.PositiveInfinity)]

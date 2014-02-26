@@ -62,16 +62,20 @@ namespace TAPI.SDK
 
             const string
                 MODFILE = "TAPI.SDK.tapimod",
-                MODNAME = "TAPI.SDK",
-                DISPLAYNAME = "tAPI SDK";
+                INTERNALNAME = "TAPI.SDK",
+#pragma warning disable 219
+                DISPLAYNAME = "tAPI SDK"; // pro forma
+#pragma warning restore 219
 
             ModBase modBase = new Mod();
 
             modBase.fileName = MODFILE;
-            modBase.modName = MODNAME;
+            modBase.modName = INTERNALNAME;
             modBase.modInfo = new ModInfo(modInfo);
+            modBase.modIndex = 0;
+            Mods.modBases.Insert(0, modBase);
 
-            Mods.loadOrder.Add(MODNAME);
+            Mods.loadOrder.Add(INTERNALNAME);
             Mods.modBases.Add(modBase);
 
             #region instantiate mod[...]
@@ -81,28 +85,26 @@ namespace TAPI.SDK
             modBase.modNPCs.Add(new MNPC(modBase, null));
             modBase.modProjectiles.Add(new MProj(modBase, null));
             modBase.modInterfaces.Add(new SdkUI(modBase));
-
-            Defs.FillCallPriorities(modBase.GetType());
-
-            foreach (ModWorld m in modBase.modWorlds)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModPlayer m in modBase.modPlayers)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModItem m in modBase.modItems)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModNPC m in modBase.modNPCs)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModProjectile m in modBase.modProjectiles)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModInterface m in modBase.modInterfaces)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (ModPrefix m in modBase.modPrefixes)
-                Defs.FillCallPriorities(m.GetType());
             #endregion
 
+            ModsLoadContent.Load(Assembly.GetExecutingAssembly(), modBase);
             modBase.OnLoad();
 
+            modBase.modPrefixes[0].Init(null);
+
             Inited = true;
+
+            SdkUI.Reset();
+
+            SyncedRandom.Reset();
+
+            ModableObject.Reset();
+        }
+        internal static void Uninit()
+        {
+            Mod.instance = null;
+
+            Inited = false;
         }
 
         internal static string ReadResource(string resourceName)

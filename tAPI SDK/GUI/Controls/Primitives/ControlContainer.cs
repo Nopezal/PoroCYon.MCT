@@ -24,7 +24,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
         }
 
         public Action<ControlContainer, Control> OnAddControl, OnRemoveControl;
-        public Action<ControlContainer, Control> GlobalAddControl, GlobalRemoveControl;
+        public static Action<ControlContainer, Control> GlobalAddControl, GlobalRemoveControl;
 
         public override void Init()
         {

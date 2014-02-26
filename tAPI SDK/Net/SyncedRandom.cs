@@ -9,7 +9,7 @@ namespace TAPI.SDK.Net
     /// A synced Pseudo-Random Number Generator.
     /// Values are global.
     /// </summary>
-    public sealed class SyncedRandom : Random
+    public sealed class SyncedRandom : Random, IDisposable
     {
         internal static WrapperDictionary<string, Random> rands = new WrapperDictionary<string, Random>();
         internal static WrapperDictionary<string, int> refs = new WrapperDictionary<string, int>();
@@ -55,6 +55,19 @@ namespace TAPI.SDK.Net
         /// decreases the group reference counter, and checks wether the group's random instance can be removed or not.
         /// </summary>
         ~SyncedRandom()
+        {
+            DecreaseRef();
+        }
+        /// <summary>
+        /// Disposes the SyncedRandom instance by sending a NetMessage that decreases the group reference counter on the server/other clients,
+        /// decreases the group reference counter, and checks wether the group's random instance can be removed or not.
+        /// </summary>
+        public void Dispose()
+        {
+            DecreaseRef();
+        }
+
+        void DecreaseRef()
         {
             if (Main.netMode != 0)
                 NetHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_DTOR, GroupName);
@@ -147,6 +160,12 @@ namespace TAPI.SDK.Net
                 return;
 
             NetHelper.SendModData("TAPI.SDK", InternalNetMessages.SyncRandom_Sync, GroupName, rands[GroupName], refs[GroupName]);
+        }
+
+        internal static void Reset()
+        {
+            SyncedRandom.rands.Clear();
+            SyncedRandom.refs.Clear();
         }
     }
 }

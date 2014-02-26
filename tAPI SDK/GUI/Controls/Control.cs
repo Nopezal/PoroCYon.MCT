@@ -113,6 +113,16 @@ namespace TAPI.SDK.GUI.Controls
 				return Hitbox.Position();
 			}
 		}
+        /// <summary>
+        /// Gets wether the control is visible or not
+        /// </summary>
+        public virtual bool IsVisible
+        {
+            get
+            {
+                return (Visibility & SdkUI.CurrentVisibility) != 0;
+            }
+        }
 
         public virtual void Init()
         {
