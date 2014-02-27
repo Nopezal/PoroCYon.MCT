@@ -48,7 +48,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
     }
     public abstract class ListeningControl<T> : ListeningControl
     {
-        public Action<ListeningControl<T>, T> OnInputGot;
+        public new Action<ListeningControl<T>, T> OnInputGot;
         //public static Action<ListeningControl<T>, T> GlobalInputGot;
 
         protected override void GotInput(object got)

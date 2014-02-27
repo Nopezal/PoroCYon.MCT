@@ -10,7 +10,7 @@ namespace TAPI.SDK.Content
     /// <summary>
     /// Common parameter values for ObjectLoader methods
     /// </summary>
-    public struct LoadParameters
+    public class LoadParameters
     {
         /// <summary>
         /// The <see cref="TAPI.ModBase"/> of the parameters
@@ -33,7 +33,7 @@ namespace TAPI.SDK.Content
         public string SubClassTypeName;
 
         /// <summary>
-        /// Creates a new instance of the LoadParameters structure
+        /// Creates a new instance of the LoadParameters class
         /// </summary>
         /// <param name="name">Sets the Name field</param>
         /// <param name="base">Sets the ModBase field</param>
@@ -51,7 +51,7 @@ namespace TAPI.SDK.Content
     /// <summary>
     /// Parameter values for armor items
     /// </summary>
-    public struct ArmorParameters
+    public class ArmorParameters
     {
         /// <summary>
         /// The texture of the helmet. null for no helmet.
@@ -71,7 +71,7 @@ namespace TAPI.SDK.Content
         public Texture2D LegsTexture;
 
         /// <summary>
-        /// Creates a new instance of the ArmorParameters sturcture
+        /// Creates a new instance of the ArmorParameters class
         /// </summary>
         /// <param name="head">Sets the HeadTexture field. null for no helmet.</param>
         /// <param name="body">Sets the BodyTexture field. null for no chainmail.</param>
@@ -88,7 +88,7 @@ namespace TAPI.SDK.Content
     /// <summary>
     /// Retur values for armor items
     /// </summary>
-    public struct ArmorReturnValues
+    public class ArmorReturnValues
     {
         /// <summary>
         /// The ID of the helmet. -1 for no helmet.
@@ -104,7 +104,7 @@ namespace TAPI.SDK.Content
         public int LegsID;
 
         /// <summary>
-        /// Creates a new instance of the ArmorReturnValues structure
+        /// Creates a new instance of the ArmorReturnValues class
         /// </summary>
         /// <param name="head">The ID of the helmet. -1 for no helmet.</param>
         /// <param name="body">The ID of the chainmail. -1 for no chainmail.</param>
@@ -120,7 +120,7 @@ namespace TAPI.SDK.Content
     /// <summary>
     /// Parameter values for Tiles
     /// </summary>
-    public struct TileParameters
+    public class TileParameters
     {
         /// <summary>
         /// The texture of the <see cref="TAPI.Tile" /> to add
@@ -128,6 +128,7 @@ namespace TAPI.SDK.Content
         public Texture2D Texture;
 
         #region lots of stuff
+        #region ints
         /// <summary>
         /// The width of the <see cref="TAPI.Tile" />
         /// </summary>
@@ -164,107 +165,390 @@ namespace TAPI.SDK.Content
         /// The total amount of frames
         /// </summary>
         public int FrameCounter;
+        #endregion
 
+        #region bools
+        int boolValues = 0;
+
+        bool this[int index]
+        {
+            get
+            {
+                if (index < 0 || index > 31)
+                    throw new IndexOutOfRangeException("An int holds only 32 bits!");
+
+                return (boolValues & (1 << index)) != 0;
+            }
+            set
+            {
+                if (index < 0 || index > 31)
+                    throw new IndexOutOfRangeException("An int holds only 32 bits!");
+
+                if (value)
+                    boolValues |= (byte)(1 << index);
+                else
+                    boolValues &= (byte)(1 << index);
+            }
+        }
+
+        // byte 1
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> is solid or not
         /// </summary>
-        public bool Solid;
+        public bool Solid
+        {
+            get
+            {
+                return this[0];
+            }
+            set
+            {
+                this[0] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> has a solid top or not (like Wooden Planks)
         /// </summary>
-        public bool SolidTop;
+        public bool SolidTop
+        {
+            get
+            {
+                return this[1];
+            }
+            set
+            {
+                this[1] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> should only change frame when told or when tried to mine it
         /// </summary>
-        public bool FrameImportant;
+        public bool FrameImportant
+        {
+            get
+            {
+                return this[2];
+            }
+            set
+            {
+                this[2] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> is destroyed by 1 'tick' of the tool or not
         /// </summary>
-        public bool BreaksFast;
+        public bool BreaksFast
+        {
+            get
+            {
+                return this[3];
+            }
+            set
+            {
+                this[3] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> is mineable by a pickaxe or not
         /// </summary>
-        public bool BreaksByPic;
+        public bool BreaksByPic
+        {
+            get
+            {
+                return this[4];
+            }
+            set
+            {
+                this[4] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> is mineable by an axe or not
         /// </summary>
-        public bool BreaksByAxe;
+        public bool BreaksByAxe
+        {
+            get
+            {
+                return this[5];
+            }
+            set
+            {
+                this[5] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> is mineable by a hammer or not
         /// </summary>
-        public bool BreaksByHammer;
+        public bool BreaksByHammer
+        {
+            get
+            {
+                return this[6];
+            }
+            set
+            {
+                this[6] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> breaks when hit with a melee item (sword, tool, ...), Projectile, ...
         /// </summary>
-        public bool BreaksByCut;
+        public bool BreaksByCut
+        {
+            get
+            {
+                return this[7];
+            }
+            set
+            {
+                this[7] = value;
+            }
+        }
+
+        // byte 2
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> breaks when it touches water or not
         /// </summary>
-        public bool BreaksByWater;
+        public bool BreaksByWater
+        {
+            get
+            {
+                return this[8];
+            }
+            set
+            {
+                this[8] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> breaks when it touches lava or not
         /// </summary>
-        public bool BreaksByLava;
+        public bool BreaksByLava
+        {
+            get
+            {
+                return this[9];
+            }
+            set
+            {
+                this[9] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> counts as a table or not
         /// </summary>
-        public bool Table;
+        public bool Table
+        {
+            get
+            {
+                return this[10];
+            }
+            set
+            {
+                this[10] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> counts as a rope or not
         /// </summary>
-        public bool Rope;
+        public bool Rope
+        {
+            get
+            {
+                return this[11];
+            }
+            set
+            {
+                this[11] = value;
+            }
+        }
         /// <summary>
         /// Wether other tiles can be attached to <see cref="TAPI.Tile" /> tile or not
         /// </summary>
-        public bool NoAttach;
+        public bool NoAttach
+        {
+            get
+            {
+                return this[12];
+            }
+            set
+            {
+                this[12] = value;
+            }
+        }
         /// <summary>
         /// Wether this <see cref="TAPI.Tile" /> counts as a dungeon tile or not
         /// </summary>
-        public bool Dungeon;
+        public bool Dungeon
+        {
+            get
+            {
+                return this[13];
+            }
+            set
+            {
+                this[13] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> blocks any light or not (including sunlight)
         /// </summary>
-        public bool BlocksAnyLight;
+        public bool BlocksAnyLight
+        {
+            get
+            {
+                return this[14];
+            }
+            set
+            {
+                this[14] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> blocks sunlight or not
         /// </summary>
-        public bool BlocksSunlight;
+        public bool BlocksSunlight
+        {
+            get
+            {
+                return this[15];
+            }
+            set
+            {
+                this[15] = value;
+            }
+        }
+
+        // byte 3
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> merges with bricks
         /// </summary>
-        public bool Brick;
+        public bool Brick
+        {
+            get
+            {
+                return this[16];
+            }
+            set
+            {
+                this[16] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> merges with moss
         /// </summary>
-        public bool Moss;
+        public bool Moss
+        {
+            get
+            {
+                return this[17];
+            }
+            set
+            {
+                this[17] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> merges with stone
         /// </summary>
-        public bool Stone;
+        public bool Stone
+        {
+            get
+            {
+                return this[18];
+            }
+            set
+            {
+                this[18] = value;
+            }
+        }
         /// <summary>
         /// Wether the Tiel merges with dirt
         /// </summary>
-        public bool Dirt;
+        public bool Dirt
+        {
+            get
+            {
+                return this[19];
+            }
+            set
+            {
+                this[19] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> merges with sand or not
         /// </summary>
-        public bool Sand;
+        public bool Sand
+        {
+            get
+            {
+                return this[20];
+            }
+            set
+            {
+                this[20] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> burns when you walk on it or not
         /// </summary>
-        public bool Flame;
+        public bool Flame
+        {
+            get
+            {
+                return this[21];
+            }
+            set
+            {
+                this[21] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> counts as an alchemy recepient or not (like the Bowl, Vase, ...)
         /// </summary>
-        public bool AlchemyFlower;
+        public bool AlchemyFlower
+        {
+            get
+            {
+                return this[22];
+            }
+            set
+            {
+                this[22] = value;
+            }
+        }
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> glows or not
         /// </summary>
-        public bool Glows;
+        public bool Glows
+        {
+            get
+            {
+                return this[23];
+            }
+            set
+            {
+                this[23] = value;
+            }
+        }
+
+        // byte 4 *foreveralone*
         /// <summary>
         /// Wether the <see cref="TAPI.Tile" /> shines or not
         /// </summary>
-        public bool Shines;
+        public bool Shines
+        {
+            get
+            {
+                return this[24];
+            }
+            set
+            {
+                this[24] = value;
+            }
+        }
+        #endregion
         #endregion
     }
 
@@ -291,7 +575,7 @@ namespace TAPI.SDK.Content
     /// <summary>
     /// Parameter values for Buffs
     /// </summary>
-    public struct BuffParameters
+    public class BuffParameters
     {
         /// <summary>
         /// The icon texture of the Buff to add
@@ -315,5 +599,14 @@ namespace TAPI.SDK.Content
         /// The type of the Buff to add
         /// </summary>
         public BuffType Type;
+
+        public BuffParameters(BuffType type, Texture2D texture, string tip, bool vanityPet, bool lightPet)
+        {
+            Type = type;
+            Texture = texture;
+            Tip = tip;
+            VanityPet = vanityPet;
+            LightPet = lightPet;
+        }
     }
 }
