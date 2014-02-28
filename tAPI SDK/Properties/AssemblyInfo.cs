@@ -12,11 +12,12 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(true)]
-[assembly: Guid("af310c8e-783e-4aa0-a9cf-09aa1f41632f")]
+[assembly: Guid(TAPI.SDK.Internal.CommonToolUtilities.GUID)]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]
 
 // hehe..
+[assembly: InternalsVisibleTo("tAPI SDK Tools")]
 [assembly: InternalsVisibleTo("tAPI Extended Packer")]
 [assembly: InternalsVisibleTo("tAPI SDK Mod Builder")]
 [assembly: InternalsVisibleTo("tAPI SDK Mod Decompiler")]

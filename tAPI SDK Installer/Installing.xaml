@@ -6,10 +6,10 @@
 
         <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="Please wait while the tAPI SDK is being installed" VerticalAlignment="Top" FontFamily="Xolonium" FontSize="16" />
 
-        <TextBlock Name="AquireProgressText" Margin="10,85,214,0" TextWrapping="Wrap" Text="Aquiring: Initializing installation process..." VerticalAlignment="Top" FontFamily="Xolonium" />
+        <TextBlock Name="AquireProgressText" Margin="10,85,10,0" TextWrapping="WrapWithOverflow" Text="Aquiring: Initializing installation process..." VerticalAlignment="Top" FontFamily="Xolonium" />
         <TextBlock Name="AquireProgressPercent" Margin="0,104,10,0" TextWrapping="Wrap" Text="0%" FontFamily="Xolonium" FontSize="36" HorizontalAlignment="Right" Width="138" VerticalAlignment="Top" TextAlignment="Right" />
 
-        <TextBlock Name="ApplyProgressText" Margin="10,153,212,0" TextWrapping="Wrap" Text="Applying: Initializing installation process..." VerticalAlignment="Top" FontFamily="Xolonium" Height="14" />
+        <TextBlock Name="ApplyProgressText" Margin="10,153,10,0" TextWrapping="WrapWithOverflow" Text="Applying: Initializing installation process..." VerticalAlignment="Top" FontFamily="Xolonium" Height="14" />
         <TextBlock Name="ApplyProgressPercent" Margin="0,172,10,0" TextWrapping="Wrap" Text="0%" FontFamily="Xolonium" FontSize="36" HorizontalAlignment="Right" Width="138" VerticalAlignment="Top" TextAlignment="Right" />
 
     </Grid>

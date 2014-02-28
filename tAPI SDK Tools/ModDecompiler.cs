@@ -4,14 +4,21 @@ using System.IO;
 using System.Linq;
 using TAPI.SDK.Internal;
 
-namespace TAPI.SDK.ModDecompiler
+namespace TAPI.SDK.Tools.Decompiler
 {
+    /// <summary>
+    /// The tAPI SDK Mod decompiler
+    /// </summary>
     public static class ModDecompiler
     {
         internal readonly static string
             modsDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods",
             decompDir = modsDir + "\\Decompiled Mods";
 
+        /// <summary>
+        /// Decompiles a .tapimod file
+        /// </summary>
+        /// <param name="modFile">The .tapimod file to decompile</param>
         public static void Decompile(string modFile)
         {
             CommonToolUtilities.RefreshHashes();

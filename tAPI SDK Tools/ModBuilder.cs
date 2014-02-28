@@ -5,11 +5,18 @@ using System.Linq;
 using System.Reflection;
 using TAPI.SDK.Internal;
 
-namespace TAPI.SDK.ModBuilder
+namespace TAPI.SDK.Tools.Builder
 {
-    public static class ModCompiler
+    /// <summary>
+    /// The tAPI SDK Mod builder
+    /// </summary>
+    public static class ModBuilder
     {
-        public static void Compile(string dllFile)
+        /// <summary>
+        /// Builds a mod from a managed .dll file
+        /// </summary>
+        /// <param name="dllFile">The .dll file to build</param>
+        public static void Build(string dllFile)
         {
             CommonToolUtilities.RefreshHashes();
 

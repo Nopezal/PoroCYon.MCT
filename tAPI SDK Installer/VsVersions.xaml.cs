@@ -23,23 +23,23 @@ namespace TAPI.SDK.Installer
     public partial class VsVersions : UserControl
     {
         internal static VSVersion
-            vsVersions = 0,
-            canInstallVS = 0;
+            ChosenVersions = 0,
+            PossibleVersions = 0;
 
         public VsVersions()
         {
             InitializeComponent();
 
-            vsVersions = 0;
+            ChosenVersions = 0;
 
             VSVersion latest = 0, latestExpress = 0;
             for (VSVersion ver = VSVersion.VCSExpress; ver <= VSVersion.VisualStudio12; ver = (VSVersion)((uint)ver * 2u))
             {
                 FromVSVersion(ver).IsEnabled = false;
 
-                if ((canInstallVS & ver) == ver)
+                if ((PossibleVersions & ver) == ver)
                 {
-                    vsVersions |= ver;
+                    ChosenVersions |= ver;
                     FromVSVersion(ver).IsEnabled = true;
                     latest = ver;
                     if (ver == VSVersion.VCSExpress || ver == VSVersion.WDExpress11 || ver == VSVersion.WDExpress12)

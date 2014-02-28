@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
@@ -16,6 +17,18 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        // This class is currently empty.
+        public override void AI()
+        {
+            base.AI();
+
+
+        }
+
+        public override void NPCLoot()
+        {
+            base.NPCLoot();
+
+
+        }
     }
 }

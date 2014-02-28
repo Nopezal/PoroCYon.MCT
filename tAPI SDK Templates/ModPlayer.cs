@@ -5,27 +5,38 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
     [GlobalMod]
     public class ModPlayer : TAPI.ModPlayer
     {
-        public ModPlayer(TAPI.ModBase modBase)
-            : base(modBase)
+        public ModPlayer(TAPI.ModBase @base, Player p)
+            : base(@base, p)
         {
 
         }
 
-        /// <summary>
-        /// Called when the player is updated (Player.Update is called)
-        /// </summary>
-        /// <param name="player">The Player who is being updated</param>
-        public override void OnUpdate(Player player)
+        public override void OnUpdate()
         {
-            base.OnUpdate(player);
+            base.OnUpdate();
 
-            // TODO: add your OnUpdate logic here
+
+        }
+
+        public override void Save(BinBuffer bb)
+        {
+            base.Save(bb);
+
+
+        }
+
+        public override void Load(BinBuffer bb)
+        {
+            base.Load(bb);
+
+
         }
     }
 }

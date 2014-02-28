@@ -7,26 +7,26 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using TAPI.SDK;
 
-namespace TAPI.$safeprojectname$
+namespace TAPI.safeprojectname.Prefix
 {
-    public class Projectile : TAPI.ModProjectile
+    public class Prefix : TAPI.ModPrefix
     {
-        public Projectile(TAPI.ModBase @base, TAPI.Projectile p)
+        public Prefix(ModBase @base, TAPI.Prefix p)
             : base(@base, p)
         {
 
         }
 
-        public override void AI()
+        public override void ApplyToItem(Item i)
         {
-            base.AI();
+            base.ApplyToItem(i);
 
 
         }
 
-        public override void Kill()
+        public override void ApplyToPlayer(Player p)
         {
-            base.Kill();
+            base.ApplyToPlayer(p);
 
 
         }

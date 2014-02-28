@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
@@ -16,14 +17,18 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        /// <summary>
-        /// Called when the Item is initialized (Item.Initialize is called)
-        /// </summary>
-        public override void Initialize()
+        public override void UseItem(Player p)
         {
-            base.Initialize();
+            base.UseItem(p);
 
-            // TODO: add your Initialize logic here
+
+        }
+
+        public override void Effects(Player p)
+        {
+            base.Effects(p);
+
+
         }
     }
 }

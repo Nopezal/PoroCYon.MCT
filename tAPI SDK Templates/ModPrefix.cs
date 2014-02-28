@@ -2,9 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
+    [GlobalMod]
     public class ModPrefix : TAPI.ModPrefix
     {
         public ModPrefix(ModBase @base, Prefix p)
@@ -13,25 +18,17 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        /// <summary>
-        /// Called when a Prefix is applyed to an Item
-        /// </summary>
-        /// <param name="i">The Item where the Prefix is applied to</param>
         public override void ApplyToItem(Item i)
         {
             base.ApplyToItem(i);
 
-            // TODO: add your ApplyToItem logic here
+
         }
-        /// <summary>
-        /// Called when a Prefix is applyed to a Player
-        /// </summary>
-        /// <param name="p">The Player where the Prefix is applied to</param>
         public override void ApplyToPlayer(Player p)
         {
             base.ApplyToPlayer(p);
 
-            // TODO: add your ApplyToPlayer logic here
+
         }
     }
 }

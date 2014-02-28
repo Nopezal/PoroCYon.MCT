@@ -138,11 +138,14 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PreBuildEvent>if "%25username%25"=="Pieter" (
+    <PreBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
     copy "$(SolutionDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.dll" /y
     copy "$(SolutionDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.xml" /y
     copy "$(SolutionDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.pdb" /y
-)
+
+   rem mkdir "%25userprofile%25\Dropbox\Public\tAPI SDK\Templates\"
+    rem xcopy "$(SolutionDir)Templates\" "%25userprofile%25\Dropbox\Public\tAPI SDK\Templates\" /s /i /y /j /h
+) )
 </PreBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

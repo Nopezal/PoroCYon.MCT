@@ -1,13 +1,8 @@
 ﻿{
-	"displayName"    : "$projectname$",
-	"author"  : "$registeredorganization$",
+	"displayName" : "$projectname$",
+	"author" : "$registeredorganization$",
 	"version" : "1.0.0.0",
-	"info"    : "$projectname$ by $registeredorganization$ v1.0.0.0",
+	"info" : "$projectname$ by $registeredorganization$ v1.0.0.0",
 
-	"code" :
-	{
-		"internalName"           : "$projectname$",
-
-		"modBaseName"       : "TAPI.$safeprojectname$.ModBase1"
-	}
+	"internalName" : "$projectname$"
 }

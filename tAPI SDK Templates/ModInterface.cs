@@ -5,6 +5,9 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
+using TAPI.SDK.GUI;
+using TAPI.SDK.GUI.Controls;
 
 namespace TAPI.$safeprojectname$
 {
@@ -17,13 +20,30 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        /// <summary>
-        /// Called after the UI is drawn
-        /// </summary>
-        /// <param name="sb">The SpriteBatch used to draw the UI</param>
+        public override bool PreDrawInterface(SpriteBatch sb)
+        {
+
+
+            return base.PreDrawInterface(sb);
+        }
+
+        public override bool PreDrawInventory(SpriteBatch sb)
+        {
+
+
+            return base.PreDrawInventory(sb);
+        }
+
+        public override void PostDrawInventory(SpriteBatch sb)
+        {
+
+
+            base.PostDrawInventory(sb);
+        }
+
         public override void PostDrawInterface(SpriteBatch sb)
         {
-            // TODO: add your PostDrawInterface logic here
+
 
             base.PostDrawInterface(sb);
         }

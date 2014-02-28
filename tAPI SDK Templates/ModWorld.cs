@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
@@ -17,14 +18,25 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        /// <summary>
-        /// Called when the world is updated
-        /// </summary>
-        public override void OnUpdate()
+        public override void PostUpdate()
         {
-            // TODO: add your OnUpdate logic here
+            base.PostUpdate();
 
-            base.OnUpdate();
+
+        }
+
+        public override void Load(BinBuffer bb)
+        {
+            base.Load(bb);
+
+
+        }
+
+        public override void Save(BinBuffer bb)
+        {
+            base.Save(bb);
+
+
         }
     }
 }

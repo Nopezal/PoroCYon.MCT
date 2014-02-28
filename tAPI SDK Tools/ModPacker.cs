@@ -11,34 +11,55 @@ using Microsoft.JScript;
 using Microsoft.VisualBasic;
 using TAPI.SDK.Internal;
 
-namespace TAPI.Packer.Extended
+namespace TAPI.SDK.Tools.Packer
 {
     // not the ones in Microsoft.VisualBasic (or was it JScript?)
     using CompilerError = System.CodeDom.Compiler.CompilerError;
     using CompilerParameters = System.CodeDom.Compiler.CompilerParameters;
 
     // easier to use than a return value
+    /// <summary>
+    /// An error occuring when compiling an assembly
+    /// </summary>
     [Serializable]
     public class CompilerException : Exception
     {
         const string DEFAULT_MESSAGE = "Failed to compile a mod";
 
+        /// <summary>
+        /// Creates a new instance of the CompilerException class
+        /// </summary>
+        /// <param name="error">The compiler error as a string</param>
         public CompilerException(string error)
             : base(error, null)
         {
 
         }
+        /// <summary>
+        /// Creates a new instance of the CompilerException class
+        /// </summary>
+        /// <param name="inner">The cause of this exception</param>
         public CompilerException(Exception inner)
             : base(DEFAULT_MESSAGE, inner)
         {
 
         }
+        /// <summary>
+        /// Creates a new instance of the CompilerException class
+        /// </summary>
+        /// <param name="error">The compiler error as a string</param>
+        /// <param name="inner">The cause of this exception</param>
         public CompilerException(string error, Exception inner)
             : base(error, inner)
         {
 
         }
 
+        /// <summary>
+        /// Creates a CompilerException from an enumerable collection of CompilerErrors
+        /// </summary>
+        /// <param name="errors">The CompilerError collection</param>
+        /// <returns>The CompilerException of the <paramref name="errors"/></returns>
         public static CompilerException CreateException(IEnumerable errors)
         {
             string error = "";
@@ -55,20 +76,20 @@ namespace TAPI.Packer.Extended
 
             return new CompilerException(error);
         }
-
-        public override int GetHashCode()
-        {
-            return base.GetHashCode();
-        }
-        public override bool Equals(object obj)
-        {
-            return base.Equals(obj);
-        }
     }
 
-    public static class ModCompiler
+    /// <summary>
+    /// The tAPI SDK Extended mod packed
+    /// </summary>
+    public static class ModPacker
     {
-        public static CompilerException Compile(string modDirectory, string outputDirectory)
+        /// <summary>
+        /// Packs a mod
+        /// </summary>
+        /// <param name="modDirectory">The directory of the mod to pack</param>
+        /// <param name="outputDirectory">The output directory</param>
+        /// <returns>A CompilerException if there are compiler errors, null if none.</returns>
+        public static CompilerException Pack(string modDirectory, string outputDirectory)
         {
             CommonToolUtilities.RefreshHashes();
 

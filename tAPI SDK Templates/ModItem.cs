@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
@@ -17,17 +18,18 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        /// <summary>
-        /// Called before the Item is used. Return true wether the Item can be used, false otherwise.
-        /// </summary>
-        /// <param name="player">The Player who's using the item</param>
-        /// <param name="currentState">Wether it should use it or not, set by other mods.</param>
-        /// <returns>true wether the Item can be used, false otherwise</returns>
-        public override bool CanUse(Player player, bool currentState)
+        public override void UseItem(Player p)
         {
-            // TODO: add your CanUse logic here
 
-            return currentState;
+
+            base.UseItem(p);
+        }
+
+        public override void Effects(Player p)
+        {
+
+
+            base.Effects(p);
         }
     }
 }

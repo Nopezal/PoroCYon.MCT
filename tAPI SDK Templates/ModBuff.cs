@@ -7,26 +7,26 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using TAPI.SDK;
 
-namespace TAPI.$safeprojectname$
+namespace TAPI.safeprojectname
 {
-    public class Tile : TAPI.ModTile
+    [GlobalMod]
+    public class ModBuff : TAPI.ModBuff
     {
-        public Tile(TAPI.ModBase @base)
+        public ModBuff(ModBase @base)
             : base(@base)
         {
 
         }
 
-        public override void Update()
+        public override void Effects(NPC n, int index)
         {
-            base.Update();
+            base.Effects(n, index);
 
 
         }
-
-        public override void Kill(int x, int y)
+        public override void Effects(Player p, int index)
         {
-            base.Kill(x, y);
+            base.Effects(p, index);
 
 
         }

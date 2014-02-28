@@ -7,6 +7,8 @@ namespace TAPI.SDK.Internal
 {
     internal static class CommonToolUtilities
     {
+        internal const string GUID = "af310c8e-783e-4aa0-a9cf-09aa1f41632f";
+
         internal static JsonData modHashes = null;
 
         internal static string

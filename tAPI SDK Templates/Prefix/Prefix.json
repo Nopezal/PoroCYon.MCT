@@ -1,8 +1,6 @@
 ﻿{
 	"modifiers" :
 	{
-		"damage" : 5,
-
-        "COMMENT": "Add your own modifiers here"
+		"damage" : 5
 	}
 }

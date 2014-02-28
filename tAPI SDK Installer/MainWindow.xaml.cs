@@ -281,7 +281,7 @@ namespace TAPI.SDK.Installer
                 RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
                 if (key != null)
                     if (key.GetValue("FullScreen") != null)
-                        VsVersions.canInstallVS |= (VSVersion)i;
+                        VsVersions.PossibleVersions |= (VSVersion)i;
             }
 
             return true;

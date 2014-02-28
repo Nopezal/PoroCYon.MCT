@@ -5,6 +5,7 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
@@ -17,6 +18,18 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        // This class is currently empty.
+        public override void Update()
+        {
+            base.Update();
+
+
+        }
+
+        public override void Kill(int x, int y)
+        {
+            base.Kill(x, y);
+
+
+        }
     }
 }

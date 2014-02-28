@@ -18,7 +18,7 @@ namespace TAPI.SDK.Installer
 
         static Queue<Tuple<string, byte[]>> downloaded = new Queue<Tuple<string, byte[]>>();
 		static bool finishedDownloading = false;
-		static int total = 0;
+		static int total = 0, applied = 0;
 
         static Installing()
         {
@@ -33,20 +33,20 @@ namespace TAPI.SDK.Installer
 
             AquireProgress.ValueChanged += (s, e) =>
             {
-                AquireProgressPercent.Text = AquireProgress.Value + "%";
+                AquireProgressPercent.Text = (int)AquireProgress.Value + "%";
             };
             ApplyProgress.ValueChanged += (s, e) =>
             {
-                ApplyProgressPercent.Text = ApplyProgress.Value + "%";
+                ApplyProgressPercent.Text = (int)ApplyProgress.Value + "%";
             };
 
             Thread aquire = new Thread(() =>
             {
-                Action<int, string> UpdateProgress = (procent, text) =>
+                Action<double, string> UpdateProgress = (procent, text) =>
                 {
                     Dispatcher.Invoke(((Action)delegate
                     {
-                        if (procent >= 0 && procent <= 100)
+                        if (procent >= 0d && procent <= 100d)
                             AquireProgress.Value = procent;
                         if (!String.IsNullOrEmpty(text))
                             AquireProgressText.Text = "Aquiring: " + text;
@@ -59,14 +59,9 @@ namespace TAPI.SDK.Installer
 
                 List<string> ToDownload = new List<string>()
                 {
-					"PoroCYon.XnaExtensions.dll", "PoroCYon.XnaExtensions.xml",
-					
-					"TAPI.SDK.dll", "TAPI.SDK.xml",
-					
-					"tAPI Extended Packer.exe",
-					"tAPI SDK Debugger.exe",
-					"tAPI SDK Mod Builder.exe",
-					"tAPI SDK Mod Decompiler.exe",
+					"PoroCYon.XnaExtensions.dll",  "PoroCYon.XnaExtensions.xml",
+					"TAPI.SDK.dll",                "TAPI.SDK.xml",
+                    "tAPI SDK Tools.exe",          "tAPI SDK Tools.xml"
                 };
                 if (ToInstall.InstallPdb)
                 {
@@ -74,19 +69,48 @@ namespace TAPI.SDK.Installer
 
                     ToDownload.Add("TAPI.SDK.pdb");
 
-                    ToDownload.Add("tAPI Extended Packer.pdb");
-                    ToDownload.Add("tAPI SDK Debugger.pdb");
-                    ToDownload.Add("tAPI SDK Mod Builder.pdb");
-                    ToDownload.Add("tAPI SDK Mod Decompiler.pdb");
+                    ToDownload.Add("tAPI SDK Tools.pdb");
+                }
+                if (VsVersions.ChosenVersions != 0)
+                {
+                    const string T = "Templates\\tAPI ", Z = ".zip";
+
+                    ToDownload.Add(T + "global ModItem class" + Z);
+                    ToDownload.Add(T + "global ModNPC class" + Z);
+                    ToDownload.Add(T + "global ModPrefix class" + Z);
+                    ToDownload.Add(T + "global ModProjectile class" + Z);
+                    ToDownload.Add(T + "global ModTile class" + Z);
+
+                    ToDownload.Add(T + "Item JSON file" + Z);
+
+                    ToDownload.Add(T + "ModBase class" + Z);
+                    ToDownload.Add(T + "ModBuff class" + Z);
+                    ToDownload.Add(T + "ModInfo.json file" + Z);
+                    ToDownload.Add(T + "ModInterface class" + Z);
+                    ToDownload.Add(T + "ModItem class" + Z);
+                    ToDownload.Add(T + "ModNPC class" + Z);
+                    ToDownload.Add(T + "ModPlayer class" + Z);
+                    ToDownload.Add(T + "ModPrefix class" + Z);
+                    ToDownload.Add(T + "ModProjectile class" + Z);
+                    ToDownload.Add(T + "ModTile class" + Z);
+                    ToDownload.Add(T + "ModWorld class" + Z);
+
+                    ToDownload.Add(T + "NPC JSON file" + Z);
+                    ToDownload.Add(T + "Prefix JSON file" + Z);
+                    ToDownload.Add(T + "Projectile JSON file" + Z);
+                    ToDownload.Add(T + "Tile JSON file" + Z);
+                    ToDownload.Add(T + "Wall JSON file" + Z);
+
+                    ToDownload.Add(T + "Mod" + Z);
                 }
 
-                total = ToDownload.Count;
+                applied = total = ToDownload.Count;
 
                 for (int i = 0; i < ToDownload.Count; i++)
                 {
-                    UpdateProgress(-1, Path.GetFileName(ToDownload[i]));
+                    UpdateProgress(-1d, Path.GetFileName(ToDownload[i]));
                     downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
-                    UpdateProgress(100 / ((total + 1) / (i + 1)), null);
+                    UpdateProgress(100d / ((total + 1d) / (i + 1d)), null);
                 }
 
                 client.Dispose();
@@ -98,11 +122,11 @@ namespace TAPI.SDK.Installer
 
             Thread apply = new Thread(() =>
             {
-                Action<int, string> UpdateProgress = (procent, text) =>
+                Action<double, string> UpdateProgress = (procent, text) =>
                 {
                     Dispatcher.Invoke(((Action)delegate
 					{
-						if (procent >= 0 && procent <= 100)
+						if (procent >= 0d && procent <= 100d)
 							ApplyProgress.Value = procent;
 						if (!String.IsNullOrEmpty(text))
 							ApplyProgressText.Text = text;
@@ -111,18 +135,53 @@ namespace TAPI.SDK.Installer
 
 				int i = 0;
 
-				while (!finishedDownloading || downloaded.Count > 0)
+				while (!finishedDownloading || applied > 0 || downloaded.Count > 0)
 				{
-					if (downloaded.Count <= 0)
-						continue;
+                    if (downloaded.Count <= 0)
+                    {
+                        Thread.Sleep(1);
+                        continue;
+                    }
 
 					Tuple<string, byte[]> t = downloaded.Dequeue();
 
-					UpdateProgress(-1, t.Item1);
-					File.WriteAllBytes(steamDir + t.Item1, t.Item2);
-					UpdateProgress(100 / ((total + 1) / (i + 1)), null);
+                    UpdateProgress(-1d, t.Item1);
+                    if (t.Item1.StartsWith("Templates\\"))
+                        for (VSVersion v = VSVersion.VCSExpress; v <= VSVersion.VisualStudio12; v = (VSVersion)((int)v * 2))
+                        {
+                            if ((VsVersions.ChosenVersions & v) == 0)
+                                continue;
+
+                            string version = "";
+                            switch (v)
+                            {
+                                case VSVersion.VCSExpress:
+                                case VSVersion.VisualStudio10:
+                                    version = "10";
+                                    break;
+                                case VSVersion.WDExpress11:
+                                case VSVersion.VisualStudio11:
+                                    version = "12";
+                                    break;
+                                case VSVersion.WDExpress12:
+                                case VSVersion.VisualStudio12:
+                                    version = "13";
+                                    break;
+                            }
+
+                            string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Visual Studio 20" + version +
+                                "\\Templates\\" + (t.Item1 == "Templates\\tAPI Mod.zip" ? "ProjectTemplates" : "ItemTemplates") + "\\Visual C#\\tAPI\\";
+                            if (!Directory.Exists(folder))
+                                Directory.CreateDirectory(folder);
+
+                            File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
+                        }
+                    else
+                        File.WriteAllBytes(steamDir + t.Item1, t.Item2);
+                    UpdateProgress(100d / ((total + 1d) / (i + 1d)), null);
 
 					i++;
+                    applied--;
 				}
 
 				MainWindow.instance.Dispatcher.Invoke(((Action)delegate

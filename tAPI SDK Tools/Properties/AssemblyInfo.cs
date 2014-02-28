@@ -1,8 +1,8 @@
 ﻿using System.Reflection;
 using System.Runtime.InteropServices;
 
-[assembly: AssemblyTitle("tAPI SDK Mod Builder")]
-[assembly: AssemblyDescription("Builds tAPI Mods from .dll files")]
+[assembly: AssemblyTitle("tAPI SDK Tools")]
+[assembly: AssemblyDescription("A collection of command-line tools")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PoroCYon")]
 [assembly: AssemblyProduct("tAPI SDK")]
@@ -10,6 +10,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(true)]
-[assembly: Guid("16e7bf28-b52a-4e5e-9e96-4cfb751268f2")]
+[assembly: Guid(TAPI.SDK.Internal.CommonToolUtilities.GUID)]
 [assembly: AssemblyVersion("1.0.0.0")]
 [assembly: AssemblyFileVersion("1.0.0.0")]

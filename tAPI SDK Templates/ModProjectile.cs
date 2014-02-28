@@ -17,6 +17,18 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        // this class is currently empty
+        public override void AI()
+        {
+            base.AI();
+
+
+        }
+
+        public override void Kill()
+        {
+            base.Kill();
+
+
+        }
     }
 }
