@@ -112,7 +112,7 @@ namespace TAPI.SDK.Internal.ModClasses
 
             int id = (int)arguments[0];
 
-            if (id >= IEConsts.ENUM_OFFSET)
+            if (id >= Consts.ENUM_OFFSET)
                 switch ((InternalModMessages)id)
                 {
 

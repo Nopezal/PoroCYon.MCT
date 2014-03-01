@@ -1,5 +1,8 @@
-﻿using System.Reflection;
+﻿using System;
+using System.Reflection;
 using System.Runtime.InteropServices;
+using TAPI.SDK;
+using TAPI.SDK.Internal;
 
 [assembly: AssemblyTitle("tAPI SDK Tools")]
 [assembly: AssemblyDescription("A collection of command-line tools")]
@@ -10,6 +13,6 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(true)]
-[assembly: Guid(TAPI.SDK.Internal.CommonToolUtilities.GUID)]
-[assembly: AssemblyVersion("1.0.0.0")]
-[assembly: AssemblyFileVersion("1.0.0.0")]
+[assembly: Guid(Consts.GUID)]
+[assembly: AssemblyVersion(SdkConstants.VERSION_STRING)]
+[assembly: AssemblyFileVersion(SdkConstants.VERSION_STRING)]

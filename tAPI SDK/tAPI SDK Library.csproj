@@ -116,7 +116,7 @@
     <Compile Include="Input\GInput.cs" />
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
-    <Compile Include="Internal\InternalEnums.cs" />
+    <Compile Include="Internal\InternalConsts.cs" />
     <Compile Include="Internal\ModClasses\MNPC.cs" />
     <Compile Include="Internal\ModClasses\MPrefix.cs" />
     <Compile Include="Internal\ModClasses\MProj.cs" />
@@ -130,6 +130,7 @@
     <Compile Include="Internal\ModClasses\MPlayer.cs" />
     <Compile Include="Internal\ModClasses\Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="SdkConstants.cs" />
     <Compile Include="VanillaData\BuffData.cs" />
     <Compile Include="VanillaData\ItemData.cs" />
     <Compile Include="VanillaData\NPCData.cs" />
