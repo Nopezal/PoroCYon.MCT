@@ -244,6 +244,10 @@ namespace TAPI.SDK.Installer
             if (!Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
                 return false;
 
+            Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe");
+            if ((uint)a.GetType("TAPI.Constants").GetField("versionAssembly").GetValue(null) < 4u) // not r4
+                return false;
+
             #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             {
@@ -280,7 +284,7 @@ namespace TAPI.SDK.Installer
             {
                 RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
                 if (key != null)
-                    if (key.GetValue("FullScreen") != null)
+                    if (key.GetValue("FullScreen") != null) // random key
                         VsVersions.PossibleVersions |= (VSVersion)i;
             }
 

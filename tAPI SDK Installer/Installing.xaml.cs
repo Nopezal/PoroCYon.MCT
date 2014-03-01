@@ -14,7 +14,7 @@ namespace TAPI.SDK.Installer
 {
     public partial class Installing : UserControl
     {
-        readonly static string steamDir = Registry.CurrentUser.OpenSubKey(@"Software\Valve\Steam").GetValue("SourceModInstallPath").ToString();
+        readonly static string steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
 
         static Queue<Tuple<string, byte[]>> downloaded = new Queue<Tuple<string, byte[]>>();
 		static bool finishedDownloading = false;
