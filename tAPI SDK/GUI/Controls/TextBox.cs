@@ -203,7 +203,8 @@ namespace TAPI.SDK.GUI.Controls
 
             DrawBackground(sb);
 
-            sb.DrawString(Font, TextWithCaret, Position, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            Drawing.DrawStringShadow(sb, Font, TextWithCaret, Position, Colour, Rotation, Origin, Scale);
+            //sb.DrawString(Font, TextWithCaret, Position, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
         }
 
         protected override void Dispose(bool forced)

@@ -115,7 +115,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                         GlobalBeginHover(this);
                 }
 
-                IsHovered = true;
+                IsHovered = Main.localPlayer.mouseInterface = true;
 
                 if (GInput.Mouse.Left || ForceFocus)
                 {
