@@ -122,7 +122,8 @@ namespace TAPI.SDK.GUI.Controls
         {
             DrawBackground(sb);
 
-            sb.DrawString(Font, Text, Position, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            DrawOutlinedString(sb, Font, Text, Colour);
+            //sb.DrawString(Font, Text, Position, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
 
             base.Draw(sb);
         }

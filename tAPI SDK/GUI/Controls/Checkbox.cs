@@ -35,12 +35,14 @@ namespace TAPI.SDK.GUI.Controls
 		{
 			DrawBackground(sb);
 
-			sb.DrawString(Font, Text, TextPosition, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            DrawOutlinedString(sb, Font, Text, Colour);
+			//sb.DrawString(Font, Text, TextPosition, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
 
 			DrawBackground(sb, BoxHitbox);
 
-			if (IsChecked)
-				sb.DrawString(Font, "X", BoxPosition, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            if (IsChecked)
+                SdkUI.DrawOutlinedString(sb, Font, Text, BoxPosition, Colour, null, 1f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+				//sb.DrawString(Font, "X", BoxPosition, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
 
 			base.Draw(sb);
 		}

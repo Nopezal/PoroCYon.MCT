@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TAPI.SDK.GUI.Controls.Primitives;
+using TAPI.SDK.Input;
 
 namespace TAPI.SDK.GUI.Controls
 {
@@ -12,10 +13,70 @@ namespace TAPI.SDK.GUI.Controls
     /// </summary>
     public class ItemContainer : Button
     {
+        Texture2D tex = Main.inventoryBackTexture;
+        int invBackNum = 1;
+
+        public int InventoryBackTextureNum
+        {
+            get
+            {
+                return invBackNum;
+            }
+            set
+            {
+                if (value < 1 || value > 12)
+                    throw new ArgumentOutOfRangeException("value");
+
+                switch (invBackNum = value)
+                {
+                    case 1:
+                        tex = Main.inventoryBackTexture;
+                        break;
+                    case 2:
+                        tex = Main.inventoryBack2Texture;
+                        break;
+                    case 3:
+                        tex = Main.inventoryBack3Texture;
+                        break;
+                    case 4:
+                        tex = Main.inventoryBack4Texture;
+                        break;
+                    case 5:
+                        tex = Main.inventoryBack5Texture;
+                        break;
+                    case 6:
+                        tex = Main.inventoryBack6Texture;
+                        break;
+                    case 7:
+                        tex = Main.inventoryBack7Texture;
+                        break;
+                    case 8:
+                        tex = Main.inventoryBack8Texture;
+                        break;
+                    case 9:
+                        tex = Main.inventoryBack9Texture;
+                        break;
+                    case 10:
+                        tex = Main.inventoryBack10Texture;
+                        break;
+                    case 11:
+                        tex = Main.inventoryBack11Texture;
+                        break;
+                    case 12:
+                        tex = Main.inventoryBack12Texture;
+                        break;
+                }
+            }
+        }
+
         /// <summary>
         /// The Item the ItemContainer contains
         /// </summary>
-        public Item ContainedItem = new Item();
+        public Item ContainedItem
+        {
+            get;
+            protected set;
+        }
 
         /// <summary>
         /// When ContainedItem is changed
@@ -39,7 +100,7 @@ namespace TAPI.SDK.GUI.Controls
         /// Creates a new instance of the ItemContainer class
         /// </summary>
         public ItemContainer()
-            : base()
+            : this(new Item())
         {
 
         }
@@ -48,7 +109,7 @@ namespace TAPI.SDK.GUI.Controls
         /// </summary>
         /// <param name="i">Sets the ContainedItem field</param>
         public ItemContainer(Item i)
-            : this()
+            : base()
         {
             ContainedItem = (Item)i.Clone();
         }
@@ -61,7 +122,7 @@ namespace TAPI.SDK.GUI.Controls
             get
             {
                 return new Rectangle((int)Position.X, (int)Position.Y,
-                    (int)(Main.inventoryBackTexture.Width * Scale.X), (int)(Main.inventoryBackTexture.Height * Scale.Y));
+                    (int)(tex.Width * Scale.X), (int)(tex.Height * Scale.Y));
             }
         }
 
@@ -104,7 +165,8 @@ namespace TAPI.SDK.GUI.Controls
         {
             base.Draw(sb);
 
-            DrawBackground(sb);
+            sb.Draw(tex, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            //DrawBackground(sb);
 
             if (ContainedItem.IsBlank())
                 return;
@@ -132,6 +194,13 @@ namespace TAPI.SDK.GUI.Controls
             if (ContainedItem.stack > 1)
                 sb.DrawString(Main.fontItemStack, ContainedItem.stack.ToString(), new Vector2(Position.X + 10f * Main.inventoryScale,
                     Position.Y + 26f * Main.inventoryScale), Color.White, 0f, default(Vector2), scl, SpriteEffects.None, 0f);
+
+            if (GInput.Mouse.Rectangle.Intersects(Hitbox) && ContainedItem != null)
+            {
+                Main.toolTip = (Item)ContainedItem.Clone();
+                Constants.mainInstance.MouseText(ContainedItem.AffixName() + (ContainedItem.stack > 1 ? " (" + ContainedItem.stack + ")" : ""), ContainedItem.rare);
+                Main.toolTip = new Item();
+            }
         }
 
         /// <summary>
