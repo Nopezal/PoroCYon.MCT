@@ -165,7 +165,7 @@ namespace TAPI.SDK.GUI.Controls
         {
             base.Draw(sb);
 
-            sb.Draw(tex, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            sb.Draw(this.tex, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
             //DrawBackground(sb);
 
             if (ContainedItem.IsBlank())
