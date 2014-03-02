@@ -48,8 +48,9 @@ namespace TAPI.SDK.GUI.Controls
                 {
                     IsGif = false;
 
-                    foreach (Texture2D t in gif.Frames)
-                        t.Dispose();
+                    if (gif != null)
+                        foreach (Texture2D t in gif.Frames)
+                            t.Dispose();
                     gif = null;
 
                     texture = value as Texture2D;
