@@ -8,7 +8,7 @@ namespace TAPI.SDK.Installer
     /// Enumeration is marked as Flags
     /// </summary>
     [Flags]
-    public enum VSVersion : uint
+    public enum VSVersion : byte
     {
         VCSExpress = 1,
         VisualStudio10 = 2,
@@ -33,7 +33,7 @@ namespace TAPI.SDK.Installer
             ChosenVersions = 0;
 
             VSVersion latest = 0, latestExpress = 0;
-            for (VSVersion ver = VSVersion.VCSExpress; ver <= VSVersion.VisualStudio12; ver = (VSVersion)((uint)ver * 2u))
+            for (VSVersion ver = VSVersion.VCSExpress; ver <= VSVersion.VisualStudio12; ver = (VSVersion)((byte)ver * 2))
             {
                 FromVSVersion(ver).IsEnabled = false;
 
@@ -51,6 +51,24 @@ namespace TAPI.SDK.Installer
                 FromVSVersion(latest).IsChecked = true;
             if (latestExpress != 0)
                 FromVSVersion(latestExpress).IsChecked = true;
+
+            VCs10.Checked += (s, e) => ChosenVersions |= VSVersion.VCSExpress;
+            VCs10.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VCSExpress;
+
+            Vs10.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio10;
+            Vs10.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio10;
+
+            WdE11.Checked += (s, e) => ChosenVersions |= VSVersion.WDExpress11;
+            WdE11.Unchecked += (s, e) => ChosenVersions ^= VSVersion.WDExpress11;
+
+            Vs11.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio11;
+            Vs11.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio11;
+
+            WdE12.Checked += (s, e) => ChosenVersions |= VSVersion.WDExpress12;
+            WdE12.Unchecked += (s, e) => ChosenVersions ^= VSVersion.WDExpress12;
+
+            Vs12.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio12;
+            Vs12.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio12;
         }
 
         CheckBox FromVSVersion(VSVersion version)

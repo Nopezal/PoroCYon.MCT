@@ -15,6 +15,9 @@ namespace TAPI.SDK.GUI.Controls
     {
         Texture2D tex = Main.inventoryBackTexture;
         int invBackNum = 1;
+        // stuff to control stack incr/decr speed
+        int stackClickCD = 30, maxStackClickCD = 30, changeStackClickCD = 1, prevMaxChangeStackClickCD = 1;
+        bool oldMouseRight = false;
 
         public int InventoryBackTextureNum
         {
@@ -86,6 +89,15 @@ namespace TAPI.SDK.GUI.Controls
         /// When ContainedItem is changed
         /// </summary>
         public static Action<ItemContainer, Item, Item> GlobalItemChanged;
+
+        /// <summary>
+        /// When ContainedItem.stack is changed
+        /// </summary>
+        public Action<ItemContainer, int, int> OnStackChanged;
+        /// <summary>
+        /// When ContainedItem.stack is changed
+        /// </summary>
+        public static Action<ItemContainer, int, int> GlobalStackChanged;
 
         /// <summary>
         /// When trying to change ContainedItem
@@ -160,6 +172,46 @@ namespace TAPI.SDK.GUI.Controls
             if (GlobalItemChanged != null)
                 GlobalItemChanged(this, oldContained, ContainedItem);
         }
+        public override void Update()
+        {
+            base.Update();
+
+            if (stackClickCD > 0)
+                stackClickCD--;
+
+            if (GInput.Mouse.Right && GInput.Mouse.Rectangle.Intersects(Hitbox) && (Main.mouseItem.IsBlank() || Main.mouseItem.type == ContainedItem.type) && stackClickCD <= 0)
+            {
+                oldMouseRight = true;
+
+                Main.mouseItem.stack++;
+                ContainedItem.stack--;
+
+                StackChanged(ContainedItem.stack + 1, ContainedItem.stack);
+
+                if (OnStackChanged != null)
+                    OnStackChanged(this, ContainedItem.stack + 1, ContainedItem.stack);
+                if (GlobalStackChanged != null)
+                    GlobalStackChanged(this, ContainedItem.stack + 1, ContainedItem.stack);
+
+                if (--changeStackClickCD <= 0 && maxStackClickCD > 7)
+                {
+                    maxStackClickCD /= 2;
+                    prevMaxChangeStackClickCD *= 3;
+                    changeStackClickCD = prevMaxChangeStackClickCD;
+                }
+
+                stackClickCD = maxStackClickCD;
+            }
+            else if (oldMouseRight)
+            {
+                // reset values
+                maxStackClickCD = 30;
+                prevMaxChangeStackClickCD = 1;
+
+                stackClickCD = maxStackClickCD;
+                changeStackClickCD = prevMaxChangeStackClickCD;
+            }
+        }
 
         public override void Draw(SpriteBatch sb)
         {
@@ -209,6 +261,12 @@ namespace TAPI.SDK.GUI.Controls
         /// <param name="old">The old ContainedItem</param>
         /// <param name="new">The new ContainedItem</param>
         protected virtual void ItemChanged(Item old, Item @new) { }
+        /// <summary>
+        /// When ContainedItem.stack is changed
+        /// </summary>
+        /// <param name="old">The old stack</param>
+        /// <param name="new">The new stack</param>
+        protected virtual void StackChanged(int old, int @new) { }
         /// <summary>
         /// When trying to change ContainedItem
         /// </summary>
