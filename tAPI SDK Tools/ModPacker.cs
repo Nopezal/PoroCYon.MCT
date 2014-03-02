@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
 using System.Text.RegularExpressions;
 using Microsoft.CSharp;
 using Microsoft.JScript;
@@ -105,7 +106,7 @@ namespace TAPI.SDK.Tools.Packer
 
             if (!File.Exists(jsonFile))
             {
-                File.WriteAllText(jsonFile, "{\"name\":\"" + modName + "\",\"author\":\"<unknown>\"}");
+                File.WriteAllText(jsonFile, CommonToolUtilities.CreateDefaultModInfo(modName));
                 Console.WriteLine("Warning: You do not have a ModInfo.json file.\n\tUsing the default ModInfo...");
             }
 
@@ -227,25 +228,26 @@ namespace TAPI.SDK.Tools.Packer
                 return CompilerException.CreateException(cr.Errors);
             #endregion
 
-            #region save to .tapimod file
-            /*
-             * How a .tapimod file looks like:
-             * 
-             *   - version (uint)
-             * 
-             *   - modinfo (string)
-             * 
-             *   - file amount (int)
-             * 
-             *    files: 
-             *     - file name (string)
-             *     - file data length (int)
-             *   
-             *    files:
-             *     - file data (byte[])
-             *   
-             *   - assembly data
-             */
+            #region save to .tapi file
+
+            {   /*
+                 * How a .tapimod file looks like:
+                 * 
+                 *   - version (uint)
+                 * 
+                 *   - modinfo (string)
+                 * 
+                 *   - file amount (int)
+                 * 
+                 *    files: 
+                 *     - file name (string)
+                 *     - file data length (int)
+                 *   
+                 *    files:
+                 *     - file data (byte[])
+                 *   
+                 *   - assembly data
+                 */  }
 
             // VBCodeProvider automatically adds '.dll'
             string mod = outputDirectory + (cdcp is VBCodeProvider ? ".tapimod.dll" : ".tapimod");
@@ -271,7 +273,9 @@ namespace TAPI.SDK.Tools.Packer
                 bb.Write(pfile.Item2);
 
             bb.Pos = 0;
-            File.WriteAllBytes(cdcp is VBCodeProvider ? Path.ChangeExtension(mod, null) : mod, bb.ReadBytes(bb.GetSize()));
+
+            //File.WriteAllBytes(cdcp is VBCodeProvider ? Path.ChangeExtension(mod, null) : mod, bb.ReadBytes(bb.GetSize()));
+            CommonToolUtilities.ZipModData(cdcp is VBCodeProvider ? Path.ChangeExtension(mod, null) : mod, bb.ReadBytes(bb.GetSize()), Encoding.UTF8.GetBytes(modInfo));
 
             // generate false hashes
             CommonToolUtilities.AddHashes(modName, modDirectory);

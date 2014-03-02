@@ -21,6 +21,11 @@ namespace TAPI.SDK.Tools.Decompiler
         /// <param name="modFile">The .tapimod file to decompile</param>
         public static void Decompile(string modFile)
         {
+            // load data into buffer
+            BinBuffer bb = Path.GetExtension(modFile).EndsWith("tapi")
+                ? new BinBuffer(new BinBufferByte(CommonToolUtilities.UnzipModData(modFile)))
+                : new BinBuffer(new BinBufferByte(File.ReadAllBytes(modFile)));
+
             CommonToolUtilities.RefreshHashes();
 
             string
@@ -35,8 +40,6 @@ namespace TAPI.SDK.Tools.Decompiler
             List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
             List<Tuple<string, int>> reading = new List<Tuple<string, int>>();
 
-            // load data into buffer
-            BinBuffer bb = new BinBuffer(new BinBufferByte(File.ReadAllBytes(modFile)));
 
             // first 4 bytes is the version
             uint versionAssembly = bb.ReadUInt();

@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Text;
+using PoroCYon.XnaExtensions;
 using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.Tools.Builder
@@ -67,19 +69,19 @@ namespace TAPI.SDK.Tools.Builder
                         StreamReader r = new StreamReader(new MemoryStream(ms.ToArray()));
                         modInfo = r.ReadToEnd();
 
-                        if (modInfo == null)
-                            modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                        if (modInfo.IsEmpty())
+                            modInfo = CommonToolUtilities.CreateDefaultModInfo(modName);
                         else
                             try
                             {
                                 JsonData j = JsonMapper.ToObject(modInfo);
 
                                 if (!j.Has("displayName") || !j.Has("author"))
-                                    modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                                    modInfo = CommonToolUtilities.CreateDefaultModInfo(modName);
                             }
                             catch (JsonException) // invalid JSON thrown in JsonMapper.ToObject
                             {
-                                modInfo = "{\n\t\"displayName\": \"" + modName + "\",\n\t\"author\": \"<unknown>\"\n\t\"info\": \"\"\n}";
+                                modInfo = CommonToolUtilities.CreateDefaultModInfo(modName);
                             }
 
                         r.Close();
@@ -117,11 +119,20 @@ namespace TAPI.SDK.Tools.Builder
             // reset
             bb.Pos = 0;
 
-            // write it all to the .tapimod file
-            File.WriteAllBytes(modFile, bb.ReadBytes(bb.GetSize()));
+            //// write it all to the .tapimod file
+            //File.WriteAllBytes(modFile, bb.ReadBytes(bb.GetSize()));
+
+            //// reset
+            //bb.Pos = 0;
+
+            // zip .tapimod in .tapi
+            CommonToolUtilities.ZipModData(Path.ChangeExtension(modFile, ".tapi"), bb.ReadBytes(bb.GetSize()), Encoding.UTF8.GetBytes(modInfo));
+
+            //// delete .tapimod
+            //File.Delete(modFile);
             #endregion
 
-            #region generate false folders & files to foul the hash checker, and generate hashes
+            #region generate false folders & files to foul the hash checker, and generate hashes [commented]
             // not checked anymore in r4
 
             /*if (!Directory.Exists(modPath))
