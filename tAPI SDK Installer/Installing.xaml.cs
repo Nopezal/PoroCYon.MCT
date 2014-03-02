@@ -129,7 +129,7 @@ namespace TAPI.SDK.Installer
 						if (procent >= 0d && procent <= 100d)
 							ApplyProgress.Value = procent;
 						if (!String.IsNullOrEmpty(text))
-							ApplyProgressText.Text = text;
+							ApplyProgressText.Text = "Applying: " + text;
                     }), DispatcherPriority.Render);
                 };
 

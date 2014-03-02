@@ -203,6 +203,10 @@ namespace TAPI.SDK.GUI.Controls
 			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(2f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
 			sb.Draw(SdkUI.WhitePixel, Position + new Vector2(bg.Width - 8f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
 		}
+        protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Color foreground, Color? background = null, float offset = 1f)
+        {
+            SdkUI.DrawOutlinedString(sb, font, text, Position, foreground, background, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+        }
 
         public object Clone()
         {

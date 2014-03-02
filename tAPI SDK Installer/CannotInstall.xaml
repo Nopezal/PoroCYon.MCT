@@ -6,7 +6,7 @@
                 <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="12" Color="Red" />
             </TextBlock.Effect>
         </TextBlock>
-        <TextBlock Margin="10,92,10,0" TextWrapping="Wrap" Text="You need to have Steam, Terraria and tAPI installed in order to install the tAPI SDK." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="22" />
+        <TextBlock Margin="10,92,10,0" TextWrapping="Wrap" Text="You need to have Steam, Terraria and tAPI installed and have an Internet connection in order to install the tAPI SDK." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="22" />
         <TextBlock HorizontalAlignment="Left" Margin="10,203,0,0" TextWrapping="Wrap" Text="Press 'X' to exit." VerticalAlignment="Top" FontSize="16" FontFamily="Xolonium" />
 
     </Grid>

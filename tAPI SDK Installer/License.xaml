@@ -4,7 +4,7 @@
         <TextBlock Margin="10,10,10,0" TextWrapping="Wrap" Text="License" VerticalAlignment="Top" Height="27" FontSize="22" FontFamily="Xolonium" />
 
         <ScrollViewer Margin="0,42,0,52" Background="{x:Null}" HorizontalScrollBarVisibility="Auto" VerticalScrollBarVisibility="Auto">
-            <TextBlock Name="LicenseText" FontFamily="Xolonium" FontSize="16" />
+            <TextBlock Name="LicenseText" FontFamily="Xolonium" FontSize="16" ToolTip="The MIT License" />
         </ScrollViewer>
 
         <RadioButton Name="Agree" Content="I agree" HorizontalAlignment="Left" Margin="10,0,0,31" VerticalAlignment="Bottom" GroupName="License" FontFamily="Xolonium" Background="{x:Null}" />
