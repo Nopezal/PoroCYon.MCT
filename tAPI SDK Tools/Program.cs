@@ -10,45 +10,40 @@ namespace TAPI.SDK.Tools
 {
     static class Program
     {
-        static Dictionary<string, Action<string>> Commands = new Dictionary<string, Action<string>>()
+        static Dictionary<string, Action<string>> Commands;
+        static Program()
         {
-            #region pack
+            Commands = new Dictionary<string, Action<string>>()
             {
-                "pack",
-                (path) =>
                 {
-                    if (!path.Contains('/') && !path.Contains('\\'))
-                        path = Mods.pathDirModsSources + "\\" + path;
+                    "pack",
+                    (path) =>
+                    {
+                        if (!path.Contains('/') && !path.Contains('\\'))
+                            path = Mods.pathDirModsSources + "\\" + path;
 
-                    CompilerException ce = ModPacker.Pack(path, Mods.pathDirModsUnsorted);
-                    if (ce != null)
-                        Console.Error.WriteLine(ce);
-                }
-            },
-            #endregion
-            #region build
-            {
-                "build",
-                (path) => ModBuilder.Build(path)
-            },
-            {
-                "compile",
-                Commands["build"]
-            },
-            #endregion
-            #region decompile
-            {
-                "decompile",
-                (path) => 
+                        CompilerException ce = ModPacker.Pack(path, Mods.pathDirModsUnsorted);
+                        if (ce != null)
+                            Console.Error.WriteLine(ce);
+                    }
+                },
                 {
-                    if (!path.Contains('/') && !path.Contains('\\'))
-                        path = Mods.pathDirModsUnsorted + "\\" + path;
+                    "build",
+                    (path) => ModBuilder.Build(path)
+                },
+                {
+                    "decompile",
+                    (path) => 
+                    {
+                        if (!path.Contains('/') && !path.Contains('\\'))
+                            path = Mods.pathDirModsUnsorted + "\\" + path;
 
-                    ModDecompiler.Decompile(path);
+                        ModDecompiler.Decompile(path);
+                    }
                 }
-            }
-            #endregion
-        };
+            };
+            Commands.Add("compile", Commands["build"]);
+        }
 
         static void Main(string[] args)
         {
