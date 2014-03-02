@@ -94,8 +94,9 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
         protected override void Dispose(bool forced)
         {
-            while (Controls.Count > 0)
-                RemoveControl(Controls[0]);
+            if (Controls != null)
+                for (int i = 0; i < Controls.Count; i++)
+                    Controls[i].Dispose();
 
             base.Dispose(forced);
         }

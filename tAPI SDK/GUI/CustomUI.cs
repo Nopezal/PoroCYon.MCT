@@ -151,8 +151,9 @@ namespace TAPI.SDK.GUI
         /// <param name="forced">Wether the control is disposing by IDisposable.Dispose or the constructor</param>
         protected virtual void Dispose(bool forced)
         {
-            foreach (Control c in Controls)
-                c.Dispose();
+            if (Controls != null)
+                for (int i = 0; i < Controls.Count; i++)
+                    Controls[i].Dispose();
         }
 
         /// <summary>

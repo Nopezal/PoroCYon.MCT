@@ -378,7 +378,7 @@ namespace TAPI.SDK.Content
         /// <summary>
         /// Loads a SoundEffect from a stream as a .wav
         /// </summary>
-        /// <param name="data">The .wav file to load as a SoundEffect</param>
+        /// <param name="stream">The .wav file to load as a SoundEffect</param>
         /// <returns>The .wav data as a SoundEffect</returns>
         public static SoundEffect LoadSound(Stream stream)
         {
