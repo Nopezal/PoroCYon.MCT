@@ -34,23 +34,12 @@ namespace TAPI.SDK.Installer
 
             VSVersion latest = 0, latestExpress = 0;
             for (VSVersion ver = VSVersion.VCSExpress; ver <= VSVersion.VisualStudio12; ver = (VSVersion)((byte)ver * 2))
-            {
-                FromVSVersion(ver).IsEnabled = false;
-
-                if ((PossibleVersions & ver) == ver)
+                if (FromVSVersion(ver).IsEnabled = ((PossibleVersions & ver) != 0))
                 {
-                    ChosenVersions |= ver;
-                    FromVSVersion(ver).IsEnabled = true;
                     latest = ver;
                     if (ver == VSVersion.VCSExpress || ver == VSVersion.WDExpress11 || ver == VSVersion.WDExpress12)
                         latestExpress = ver;
                 }
-            }
-
-            if (latest != 0)
-                FromVSVersion(latest).IsChecked = true;
-            if (latestExpress != 0)
-                FromVSVersion(latestExpress).IsChecked = true;
 
             VCs10.Checked += (s, e) => ChosenVersions |= VSVersion.VCSExpress;
             VCs10.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VCSExpress;
@@ -69,6 +58,11 @@ namespace TAPI.SDK.Installer
 
             Vs12.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio12;
             Vs12.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio12;
+
+            if (latest != 0)
+                FromVSVersion(latest).IsChecked = true;
+            if (latestExpress != 0)
+                FromVSVersion(latestExpress).IsChecked = true;
         }
 
         CheckBox FromVSVersion(VSVersion version)
