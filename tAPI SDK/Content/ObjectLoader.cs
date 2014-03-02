@@ -1,10 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Audio;
+using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
 
 namespace TAPI.SDK.Content
 {
@@ -13,6 +17,17 @@ namespace TAPI.SDK.Content
     /// </summary>
     public static class ObjectLoader
     {
+        /// <summary>
+        /// Constants.mainInstance.Content
+        /// </summary>
+        public static ContentManager Content
+        {
+            get
+            {
+                return Constants.mainInstance.Content;
+            }
+        }
+
         /// <summary>
         /// Adds an Item to the default game data
         /// </summary>
@@ -331,6 +346,118 @@ namespace TAPI.SDK.Content
             Main.wingsLoaded[id] = true;
 
             return id;
+        }
+
+        /// <summary>
+        /// Loads a Texture2D from a byte array as a .png
+        /// </summary>
+        /// <param name="data">The .png file to load as a Texture2D</param>
+        /// <returns>The .png data as a Texture2D</returns>
+        public static Texture2D LoadTexture(byte[] data)
+        {
+            return LoadTexture(new MemoryStream(data));
+        }
+        /// <summary>
+        /// Loads a SoundEffect from a byte array as a .wav
+        /// </summary>
+        /// <param name="data">The .wav file to load as a SoundEffect</param>
+        /// <returns>The .wav data as a SoundEffect</returns>
+        public static SoundEffect LoadSound(byte[] data)
+        {
+            return LoadSound(new MemoryStream(data));
+        }
+        /// <summary>
+        /// Loads a Texture2D from a stream as a .png
+        /// </summary>
+        /// <param name="stream">The .png file to load as a Texture2D</param>
+        /// <returns>The .png data as a Texture2D</returns>
+        public static Texture2D LoadTexture(Stream stream)
+        {
+            return Texture2D.FromStream(Constants.mainInstance.GraphicsDevice, stream);
+        }
+        /// <summary>
+        /// Loads a SoundEffect from a stream as a .wav
+        /// </summary>
+        /// <param name="data">The .wav file to load as a SoundEffect</param>
+        /// <returns>The .wav data as a SoundEffect</returns>
+        public static SoundEffect LoadSound(Stream stream)
+        {
+            return SoundEffect.FromStream(stream);
+        }
+
+        /// <summary>
+        /// Loads a Texture2D from a byte array through the Content Manager (.xnb) 
+        /// </summary>
+        /// <param name="data">The .xnb file to load as a Texture2D</param>
+        /// <returns>The .xnb data as a Texture2D</returns>
+        public static Texture2D LoadImage(byte[] data)
+        {
+            return LoadContentObject<Texture2D>(data);
+        }
+        /// <summary>
+        /// Loads a SoundEffect from a byte array through the Content Manager (.xnb) 
+        /// </summary>
+        /// <param name="data">The .xnb file to load as a SoundEffect</param>
+        /// <returns>The .xnb data as a SoundEffect</returns>
+        public static SoundEffect LoadSoundEffect(byte[] data)
+        {
+            return LoadContentObject<SoundEffect>(data);
+        }
+        /// <summary>
+        /// Loads an Effect from a byte array through the Content Manager (.xnb) 
+        /// </summary>
+        /// <param name="data">The .xnb file to load as an Effect</param>
+        /// <returns>The .xnb data as an Effect</returns>
+        public static Effect LoadEffect(byte[] data)
+        {
+            return LoadContentObject<Effect>(data);
+        }
+        /// <summary>
+        /// Loads a SpriteFont from a byte array through the Content Manager (.xnb) 
+        /// </summary>
+        /// <param name="data">The .xnb file to load as a SpriteFont</param>
+        /// <returns>The .xnb data as a SpriteFont</returns>
+        public static SpriteFont LoadFont(byte[] data)
+        {
+            return LoadContentObject<SpriteFont>(data);
+        }
+
+        /// <summary>
+        /// Loads an object through the Content Manager (.xnb)
+        /// </summary>
+        /// <typeparam name="T">The type of the object to load</typeparam>
+        /// <param name="data">The data of the object to load</param>
+        /// <returns>The object loaded by the Content Manager</returns>
+        public static T LoadContentObject<T>(byte[] data)
+        {
+            if (!Directory.Exists("Content\\SDK\\Temp"))
+                Directory.CreateDirectory("Content\\SDK\\Temp");
+
+            string tempP = Path.GetTempFileName(), temp = Path.GetFileName(tempP);
+            File.WriteAllBytes(temp + ".xnb", data);
+
+            T ret = Content.Load<T>("SDK\\Temp\\" + temp);
+
+            File.Delete(temp + ".xnb");
+
+            return ret;
+        }
+
+        /// <summary>
+        /// Adds an IGameComponent to the Game Components
+        /// </summary>
+        /// <param name="component">The IGameComponent to add</param>
+        public static void AddComponent(IGameComponent component)
+        {
+            Constants.mainInstance.Components.Add(component);
+        }
+        /// <summary>
+        /// Adds a service provider to the Game Services
+        /// </summary>
+        /// <param name="serviceProvider">The service provider to add</param>
+        public static void AddService(object serviceProvider)
+        {
+            Constants.mainInstance.Services.AddService(serviceProvider.GetType(), serviceProvider);
         }
     }
 }
