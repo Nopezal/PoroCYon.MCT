@@ -41,7 +41,8 @@ namespace TAPI.SDK.GUI.Controls
 
                     gif = value as AnimatedGif;
 
-                    texture.Dispose();
+                    if (texture != null)
+                        texture.Dispose();
                     texture = null;
                 }
                 else if (value is Texture2D)
