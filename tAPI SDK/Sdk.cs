@@ -73,16 +73,20 @@ namespace TAPI.SDK
             modBase.modName = INTERNALNAME;
             modBase.modInfo = new ModInfo(modInfo);
             modBase.modIndex = 0;
+
+            foreach (ModBase @base in Mods.modBases)
+                @base.modIndex++;
+
             Mods.modBases.Insert(0, modBase);
 
-            Mods.loadOrder.Add(INTERNALNAME);
-            Mods.modBases.Add(modBase);
+            Mods.loadOrder.Insert(0, INTERNALNAME);
 
             #region instantiate mod[...]
             modBase.modPlayers.Add(new MPlayer(modBase, null));
             modBase.modWorlds.Add(new MWorld(modBase));
             modBase.modItems.Add(new MItem(modBase, null));
             modBase.modNPCs.Add(new MNPC(modBase, null));
+            modBase.modPrefixes.Add(new MPrefix(modBase, null));
             modBase.modProjectiles.Add(new MProj(modBase, null));
             modBase.modInterfaces.Add(new SdkUI(modBase));
             #endregion
