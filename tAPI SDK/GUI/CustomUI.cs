@@ -165,12 +165,13 @@ namespace TAPI.SDK.GUI
             if (control == null)
                 return;
 
-            control.ID = Controls.Count;
-
             Controls.Add(control);
 
-            control.Init();
             control.Parent = new WeakReference<IControlParent>(this);
+
+            control.ID = Controls.Count;
+
+            control.Init();
 
             if (OnControlAdded != null)
                 OnControlAdded(control);

@@ -35,9 +35,6 @@ namespace TAPI.SDK.GUI.Controls
 
         public bool IsDrawnAfter = false, HasBackground = true, Enabled = true;
 
-		/// <summary>
-		/// Null is TAPI.SDK.SdkUI
-		/// </summary>
         public WeakReference<IControlParent> Parent; // WeakReference so we don't create a memory leak
 
         public int ID = -1;

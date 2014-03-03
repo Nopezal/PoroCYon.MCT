@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
 
 namespace TAPI.SDK.GUI.Controls.Primitives
 {
@@ -104,6 +105,10 @@ namespace TAPI.SDK.GUI.Controls.Primitives
         public void AddControl(Control control)
         {
             Controls.Add(control);
+
+            control.ID = Controls.Count;
+
+            control.Parent = new WeakReference<IControlParent>(this);
 
             control.Init();
 
