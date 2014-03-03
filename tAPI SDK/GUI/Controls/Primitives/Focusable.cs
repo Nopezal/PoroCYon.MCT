@@ -29,6 +29,11 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                 if (!Parent.IsAlive)
                     return false;
 
+                if (!Hovered.ContainsKey(Parent.Target))
+                {
+                    Hovered.Add(Parent.Target, -1);
+                    return false;
+                }
                 return ID == Hovered[Parent.Target];
             }
             private set
@@ -56,6 +61,12 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             {
                 if (!Parent.IsAlive)
                     return false;
+
+                if (!Focused.ContainsKey(Parent.Target))
+                {
+                    Focused.Add(Parent.Target, -1);
+                    return false;
+                }
                 return ID == Focused[Parent.Target];
             }
             set
