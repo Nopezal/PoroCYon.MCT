@@ -6,7 +6,5 @@
     
 	"internalName": "TAPI.SDK",
 
-	"code": {
-		"modBaseName": "TAPI.SDK.Internal.SdkClasses.Mod"
-	}
+    "MSBuild": true
 }

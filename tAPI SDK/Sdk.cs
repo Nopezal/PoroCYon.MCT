@@ -52,27 +52,25 @@ namespace TAPI.SDK
             if (Inited)
                 return;
 
-            // Adding the current assembly to the mods... *puts on sunglasses*
-
-            // because of this, all mods will load the same assembly instance (hehehe), so the data can be accessible for all mods
+            // hacky stuff #1
+            // add mod etc to list...
 
             Assembly code = Assembly.GetExecutingAssembly();
 
             JsonData modInfo = JsonMapper.ToObject(ReadResource("ModInfo.json"));
 
             const string
-                MODFILE = "TAPI.SDK.tapimod",
+                MODFILE = "TAPI.SDK.tapi",
                 INTERNALNAME = "TAPI.SDK",
-#pragma warning disable 219
-                DISPLAYNAME = "tAPI SDK"; // pro forma
-#pragma warning restore 219
+                DISPLAYNAME = "tAPI SDK";
 
             ModBase modBase = new Mod();
 
             modBase.fileName = MODFILE;
-            modBase.modName = INTERNALNAME;
+            modBase.modName = DISPLAYNAME;
             modBase.modInfo = new ModInfo(modInfo);
             modBase.modIndex = 0;
+            modBase.code = Assembly.GetExecutingAssembly();
 
             foreach (ModBase @base in Mods.modBases)
                 @base.modIndex++;

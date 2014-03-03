@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Ionic.Zip;
 using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.Tools.Decompiler
@@ -11,9 +12,7 @@ namespace TAPI.SDK.Tools.Decompiler
     /// </summary>
     public static class ModDecompiler
     {
-        internal readonly static string
-            modsDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods",
-            decompDir = modsDir + "\\Decompiled Mods";
+        internal readonly static string decompDir = CommonToolUtilities.modsDir + "\\Decompiled";
 
         /// <summary>
         /// Decompiles a .tapimod file
@@ -21,59 +20,91 @@ namespace TAPI.SDK.Tools.Decompiler
         /// <param name="modFile">The .tapimod file to decompile</param>
         public static void Decompile(string modFile)
         {
-            // load data into buffer
-            BinBuffer bb = Path.GetExtension(modFile).EndsWith("tapi")
-                ? new BinBuffer(new BinBufferByte(CommonToolUtilities.UnzipModData(modFile)))
-                : new BinBuffer(new BinBufferByte(File.ReadAllBytes(modFile)));
-
-            CommonToolUtilities.RefreshHashes();
-
             string
                 modName = Path.GetFileNameWithoutExtension(modFile),
                 decompPath = ModDecompiler.decompDir + "\\" + modName;
 
-            // might be a good idea
+            byte[]
+                tapimod = new byte[0],
+                modInfo = new byte[0],
+                modInfoZip = new byte[0];
+
+            List<Tuple<string, byte[]>>
+                zipFiles = new List<Tuple<string, byte[]>>(),
+                tapimodFiles = new List<Tuple<string,byte[]>>();
+
+            uint versionAssembly = 0u;
+
             if (!Directory.Exists(decompPath))
                 Directory.CreateDirectory(decompPath);
 
-            // where to store file data
-            List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
-            List<Tuple<string, int>> reading = new List<Tuple<string, int>>();
+            #region load data from zip
+            if (modFile.EndsWith(".tapi"))
+                using (ZipFile zf = ZipFile.Read(Mods.pathDirMods + "\\" + modFile))
+                {
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        ZipEntry ze = zf["Mod.tapimod"];
+                        if (ze != null)
+                        {
+                            ze.Extract(ms);
+                            tapimod = ms.ToArray();
+                        }
+                    }
+                    using (MemoryStream ms = new MemoryStream())
+                    {
+                        ZipEntry ze = zf["ModInfo.json"];
+                        if (ze != null)
+                        {
+                            ze.Extract(ms);
+                            modInfoZip = ms.ToArray();
+                        }
+                    }
+                    foreach (ZipEntry ze in zf.Entries)
+                        if (ze.FileName != "Mod.tapimod" && ze.FileName != "ModInfo.json")
+                            using (MemoryStream ms = new MemoryStream())
+                            {
+                                ze.Extract(ms);
+                                zipFiles.Add(new Tuple<string, byte[]>(ze.FileName, ms.ToArray()));
+                            }
+                }
+            #endregion
+            else if (modFile.EndsWith(".tapimod"))
+                tapimod = File.ReadAllBytes(modFile);
+            else
+                throw new FileLoadException("File is not a .tapi or .tapimod file!");
 
+            // create binary buffer
+            BinBuffer bb = new BinBuffer(new BinBufferByte(tapimod));
 
-            // first 4 bytes is the version
-            uint versionAssembly = bb.ReadUInt();
+            // read/write tAPI version
+            File.WriteAllText(decompPath + "\\tAPI_Version.txt", (versionAssembly = bb.ReadUInt()).ToString());
 
-            // write tAPI version
-            if (!File.Exists(decompPath + "\\tAPI r" + versionAssembly))
-                File.Create(decompPath + "\\tAPI r" + versionAssembly);
-
-            // write modinfo
+            // read ModInfo.json
             File.WriteAllText(decompPath + "\\ModInfo.json", bb.ReadString());
 
-            // get file amount
-            int filesNum = bb.ReadInt();
-
-            // read file name + length
-            while (filesNum-- > 0)
-                reading.Add(new Tuple<string, int>(bb.ReadString(), bb.ReadInt()));
-
-            // read file data
-            foreach (Tuple<string, int> read in reading)
-                files.Add(new Tuple<string, byte[]>(read.Item1, bb.ReadBytes(read.Item2)));
-
-            // write files
-            foreach (Tuple<string, byte[]> pfile in files)
+            // write files from zip data
+            foreach (Tuple<string, byte[]> t in zipFiles)
             {
-                if (!Directory.Exists(Path.GetDirectoryName(decompPath + "\\" + pfile.Item1)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(decompPath + "\\" + pfile.Item1));
-                File.WriteAllBytes(decompPath + "\\" + pfile.Item1, pfile.Item2);
+                string dir = decompPath + "\\_FromZip\\" + t.Item1;
+
+                if (!Directory.Exists(Path.GetDirectoryName(dir)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(dir));
+
+                File.WriteAllBytes(dir, t.Item2);
             }
 
-            // write assembly
-            File.WriteAllBytes(decompPath + "\\" + modName + ".dll", bb.ReadBytes(bb.BytesLeft()));
+            // write (normal) files
+            List<Tuple<string, int>> fileInfo = new List<Tuple<string, int>>();
 
-            CommonToolUtilities.RefreshHashes();
+            int count = bb.ReadInt();
+            for (int i = 0; i < count; i++)
+                fileInfo.Add(new Tuple<string, int>(bb.ReadString(), bb.ReadInt()));
+            for (int i = 0; i < count; i++)
+                tapimodFiles.Add(new Tuple<string, byte[]>(fileInfo[i].Item1, bb.ReadBytes(fileInfo[i].Item2)));
+
+            // write .dll
+            File.WriteAllBytes(decompPath + "\\" + modName + ".dll", bb.ReadBytes(bb.BytesLeft()));
         }
     }
 }

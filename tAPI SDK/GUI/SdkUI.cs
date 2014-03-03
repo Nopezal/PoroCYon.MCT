@@ -105,10 +105,16 @@ namespace TAPI.SDK.GUI
             CustomUIs.Add(CustomUI);
         }
 
-        internal SdkUI(ModBase @base)
+        /// <summary>
+        /// Do NOT call this outside tAPI and the tAPI SDK, you'll get an InvalidOperationException!
+        /// </summary>
+        /// <param name="base">The ModBase used to create the SdkUI instance</param>
+        public SdkUI(ModBase @base)
             : base(@base)
         {
-
+            // hacky stuff #3
+            if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly() && Assembly.GetCallingAssembly() != Assembly.GetAssembly(typeof(ModBase)))
+                throw new InvalidOperationException();
         }
 
         internal static void Update()
@@ -140,6 +146,20 @@ namespace TAPI.SDK.GUI
             base.PostDrawInterface(sb);
 
             Draw(sb, true);
+        }
+
+        /// <summary>
+        /// Gets if something is listening to the keyboard, thus consuming the input.
+        /// </summary>
+        /// <returns>True if something is listening, false therwise.</returns>
+        [CallPriority(Single.PositiveInfinity)]
+        public override bool KeyboardInputFocused()
+        {
+            foreach (int id in Focusable.Focused.Values)
+                if (id != -1)
+                    return true;
+
+            return base.KeyboardInputFocused();
         }
 
         static void Draw(SpriteBatch sb, bool after)
@@ -285,6 +305,9 @@ namespace TAPI.SDK.GUI
             Window.GlobalDragging = null;
             Window.GlobalDraggingStarted = null;
             Window.GlobalDraggingStopped = null;
+
+            Focusable.Focused = new WrapperDictionary<IControlParent, int>();
+            Focusable.Hovered = new WrapperDictionary<IControlParent, int>();
         }
 
         /// <summary>

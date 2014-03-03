@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
+using Ionic.Zip;
 using PoroCYon.XnaExtensions;
 using TAPI.SDK.Internal;
 
@@ -20,13 +21,11 @@ namespace TAPI.SDK.Tools.Builder
         /// <param name="dllFile">The .dll file to build</param>
         public static void Build(string dllFile)
         {
-            CommonToolUtilities.RefreshHashes();
-
             #region setup
             string
                 modName = Path.GetFileNameWithoutExtension(dllFile),
-                modPath = CommonToolUtilities.modsSrcDir + "\\" + modName,
-                modFile = CommonToolUtilities.modsBinDir + "\\" + modName + ".tapimod";
+                modPath = CommonToolUtilities.modsBinDir + "\\" + modName,
+                modFile = modPath + ".tapi";
 
             if (File.Exists(modFile))
                 File.Delete(modFile);
@@ -90,101 +89,51 @@ namespace TAPI.SDK.Tools.Builder
                 }
             #endregion
 
-            File.Copy(dllFile, modFile);
+            File.Copy(dllFile, modPath + ".dll");
 
-            #region write data
+            WriteData(modInfo, modPath, files);
+        }
+        static void WriteData(string modInfo, string outputPath, List<Tuple<string, byte[]>> files)
+        {
+            JsonData json = JsonMapper.ToObject(modInfo);
+
             BinBuffer bb = new BinBuffer();
 
-            // write version
             bb.Write(Constants.versionAssembly);
 
-            // write modinfo
             bb.Write(modInfo);
 
-            // write file name + length
             bb.Write(files.Count);
             foreach (Tuple<string, byte[]> pfile in files)
             {
                 bb.Write(pfile.Item1);
                 bb.Write(pfile.Item2.Length);
             }
-
-            // write file data
             foreach (Tuple<string, byte[]> pfile in files)
-                    bb.Write(pfile.Item2);
+                bb.Write(pfile.Item2);
 
-            // write assembly
-            bb.Write(File.ReadAllBytes(dllFile));
+            bb.Write(File.ReadAllBytes(outputPath + ".dll"));
 
-            // reset
             bb.Pos = 0;
 
-            //// write it all to the .tapimod file
-            //File.WriteAllBytes(modFile, bb.ReadBytes(bb.GetSize()));
+            //File.WriteAllBytes(outputPath + ".tapimod", bb.ReadBytes(bb.GetSize()));
 
-            //// reset
-            //bb.Pos = 0;
-
-            // zip .tapimod in .tapi
-            CommonToolUtilities.ZipModData(Path.ChangeExtension(modFile, ".tapi"), bb.ReadBytes(bb.GetSize()), Encoding.UTF8.GetBytes(modInfo));
-
-            //// delete .tapimod
-            //File.Delete(modFile);
-            #endregion
-
-            #region generate false folders & files to foul the hash checker, and generate hashes [commented]
-            // not checked anymore in r4
-
-            /*if (!Directory.Exists(modPath))
-                Directory.CreateDirectory(modPath);
-
-            // get info to write to modinfo.cs
-            JsonData jModInfo = JsonMapper.ToObject(modInfo);
-
-            string actualModName = modName;
-            string codeModBaseName = "TAPI." + actualModName + ".ModBase";
-
-            if (jModInfo.Has("name"))
-                codeModBaseName = "TAPI." + (actualModName = (string)jModInfo["name"]) + ".ModBase";
-
-            if (jModInfo != null && jModInfo.Has("code") && jModInfo["code"].Has("modBaseName"))
-                codeModBaseName = (string)jModInfo["code"]["modBaseName"];
-
-            // get namespace (and modbase class name)
-            string[] nsSplit = codeModBaseName.Split('.');
-
-            string @namespace = nsSplit[0];
-            for (int i = 1; i < nsSplit.Length - 1; i++)
-                @namespace += "." + nsSplit[i];
-
-            // kinda crucial
-            using (FileStream fs = new FileStream(modPath + "\\" + nsSplit[nsSplit.Length - 1] + ".cs", FileMode.Create))
+            File.Delete(outputPath + ".tapi");
+            using (ZipFile zip = new ZipFile())
             {
-                using (StreamWriter bw = new StreamWriter(fs))
-                {
-                    bw.Write(
-                            "using System;\n" +
-                            "using TAPI;\n" +
-                            "\n" +
-                            "namespace " + @namespace + "\n" +
-                            "{\n" +
-                            "    public class " + nsSplit[nsSplit.Length - 1] + " : TAPI.ModBase\n" +
-                            "    {\n" +
-                            "        public " + nsSplit[nsSplit.Length - 1] + "() : base() { }\n" +
-                            "    }\n" +
-                            "}\n"
-                        );
-                }
+                string dir = Mods.pathDirModsUnsorted;
+                if (!Directory.Exists(dir))
+                    Directory.CreateDirectory(dir);
+
+                zip.AddEntry("Mod.tapimod", bb.ReadBytes(bb.GetSize()));
+                zip.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(modInfo));
+
+                foreach (Tuple<string, byte[]> file in files)
+                    zip.AddEntry(file.Item1, file.Item2);
+                zip.Save(outputPath + ".tapi");
             }
-
-            // write modinfo
-            File.WriteAllText(modPath + "\\ModInfo.json", modInfo);
-
-            // write .dll file, you'll never know if...
-            File.Copy(dllFile, modPath + "\\" + Path.GetFileName(dllFile), true);
-
-            CommonToolUtilities.AddHashes(modName, modPath);*/
-            #endregion
+            if (json == null || !json.Has("extractDLL") || !(bool)json["extractDLL"])
+                File.Delete(outputPath + ".dll");
         }
     }
 }

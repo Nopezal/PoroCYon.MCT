@@ -10,15 +10,15 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 {
     public abstract class Focusable : Control
     {
-        public static int Hovered
+        public static WrapperDictionary<IControlParent, int> Hovered
         {
             get;
-            private set;
+            internal set;
         }
-        public static int Focused
+        public static WrapperDictionary<IControlParent, int> Focused
         {
             get;
-            private set;
+            internal set;
         }
 
 		public bool CanFocus = true, StayFocused = true;
@@ -26,18 +26,24 @@ namespace TAPI.SDK.GUI.Controls.Primitives
         {
             get
             {
-                return ID == Hovered;
+                if (!Parent.IsAlive)
+                    return false;
+
+                return ID == Hovered[Parent.Target];
             }
             private set
             {
-                Hovered = value ? ID : -1;
+                if (!Parent.IsAlive)
+                    return;
+
+                Hovered[Parent.Target] = value ? ID : -1;
 
                 for (int i = 0; i < Parent.Target.Controls.Count; i++)
                     if (Parent.Target.Controls[i] is Focusable)
                     {
                         Focusable f = (Focusable)Parent.Target.Controls[i];
 
-                        if (f.ID == Hovered)
+                        if (f.ID == Hovered[Parent.Target])
                             f.BeginHover();
                         else
                             f.EndHover();
@@ -48,11 +54,16 @@ namespace TAPI.SDK.GUI.Controls.Primitives
         {
             get
             {
-                return ID == Focused;
+                if (!Parent.IsAlive)
+                    return false;
+                return ID == Focused[Parent.Target];
             }
             set
             {
-                Focused = value ? ID : -1;
+                if (!Parent.IsAlive)
+                    return;
+
+                Focused[Parent.Target] = value ? ID : -1;
 
                 Main.PlaySound("vanilla:menuTick");
 
@@ -61,7 +72,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                     {
                         Focusable f = (Focusable)Parent.Target.Controls[i];
 
-                        if (f.ID == Focused)
+                        if (f.ID == Focused[Parent.Target])
                             f.FocusGot();
                         else
                             f.FocusLost();
@@ -90,7 +101,8 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
         static Focusable()
         {
-            Hovered = Focused = -1;
+            Hovered = new WrapperDictionary<IControlParent, int>();
+            Focused = new WrapperDictionary<IControlParent, int>();
         }
 
         protected virtual void BeginHover() { }
@@ -100,7 +112,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
 
         public override void Update()
         {
-			if (!CanFocus)
+			if (!CanFocus || !Parent.IsAlive)
 				return;
 
             if (GInput.Mouse.Rectangle.Intersects(Hitbox) || ForceHover)
@@ -133,7 +145,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
                 }
                 else if (IsFocused && !StayFocused)
                 {
-                    Focused = -1;
+                    Focused[Parent.Target] = -1;
 
                     FocusLost();
 
@@ -149,7 +161,7 @@ namespace TAPI.SDK.GUI.Controls.Primitives
             {
                 if (GInput.Mouse.Left)
                 {
-                    Focused = -1;
+                    Focused[Parent.Target] = -1;
 
                     FocusLost();
 

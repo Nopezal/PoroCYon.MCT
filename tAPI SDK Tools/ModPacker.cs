@@ -7,9 +7,12 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using Microsoft.Build.Evaluation;
+using Microsoft.Build.Execution;
 using Microsoft.CSharp;
 using Microsoft.JScript;
 using Microsoft.VisualBasic;
+using Ionic.Zip;
 using TAPI.SDK.Internal;
 
 namespace TAPI.SDK.Tools.Packer
@@ -17,67 +20,9 @@ namespace TAPI.SDK.Tools.Packer
     // not the ones in Microsoft.VisualBasic (or was it JScript?)
     using CompilerError = System.CodeDom.Compiler.CompilerError;
     using CompilerParameters = System.CodeDom.Compiler.CompilerParameters;
-
-    // easier to use than a return value
-    /// <summary>
-    /// An error occuring when compiling an assembly
-    /// </summary>
-    [Serializable]
-    public class CompilerException : Exception
-    {
-        const string DEFAULT_MESSAGE = "Failed to compile a mod";
-
-        /// <summary>
-        /// Creates a new instance of the CompilerException class
-        /// </summary>
-        /// <param name="error">The compiler error as a string</param>
-        public CompilerException(string error)
-            : base(error, null)
-        {
-
-        }
-        /// <summary>
-        /// Creates a new instance of the CompilerException class
-        /// </summary>
-        /// <param name="inner">The cause of this exception</param>
-        public CompilerException(Exception inner)
-            : base(DEFAULT_MESSAGE, inner)
-        {
-
-        }
-        /// <summary>
-        /// Creates a new instance of the CompilerException class
-        /// </summary>
-        /// <param name="error">The compiler error as a string</param>
-        /// <param name="inner">The cause of this exception</param>
-        public CompilerException(string error, Exception inner)
-            : base(error, inner)
-        {
-
-        }
-
-        /// <summary>
-        /// Creates a CompilerException from an enumerable collection of CompilerErrors
-        /// </summary>
-        /// <param name="errors">The CompilerError collection</param>
-        /// <returns>The CompilerException of the <paramref name="errors"/></returns>
-        public static CompilerException CreateException(IEnumerable errors)
-        {
-            string error = "";
-
-            foreach (CompilerError ce in errors)
-            {
-                string[] codeLines = Regex.Split(File.ReadAllText(ce.FileName), @"\r?\n|\r"); // \n, \r or \r\n
-
-                error += " " + ce.ErrorText + ":" + Environment.NewLine;
-                if (ce.Line - 1 >= 0)
-                    error += "   " + codeLines[ce.Line - 1] + Environment.NewLine;
-                error += "   " + "^".PadLeft(ce.Column) + Environment.NewLine;
-            }
-
-            return new CompilerException(error);
-        }
-    }
+    // nested classes <_>
+    using CompileException = TAPI.ModsCompile.CompileException;
+    using ValidateJson = TAPI.ModsCompile.ValidateJson;
 
     /// <summary>
     /// The tAPI SDK Extended mod packed
@@ -90,198 +35,256 @@ namespace TAPI.SDK.Tools.Packer
         /// <param name="modDirectory">The directory of the mod to pack</param>
         /// <param name="outputDirectory">The output directory</param>
         /// <returns>A CompilerException if there are compiler errors, null if none.</returns>
-        public static CompilerException Pack(string modDirectory, string outputDirectory)
+        public static void Pack(string modDirectory, string outputDirectory)
         {
-            CommonToolUtilities.RefreshHashes();
+            CompileException cex = new CompileException(modDirectory + "\\");
 
             string modName = Path.GetDirectoryName(modDirectory);
 
-            string jsonFile, modInfo;
-
-            CodeDomProvider cdcp = new CSharpCodeProvider();
-            string ext = "*.cs";
-
             #region validating ModInfo.json
-            jsonFile = modDirectory + "\\ModInfo.json";
-
+            string jsonFile = modDirectory + "\\ModInfo.json";
+            JsonData json = null;
+            Dictionary<string, string> dictNames = null;
             if (!File.Exists(jsonFile))
             {
                 File.WriteAllText(jsonFile, CommonToolUtilities.CreateDefaultModInfo(modName));
                 Console.WriteLine("Warning: You do not have a ModInfo.json file.\n\tUsing the default ModInfo...");
             }
-
             try
             {
-                JsonData json = JsonMapper.ToObject(File.ReadAllText(jsonFile));
-
-                if (!json.Has("name"))
-                    throw new CompilerException("Missing ModInfo filed 'name'");
-                else
-                    modName = (string)json["name"];
-
+                json = JsonMapper.ToObject(File.ReadAllText(jsonFile));
+                if (!json.Has("displayName"))
+                    cex.AddProblem(jsonFile, "Missing ModInfo field 'displayName'");
                 if (!json.Has("author"))
-                    throw new CompilerException("Missing ModInfo filed 'author'");
-
-                if (json.Has("code"))
-                {
-                    JsonData jCode = json["code"];
-                    if (jCode.Has("codeType"))
-                        switch (jCode["codeType"].ToString().ToLower().Trim())
-                        {
-                            case "vb":
-                            case "vb.net":
-                            case "basic":
-                            case "basic.net":
-                            case "vbasic":
-                            case "vbasic.net":
-                            case "visualbasic":
-                            case "visualbasic.net":
-                            case "visual basic":
-                            case "visual basic.net":
-                                cdcp = new VBCodeProvider();
-                                ext = "*.vb";
-                                Console.WriteLine("Using Visual Basic.NET (VBCodeDomProvider)...");
-                                break;
-                            case "js":
-                            case "js.net":
-                            case "jscript":
-                            case "jscript.net":
-                            case "javascript":
-                            case "javascript.net":
-                                cdcp = new JScriptCodeProvider();
-                                ext = "*.js";
-                                Console.WriteLine("Using JScript.NET (JScriptCodeProvider)...");
-                                break;
-                            case "cs":
-                            case "c#":
-                            case "csharp":
-                            case "visual cs":
-                            case "visual c#":
-                            case "visual csharp":
-                                // inited as C#
-                                Console.WriteLine("Using C# (CSharpCodeProvider)...");
-                                break;
-                            default:
-                                Console.WriteLine("Language not explicitely defined, using C# (CSharpCodeProvider)...");
-                                break;
-                        }
-                }
-
-                //if (!json.Has("version"))
-                //    throw new CompileException("Missing ModInfo field 'version'");
-                //if (!json.Has("info"))
-                //    throw new CompileException("Missing ModInfo field 'info'");
-
-                modInfo = (string)json;
+                    cex.AddProblem(jsonFile, "Missing ModInfo field 'author'");
+                if (!json.Has("internalName"))
+                    cex.AddProblem(jsonFile, "Missing ModInfo field 'internalName'");
+                if (json.Has("modReferences"))
+                    dictNames = Mods.GetInternalNameToPathDictionary();
+                ValidateJson.ModInfo(jsonFile, json, cex, dictNames);
             }
             catch (Exception e)
             {
-                throw new CompilerException("Invalid file: ModInfo.json", e);
+                cex.AddProblem(jsonFile, "Invalid JSON file.\n" + e.Message);
             }
             #endregion
 
-            #region compile the code
-            List<string> toCompile = new List<string>();
-            foreach (string file in Directory.EnumerateFiles(modDirectory, ext, SearchOption.AllDirectories))
-                toCompile.Add(file);
+            BuildSource(modDirectory, outputDirectory, json, cex, dictNames);
 
-            CompilerParameters cp = new CompilerParameters()
+            List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
+            List<string> allowExt = new List<string> { ".png", ".json", ".fx", ".dll", ".wav", ".xnb", ".xml", ".xaml", ".html" };
+
+            foreach (string fileName in Directory.EnumerateFiles(modDirectory, "*.*", SearchOption.AllDirectories))
             {
-                GenerateExecutable = false,
-                GenerateInMemory = false,
+                if (fileName.EndsWith(".cs") || fileName.EndsWith(".vb") || fileName.EndsWith(".js"))
+                    continue;
 
-                OutputAssembly = outputDirectory + "\\" + modName + ".tapimod"
-            };
+                foreach (string ext in allowExt)
+                    if (fileName.EndsWith(ext))
+                    {
+                        string fname = fileName.Substring(modDirectory.Length + 1).Replace('\\', '/');
 
-            string
-                xna = Environment.GetEnvironmentVariable("XNAGSv4") + "\\References\\Windows\\x86\\",
-                wpf = Environment.GetFolderPath(Environment.SpecialFolder.ProgramFilesX86)
-                    + "\\Reference Assemblies\\Microsoft\\Framework\\.NETFramework\\v4.0\\Profile\\Client\\",
-                here = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                        if (fname == "ModInfo.json")
+                            continue;
 
-            cp.ReferencedAssemblies.Add("tAPI.exe");
-            cp.ReferencedAssemblies.Add("Microsoft.JScript.dll");
-            cp.ReferencedAssemblies.Add("Microsoft.VisualBasic.dll");
-            cp.ReferencedAssemblies.Add("Microsoft.CSharp.dll");
+                        files.Add(new Tuple<string, byte[]>(fname, File.ReadAllBytes(fileName)));
+                        break;
+                    }
+            }
 
-            cp.ReferencedAssemblies.Add("Accessibility.dll");
+            ModsCompile.WriteData(modDirectory, outputDirectory, files, json);
+        }
+
+        static void BuildSource(string sourcePath, string outputPath, JsonData modInfo, CompileException cex, Dictionary<string, string> dictNames)
+        {
+
+            string[] modPathSplit = sourcePath.Split('\\', '/');
+            string modName = modPathSplit[modPathSplit.Length - 1].Split('.')[0];
+
+            if (modInfo.Has("MSBuild"))
+                if ((bool)modInfo["MSBuild"])
+                {
+                    // done by msbuild anyway
+                    ModsCompile.BuildSource(sourcePath, outputPath, modInfo, cex, dictNames);
+                    return;
+                }
+
+            // but this has to change - other CodeDomProviders (default stays C#)
+            CodeDomProvider cdp = new CSharpCodeProvider();
+
+            foreach (string fileName in Directory.EnumerateFiles(sourcePath, "*.json", SearchOption.AllDirectories))
+            {
+                string fname = fileName.Substring(sourcePath.Length + 1).Replace('\\', '/');
+                if (fname == "ModInfo.json")
+                    continue;
+                try
+                {
+                    JsonData json2 = JsonMapper.ToObject(File.ReadAllText(fileName));
+                    if (fname.ToLower().StartsWith("item/"))
+                        ValidateJson.Item(modName, fileName, json2, cex);
+                    if (fname.ToLower().StartsWith("npc/"))
+                        ValidateJson.NPC(modName, fileName, json2, cex);
+                    if (fname.ToLower().StartsWith("projectile/"))
+                        ValidateJson.Projectile(modName, fileName, json2, cex);
+                    //TODO: check all the JSON files other than ModInfo.json for required fields
+                }
+                catch (Exception e)
+                {
+                    cex.AddProblem(fileName, "Invalid JSON file.\n" + e.Message);
+                }
+            }
+
+            CompilerParameters cp = new CompilerParameters();
+
+            cp.GenerateExecutable = false;
+
+            cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
+
             cp.ReferencedAssemblies.Add("mscorlib.dll");
             cp.ReferencedAssemblies.Add("System.dll");
             cp.ReferencedAssemblies.Add("System.Core.dll");
-            cp.ReferencedAssemblies.Add("System.Drawing.dll");
-            cp.ReferencedAssemblies.Add("System.Windows.Forms.dll");
             cp.ReferencedAssemblies.Add("System.Numerics.dll");
             cp.ReferencedAssemblies.Add("System.Xml.dll");
 
-            cp.ReferencedAssemblies.Add(wpf + "PresentationCore.dll");
-            cp.ReferencedAssemblies.Add(wpf + "PresentationFramework.dll");
-            cp.ReferencedAssemblies.Add(wpf + "WindowsBase.dll");
+            cp.ReferencedAssemblies.Add("System.Drawing.dll");
+            cp.ReferencedAssemblies.Add("System.Windows.Forms.dll");
 
-            cp.ReferencedAssemblies.Add(xna + "Microsoft.Xna.Framework.dll");
-            cp.ReferencedAssemblies.Add(xna + "Microsoft.Xna.Framework.Xact.dll");
-            cp.ReferencedAssemblies.Add(xna + "Microsoft.Xna.Framework.Game.dll");
-            cp.ReferencedAssemblies.Add(xna + "Microsoft.Xna.Framework.Graphics.dll");
+            cp.ReferencedAssemblies.Add("Microsoft.Xna.Framework.dll");
+            cp.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Xact.dll");
+            cp.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Game.dll");
+            cp.ReferencedAssemblies.Add("Microsoft.Xna.Framework.Graphics.dll");
 
-            CompilerResults cr = cdcp.CompileAssemblyFromFile(cp, toCompile.ToArray());
+            if (modInfo != null)
+            {
+                if (modInfo.Has("language"))
+                    switch (((string)modInfo["language"]).ToLowerInvariant())
+                    {
+                        case "js":
+                        case "js.net":
+                        case "jscript":
+                        case "jscript.net":
+                        case "javascript":
+                        case "javascript.net":
+                            cdp = new JScriptCodeProvider();
+                            break;
+                        case "vb":
+                        case "vb.net":
+                        case "visualbasic":
+                        case "visualbasic.net":
+                        case "visual basic":
+                        case "visual basic.net":
+                            cdp = new VBCodeProvider();
+                            break;
+                    }
+
+                if (modInfo.Has("modReferences"))
+                {
+                    if (Directory.Exists(Mods.pathDirMods + "/.Temp"))
+                        Directory.Delete(Mods.pathDirMods + "/.Temp", true);
+                    Directory.CreateDirectory(Mods.pathDirMods + "/.Temp");
+                    JsonData jRefs = (JsonData)modInfo["modReferences"];
+                    for (int i = 0; i < jRefs.Count; i++)
+                    {
+                        string jRef = (string)jRefs[i];
+                        if (!dictNames.ContainsKey(jRef))
+                            continue;
+                        string modfile = dictNames[jRef];
+                        cp.ReferencedAssemblies.Add(Mods.pathDirMods + "/.Temp/" + jRef + ".dll");
+
+                        string[] split = jRef.Split('\\');
+                        if (modfile.EndsWith(".tapimod"))
+                        {
+                            using (FileStream fileStream = new FileStream(modfile, FileMode.Open))
+                            {
+                                BinBuffer bb2 = new BinBuffer(new BinBufferStream(fileStream));
+                                bb2.ReadInt();
+                                bb2.ReadString();
+                                int count = bb2.ReadInt();
+                                int skip = 0;
+                                while (count-- > 0)
+                                {
+                                    bb2.ReadString();
+                                    skip += bb2.ReadInt();
+                                }
+                                while (skip-- > 0)
+                                    bb2.ReadByte();
+                                File.WriteAllBytes(Mods.pathDirMods + "/.Temp/" + jRef + ".dll", bb2.ReadBytes(bb2.BytesLeft()));
+                            }
+                        }
+                        else if (modfile.EndsWith(".tapi"))
+                        {
+                            using (ZipFile zip = ZipFile.Read(modfile))
+                            {
+                                if (zip.ContainsEntry("Mod.tapimod"))
+                                {
+                                    ZipEntry ze = zip["Mod.tapimod"];
+                                    using (MemoryStream ms = new MemoryStream())
+                                    {
+                                        ze.Extract(ms);
+                                        ms.Position = 0;
+                                        BinBuffer bb2 = new BinBuffer(new BinBufferStream(ms));
+                                        bb2.ReadInt();
+                                        bb2.ReadString();
+                                        int count = bb2.ReadInt();
+                                        int skip = 0;
+                                        while (count-- > 0)
+                                        {
+                                            bb2.ReadString();
+                                            skip += bb2.ReadInt();
+                                        }
+                                        while (skip-- > 0)
+                                            bb2.ReadByte();
+                                        File.WriteAllBytes(Mods.pathDirMods + "/.Temp/" + jRef + ".dll", bb2.ReadBytes(bb2.BytesLeft()));
+                                    }
+                                }
+                            }
+                        }
+                    }
+                }
+                if (modInfo.Has("dllReferences"))
+                {
+                    JsonData jRefs = (JsonData)modInfo["dllReferences"];
+                    for (int i = 0; i < jRefs.Count; i++)
+                    {
+                        string jRef = (string)jRefs[i];
+                        if (File.Exists(sourcePath + "/" + jRef)) // remove .dll -> can also reference .exes
+                            cp.ReferencedAssemblies.Add(sourcePath + "/" + jRef);
+                        else
+                            cp.ReferencedAssemblies.Add(jRef); // somewhere else, like the GAC
+                    }
+                }
+            }
+
+            cp.OutputAssembly = outputPath + (cdp is VBCodeProvider ? "" : ".dll"); // VBCodeProvider automatically adds '.dll'
+
+            List<string> toCompile = new List<string>();
+            foreach (string fileName in Directory.EnumerateFiles(sourcePath, cdp.FileExtension, SearchOption.AllDirectories))
+                toCompile.Add(fileName);
+
+            CompilerResults cr = cdp.CompileAssemblyFromFile(cp, toCompile.ToArray());
+
+            if (Directory.Exists(Mods.pathDirMods + "/.Temp"))
+                Directory.Delete(Mods.pathDirMods + "/.Temp", true);
 
             if (cr.Errors.HasErrors)
-                return CompilerException.CreateException(cr.Errors);
-            #endregion
-
-            #region save to .tapi file
-
-            {   /*
-                 * How a .tapimod file looks like:
-                 * 
-                 *   - version (uint)
-                 * 
-                 *   - modinfo (string)
-                 * 
-                 *   - file amount (int)
-                 * 
-                 *    files: 
-                 *     - file name (string)
-                 *     - file data length (int)
-                 *   
-                 *    files:
-                 *     - file data (byte[])
-                 *   
-                 *   - assembly data
-                 */  }
-
-            // VBCodeProvider automatically adds '.dll'
-            string mod = outputDirectory + (cdcp is VBCodeProvider ? ".tapimod.dll" : ".tapimod");
-
-            List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
-            foreach (string fileName in Directory.EnumerateFiles(modDirectory, "*.*", SearchOption.AllDirectories))
-                if (!Path.GetExtension(fileName).EndsWith(ext.Substring(2)))
-                    files.Add(new Tuple<string, byte[]>(fileName.Substring(modDirectory.Length + 1).Replace('\\', '/'), File.ReadAllBytes(fileName)));
-
-            BinBuffer bb = new BinBuffer();
-
-            bb.Write(Constants.versionAssembly);
-
-            bb.Write(modInfo);
-
-            bb.Write(files.Count);
-            foreach (Tuple<string, byte[]> pfile in files)
             {
-                bb.Write(pfile.Item1);
-                bb.Write(pfile.Item2.Length);
+                foreach (CompilerError ce in cr.Errors)
+                {
+                    StringBuilder sb = new StringBuilder();
+                    if (ce.FileName != "")
+                    {
+                        sb.Append("(" + ce.Column + "," + ce.Line + "): " + ce.ErrorText);
+                        sb.Append("\n" + File.ReadLines(ce.FileName).Skip(ce.Line - 1).Take(1).First().Replace("\t", " "));
+                        sb.Append('\n');
+                        for (int i = 0; i < ce.Column - 1; i++)
+                            sb.Append(' ');
+                        sb.Append('^');
+                        cex.AddProblem(ce.FileName, sb.ToString());
+                    }
+                    else // general error (without file) - .dll not found, etc
+                        cex.AddProblem(outputPath, (ce.IsWarning ? "warning" : "error") + " " + ce.ErrorNumber + ": " + ce.ErrorText);
+                }
             }
-            foreach (Tuple<string, byte[]> pfile in files)
-                bb.Write(pfile.Item2);
-
-            bb.Pos = 0;
-
-            //File.WriteAllBytes(cdcp is VBCodeProvider ? Path.ChangeExtension(mod, null) : mod, bb.ReadBytes(bb.GetSize()));
-            CommonToolUtilities.ZipModData(cdcp is VBCodeProvider ? Path.ChangeExtension(mod, null) : mod, bb.ReadBytes(bb.GetSize()), Encoding.UTF8.GetBytes(modInfo));
-
-            // generate false hashes
-            CommonToolUtilities.AddHashes(modName, modDirectory);
-            #endregion
-
-            return null;
         }
     }
 }

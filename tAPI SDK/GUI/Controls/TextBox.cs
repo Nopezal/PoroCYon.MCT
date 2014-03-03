@@ -85,11 +85,11 @@ namespace TAPI.SDK.GUI.Controls
             }
         }
 
-        public KeyboardText KeyboardText
-        {
-            get;
-            private set;
-        }
+        //public KeyboardText KeyboardText
+        //{
+        //    get;
+        //    private set;
+        //}
 
         public TextBox()
             : base()
@@ -98,7 +98,7 @@ namespace TAPI.SDK.GUI.Controls
             Font = Main.fontMouseText;
             CaretCD = 60;
 
-            KeyboardText = new KeyboardText(Form.FromHandle(Constants.mainInstance.Window.Handle) as Form);
+            //KeyboardText = new KeyboardText(Form.FromHandle(Constants.mainInstance.Window.Handle) as Form);
         }
         public TextBox(string defaultText)
             : this()
@@ -110,7 +110,7 @@ namespace TAPI.SDK.GUI.Controls
         {
             base.Init();
 
-            KeyboardText.StartReading();
+            //KeyboardText.StartReading();
         }
         public override void Update()
         {
@@ -121,10 +121,10 @@ namespace TAPI.SDK.GUI.Controls
                 Main.inputTextEnter = true;
                 Main.chatText = "";
 
-                string add = KeyboardText.ReadToEnd();
-                if (add != "")
+                string @new = Main.GetInputText(Text);
+                if (@new != Text)
                 {
-                    Text += add;
+                    Text = @new;
                     Main.PlaySound("vanilla:menuTick");
                 }
 
@@ -209,7 +209,7 @@ namespace TAPI.SDK.GUI.Controls
 
         protected override void Dispose(bool forced)
         {
-            KeyboardText.StopReading();
+            //KeyboardText.StopReading();
         }
     }
 }

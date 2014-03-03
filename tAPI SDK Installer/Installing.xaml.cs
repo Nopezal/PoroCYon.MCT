@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Net;
@@ -113,6 +114,8 @@ namespace TAPI.SDK.Installer
                     UpdateProgress(100d / ((total + 1d) / (i + 1d)), null);
                 }
 
+                UpdateProgress(100d, "finished");
+
                 client.Dispose();
 
                 finishedDownloading = true;
@@ -183,6 +186,21 @@ namespace TAPI.SDK.Installer
 					i++;
                     applied--;
 				}
+
+                UpdateProgress(99, "Creating .tapi file for TAPI.SDK.dll");
+
+                Process p = new Process()
+                {
+                    StartInfo = new ProcessStartInfo(steamDir + "\\tAPI SDK Tools.exe", "build \"" + steamDir + "\\TAPI.SDK.dll" + "\"")
+                    {
+                        CreateNoWindow = true,
+                        UseShellExecute = false,
+                        RedirectStandardError = true,
+                        RedirectStandardOutput = true
+                    }
+                };
+                p.Start();
+                p.WaitForExit();
 
 				MainWindow.instance.Dispatcher.Invoke(((Action)delegate
 				{
