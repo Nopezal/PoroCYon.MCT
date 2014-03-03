@@ -36,7 +36,7 @@ namespace TAPI.SDK.GUI.Controls
             Font = Main.fontMouseText;
         }
         public TextBlock(string text)
-            : base()
+            : this()
         {
             Text = text;
         }
