@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
-using TAPI.SDK.GUI;
 using TAPI.SDK.Input;
 using TAPI.SDK.Interop;
 using TAPI.SDK.Net;
@@ -55,7 +54,7 @@ namespace TAPI.SDK.Internal.ModClasses
                 return; // no need to continue anyway
             }
 
-            (SdkUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { Color.White });
+            (Sdk.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
 
             instance = this;
 
@@ -208,12 +207,7 @@ namespace TAPI.SDK.Internal.ModClasses
         [CallPriority(Single.PositiveInfinity)]
         public override void PostGameDraw(SpriteBatch sb)
         {
-            if (Main.gameMenu)
-            {
-                GInput.Update();
-
-                SdkUI.Update();
-            }
+            GInput.Update();
 
             base.PostGameDraw(sb);
         }

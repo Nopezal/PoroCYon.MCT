@@ -7,7 +7,6 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
-using TAPI.SDK.GUI;
 using TAPI.SDK.Input;
 using TAPI.SDK.Internal;
 using TAPI.SDK.Internal.ModClasses;
@@ -40,6 +39,14 @@ namespace TAPI.SDK
             {
                 return Constants.mainInstance.spriteBatch;
             }
+        }
+        /// <summary>
+        /// A 1-by-1, white pixel (#FFFFFF00)
+        /// </summary>
+        public static Texture2D WhitePixel
+        {
+            get;
+            internal set;
         }
 
         /// <summary>
@@ -86,7 +93,7 @@ namespace TAPI.SDK
             modBase.modNPCs.Add(new MNPC(modBase, null));
             modBase.modPrefixes.Add(new MPrefix(modBase, null));
             modBase.modProjectiles.Add(new MProj(modBase, null));
-            modBase.modInterfaces.Add(new SdkUI(modBase));
+            modBase.modInterfaces.Add(new MUI(modBase));
             #endregion
 
             ModsLoadContent.Load(Assembly.GetExecutingAssembly(), modBase);
@@ -95,8 +102,6 @@ namespace TAPI.SDK
             modBase.modPrefixes[0].Init(null);
 
             Inited = true;
-
-            SdkUI.Reset();
 
             SyncedRandom.Reset();
 

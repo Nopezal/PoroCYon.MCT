@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using TAPI.SDK.Input;
 
 namespace TAPI.SDK.Internal.ModClasses
 {
-    [GlobalMod]
-    sealed class MWorld : ModWorld
+    public sealed class MTile : ModTile
     {
-        public MWorld(ModBase @base)
+        public MTile(ModBase @base)
             : base(@base)
         {
 

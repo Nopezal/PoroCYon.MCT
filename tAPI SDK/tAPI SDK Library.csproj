@@ -84,47 +84,16 @@
   <ItemGroup>
     <Compile Include="Content\LoadParameters.cs" />
     <Compile Include="Content\ObjectLoader.cs" />
-    <Compile Include="GUI\Controls\CheckBox.cs" />
-    <Compile Include="GUI\Controls\ColourChooser.cs" />
-    <Compile Include="GUI\Controls\IncreaseDecreaseButton.cs" />
-    <Compile Include="GUI\Controls\Interop\ControlContainerWrapper.cs" />
-    <Compile Include="GUI\Controls\Interop\MenuButtonWrapper.cs" />
-    <Compile Include="GUI\Controls\Interop\MenuPageWrapper.cs" />
-    <Compile Include="GUI\Controls\ItemContainer.cs" />
-    <Compile Include="GUI\Controls\KeyBox.cs" />
-    <Compile Include="GUI\Controls\Interop\ControlWrapper.cs" />
-    <Compile Include="GUI\CustomUI.cs" />
-    <Compile Include="GUI\IControlParent.cs" />
-    <Compile Include="GUI\MessageBox.cs" />
-    <Compile Include="GUI\Controls\Primitives\Button.cs" />
-    <Compile Include="GUI\Controls\Control.cs" />
-    <Compile Include="GUI\Controls\Primitives\Checkable.cs" />
-    <Compile Include="GUI\Controls\Primitives\ControlContainer.cs" />
-    <Compile Include="GUI\Controls\ControlGroup.cs" />
-    <Compile Include="GUI\Controls\Primitives\Focusable.cs" />
-    <Compile Include="GUI\Controls\Image.cs" />
-    <Compile Include="GUI\Controls\ImageButton.cs" />
-    <Compile Include="GUI\Controls\Primitives\ICaretControl.cs" />
-    <Compile Include="GUI\Controls\Primitives\IFontControl.cs" />
-    <Compile Include="GUI\Controls\Primitives\IImageControl.cs" />
-    <Compile Include="GUI\Controls\Primitives\ITextControl.cs" />
-    <Compile Include="GUI\Controls\Primitives\ListeningControl.cs" />
-    <Compile Include="GUI\Controls\RadioButton.cs" />
-    <Compile Include="GUI\Controls\Slider.cs" />
-    <Compile Include="GUI\Controls\TextBlock.cs" />
-    <Compile Include="GUI\Controls\TextBox.cs" />
-    <Compile Include="GUI\Controls\TextButton.cs" />
-    <Compile Include="GUI\Controls\Window.cs" />
-    <Compile Include="Internal\SdkCustomUI.cs" />
-    <Compile Include="GUI\SdkUI.cs" />
-    <Compile Include="GUI\XmlUIConstructor.cs" />
     <Compile Include="Input\GInput.cs" />
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
     <Compile Include="Internal\InternalConsts.cs" />
+    <Compile Include="Internal\ModClasses\MBuff.cs" />
     <Compile Include="Internal\ModClasses\MNPC.cs" />
     <Compile Include="Internal\ModClasses\MPrefix.cs" />
     <Compile Include="Internal\ModClasses\MProj.cs" />
+    <Compile Include="Internal\ModClasses\MTile.cs" />
+    <Compile Include="Internal\ModClasses\MUI.cs" />
     <Compile Include="Internal\ModClasses\MWorld.cs" />
     <Compile Include="Interop\ModMessages.cs" />
     <Compile Include="ModableObject.cs" />
@@ -146,10 +115,7 @@
     <EmbeddedResource Include="ModInfo.json" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="GUI\Controls\UIClassDiagram.cd" />
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="GUI\TemplateXmlUI.xml" />
+    <Folder Include="UI\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
