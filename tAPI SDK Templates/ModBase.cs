@@ -9,7 +9,6 @@ using TAPI.SDK;
 
 namespace TAPI.$safeprojectname$
 {
-    [GlobalMod]
     public class ModBase : TAPI.ModBase
     {
         public ModBase()

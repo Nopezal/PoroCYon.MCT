@@ -11,7 +11,10 @@ using TAPI.SDK.Input;
 using TAPI.SDK.Internal;
 using TAPI.SDK.Internal.ModClasses;
 using TAPI.SDK.Interop;
+using TAPI.SDK.ObjectModel;
 using TAPI.SDK.Net;
+using TAPI.SDK.UI;
+using TAPI.SDK.UI.MenuItems;
 
 namespace TAPI.SDK
 {
@@ -25,25 +28,6 @@ namespace TAPI.SDK
         /// Wether the SDK is initalized or not
         /// </summary>
         public static bool Inited
-        {
-            get;
-            internal set;
-        }
-
-        /// <summary>
-        /// Gets the <see cref="Microsoft.Xna.Framework.Graphics.SpriteBatch"/> used by the game
-        /// </summary>
-        public static SpriteBatch SharedSpriteBatch
-        {
-            get
-            {
-                return Constants.mainInstance.spriteBatch;
-            }
-        }
-        /// <summary>
-        /// A 1-by-1, white pixel (#FFFFFF00)
-        /// </summary>
-        public static Texture2D WhitePixel
         {
             get;
             internal set;
@@ -109,6 +93,22 @@ namespace TAPI.SDK
         }
         internal static void Uninit()
         {
+            SdkUI.WhitePixel.Dispose();
+
+            CheckBox.GlobalChecked = null;
+            CheckBox.GlobalUnchecked = null;
+
+            Control.GlobalDraw = null;
+            Control.GlobalInit = null;
+            Control.GlobalPreDraw = null;
+            Control.GlobalUpdate = null;
+
+            Page.GlobalDraw = null;
+            Page.GlobalInit = null;
+            Page.GlobalUpdate = null;
+
+            RadioButton.groups.Clear();
+
             Mod.instance = null;
 
             Inited = false;

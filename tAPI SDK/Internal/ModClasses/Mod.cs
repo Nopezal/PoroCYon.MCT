@@ -7,6 +7,7 @@ using PoroCYon.XnaExtensions;
 using TAPI.SDK.Input;
 using TAPI.SDK.Interop;
 using TAPI.SDK.Net;
+using TAPI.SDK.UI;
 
 namespace TAPI.SDK.Internal.ModClasses
 {
@@ -54,7 +55,7 @@ namespace TAPI.SDK.Internal.ModClasses
                 return; // no need to continue anyway
             }
 
-            (Sdk.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
+            (SdkUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
 
             instance = this;
 

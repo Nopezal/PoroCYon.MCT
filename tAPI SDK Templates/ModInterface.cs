@@ -11,7 +11,6 @@ using TAPI.SDK.GUI.Controls;
 
 namespace TAPI.$safeprojectname$
 {
-    [GlobalMod]
     public class ModInterface : TAPI.ModInterface
     {
         public ModInterface(ModBase @base)

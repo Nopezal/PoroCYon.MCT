@@ -5,7 +5,7 @@ using System.Linq;
 namespace TAPI.SDK.Internal.ModClasses
 {
     [GlobalMod]
-    public sealed class MUI : ModInterface
+    sealed class MUI : ModInterface
     {
         public MUI(ModBase @base)
             : base(@base)

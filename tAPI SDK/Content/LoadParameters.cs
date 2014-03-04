@@ -600,6 +600,14 @@ namespace TAPI.SDK.Content
         /// </summary>
         public BuffType Type;
 
+        /// <summary>
+        /// Creates a new instance of the BuffParameters clas
+        /// </summary>
+        /// <param name="type">The type of the buff</param>
+        /// <param name="texture">The texture of the buff</param>
+        /// <param name="tip">The tooltip of the buff</param>
+        /// <param name="vanityPet">Wether the buff functions as a vanity pet icon or not</param>
+        /// <param name="lightPet">Wether the buff functions as a light-emitting pet icon or not</param>
         public BuffParameters(BuffType type, Texture2D texture, string tip, bool vanityPet, bool lightPet)
         {
             Type = type;

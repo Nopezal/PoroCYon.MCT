@@ -96,7 +96,11 @@
     <Compile Include="Internal\ModClasses\MUI.cs" />
     <Compile Include="Internal\ModClasses\MWorld.cs" />
     <Compile Include="Interop\ModMessages.cs" />
-    <Compile Include="ModableObject.cs" />
+    <Compile Include="ObjectModel\Entity.cs" />
+    <Compile Include="ObjectModel\IFontObject.cs" />
+    <Compile Include="ObjectModel\IImageObject.cs" />
+    <Compile Include="ObjectModel\ITextObject.cs" />
+    <Compile Include="ObjectModel\ModableObject.cs" />
     <Compile Include="Net\NetHelper.cs" />
     <Compile Include="Net\SyncedRandom.cs" />
     <Compile Include="Sdk.cs" />
@@ -105,6 +109,12 @@
     <Compile Include="Internal\ModClasses\Mod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SdkConstants.cs" />
+    <Compile Include="UI\MenuItems\CheckBox.cs" />
+    <Compile Include="UI\MenuItems\Control.cs" />
+    <Compile Include="UI\MenuItems\Image.cs" />
+    <Compile Include="UI\MenuItems\Page.cs" />
+    <Compile Include="UI\MenuItems\RadioButton.cs" />
+    <Compile Include="UI\SdkUI.cs" />
     <Compile Include="VanillaData\BuffData.cs" />
     <Compile Include="VanillaData\ItemData.cs" />
     <Compile Include="VanillaData\NPCData.cs" />
@@ -114,9 +124,7 @@
   <ItemGroup>
     <EmbeddedResource Include="ModInfo.json" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="UI\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (

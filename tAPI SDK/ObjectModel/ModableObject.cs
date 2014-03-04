@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using PoroCYon.XnaExtensions;
 
-namespace TAPI.SDK
+namespace TAPI.SDK.ObjectModel
 {
     /// <summary>
     /// Represents an object where fields and hooks can be added and removed
