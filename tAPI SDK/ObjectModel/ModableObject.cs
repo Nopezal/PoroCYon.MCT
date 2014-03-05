@@ -6,7 +6,7 @@ using PoroCYon.XnaExtensions;
 namespace TAPI.SDK.ObjectModel
 {
     /// <summary>
-    /// Represents an object where fields and hooks can be added and removed
+    /// Represents an object where fields and hooks can be added and removed (and hooks can be invoked)
     /// </summary>
     public abstract class ModableObject
     {

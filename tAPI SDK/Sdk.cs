@@ -93,21 +93,7 @@ namespace TAPI.SDK
         }
         internal static void Uninit()
         {
-            SdkUI.WhitePixel.Dispose();
-
-            CheckBox.GlobalChecked = null;
-            CheckBox.GlobalUnchecked = null;
-
-            Control.GlobalDraw = null;
-            Control.GlobalInit = null;
-            Control.GlobalPreDraw = null;
-            Control.GlobalUpdate = null;
-
-            Page.GlobalDraw = null;
-            Page.GlobalInit = null;
-            Page.GlobalUpdate = null;
-
-            RadioButton.groups.Clear();
+            SdkUI.Uninit();
 
             Mod.instance = null;
 

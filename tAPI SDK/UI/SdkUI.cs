@@ -1,16 +1,78 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
+using TAPI.SDK.Internal;
+using TAPI.SDK.UI.Interface;
+using TAPI.SDK.UI.Interface.Controls;
+//using TAPI.SDK.UI.Interface.Controls.Primitives;
+using TAPI.SDK.UI.MenuItems;
 
 namespace TAPI.SDK.UI
 {
+    using IControl = TAPI.SDK.UI.Interface.Controls.Control;
+    using MControl = TAPI.SDK.UI.MenuItems.Control;
+
     /// <summary>
-    /// The global UI class, provides various things regarding drawing.
+    /// The visibility states of a CustomUI or Control
+    /// </summary>
+    [Flags]
+    public enum Visibility
+    {
+        None = 0,
+
+        Inventory = 1,
+        NoInventory = 2,
+
+        All = Inventory | NoInventory
+    }
+
+    /// <summary>
+    /// The global UI class, provides various things regarding drawing, and holds all CustomUIs.
     /// </summary>
     public static class SdkUI
     {
+        static SdkCustomUI defaultUI;
+
+        internal static List<CustomUI> customUIs;
+
+        internal static SdkCustomUI DefaultUI
+        {
+            get
+            {
+                return defaultUI ?? (defaultUI = new SdkCustomUI());
+            }
+            set
+            {
+                defaultUI = value;
+            }
+        }
+
+        /// <summary>
+        /// A ReadOnlyCollection of all CustomUI instances
+        /// </summary>
+        public static ReadOnlyCollection<CustomUI> CustomUIs
+        {
+            get
+            {
+                return customUIs.AsReadOnly();
+            }
+        }
+
+        /// <summary>
+        /// The current visibility state of the game
+        /// </summary>
+        public static Visibility CurrentVisibility
+        {
+            get
+            {
+                return Main.playerInventory ? Visibility.Inventory : Visibility.NoInventory;
+            }
+        }
+
         /// <summary>
         /// Gets the <see cref="Microsoft.Xna.Framework.Graphics.SpriteBatch"/> used by the game
         /// </summary>
@@ -29,6 +91,7 @@ namespace TAPI.SDK.UI
             get;
             internal set;
         }
+
 
         /// <summary>
         /// Draws a string with an outline
@@ -75,6 +138,90 @@ namespace TAPI.SDK.UI
             MouseText(i.AffixName() + (i.stack > 1 ? " (" + i.stack + ")" : ""));
 
             Main.mouseItem = new Item();
+        }
+
+        /// <summary>
+        /// Adds a CustomUI to the list
+        /// </summary>
+        /// <param name="customUI">The CustomUI to add</param>
+        public static void AddCustomUI(CustomUI customUI)
+        {
+            customUIs.Add(customUI);
+        }
+        /// <summary>
+        /// Removes a CustomUI from the list
+        /// </summary>
+        /// <param name="customUI">The CustomUI to remvoe</param>
+        public static void RemoveCustomUI(CustomUI customUI)
+        {
+            customUIs.Remove(customUI);
+        }
+        /// <summary>
+        /// Removes a CustomUI from the list 
+        /// </summary>
+        /// <param name="index">The index of the CustomUI to remove</param>
+        public static void RemoveCustomUIAt(int index)
+        {
+            customUIs.RemoveAt(index);
+        }
+        /// <summary>
+        /// Removes all CustomUIs from the list
+        /// </summary>
+        public static void ClearCustomUIs()
+        {
+            customUIs.Clear();
+        }
+
+        internal static void Uninit()
+        {
+            WhitePixel.Dispose();
+
+            defaultUI = null;
+
+            #region Interface
+            CustomUI.GlobalControlAdded = null;
+            CustomUI.GlobalControlRemoved = null;
+
+            IControl.GlobalAdded = null;
+            IControl.GlobalDraw = null;
+            IControl.GlobalInit = null;
+            IControl.GlobalRemoved = null;
+            IControl.GlobalUpdate = null;
+            #endregion
+
+            #region MenuItems
+            CheckBox.GlobalChecked = null;
+            CheckBox.GlobalUnchecked = null;
+
+            MControl.GlobalDraw = null;
+            MControl.GlobalInit = null;
+            MControl.GlobalPreDraw = null;
+            MControl.GlobalUpdate = null;
+
+            Page.GlobalDraw = null;
+            Page.GlobalInit = null;
+            Page.GlobalUpdate = null;
+
+            RadioButton.groups.Clear();
+            #endregion
+        }
+
+        internal static void Update()
+        {
+            DefaultUI.Update();
+
+            for (int i = 0; i < customUIs.Count; i++)
+                if (customUIs[i].IsVisible)
+                    customUIs[i].Update();
+        }
+        internal static void Draw(SpriteBatch sb, DrawCalled called)
+        {
+            if (called == DrawCalled.PostDrawInventory)
+                DefaultUI.Draw(sb);
+
+            for (int i = 0; i < customUIs.Count; i++)
+                if (customUIs[i].IsVisible && customUIs[i].DrawCalled == called)
+                    customUIs[i].Draw(sb);
         }
     }
 }
