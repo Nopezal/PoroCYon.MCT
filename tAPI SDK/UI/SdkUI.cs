@@ -203,6 +203,38 @@ namespace TAPI.SDK.UI
             customUIs.Clear();
         }
 
+        /// <summary>
+        /// Adds a Control to the list
+        /// </summary>
+        /// <param name="control">The Control to add</param>
+        public static void AddControl(IControl control)
+        {
+            DefaultUI.AddControl(control);
+        }
+        /// <summary>
+        /// Removes a Control from the list
+        /// </summary>
+        /// <param name="control">The Control to remvoe</param>
+        public static void RemoveControl(IControl control)
+        {
+            DefaultUI.RemoveControl(control);
+        }
+        /// <summary>
+        /// Removes a Control from the list 
+        /// </summary>
+        /// <param name="index">The index of the Control to remove</param>
+        public static void RemoveControlAt(int index)
+        {
+            DefaultUI.RemoveControlAt(index);
+        }
+        /// <summary>
+        /// Removes all Controls from the list
+        /// </summary>
+        public static void ClearControls()
+        {
+            DefaultUI.ClearControls();
+        }
+
         internal static void Uninit()
         {
             WhitePixel.Dispose();
@@ -245,6 +277,11 @@ namespace TAPI.SDK.UI
             ItemContainer.GlobalStackChanged = null;
 
             Slider.GlobalValueChanged = null;
+
+            Window.GlobalClosed = null;
+            Window.GlobalDragging = null;
+            Window.GlobalDraggingStarted = null;
+            Window.GlobalDraggingStopped = null;
             #endregion
 
             #region MenuItems

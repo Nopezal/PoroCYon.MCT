@@ -13,6 +13,9 @@ using TAPI.SDK.UI.Interface.Controls.Primitives;
 
 namespace TAPI.SDK.UI.Interface.Controls
 {
+    /// <summary>
+    /// A control that listens to key input
+    /// </summary>
     [ComVisible(false)]
     public class KeyBox : ListeningControl<Key>, ICaretObject
     {

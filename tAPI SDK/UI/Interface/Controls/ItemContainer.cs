@@ -9,6 +9,9 @@ using TAPI.SDK.UI.Interface.Controls.Primitives;
 
 namespace TAPI.SDK.UI.Interface.Controls
 {
+    /// <summary>
+    /// An Item slot
+    /// </summary>
     public class ItemContainer : Focusable
     {
         Texture2D bgTex = Main.inventoryBackTexture;

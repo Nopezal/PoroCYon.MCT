@@ -85,7 +85,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <summary>
         /// The visibility of the control
         /// </summary>
-        public Visibility Visibility = Visibility.Inventory;
+        public Visibility Visibility = Visibility.All;
         #endregion
 
         #region events
@@ -282,7 +282,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         }
 
         /// <summary>
-        /// Destroys the control; thus removing it safely from it's parent's list.
+        /// Destroys the control by removing it safely from it's parent's list.
         /// </summary>
         public void Destroy()
         {
