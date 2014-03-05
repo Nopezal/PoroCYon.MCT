@@ -5,6 +5,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TAPI.SDK.UI;
 using TAPI.SDK.UI.Interface;
+using TAPI.SDK.UI.Interface.Controls;
 
 namespace TAPI.SDK.Internal.ModClasses
 {
@@ -47,6 +48,11 @@ namespace TAPI.SDK.Internal.ModClasses
             SdkUI.Draw(sb, DrawCalled.PostDrawInterface);
 
             base.PostDrawInterface(sb);
+        }
+
+        public override bool KeyboardInputFocused()
+        {
+            return base.KeyboardInputFocused() || Control.listening;
         }
     }
 }

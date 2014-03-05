@@ -24,6 +24,23 @@ namespace TAPI.SDK.UI.Interface.Controls
 
         internal bool Destroyed = false;
 
+        internal static bool listening = false;
+
+        /// <summary>
+        /// Wether a control is listening to the keyboard or not
+        /// </summary>
+        protected static bool SomethingIsListening
+        {
+            get
+            {
+                return listening;
+            }
+            set
+            {
+                listening = value;
+            }
+        }
+
         #region fields
         /// <summary>
         /// Wether the control has a background or not
@@ -42,13 +59,13 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// </summary>
         public Vector2 Scale = new Vector2(1f);
         /// <summary>
-        /// The colour of the control.
+        /// The colour of the control. Default is #FFFFFF00
         /// </summary>
         public Color Colour = new Color(255, 255, 255, 0);
         /// <summary>
-        /// The secondary colour of the control. Not used for all types of controls.
+        /// The secondary colour of the control. Not used for all types of controls. Default is #00000000
         /// </summary>
-        public Color SecondaryColour = new Color(255, 255, 255, 0);
+        public Color SecondaryColour = new Color(0, 0, 0, 0);
         /// <summary>
         /// The rotation of the control
         /// </summary>
@@ -232,39 +249,6 @@ namespace TAPI.SDK.UI.Interface.Controls
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
             Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, GInput.Mouse.Rectangle.Intersects(bg) ? 0.85f : 0.75f);
-
-            //Rectangle?
-            //    topLeft = new Rectangle(0, 0, 8, 8),
-            //    topRight = new Rectangle(492, 0, 8, 8),
-            //    bottomLeft = new Rectangle(0, 492, 8, 8),
-            //    bottomRight = new Rectangle(492, 492, 8, 8);
-
-            //int a = GInput.Mouse.Rectangle.Intersects(bg) ? 200 : 150;
-            //Color
-            //    corner = new Color(255, 255, 255, a),
-            //    border = new Color(18, 18, 38, a),
-            //    inner = new Color(63, 65, 151, a);
-
-            //// corners
-            //sb.Draw(Main.chatBackTexture, Position, topLeft, corner);
-            //sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(8f, 0f), topRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-            //sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(0f, 80f), bottomLeft, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-            //sb.Draw(Main.chatBackTexture, Position + bg.Size() - new Vector2(8f), bottomRight, corner, Rotation, Origin, 1f, SpriteEffects, LayerDepth);
-
-            //// borders
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, 0f), null, border, Rotation, Origin, new Vector2(bg.Width - 16f, 2f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(0f, 8f), null, border, Rotation, Origin, new Vector2(2f, bg.Height - 16f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, bg.Height - 2f), null, border, Rotation, Origin, new Vector2(bg.Width - 16f, 2f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(bg.Width - 2f, 8f), null, border, Rotation, Origin, new Vector2(2f, bg.Height - 16f), SpriteEffects, LayerDepth);
-
-            //// inner (centre)
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f), null, inner, Rotation, Origin, bg.Size() - new Vector2(16f), SpriteEffects, LayerDepth);
-
-            //// inner (missing parts)
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, 2f), null, inner, Rotation, Origin, new Vector2(bg.Width - 16f, 6f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(8f, bg.Height - 8f), null, inner, Rotation, Origin, new Vector2(bg.Width - 16f, 6f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(2f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
-            //sb.Draw(SdkUI.WhitePixel, Position + new Vector2(bg.Width - 8f, 8f), null, inner, Rotation, Origin, new Vector2(6f, bg.Height - 16f), SpriteEffects, LayerDepth);
         }
         /// <summary>
         /// Draws an outlined string with the control's properties as paramters
@@ -277,7 +261,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <param name="offset">The offset of the outlines</param>
         protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Color foreground, Color? background = null, float offset = 1f)
         {
-            SdkUI.DrawOutlinedString(sb, font, text, Position, foreground, background, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+            SdkUI.DrawOutlinedString(sb, font, text, Position, foreground, background ?? SecondaryColour, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }
 
         /// <summary>

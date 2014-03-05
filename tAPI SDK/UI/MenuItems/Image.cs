@@ -74,17 +74,9 @@ namespace TAPI.SDK.UI.MenuItems
         /// <summary>
         /// Creates a new instance of the Image class
         /// </summary>
-        public Image()
-            : base()
-        {
-
-        }
-        /// <summary>
-        /// Creates a new instance of the Image class
-        /// </summary>
         /// <param name="image">The picture of the Image, as a Texture2D</param>
         public Image(Texture2D image)
-            : this()
+            : base()
         {
             Picture = image;
         }
@@ -93,7 +85,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// </summary>
         /// <param name="image">The picture of the Image, as an AnimatedGif</param>
         public Image(AnimatedGif image)
-            : this()
+            : base()
         {
             Picture = image;
         }

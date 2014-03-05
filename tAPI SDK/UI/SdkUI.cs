@@ -13,8 +13,13 @@ using TAPI.SDK.UI.MenuItems;
 
 namespace TAPI.SDK.UI
 {
+    // the number of ambiguous matches is too damn high
     using IControl = TAPI.SDK.UI.Interface.Controls.Control;
     using MControl = TAPI.SDK.UI.MenuItems.Control;
+    using ICheckBox = TAPI.SDK.UI.Interface.Controls.CheckBox;
+    using MCheckBox = TAPI.SDK.UI.MenuItems.CheckBox;
+    using IRadioButton = TAPI.SDK.UI.Interface.Controls.RadioButton;
+    using MRadioButton = TAPI.SDK.UI.MenuItems.RadioButton;
 
     /// <summary>
     /// The visibility states of a CustomUI or Control
@@ -208,11 +213,15 @@ namespace TAPI.SDK.UI
             CustomUI.GlobalControlAdded = null;
             CustomUI.GlobalControlRemoved = null;
 
+            // ---
+
             IControl.GlobalAdded = null;
             IControl.GlobalDraw = null;
             IControl.GlobalInit = null;
             IControl.GlobalRemoved = null;
             IControl.GlobalUpdate = null;
+
+            // ---
 
             Button.GlobalClicked = null;
 
@@ -228,11 +237,19 @@ namespace TAPI.SDK.UI
             Focusable.GlobalLostFocus = null;
 
             ListeningControl.GlobalInputGot = null;
+
+            // ---
+
+            ItemContainer.GlobalCanSetItem = null;
+            ItemContainer.GlobalItemChanged = null;
+            ItemContainer.GlobalStackChanged = null;
+
+            Slider.GlobalValueChanged = null;
             #endregion
 
             #region MenuItems
-            CheckBox.GlobalChecked = null;
-            CheckBox.GlobalUnchecked = null;
+            MCheckBox.GlobalChecked = null;
+            MCheckBox.GlobalUnchecked = null;
 
             MControl.GlobalDraw = null;
             MControl.GlobalInit = null;
@@ -243,12 +260,14 @@ namespace TAPI.SDK.UI
             Page.GlobalInit = null;
             Page.GlobalUpdate = null;
 
-            RadioButton.groups.Clear();
+            MRadioButton.groups.Clear();
             #endregion
         }
 
         internal static void Update()
         {
+            IControl.listening = false;
+
             DefaultUI.Update();
 
             for (int i = 0; i < customUIs.Count; i++)

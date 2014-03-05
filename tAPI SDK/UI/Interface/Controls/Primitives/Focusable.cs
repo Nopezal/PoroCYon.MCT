@@ -263,5 +263,17 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
 
             ForceHover = ForceFocus = false;
         }
+
+        /// <summary>
+        /// Draws a blue background behind the control
+        /// </summary>
+        /// <param name="sb">The SpriteBatch used to draw the background</param>
+        protected new void DrawBackground(SpriteBatch sb)
+        {
+            if (!HasBackground)
+                return;
+
+            Drawing.DrawBlueBox(sb, Hitbox.X, Hitbox.Y, Hitbox.Width, Hitbox.Height, IsHovered ? 0.85f : 0.75f);
+        }
     }
 }

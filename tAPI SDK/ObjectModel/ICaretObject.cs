@@ -5,7 +5,7 @@ using System.Linq;
 namespace TAPI.SDK.ObjectModel
 {
     /// <summary>
-    /// an ITextObject with a caret
+    /// an ITextObject with a caret, usually used for editable text
     /// </summary>
     public interface ICaretObject : ITextObject
     {
@@ -19,7 +19,7 @@ namespace TAPI.SDK.ObjectModel
         /// <summary>
         /// Wether the caret is visible or not
         /// </summary>
-        bool CaretVisible
+        bool IsCaretVisible
         {
             get;
         }
