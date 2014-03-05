@@ -8,7 +8,7 @@ using PoroCYon.XnaExtensions;
 using TAPI.SDK.Internal;
 using TAPI.SDK.UI.Interface;
 using TAPI.SDK.UI.Interface.Controls;
-//using TAPI.SDK.UI.Interface.Controls.Primitives;
+using TAPI.SDK.UI.Interface.Controls.Primitives;
 using TAPI.SDK.UI.MenuItems;
 
 namespace TAPI.SDK.UI
@@ -22,11 +22,23 @@ namespace TAPI.SDK.UI
     [Flags]
     public enum Visibility
     {
+        /// <summary>
+        /// Not visible at all. Use this when you override IsVisible
+        /// </summary>
         None = 0,
 
+        /// <summary>
+        /// Only visible when the inventory is opened
+        /// </summary>
         Inventory = 1,
+        /// <summary>
+        /// Only visible when the inventory is closed
+        /// </summary>
         NoInventory = 2,
 
+        /// <summary>
+        /// At all time ingame
+        /// </summary>
         All = Inventory | NoInventory
     }
 
@@ -70,6 +82,20 @@ namespace TAPI.SDK.UI
             get
             {
                 return Main.playerInventory ? Visibility.Inventory : Visibility.NoInventory;
+            }
+        }
+        /// <summary>
+        /// Gets or sets the DrawCalled field of the default CustomUI
+        /// </summary>
+        public static DrawCalled DrawCalled
+        {
+            get
+            {
+                return defaultUI.DrawCalled;
+            }
+            set
+            {
+                defaultUI.DrawCalled = value;
             }
         }
 
@@ -187,6 +213,21 @@ namespace TAPI.SDK.UI
             IControl.GlobalInit = null;
             IControl.GlobalRemoved = null;
             IControl.GlobalUpdate = null;
+
+            Button.GlobalClicked = null;
+
+            Checkable.GlobalChecked = null;
+            Checkable.GlobalUnchecked = null;
+
+            ControlContainer.GlobalAddControl = null;
+            ControlContainer.GlobalRemoveControl = null;
+
+            Focusable.GlobalBeginHover = null;
+            Focusable.GlobalEndHover = null;
+            Focusable.GlobalGotFocus = null;
+            Focusable.GlobalLostFocus = null;
+
+            ListeningControl.GlobalInputGot = null;
             #endregion
 
             #region MenuItems

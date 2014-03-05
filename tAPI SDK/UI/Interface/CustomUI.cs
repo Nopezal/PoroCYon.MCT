@@ -10,13 +10,27 @@ using TAPI.SDK.UI.Interface.Controls;
 
 namespace TAPI.SDK.UI.Interface
 {
-
+    /// <summary>
+    /// When to call Draw on a CustomUI
+    /// </summary>
     public enum DrawCalled
     {
+        /// <summary>
+        /// At ModInterface.PreDrawInterface
+        /// </summary>
         PreDrawInterface,
+        /// <summary>
+        /// At ModInterface.PreDrawInventory
+        /// </summary>
         PreDrawInventory,
 
+        /// <summary>
+        /// At ModInterface.PostDrawInventory
+        /// </summary>
         PostDrawInventory,
+        /// <summary>
+        /// At ModInterface.PostDrawInterface
+        /// </summary>
         PostDrawInterface
     }
 
@@ -118,7 +132,6 @@ namespace TAPI.SDK.UI.Interface
         /// Draws the CustomUI
         /// </summary>
         /// <param name="sb">The SpriteBatch used to draw things</param>
-        /// <param name="after">Wether it is called in Pre- or PostDrawInterface</param>
         public virtual void Draw(SpriteBatch sb)
         {
             for (int i = 0; i < controls.Count; i++)

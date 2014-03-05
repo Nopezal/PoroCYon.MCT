@@ -32,7 +32,7 @@ namespace TAPI.SDK.ObjectModel
         /// <summary>
         /// Removes a control from the collection of controls from the given ID
         /// </summary>
-        /// <param name="control">The ID of the control to remove</param>
+        /// <param name="id">The ID of the control to remove</param>
         void RemoveControlAt(int id);
         /// <summary>
         /// Clears the controls list

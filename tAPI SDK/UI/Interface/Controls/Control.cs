@@ -124,11 +124,14 @@ namespace TAPI.SDK.UI.Interface.Controls
             get;
             internal set;
         }
+        /// <summary>
+        /// The drawing origion of the Control
+        /// </summary>
         public virtual Vector2 Origin
         {
             get
             {
-                return origin ?? new Vector2(Hitbox.Width, Hitbox.Height) / 2f;
+                return origin ?? Vector2.Zero;//new Vector2(Hitbox.Width, Hitbox.Height) / 2f;
             }
             set
             {
@@ -145,11 +148,14 @@ namespace TAPI.SDK.UI.Interface.Controls
                 return new Rectangle((int)Position.X, (int)Position.Y, (int)Scale.X, (int)Scale.Y);
             }
         }
+        /// <summary>
+        /// The draw position of the Control
+        /// </summary>
         public virtual Vector2 DrawnPosition
         {
             get
             {
-                return Hitbox.Position();
+                return Position + Origin;//Hitbox.Position();
             }
         }
         /// <summary>
