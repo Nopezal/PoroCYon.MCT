@@ -24,42 +24,11 @@ namespace TAPI.SDK.Internal.ModClasses
 
         public override void OnLoad()
         {
-            if (code.Location.IsEmpty()) // is loaded through mod (.tapi, byte array -> no location)
-            {
-                // hacky stuff #2
-
-                // remove from list, but the file still exists
-
-                // this is so it's using the .dll (shared objects) instead from some byte array (not so shared objects),
-                // but that would make the modinfo display chrash. Adding this .tapi file and removing it from the list by code fixes it.
-                modInfo = new ModInfo();
-                modInterfaces = new List<ModInterface>();
-                modItems = new List<ModItem>();
-                modNPCs = new List<ModNPC>();
-                modPlayers = new List<ModPlayer>();
-                modPrefixes = new List<ModPrefix>();
-                modProjectiles = new List<ModProjectile>();
-                modWorlds = new List<ModWorld>();
-
-                modIndex = -1;
-                modName = "";
-                fileName = "";
-                textures = new Dictionary<string, Texture2D>();
-                files = new Dictionary<string, byte[]>();
-                code = null;
-
-                Mods.loadOrder.Remove("TAPI.SDK");
-
-                Mods.modBases.Remove(this);
-
-                return; // no need to continue anyway
-            }
+            base.OnLoad();
 
             (SdkUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
 
             instance = this;
-
-            base.OnLoad();
         }
         public override void OnUnload()
         {

@@ -15,6 +15,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tAPI SDK Templates", "tAPI 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tAPI SDK Tools", "tAPI SDK Tools\tAPI SDK Tools.csproj", "{FE1A503F-8B67-4D06-8BBE-FFEC7956634E}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "tAPI SDK Mod placeholder", "tAPI SDK Mod placeholder\tAPI SDK Mod placeholder.csproj", "{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -63,6 +65,16 @@ Global
 		{FE1A503F-8B67-4D06-8BBE-FFEC7956634E}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{FE1A503F-8B67-4D06-8BBE-FFEC7956634E}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{FE1A503F-8B67-4D06-8BBE-FFEC7956634E}.Release|Win32.ActiveCfg = Release|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

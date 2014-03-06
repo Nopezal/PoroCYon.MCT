@@ -93,9 +93,9 @@ namespace TAPI.SDK.Tools.Builder
                 }
             #endregion
 
-            File.Copy(dllFile, modPath + ".dll");
+            File.Copy(dllFile, modPath + ".dll", true);
             if (File.Exists(Path.ChangeExtension(dllFile, ".pdb")))
-                File.Copy(Path.ChangeExtension(dllFile, ".pdb"), modPath + ".pdb");
+                File.Copy(Path.ChangeExtension(dllFile, ".pdb"), modPath + ".pdb", true);
 
             WriteData(modInfo, modPath, files);
         }

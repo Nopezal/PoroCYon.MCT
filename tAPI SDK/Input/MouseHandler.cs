@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
+//using System.Windows.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 
@@ -16,19 +16,24 @@ namespace TAPI.SDK.Input
     /// </summary>
     public struct MouseHandler
     {
-        bool l;
-
         /// <summary>
-        /// Wether the left mouse button is pressed or not (returns false when Main.blockMouse or Player.mouseInterface is true)
+        /// Wether the left mouse button is pressed or not
         /// </summary>
         public bool Left
         {
+            get;
+            private set;
+        }
+        /// <summary>
+        /// Wether the left mouse button is pressed or not (returns false when Main.blockMouse or Player.mouseInterface is true)
+        /// </summary>
+        public bool SafeLeft
+        {
             get
             {
-                return l && !Constants.mainInstance.blockMouse && !Main.localPlayer.mouseInterface;
+                return Left && !Constants.mainInstance.blockMouse && !Main.localPlayer.mouseInterface;
             }
         }
-
         /// <summary>
         /// Wether the right mouse button is pressed or not
         /// </summary>
@@ -104,6 +109,27 @@ namespace TAPI.SDK.Input
         }
 
         /// <summary>
+        /// Wether the user just clicked left or not
+        /// </summary>
+        public bool JustClickedLeft
+        {
+            get
+            {
+                return GInput.Mouse.Left && !GInput.OldMouse.Left;
+            }
+        }
+        /// <summary>
+        /// Wether the user just clicked right or not
+        /// </summary>
+        public bool JustClickedRight
+        {
+            get
+            {
+                return GInput.Mouse.Right && !GInput.OldMouse.Right;
+            }
+        }
+
+        /// <summary>
         /// Gets the current scroll wheel value
         /// </summary>
         public int ScrollWheel
@@ -118,19 +144,19 @@ namespace TAPI.SDK.Input
         /// <returns>The current mouse state</returns>
         public static MouseHandler GetState()
         {
-            XnaExtMouse xem = XnaExtMouse.GetState();
+            MouseState xm = Mouse.GetState();
 
             MouseHandler ret = new MouseHandler()
             {
-                l = xem.Left,
-                Right = xem.Right,
-                Middle = xem.Middle,
-                XButton1 = xem.XButton1,
-                XButton2 = xem.XButton2
+                Left = xm.LeftButton == ButtonState.Pressed,
+                Right = xm.RightButton == ButtonState.Pressed,
+                Middle = xm.MiddleButton == ButtonState.Pressed,
+                XButton1 = xm.XButton1 == ButtonState.Pressed,
+                XButton2 = xm.XButton2 == ButtonState.Pressed
             };
 
-            ret.Position = xem.Position;
-            ret.ScrollWheel = xem.ScrollWheel;
+            ret.Position = xm.Position();
+            ret.ScrollWheel = xm.ScrollWheelValue;
 
             return ret;
         }

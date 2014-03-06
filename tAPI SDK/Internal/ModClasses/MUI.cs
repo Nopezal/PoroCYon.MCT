@@ -23,6 +23,9 @@ namespace TAPI.SDK.Internal.ModClasses
         {
             SdkUI.Draw(sb, DrawCalled.PreDrawInterface);
 
+            if (!Main.playerInventory)
+                PreDrawInventory(sb);
+
             return base.PreDrawInterface(sb);
         }
 
@@ -45,6 +48,9 @@ namespace TAPI.SDK.Internal.ModClasses
         [CallPriority(Single.Epsilon)]
         public override void PostDrawInterface(SpriteBatch sb)
         {
+            if (!Main.playerInventory)
+                PostDrawInventory(sb);
+
             SdkUI.Draw(sb, DrawCalled.PostDrawInterface);
 
             base.PostDrawInterface(sb);

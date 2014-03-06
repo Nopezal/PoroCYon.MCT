@@ -100,8 +100,6 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
 
                 Focused[Parent.Target] = value ? ID : -1;
 
-                Main.PlaySound("vanilla:menuTick");
-
                 for (int i = 0; i < Parent.Target.Controls.Count; i++)
                     if (Parent.Target.Controls[i] is Focusable)
                     {
@@ -113,6 +111,14 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                             f.FocusLost();
                     }
             }
+        }
+        /// <summary>
+        /// Wether the Focusable was focused in the previous tick or not
+        /// </summary>
+        public bool OldIsFocused
+        {
+            get;
+            private set;
         }
 
         /// <summary>
@@ -233,6 +239,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
             if (!CanFocus || !Parent.IsAlive)
                 return;
 
+            OldIsFocused = IsFocused;
+
             if (GInput.Mouse.Rectangle.Intersects(Hitbox) || ForceHover)
             {
                 if (!IsHovered)
@@ -273,7 +281,19 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
             if (!HasBackground)
                 return;
 
-            Drawing.DrawBlueBox(sb, Hitbox.X, Hitbox.Y, Hitbox.Width, Hitbox.Height, IsHovered ? 0.85f : 0.75f);
+            DrawBackground(sb, Hitbox);
+        }
+        /// <summary>
+        /// Draws a blue background behind the control
+        /// </summary>
+        /// <param name="sb">The SpriteBatch used to draw the background</param>
+        /// <param name="hb">The bounds of the background to draw</param>
+        protected new void DrawBackground(SpriteBatch sb, Rectangle hb)
+        {
+            if (!HasBackground)
+                return;
+
+            Drawing.DrawBlueBox(sb, hb.X, hb.Y, hb.Width, hb.Height, IsHovered ? 0.85f : 0.75f);
         }
     }
 }

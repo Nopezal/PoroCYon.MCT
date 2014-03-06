@@ -39,8 +39,8 @@ namespace TAPI.SDK.UI.Interface
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y,
-                    (int)(Scale.X * Font.MeasureString(Text).X), (int)(Scale.Y * Font.MeasureString(Text).Y));
+                return new Rectangle((int)Position.X - 16, (int)Position.Y - 8,
+                    (int)(Scale.X * Font.MeasureString(Text).X) + 32, (int)(Scale.Y * Font.MeasureString(Text).Y) + 16);
             }
         }
 

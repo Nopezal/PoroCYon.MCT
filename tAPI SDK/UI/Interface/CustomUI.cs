@@ -39,6 +39,7 @@ namespace TAPI.SDK.UI.Interface
     /// </summary>
     public abstract class CustomUI : ModableObject, IControlParent, ICloneable<CustomUI>
     {
+        bool inited = false;
         List<Control> controls;
 
         /// <summary>
@@ -103,7 +104,13 @@ namespace TAPI.SDK.UI.Interface
         /// <summary>
         /// Initializes the CustomUI
         /// </summary>
-        public virtual void Init() { }
+        public virtual void Init()
+        {
+            for (int i = 0; i < controls.Count; i++)
+                controls[i].Init();
+
+            inited = true;
+        }
         /// <summary>
         /// Updates the CustomUI
         /// </summary>
@@ -167,9 +174,10 @@ namespace TAPI.SDK.UI.Interface
 
             control.Parent = new WeakReference<IControlParent>(this);
 
-            control.ID = controls.Count;
+            control.ID = controls.Count - 1;
 
-            control.Init();
+            if (inited)
+                control.Init();
 
             if (OnControlAdded != null)
                 OnControlAdded(control);

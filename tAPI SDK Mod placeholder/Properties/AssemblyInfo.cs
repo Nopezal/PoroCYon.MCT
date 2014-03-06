@@ -14,10 +14,9 @@ using TAPI.SDK.Internal;
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 [assembly: ComVisible(true)]
-[assembly: Guid(Consts.GUID)]
+[assembly: Guid("af310c8e-783e-4aa0-a9cf-09aa1f41632f")]
 [assembly: AssemblyVersion(SdkConstants.VERSION_STRING)]
 [assembly: AssemblyFileVersion(SdkConstants.VERSION_STRING)]
 
 // hehe..
 [assembly: InternalsVisibleTo("tAPI SDK Tools")]
-[assembly: InternalsVisibleTo("TAPI.SDK")]

@@ -57,18 +57,18 @@ namespace TAPI.SDK
 
             ModBase modBase = new Mod();
 
+            modBase.code = Assembly.GetExecutingAssembly();
             modBase.fileName = MODFILE;
             modBase.modName = DISPLAYNAME;
             modBase.modInfo = new ModInfo(modInfo);
+
             modBase.modIndex = 0;
-            modBase.code = Assembly.GetExecutingAssembly();
 
             foreach (ModBase @base in Mods.modBases)
                 @base.modIndex++;
 
-            Mods.modBases.Insert(0, modBase);
-
             Mods.loadOrder.Insert(0, INTERNALNAME);
+            Mods.modBases.Insert(0, modBase);
 
             #region instantiate mod[...]
             modBase.modPlayers.Add(new MPlayer(modBase, null));
@@ -91,6 +91,7 @@ namespace TAPI.SDK
 
             ModableObject.Reset();
         }
+
         internal static void Uninit()
         {
             SdkUI.Uninit();

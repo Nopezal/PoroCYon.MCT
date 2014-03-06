@@ -1,0 +1,10 @@
+﻿{
+	"displayName": "tAPI SDK",
+	"author": "PoroCYon",
+	"version": "1.0.0.0",
+	"info": "The tAPI SDK",
+    
+	"internalName": "TAPI.SDK",
+
+    "MSBuild": true
+}

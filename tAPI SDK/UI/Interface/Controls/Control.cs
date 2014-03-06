@@ -61,11 +61,11 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <summary>
         /// The colour of the control. Default is #FFFFFF00
         /// </summary>
-        public Color Colour = new Color(255, 255, 255, 0);
+        public Color Colour = new Color(255, 255, 255, 255);
         /// <summary>
         /// The secondary colour of the control. Not used for all types of controls. Default is #00000000
         /// </summary>
-        public Color SecondaryColour = new Color(0, 0, 0, 0);
+        public Color SecondaryColour = new Color(0, 0, 0, 255);
         /// <summary>
         /// The rotation of the control
         /// </summary>
@@ -245,7 +245,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// Draws a blue background with the given bounds
         /// </summary>
         /// <param name="sb">The SpriteBatch used to draw the background</param>
-        /// <param name="bg">The boudns of the background to draw</param>
+        /// <param name="bg">The bounds of the background to draw</param>
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
             Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, GInput.Mouse.Rectangle.Intersects(bg) ? 0.85f : 0.75f);
@@ -259,7 +259,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <param name="foreground">The foreground colour of the text to draw</param>
         /// <param name="background">The outline colour</param>
         /// <param name="offset">The offset of the outlines</param>
-        protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Color foreground, Color? background = null, float offset = 1f)
+        protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Color foreground, Color? background = null, float offset = 2f)
         {
             SdkUI.DrawOutlinedString(sb, font, text, Position, foreground, background ?? SecondaryColour, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }

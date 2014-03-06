@@ -62,7 +62,9 @@ namespace TAPI.SDK.Installer
                 {
 					"PoroCYon.XnaExtensions.dll",  "PoroCYon.XnaExtensions.xml",
 					"TAPI.SDK.dll",                "TAPI.SDK.xml",
-                    "tAPI SDK Tools.exe",          "tAPI SDK Tools.xml"
+                    "tAPI SDK Tools.exe",          "tAPI SDK Tools.xml",
+
+                    "TAPI.SDK.Placeholder.dll"
                 };
                 if (ToInstall.InstallPdb)
                 {
@@ -111,7 +113,7 @@ namespace TAPI.SDK.Installer
                 {
                     UpdateProgress(-1d, Path.GetFileName(ToDownload[i]));
                     downloaded.Enqueue(new Tuple<string, byte[]>(ToDownload[i], client.DownloadData(baseUri + ToDownload[i])));
-                    UpdateProgress(100d / ((total + 1d) / (i + 1d)), null);
+                    UpdateProgress(100d / (total / (i + 1d)), null);
                 }
 
                 UpdateProgress(100d, "finished");
@@ -138,15 +140,15 @@ namespace TAPI.SDK.Installer
 
 				int i = 0;
 
-				while (!finishedDownloading || applied > 0 || downloaded.Count > 0)
-				{
+                while (!finishedDownloading || applied > 0 || downloaded.Count > 0)
+                {
                     if (downloaded.Count <= 0)
                     {
                         Thread.Sleep(1);
                         continue;
                     }
 
-					Tuple<string, byte[]> t = downloaded.Dequeue();
+                    Tuple<string, byte[]> t = downloaded.Dequeue();
 
                     UpdateProgress(-1d, t.Item1);
                     if (t.Item1.StartsWith("Templates\\"))
@@ -179,19 +181,26 @@ namespace TAPI.SDK.Installer
 
                             File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
                         }
+                    else if (t.Item1 == "TAPI.SDK.Placeholder.dll")
+                    {
+                        if (!Directory.Exists(steamDir + "Temp"))
+                            Directory.CreateDirectory(steamDir + "Temp");
+                        File.WriteAllBytes(steamDir + "Temp\\TAPI.SDK.dll", t.Item2);
+                    }
                     else
                         File.WriteAllBytes(steamDir + t.Item1, t.Item2);
-                    UpdateProgress(100d / ((total + 1d) / (i + 1d)), null);
 
-					i++;
+                    UpdateProgress(100d / (total / (i + 1d)), null);
+
+                    i++;
                     applied--;
-				}
+                }
 
                 UpdateProgress(99, "Creating .tapi file for TAPI.SDK.dll");
 
                 Process p = new Process()
                 {
-                    StartInfo = new ProcessStartInfo(steamDir + "\\tAPI SDK Tools.exe", "build \"" + steamDir + "\\TAPI.SDK.dll" + "\"")
+                    StartInfo = new ProcessStartInfo(steamDir + "\\tAPI SDK Tools.exe", "build \"" + steamDir + "Temp\\TAPI.SDK.dll" + "\"")
                     {
                         CreateNoWindow = true,
                         UseShellExecute = false,
@@ -201,6 +210,8 @@ namespace TAPI.SDK.Installer
                 };
                 p.Start();
                 p.WaitForExit();
+
+                File.Delete(steamDir + "Temp\\TAPI.SDK.dll");
 
 				MainWindow.instance.Dispatcher.Invoke(((Action)delegate
 				{

@@ -29,15 +29,14 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         }
 
         /// <summary>
-        /// Gives the Focusable focus
+        /// Updates the Control
         /// </summary>
-        protected override void FocusGot()
+        public override void Update()
         {
-            base.FocusGot();
+            base.Update();
 
-            Click();
-
-            Main.PlaySound("vanilla:menuTick");
+            if (IsFocused && (!OldIsFocused || StayFocused))
+                Click();
         }
 
         /// <summary>
@@ -45,6 +44,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Click()
         {
+            Main.PlaySound("vanilla:menuTick");
+
             if (OnClicked != null)
                 OnClicked(this);
             if (GlobalClicked != null)
