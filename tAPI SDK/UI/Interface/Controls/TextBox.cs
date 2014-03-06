@@ -164,7 +164,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// </summary>
         /// <param name="defaultText">The text of the TextBox</param>
         public TextBox(string defaultText)
-            : this()
+            : base()
         {
             Text = defaultText;
             Font = Main.fontMouseText;

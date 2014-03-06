@@ -12,6 +12,20 @@ namespace TAPI.SDK.Internal.ModClasses
     [GlobalMod]
     sealed class MUI : ModInterface
     {
+        sealed class PostInventoryLayer : InterfaceLayer
+        {
+            internal PostInventoryLayer()
+                : base("TAPI.SDK:PostDrawInventoryUI")
+            {
+
+            }
+
+            protected override void OnDraw(SpriteBatch sb)
+            {
+                SdkUI.Draw(sb, DrawCalled.PostDrawInventory);
+            }
+        }
+
         public MUI(ModBase @base)
             : base(@base)
         {
@@ -38,14 +52,6 @@ namespace TAPI.SDK.Internal.ModClasses
         }
 
         [CallPriority(Single.Epsilon)]
-        public override void PostDrawInventory(SpriteBatch sb)
-        {
-            SdkUI.Draw(sb, DrawCalled.PostDrawInventory);
-
-            base.PostDrawInventory(sb);
-        }
-
-        [CallPriority(Single.Epsilon)]
         public override void PostDrawInterface(SpriteBatch sb)
         {
             if (!Main.playerInventory)
@@ -59,6 +65,12 @@ namespace TAPI.SDK.Internal.ModClasses
         public override bool KeyboardInputFocused()
         {
             return base.KeyboardInputFocused() || Control.listening;
+        }
+
+        public override void ModifyInterfaceLayerList(List<InterfaceLayer> list)
+        {
+            // putting it here so it is also drawn when the inventory is closed
+            list.Insert(list.IndexOf(InterfaceLayer.LayerInventory) + 1, new PostInventoryLayer());
         }
     }
 }
