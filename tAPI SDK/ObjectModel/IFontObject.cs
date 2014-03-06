@@ -17,6 +17,7 @@ namespace TAPI.SDK.ObjectModel
         SpriteFont Font
         {
             get;
+            set;
         }
     }
 }

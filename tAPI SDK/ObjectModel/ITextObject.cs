@@ -16,6 +16,7 @@ namespace TAPI.SDK.ObjectModel
         string Text
         {
             get;
+            set;
         }
     }
 }

@@ -79,6 +79,8 @@ namespace TAPI.SDK.UI.Interface.Controls
     [ComVisible(false)]
     public class TextBox : ListeningControl<char>, ICaretObject
     {
+        static int enterCount = 0;
+
         /// <summary>
         /// The behaviour of the TextBox when Enter is pressed
         /// </summary>
@@ -116,7 +118,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             get
             {
-                return Text + (IsCaretVisible ? "_" : " ");
+                return Text + (IsCaretVisible && Listening ? "|" : " ");
             }
         }
         /// <summary>
@@ -145,8 +147,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y,
-                    (int)(Scale.X * Font.MeasureString(TextWithCaret).X), (int)(Scale.Y * Font.MeasureString(TextWithCaret).Y));
+                return new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
+                    (int)(Scale.X * Font.MeasureString(TextWithCaret).X) + 16, (int)(Scale.Y * Font.MeasureString(TextWithCaret).Y) + 16);
             }
         }
 
@@ -168,7 +170,36 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             Text = defaultText;
             Font = Main.fontMouseText;
+
             CaretTimer = 60;
+
+            StayFocused = true;
+
+            ListensToKeyboard = true;
+        }
+
+        /// <summary>
+        /// Gives the Focusable focus
+        /// </summary>
+        protected override void FocusGot()
+        {
+            base.FocusGot();
+
+            Main.clrInput();
+
+            Listening = true;
+        }
+
+        /// <summary>
+        /// Makes the Focusable lose its focus
+        /// </summary>
+        protected override void FocusLost()
+        {
+            base.FocusLost();
+
+            Main.clrInput();
+
+            Listening = false;
         }
 
         /// <summary>
@@ -178,7 +209,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Update();
 
-            if (IsFocused)
+            if (Listening)
             {
                 Main.inputTextEnter = true;
                 Main.chatText = "";
@@ -203,52 +234,35 @@ namespace TAPI.SDK.UI.Interface.Controls
                     Main.PlaySound("vanilla:menuTick");
                 }
 
-                // enter
-                if (GInput.Keyboard.IsKeyDown(Keys.Enter))
+                #region enter
+                bool doEnter = GInput.Keyboard.KeyJustPressed(Keys.Enter);
+                if (GInput.Keyboard.IsKeyDown(Keys.Enter) && GInput.OldKeyboard.IsKeyDown(Keys.Enter))
+                {
+                    if (enterCount == 0)
+                    {
+                        enterCount = 7;
+                        doEnter = true;
+                    }
+                    enterCount--;
+                }
+                else
+                    enterCount = 15;
+
+                if (doEnter)
                 {
                     bool shift = GInput.Keyboard.IsKeyDown(Keys.LeftShift) || GInput.Keyboard.IsKeyDown(Keys.RightShift);
 
                     if (((EnterMode & EnterMode.StopWhenEnter) != 0 && !shift) || ((EnterMode & EnterMode.StopWhenShiftEnter) != 0 && shift))
-                        IsFocused = false;
+                        IsFocused = Listening = false;
                     else
                         Text += '\n';
 
                     Main.PlaySound("vanilla:menuTick");
                 }
-
-                #region ctrl + ... // implemented in Main.GetInputText
-                //if (GInput.Keyboard.IsKeyDown(Key.LeftCtrl) || GInput.Keyboard.IsKeyDown(Key.RightCtrl))
-                //{
-                //    // ctrl + c (copy)
-                //    if (GInput.Keyboard.IsKeyDown(Key.C) && GInput.OldKeyboard.IsKeyUp(Key.C))
-                //        if (Text != "")
-                //            Clipboard.SetText(Text);
-                //        else
-                //            Clipboard.Clear();
-
-                //    // ctrl + v (paste)
-                //    if (GInput.Keyboard.IsKeyDown(Key.V) && GInput.OldKeyboard.IsKeyUp(Key.V))
-                //    {
-                //        string str = Clipboard.GetText();
-
-                //        for (int i = 0; i < str.Length; i++)
-                //            if ((int)str[i] < 32 || (int)str[i] == 127)
-                //                str = str.Replace(str[i--].ToString(), "");
-
-                //        Text = str;
-                //    }
-
-                //    // ctrl + x (cut)
-                //    if (GInput.Keyboard.IsKeyDown(Key.X) && GInput.OldKeyboard.IsKeyUp(Key.X))
-                //        if (Text != "")
-                //        {
-                //            Clipboard.SetText(Text);
-                //            Text = "";
-                //        }
-                //        else
-                //            Clipboard.Clear();
-                //}
                 #endregion
+
+                if (--CaretTimer <= 0)
+                    CaretTimer = 60;
             }
         }
         /// <summary>

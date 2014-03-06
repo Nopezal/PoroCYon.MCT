@@ -48,7 +48,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             get
             {
-                return Pressed == Keys.None ? (IsCaretVisible ? "_" : " ") : Pressed.ToString();
+                return Pressed == Keys.None ? (IsCaretVisible && Listening ? "_" : " ") : Pressed.ToString();
             }
             set
             {
@@ -72,6 +72,17 @@ namespace TAPI.SDK.UI.Interface.Controls
             get
             {
                 return CaretTimer >= 30;
+            }
+        }
+
+        /// <summary>
+        /// The text of the KeyBox. Includes the caret.
+        /// </summary>
+        public string TextWithCaret
+        {
+            get
+            {
+                return Text;
             }
         }
 
@@ -108,6 +119,8 @@ namespace TAPI.SDK.UI.Interface.Controls
             CaretTimer = 60;
 
             StayFocused = true;
+
+            ListensToKeyboard = true;
         }
 
         /// <summary>
@@ -144,8 +157,6 @@ namespace TAPI.SDK.UI.Interface.Controls
 
             if (Listening)
             {
-                SomethingIsListening = true;
-
                 if (GInput.Keyboard.Keys.Length > 0)
                 {
                     Pressed = GInput.Keyboard.Keys[0];
@@ -157,9 +168,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                     IsFocused = Listening = false;
                 }
 
-                CaretTimer--;
-
-                if (CaretTimer <= 0)
+                if (--CaretTimer <= 0)
                     CaretTimer = 60;
             }
         }

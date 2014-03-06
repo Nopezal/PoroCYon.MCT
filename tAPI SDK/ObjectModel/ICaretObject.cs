@@ -23,5 +23,13 @@ namespace TAPI.SDK.ObjectModel
         {
             get;
         }
+
+        /// <summary>
+        /// Gets the text of the ITextObject which does include the caret
+        /// </summary>
+        string TextWithCaret
+        {
+            get;
+        }
     }
 }

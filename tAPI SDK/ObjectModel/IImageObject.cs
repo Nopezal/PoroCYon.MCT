@@ -27,6 +27,7 @@ namespace TAPI.SDK.ObjectModel
         object Picture
         {
             get;
+            set;
         }
     }
 }

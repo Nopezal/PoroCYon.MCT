@@ -15,9 +15,26 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         public static Action<ListeningControl, object> GlobalInputGot;
 
         /// <summary>
+        /// Wether the ListeningControl listens to the Keyboard or not
+        /// </summary>
+        protected bool ListensToKeyboard = false;
+
+        bool listen = false;
+
+        /// <summary>
         /// Wether the ListeningControl is listening or not
         /// </summary>
-        protected bool Listening = false;
+        protected bool Listening
+        {
+            get
+            {
+                return listen;
+            }
+            set
+            {
+                SomethingIsListening = (listen = value) && ListensToKeyboard;
+            }
+        }
 
         /// <summary>
         /// Creates a new instance of the ListeningControl class
@@ -26,6 +43,17 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
             : base()
         {
 
+        }
+
+        /// <summary>
+        /// Updates the Control
+        /// </summary>
+        public override void Update()
+        {
+            base.Update();
+
+            if (listen)
+                SomethingIsListening = ListensToKeyboard;
         }
     }
 
