@@ -246,7 +246,7 @@ namespace TAPI.SDK.Content
 
             TileDef.tileSand[type] = Tparam.Sand;
             TileDef.tileFlame[type] = Tparam.Flame;
-            TileDef.alchemyflower[type] = Tparam.AlchemyFlower;
+            TileDef.alchemyFlower[type] = Tparam.AlchemyFlower;
         }
 
         /// <summary>
