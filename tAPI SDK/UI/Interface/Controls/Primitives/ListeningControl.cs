@@ -15,6 +15,11 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         public static Action<ListeningControl, object> GlobalInputGot;
 
         /// <summary>
+        /// Wether the ListeningControl is listening or not
+        /// </summary>
+        protected bool Listening = false;
+
+        /// <summary>
         /// Creates a new instance of the ListeningControl class
         /// </summary>
         public ListeningControl()

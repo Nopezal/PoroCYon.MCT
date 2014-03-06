@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
-using System.Windows.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Input;
 using TAPI.SDK.Input;
@@ -17,14 +17,14 @@ namespace TAPI.SDK.UI.Interface.Controls
     /// A control that listens to key input
     /// </summary>
     [ComVisible(false)]
-    public class KeyBox : ListeningControl<Key>, ICaretObject
+    public class KeyBox : ListeningControl<Keys>, ICaretObject
     {
-        Key old = Key.None;
+        Keys old = Keys.None;
 
         /// <summary>
         /// The key that was pressed in the KeyBox
         /// </summary>
-        public Key Pressed
+        public Keys Pressed
         {
             get;
             private set;
@@ -48,7 +48,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             get
             {
-                return Pressed == Key.None ? (IsCaretVisible ? "_" : " ") : Pressed.ToString();
+                return Pressed == Keys.None ? (IsCaretVisible ? "_" : " ") : Pressed.ToString();
             }
             set
             {
@@ -82,8 +82,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             get
             {
-                return new Rectangle((int)Position.X, (int)Position.Y,
-                    (int)(Scale.X * Font.MeasureString(Text).X), (int)(Scale.Y * Font.MeasureString(Text).Y));
+                return new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
+                    (int)(Scale.X * Font.MeasureString(Text).X) + 16, (int)(Scale.Y * Font.MeasureString(Text).Y) + 16);
             }
         }
 
@@ -91,21 +91,23 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// Creates a new instance of the KeyBox class
         /// </summary>
         public KeyBox()
-            : base()
+            : this(Keys.None)
         {
-            Pressed = Key.None;
 
-            Font = Main.fontMouseText;
-            CaretTimer = 60;
         }
         /// <summary>
         /// Creates a new instance of the KeyBox class
         /// </summary>
         /// <param name="defaultKey">The key that was entered in the KeyBox</param>
-        public KeyBox(Key defaultKey)
-            : this()
+        public KeyBox(Keys defaultKey)
+            : base()
         {
             Pressed = defaultKey;
+
+            Font = Main.fontMouseText;
+            CaretTimer = 60;
+
+            StayFocused = true;
         }
 
         /// <summary>
@@ -115,8 +117,10 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.FocusGot();
 
+            Listening = true;
+
             old = Pressed;
-            Pressed = Key.None;
+            Pressed = Keys.None;
         }
         /// <summary>
         /// Makes the Focusable lose its focus
@@ -125,7 +129,9 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.FocusLost();
 
-            if (Pressed == Key.None)
+            Listening = false;
+
+            if (Pressed == Keys.None)
                 Pressed = old;
         }
 
@@ -136,7 +142,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Update();
 
-            if (IsFocused)
+            if (Listening)
             {
                 SomethingIsListening = true;
 
@@ -148,7 +154,7 @@ namespace TAPI.SDK.UI.Interface.Controls
 
                     Main.PlaySound("vanilla:menuTick");
 
-                    IsFocused = false;
+                    IsFocused = Listening = false;
                 }
 
                 CaretTimer--;

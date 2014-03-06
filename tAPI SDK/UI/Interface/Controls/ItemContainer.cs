@@ -1,9 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using TAPI.SDK.Input;
 using TAPI.SDK.UI.Interface.Controls.Primitives;
 
@@ -175,7 +175,7 @@ namespace TAPI.SDK.UI.Interface.Controls
             {
                 if (IsFocused)
                 {
-                    if (GInput.Keyboard.IsKeyDown(Key.LeftShift))
+                    if (GInput.Keyboard.IsKeyDown(Keys.LeftShift))
                     {
                         if (Main.npcShop > 0 && IsSellable)
                         {

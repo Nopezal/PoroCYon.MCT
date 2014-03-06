@@ -16,6 +16,8 @@ namespace TAPI.SDK.Input
     /// </summary>
     public struct MouseHandler
     {
+        Vector2 pos;
+
         /// <summary>
         /// Wether the left mouse button is pressed or not
         /// </summary>
@@ -68,12 +70,18 @@ namespace TAPI.SDK.Input
         }
 
         /// <summary>
-        /// Gets the position of the mouse, relative to the Terraria window
+        /// Gets or sets the position of the mouse, relative to the Terraria window
         /// </summary>
         public Vector2 Position
         {
-            get;
-            private set;
+            get
+            {
+                return pos;
+            }
+            set
+            {
+                SetPosition(pos = value);
+            }
         }
         /// <summary>
         /// Gets the hitbox of the mouse, relative to the Terraria window
@@ -94,6 +102,10 @@ namespace TAPI.SDK.Input
             get
             {
                 return Position + Main.screenPosition;
+            }
+            set
+            {
+                Position = value - Main.screenPosition;
             }
         }
         /// <summary>
@@ -155,7 +167,7 @@ namespace TAPI.SDK.Input
                 XButton2 = xm.XButton2 == ButtonState.Pressed
             };
 
-            ret.Position = xm.Position();
+            ret.pos = xm.Position();
             ret.ScrollWheel = xm.ScrollWheelValue;
 
             return ret;

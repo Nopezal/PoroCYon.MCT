@@ -178,7 +178,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         public Focusable()
             : base()
         {
-            ForceHover = false;
+            ForceHover = ForceFocus = false;
         }
 
         static Focusable()
@@ -246,7 +246,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 if (!IsHovered)
                     BeginHover();
 
-                IsHovered = Main.localPlayer.mouseInterface = Constants.mainInstance.blockMouse = true;
+                IsHovered = GInput.BlockMouse = true;
             }
             else if (IsHovered)
             {
@@ -260,7 +260,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 if (!IsFocused)
                     FocusGot();
 
-                IsFocused = Main.localPlayer.mouseInterface = Constants.mainInstance.blockMouse = true;
+                IsFocused = GInput.BlockMouse = true;
             }
             else if (IsFocused && !StayFocused)
             {

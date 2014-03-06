@@ -115,6 +115,9 @@ namespace TAPI.SDK.UI.MenuItems
         {
             base.Checked();
 
+            if (preventSO)
+                return;
+
             if (!grName.IsEmpty())
                 foreach (RadioButton rb in groups[grName])
                     if (rb != this)
@@ -127,18 +130,16 @@ namespace TAPI.SDK.UI.MenuItems
         {
             base.Unchecked();
 
-            if (preventSO)
-                return;
-
             preventSO = true;
 
-            foreach (RadioButton rb in groups[grName])
-                if (rb != this)
-                    if (rb.IsChecked)
-                    {
-                        preventSO = false;
-                        return;
-                    }
+            if (!grName.IsEmpty())
+                foreach (RadioButton rb in groups[grName])
+                    if (rb != this)
+                        if (rb.IsChecked)
+                        {
+                            preventSO = false;
+                            return;
+                        }
 
             IsChecked = true; // do not allow no RB to be checked
 

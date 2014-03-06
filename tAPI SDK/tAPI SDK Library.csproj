@@ -85,6 +85,7 @@
     <Compile Include="Content\LoadParameters.cs" />
     <Compile Include="Content\ObjectLoader.cs" />
     <Compile Include="Input\GInput.cs" />
+    <Compile Include="Input\KeyHandler.cs" />
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
     <Compile Include="Internal\InternalConsts.cs" />
@@ -152,11 +153,22 @@
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
-    copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetFileName)" /y
-    copy "$(TargetDir)$(TargetName).pdb" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetName).pdb" /y
-    copy "$(TargetDir)$(TargetName).xml" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetName).xml" /y
-) )
+    <PostBuildEvent>if "%25username%25"=="Pieter" (
+        copy "$(TargetPath)" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetFileName)" /y
+        copy "$(TargetDir)$(TargetName).pdb" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).pdb" /y
+
+    if "$(ConfigurationName)"=="Release" (
+        copy "$(TargetDir)$(TargetName).xml" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).xml" /y
+
+        copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetFileName)" /y
+        copy "$(TargetDir)$(TargetName).pdb" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetName).pdb" /y
+        copy "$(TargetDir)$(TargetName).xml" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetName).xml" /y
+
+        copy "$(TargetDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.dll" /y
+        copy "$(TargetDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.pdb" /y
+        copy "$(TargetDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\tAPI SDK\PoroCYon.XnaExtensions.xml" /y
+    )
+)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

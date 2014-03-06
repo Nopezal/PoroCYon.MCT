@@ -3,12 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.InteropServices;
 using System.Text;
-using System.Windows.Forms;
 using System.Windows.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Input;
 using TAPI.SDK.ObjectModel;
 using TAPI.SDK.UI.Interface.Controls.Primitives;
 using TAPI.SDK.Input;
@@ -193,7 +192,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                 }
 
                 // tabs
-                if (GInput.Keyboard.IsKeyDown(Key.Tab))
+                if (GInput.Keyboard.IsKeyDown(Keys.Tab))
                 {
                     if (TabMode <= 0)
                         Text += '\t';
@@ -205,9 +204,9 @@ namespace TAPI.SDK.UI.Interface.Controls
                 }
 
                 // enter
-                if (GInput.Keyboard.IsKeyDown(Key.Enter))
+                if (GInput.Keyboard.IsKeyDown(Keys.Enter))
                 {
-                    bool shift = GInput.Keyboard.IsKeyDown(Key.LeftShift) || GInput.Keyboard.IsKeyDown(Key.RightShift);
+                    bool shift = GInput.Keyboard.IsKeyDown(Keys.LeftShift) || GInput.Keyboard.IsKeyDown(Keys.RightShift);
 
                     if (((EnterMode & EnterMode.StopWhenEnter) != 0 && !shift) || ((EnterMode & EnterMode.StopWhenShiftEnter) != 0 && shift))
                         IsFocused = false;

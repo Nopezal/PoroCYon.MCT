@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Input;
 
 namespace TAPI.SDK.Input
 {
@@ -11,6 +9,21 @@ namespace TAPI.SDK.Input
     /// </summary>
     public static class GInput
     {
+        /// <summary>
+        /// Wether the game should block any other mouse input or not
+        /// </summary>
+        public static bool BlockMouse
+        {
+            get
+            {
+                return Constants.mainInstance.blockMouse || Main.localPlayer.mouseInterface;
+            }
+            set
+            {
+                Constants.mainInstance.blockMouse = Main.localPlayer.mouseInterface = value;
+            }
+        }
+
         /// <summary>
         /// The Keyboard state of the current frame
         /// </summary>

@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Input;
 using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Microsoft.Xna.Framework.Input;
 using TAPI.SDK.Input;
 using TAPI.SDK.ObjectModel;
 using TAPI.SDK.UI.Interface.Controls.Primitives;
@@ -128,7 +128,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// </summary>
         public override void Update()
         {
-            if (GInput.Keyboard.IsKeyDown(Key.Back))
+            if (GInput.Keyboard.IsKeyDown(Keys.Back))
             {
                 Destroy();
                 return;
