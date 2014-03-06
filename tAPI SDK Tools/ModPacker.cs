@@ -69,6 +69,8 @@ namespace TAPI.SDK.Tools.Packer
             }
             #endregion
 
+            // .pdb stuff is done in BuildSource and WriteData
+
             BuildSource(modDirectory, outputDirectory, json, cex, dictNames);
 
             List<Tuple<string, byte[]>> files = new List<Tuple<string, byte[]>>();
@@ -109,6 +111,10 @@ namespace TAPI.SDK.Tools.Packer
                     return;
                 }
 
+            bool generatePDB = false;
+            if (modInfo.Has("includePDB"))
+                generatePDB = (bool)modInfo["includePDB"];
+
             // but this has to change - other CodeDomProviders (default stays C#)
             CodeDomProvider cdp = new CSharpCodeProvider();
 
@@ -139,6 +145,8 @@ namespace TAPI.SDK.Tools.Packer
             cp.GenerateExecutable = false;
 
             cp.ReferencedAssemblies.Add(Assembly.GetExecutingAssembly().Location);
+
+            cp.IncludeDebugInformation = generatePDB;
 
             cp.ReferencedAssemblies.Add("mscorlib.dll");
             cp.ReferencedAssemblies.Add("System.dll");
@@ -284,6 +292,14 @@ namespace TAPI.SDK.Tools.Packer
                     else // general error (without file) - .dll not found, etc
                         cex.AddProblem(outputPath, (ce.IsWarning ? "warning" : "error") + " " + ce.ErrorNumber + ": " + ce.ErrorText);
                 }
+            }
+
+            if (cex.problems.Count != 0)
+            {
+                if (File.Exists(outputPath + ".dll"))
+                    File.Delete(outputPath + ".dll");
+
+                throw cex;
             }
         }
     }

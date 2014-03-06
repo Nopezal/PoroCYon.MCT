@@ -74,7 +74,7 @@ namespace TAPI.SDK.Tools.Decompiler
             else
                 throw new FileLoadException("File is not a .tapi or .tapimod file!");
 
-            // create binary buffer
+            // create binary buffer of .tapimod file
             BinBuffer bb = new BinBuffer(new BinBufferByte(tapimod));
 
             // read/write tAPI version
@@ -83,7 +83,7 @@ namespace TAPI.SDK.Tools.Decompiler
             // read ModInfo.json
             File.WriteAllText(decompPath + "\\ModInfo.json", bb.ReadString());
 
-            // write files from zip data
+            // write files from zip data (.pdb is automatically included)
             foreach (Tuple<string, byte[]> t in zipFiles)
             {
                 string dir = decompPath + "\\_FromZip\\" + t.Item1;
@@ -94,7 +94,7 @@ namespace TAPI.SDK.Tools.Decompiler
                 File.WriteAllBytes(dir, t.Item2);
             }
 
-            // write (normal) files
+            // read (normal) files
             List<Tuple<string, int>> fileInfo = new List<Tuple<string, int>>();
 
             int count = bb.ReadInt();
@@ -102,6 +102,17 @@ namespace TAPI.SDK.Tools.Decompiler
                 fileInfo.Add(new Tuple<string, int>(bb.ReadString(), bb.ReadInt()));
             for (int i = 0; i < count; i++)
                 tapimodFiles.Add(new Tuple<string, byte[]>(fileInfo[i].Item1, bb.ReadBytes(fileInfo[i].Item2)));
+
+            // write them
+            foreach (Tuple<string, byte[]> t in tapimodFiles)
+            {
+                string dir = decompPath + "\\" + t.Item1;
+
+                if (!Directory.Exists(Path.GetDirectoryName(dir)))
+                    Directory.CreateDirectory(Path.GetDirectoryName(dir));
+
+                File.WriteAllBytes(dir, t.Item2);
+            }
 
             // write .dll
             File.WriteAllBytes(decompPath + "\\" + modName + ".dll", bb.ReadBytes(bb.BytesLeft()));
