@@ -59,7 +59,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
-            Vector2 charSize = Font.MeasureString(CheckChar.ToString());
+            Vector2 charSize = Font.MeasureString(DisplayChar.ToString());
 
             DrawBackground(sb);
 
@@ -82,7 +82,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                 new Vector2(2f, charSize.Y - 4f) * Scale, SpriteEffects, LayerDepth);
 
             if (IsChecked)
-                SdkUI.DrawOutlinedString(sb, Font, CheckChar.ToString(), BoxPosition + new Vector2(4f), Colour, null, 1f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+                SdkUI.DrawOutlinedString(sb, Font, DisplayChar.ToString(), BoxPosition + new Vector2(4f), Colour, null, 1f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }
     }
 }

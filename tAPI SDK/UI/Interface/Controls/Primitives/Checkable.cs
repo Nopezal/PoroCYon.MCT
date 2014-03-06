@@ -39,7 +39,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         /// <summary>
         /// The character displayed when the Checkable is checked
         /// </summary>
-        public char CheckChar = 'X';
+        public char DisplayChar = 'X';
 
         /// <summary>
         /// Wether the Checkable is checked or not
@@ -135,10 +135,10 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 switch (Location)
                 {
                     case BoxLocation.Left:
-                        pos.X += Font.MeasureString(CheckChar.ToString()).X * Scale.X + 16f;
+                        pos.X += Font.MeasureString(DisplayChar.ToString()).X * Scale.X + 16f;
                         break;
                     case BoxLocation.Top:
-                        pos.Y += Font.MeasureString(CheckChar.ToString()).Y * Scale.Y + 16f;
+                        pos.Y += Font.MeasureString(DisplayChar.ToString()).Y * Scale.Y + 16f;
                         break;
                     case BoxLocation.Bottom:
                     case BoxLocation.Right:
@@ -157,7 +157,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
             get
             {
                 return new Rectangle((int)BoxPosition.X, (int)BoxPosition.Y,
-                    (int)(Font.MeasureString(CheckChar.ToString()).X * Scale.X), (int)(Font.MeasureString(CheckChar.ToString()).Y * Scale.X));
+                    (int)(Font.MeasureString(DisplayChar.ToString()).X * Scale.X), (int)(Font.MeasureString(DisplayChar.ToString()).Y * Scale.X));
             }
         }
 

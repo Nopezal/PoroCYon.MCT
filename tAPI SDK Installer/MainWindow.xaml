@@ -1,5 +1,5 @@
 ﻿<Window x:Class="TAPI.SDK.Installer.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="tAPI SDK Installer" Height="350" Width="525" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" MinHeight="350" MinWidth="525" Background="#D8FFFFFF">
+        Title="tAPI SDK Installer" Height="350" Width="525" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" MinHeight="350" MinWidth="525" Background="#D8FFFFFF" Icon="Logo.ico">
     <Grid>
         <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="tAPI SDK Installer" VerticalAlignment="Top" Height="45" Width="409" FontSize="36" FontFamily="Xolonium">
             <TextBlock.Effect>

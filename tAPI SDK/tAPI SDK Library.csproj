@@ -41,6 +41,9 @@
     <NoWarn>
     </NoWarn>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="CustomMarshalers" />
@@ -150,7 +153,9 @@
   <ItemGroup>
     <EmbeddedResource Include="ModInfo.json" />
   </ItemGroup>
-  <ItemGroup />
+  <ItemGroup>
+    <Content Include="Logo.ico" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" (

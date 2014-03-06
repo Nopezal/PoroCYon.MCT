@@ -13,7 +13,8 @@
     <FileAlignment>512</FileAlignment>
     <ProjectTypeGuids>{60dc8134-eba5-43b8-bcc9-bb4bc16c2548};{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}</ProjectTypeGuids>
     <WarningLevel>4</WarningLevel>
-    <TargetFrameworkProfile>Client</TargetFrameworkProfile>
+    <TargetFrameworkProfile>
+    </TargetFrameworkProfile>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <PlatformTarget>x86</PlatformTarget>
@@ -43,6 +44,9 @@
   <PropertyGroup />
   <PropertyGroup>
     <NoWin32Manifest>true</NoWin32Manifest>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -136,6 +140,23 @@
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <Resource Include="Logo.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\tAPI SDK Mod placeholder\tAPI SDK Mod placeholder.csproj">
+      <Project>{adc0bff2-97ca-42f4-91b5-3bbd82e18981}</Project>
+      <Name>tAPI SDK Mod placeholder</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tAPI SDK Tools\tAPI SDK Tools.csproj">
+      <Project>{fe1a503f-8b67-4d06-8bbe-ffec7956634e}</Project>
+      <Name>tAPI SDK Tools</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\tAPI SDK\tAPI SDK Library.csproj">
+      <Project>{20d85f91-12d1-4653-a46f-e7ba53feec1c}</Project>
+      <Name>tAPI SDK Library</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
@@ -147,6 +168,12 @@
     rem xcopy "$(SolutionDir)Templates\" "%25userprofile%25\Dropbox\Public\tAPI SDK\Templates\" /s /i /y /j /h
 ) )
 </PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
+    copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\tAPI SDK\$(TargetFileName)"
+) )
+</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.
