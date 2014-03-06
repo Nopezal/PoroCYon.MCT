@@ -14,6 +14,8 @@ namespace TAPI.SDK.UI.MenuItems
 
         string grName = "";
 
+        static bool preventSO = false;
+
         /// <summary>
         /// The group name of the radio button
         /// </summary>
@@ -117,6 +119,30 @@ namespace TAPI.SDK.UI.MenuItems
                 foreach (RadioButton rb in groups[grName])
                     if (rb != this)
                         rb.IsChecked = false;
+        }
+        /// <summary>
+        /// Called when the CheckBox is unchecked
+        /// </summary>
+        protected override void Unchecked()
+        {
+            base.Unchecked();
+
+            if (preventSO)
+                return;
+
+            preventSO = true;
+
+            foreach (RadioButton rb in groups[grName])
+                if (rb != this)
+                    if (rb.IsChecked)
+                    {
+                        preventSO = false;
+                        return;
+                    }
+
+            IsChecked = true; // do not allow no RB to be checked
+
+            preventSO = false;
         }
     }
 }

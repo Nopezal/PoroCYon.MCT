@@ -246,7 +246,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 if (!IsHovered)
                     BeginHover();
 
-                IsHovered = Main.localPlayer.mouseInterface = true;
+                IsHovered = Main.localPlayer.mouseInterface = Constants.mainInstance.blockMouse = true;
             }
             else if (IsHovered)
             {
@@ -260,7 +260,7 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 if (!IsFocused)
                     FocusGot();
 
-                IsFocused = Main.localPlayer.mouseInterface = true;
+                IsFocused = Main.localPlayer.mouseInterface = Constants.mainInstance.blockMouse = true;
             }
             else if (IsFocused && !StayFocused)
             {

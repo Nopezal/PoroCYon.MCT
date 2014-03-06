@@ -250,6 +250,7 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, GInput.Mouse.Rectangle.Intersects(bg) ? 0.85f : 0.75f);
         }
+
         /// <summary>
         /// Draws an outlined string with the control's properties as paramters
         /// </summary>
@@ -261,7 +262,21 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <param name="offset">The offset of the outlines</param>
         protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Color foreground, Color? background = null, float offset = 2f)
         {
-            SdkUI.DrawOutlinedString(sb, font, text, Position, foreground, background ?? SecondaryColour, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+            DrawOutlinedString(sb, font, text, Position, foreground, background, offset);
+        }
+        /// <summary>
+        /// Draws an outlined string with the control's properties as paramters
+        /// </summary>
+        /// <param name="sb">The SpriteBatch used to draw the string</param>
+        /// <param name="font">The font of the text to draw</param>
+        /// <param name="text">The text to draw</param>
+        /// <param name="position">The position of the text to draw</param>
+        /// <param name="foreground">The foreground colour of the text to draw</param>
+        /// <param name="background">The outline colour</param>
+        /// <param name="offset">The offset of the outlines</param>
+        protected void DrawOutlinedString(SpriteBatch sb, SpriteFont font, string text, Vector2 position, Color foreground, Color? background = null, float offset = 2f)
+        {
+            SdkUI.DrawOutlinedString(sb, font, text, position, foreground, background ?? SecondaryColour, offset, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }
 
         /// <summary>

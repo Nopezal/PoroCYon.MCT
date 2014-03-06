@@ -75,7 +75,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         {
             get
             {
-                Rectangle ret = new Rectangle((int)Position.X, (int)Position.Y, (int)(Font.MeasureString(Text).X * Scale.X), (int)(Font.MeasureString(Text).Y * Scale.Y));
+                Rectangle ret = new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
+                    (int)(Font.MeasureString(Text).X * Scale.X) + 16, (int)(Font.MeasureString(Text).Y * Scale.Y) + 16);
 
                 switch (Location)
                 {
@@ -134,10 +135,10 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
                 switch (Location)
                 {
                     case BoxLocation.Left:
-                        pos.X += Font.MeasureString(CheckChar.ToString()).X * Scale.X + 8f;
+                        pos.X += Font.MeasureString(CheckChar.ToString()).X * Scale.X + 16f;
                         break;
                     case BoxLocation.Top:
-                        pos.Y += Font.MeasureString(CheckChar.ToString()).Y * Scale.Y + 8f;
+                        pos.Y += Font.MeasureString(CheckChar.ToString()).Y * Scale.Y + 16f;
                         break;
                     case BoxLocation.Bottom:
                     case BoxLocation.Right:
@@ -187,18 +188,17 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         }
 
         /// <summary>
-        /// When the focusable got focus
+        /// Updates the Control
         /// </summary>
-        protected override void FocusGot()
+        public override void Update()
         {
-            base.FocusGot();
+            base.Update();
 
-            if (IsChecked = !IsChecked)
-                Check();
-            else
-                Uncheck();
-
-            Main.PlaySound("vanilla:menuTick");
+            if (IsFocused && !OldIsFocused)
+                if (IsChecked = !IsChecked)
+                    Check();
+                else
+                    Uncheck();
         }
 
         /// <summary>
@@ -206,6 +206,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Check()
         {
+            Main.PlaySound("vanilla:menuTick");
+
             if (OnChecked != null)
                 OnChecked(this);
             if (GlobalChecked != null)
@@ -216,6 +218,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Uncheck()
         {
+            Main.PlaySound("vanilla:menuTick");
+
             if (OnUnchecked != null)
                 OnUnchecked(this);
             if (GlobalUnchecked != null)

@@ -148,7 +148,7 @@ namespace TAPI.SDK.UI.Interface.Controls
 
             DrawBackground(sb);
 
-            DrawOutlinedString(sb, Font, Text, Colour);
+            DrawOutlinedString(sb, Font, Text, TextPosition, Colour);
 
             // draw box
 
@@ -167,7 +167,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                 new Vector2(2f, charSize.Y - 4f) * Scale, SpriteEffects, LayerDepth);
 
             if (IsChecked)
-                SdkUI.DrawOutlinedString(sb, Font, Text, BoxPosition, Colour, null, 1f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+                SdkUI.DrawOutlinedString(sb, Font, CheckChar.ToString(), BoxPosition + new Vector2(4f), Colour, null, 1f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }
     }
 }
