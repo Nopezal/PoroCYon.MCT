@@ -62,7 +62,7 @@ namespace TAPI.SDK.Tools.Builder
 
                     string name = res;
                     if (res.StartsWith(Path.GetFileNameWithoutExtension(dllFile)))
-                        name = res.Substring(Path.GetFileNameWithoutExtension(dllFile).Length);
+                        name = res.Substring(Path.GetFileNameWithoutExtension(dllFile).Length + 1); // + 1 -> also remove the '.'
 
                     // not putting ModInfo.json in it
                     if (name != "ModInfo.json")

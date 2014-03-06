@@ -20,6 +20,9 @@ namespace TAPI.SDK.Tools.Decompiler
         /// <param name="modFile">The .tapimod file to decompile</param>
         public static void Decompile(string modFile)
         {
+            if (!File.Exists(Mods.pathDirMods + "\\" + modFile))
+                throw new FileNotFoundException(Mods.pathDirMods + "\\" + modFile);
+
             string
                 modName = Path.GetFileNameWithoutExtension(modFile),
                 decompPath = ModDecompiler.decompDir + "\\" + modName;
