@@ -245,6 +245,8 @@ namespace TAPI.SDK.UI
             CustomUI.GlobalControlAdded = null;
             CustomUI.GlobalControlRemoved = null;
 
+            customUIs.Clear();
+
             // ---
 
             IControl.GlobalAdded = null;
