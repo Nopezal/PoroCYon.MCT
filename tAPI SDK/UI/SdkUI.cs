@@ -177,7 +177,7 @@ namespace TAPI.SDK.UI
         /// <param name="customUI">The CustomUI to add</param>
         public static void AddCustomUI(CustomUI customUI)
         {
-            customUIs.Add(customUI);
+            (customUIs ?? (customUIs = new List<CustomUI>())).Add(customUI);
         }
         /// <summary>
         /// Removes a CustomUI from the list
@@ -185,7 +185,7 @@ namespace TAPI.SDK.UI
         /// <param name="customUI">The CustomUI to remvoe</param>
         public static void RemoveCustomUI(CustomUI customUI)
         {
-            customUIs.Remove(customUI);
+            (customUIs ?? (customUIs = new List<CustomUI>())).Remove(customUI);
         }
         /// <summary>
         /// Removes a CustomUI from the list 
@@ -193,14 +193,14 @@ namespace TAPI.SDK.UI
         /// <param name="index">The index of the CustomUI to remove</param>
         public static void RemoveCustomUIAt(int index)
         {
-            customUIs.RemoveAt(index);
+            (customUIs ?? (customUIs = new List<CustomUI>())).RemoveAt(index);
         }
         /// <summary>
         /// Removes all CustomUIs from the list
         /// </summary>
         public static void ClearCustomUIs()
         {
-            customUIs.Clear();
+            (customUIs ?? (customUIs = new List<CustomUI>())).Clear();
         }
 
         /// <summary>
