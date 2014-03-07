@@ -179,11 +179,12 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <param name="sb">The SpriteBatch used to draw the Control</param>
         public override void Draw(SpriteBatch sb)
         {
-            DrawBackground(sb);
+            base.Draw(sb);
+
+            if (HasBackground)
+                DrawBackground(sb);
 
             DrawOutlinedString(sb, Font, Text, Colour);
-
-            base.Draw(sb);
         }
     }
 }

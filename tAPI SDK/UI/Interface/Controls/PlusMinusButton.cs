@@ -109,7 +109,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             (this as Control).Draw(sb); // skip TextBlock.Draw
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             DrawOutlinedString(sb, Font, Text + (ShowValue ? ": " + Value : ""), Colour);
 

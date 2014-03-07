@@ -207,6 +207,9 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
+            if (HasBackground)
+                DrawBackground(sb);
+
             slot.Draw(sb);
         }
 

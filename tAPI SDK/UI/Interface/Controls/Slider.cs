@@ -235,7 +235,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             sb.Draw(Background, Position + new Vector2(8f, 8f + Hitbox.Height / 2f - (Background.Width / 2f) * Scale.Y), null, Colour,
                 Rotation + (Orientation == SliderOrientation.Horizontal ? 0f : MathHelper.PiOver2), Origin,

@@ -70,7 +70,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             DrawOutlinedString(sb, Font, Text, Colour);
         }

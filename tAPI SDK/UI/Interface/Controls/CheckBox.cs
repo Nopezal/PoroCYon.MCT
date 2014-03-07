@@ -61,7 +61,8 @@ namespace TAPI.SDK.UI.Interface.Controls
 
             Vector2 charSize = Font.MeasureString(DisplayChar.ToString());
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             DrawOutlinedString(sb, Font, Text, TextPosition, Colour);
 

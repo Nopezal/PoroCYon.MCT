@@ -192,7 +192,8 @@ namespace TAPI.SDK.UI.Interface.Controls
             Position -= topBar;
 
             // window border/bg
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             // divider header/body
             sb.Draw(SdkUI.WhitePixel, new Vector2(2f, topBar.Y), null, new Color(18, 18, 38), Rotation, Origin, new Vector2(Scale.X - 4f, 2f), SpriteEffects, LayerDepth);

@@ -110,7 +110,8 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             h.Position += Position;
             h.Draw(sb);

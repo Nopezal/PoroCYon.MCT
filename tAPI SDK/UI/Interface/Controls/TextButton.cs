@@ -71,7 +71,8 @@ namespace TAPI.SDK.UI.Interface
         {
             base.Draw(sb);
 
-            DrawBackground(sb);
+            if (HasBackground)
+                DrawBackground(sb);
 
             DrawOutlinedString(sb, Font, Text, Colour);
         }

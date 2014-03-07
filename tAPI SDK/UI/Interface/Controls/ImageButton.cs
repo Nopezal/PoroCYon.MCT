@@ -137,6 +137,11 @@ namespace TAPI.SDK.UI.Interface.Controls
         /// <param name="sb">The SpriteBatch used to draw the control</param>
         public override void Draw(SpriteBatch sb)
         {
+            base.Draw(sb);
+
+            if (HasBackground)
+                DrawBackground(sb);
+
             // this might be a good idea
             if (IsGif)
             {
@@ -150,8 +155,6 @@ namespace TAPI.SDK.UI.Interface.Controls
                 sb.Draw(gif, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
             else
                 sb.Draw(tex, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
-
-            base.Draw(sb);
         }
     }
 }

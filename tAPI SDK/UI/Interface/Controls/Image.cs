@@ -137,6 +137,9 @@ namespace TAPI.SDK.UI.Interface.Controls
         {
             base.Draw(sb);
 
+            if (HasBackground)
+                DrawBackground(sb);
+
             // this might be a good idea
             if (IsGif)
             {
