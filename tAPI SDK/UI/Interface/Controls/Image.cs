@@ -106,7 +106,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                 else if (texture == null)
                     return Rectangle.Empty;
 
-                return new Rectangle((int)Position.X, (int)Position.Y, (int)(picAsTex.Width * Scale.X), (int)(picAsTex.Height * Scale.Y));
+                return new Rectangle((int)Position.X - 8, (int)Position.Y - 8, (int)(picAsTex.Width * Scale.X) + 16, (int)(picAsTex.Height * Scale.Y) + 16);
             }
         }
 
