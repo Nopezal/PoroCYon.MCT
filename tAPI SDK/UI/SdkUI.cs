@@ -54,6 +54,8 @@ namespace TAPI.SDK.UI
     {
         static SdkCustomUI defaultUI;
 
+        internal static string TooltipToDraw;
+
         internal static List<CustomUI> customUIs = new List<CustomUI>();
 
         internal static SdkCustomUI DefaultUI
@@ -323,6 +325,11 @@ namespace TAPI.SDK.UI
             for (int i = 0; i < customUIs.Count; i++)
                 if (customUIs[i].IsVisible && customUIs[i].DrawCalled == called)
                     customUIs[i].Draw(sb);
+
+            if (!TooltipToDraw.IsEmpty())
+                MouseText(TooltipToDraw);
+
+            TooltipToDraw = "";
         }
     }
 }

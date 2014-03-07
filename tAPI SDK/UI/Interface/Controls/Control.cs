@@ -227,7 +227,7 @@ namespace TAPI.SDK.UI.Interface.Controls
                 GlobalDraw(this, sb);
 
             if (!String.IsNullOrEmpty(Tooltip) && GInput.Mouse.Rectangle.Intersects(Hitbox))
-                SdkUI.MouseText(Tooltip);
+                SdkUI.TooltipToDraw = Tooltip;
         }
 
         /// <summary>
