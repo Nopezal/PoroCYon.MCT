@@ -7,5 +7,6 @@
 	"internalName": "TAPI.SDK",
 
     "MSBuild": true,
+
     "includePDB": true
 }

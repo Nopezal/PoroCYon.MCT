@@ -44,7 +44,7 @@ namespace TAPI.SDK
             files = new Dictionary<string, byte[]>();
             code = null;
 
-            Mods.loadOrder.RemoveAt(modIndex);
+            Mods.loadOrder.RemoveAt(tempIndex);
 
             Mods.modBases.Remove(this);
         }
