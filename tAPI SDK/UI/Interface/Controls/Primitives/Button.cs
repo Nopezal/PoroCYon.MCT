@@ -10,6 +10,8 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
     /// </summary>
     public abstract class Button : Focusable
     {
+        int fireCD = 0;
+
         /// <summary>
         /// When the Button is cliced
         /// </summary>
@@ -18,6 +20,11 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         /// When a Button is clicked
         /// </summary>
         public static Action<Button> GlobalClicked = null;
+
+        /// <summary>
+        /// Wether the Button should keep firing the Click effect as long as its hovered and focused. Default is false.
+        /// </summary>
+        public bool KeepFiring = false;
 
         /// <summary>
         /// Creates a new instance of the Button class
@@ -35,8 +42,17 @@ namespace TAPI.SDK.UI.Interface.Controls.Primitives
         {
             base.Update();
 
-            if (IsFocused && (!OldIsFocused || StayFocused))
-                Click();
+            if (IsFocused && IsHovered)
+                if (KeepFiring)
+                {
+                    if (--fireCD <= 0)
+                    {
+                        Click();
+                        fireCD = 5;
+                    }
+                }
+                else if (!OldIsFocused)
+                    Click();
         }
 
         /// <summary>

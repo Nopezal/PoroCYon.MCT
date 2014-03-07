@@ -166,11 +166,11 @@ namespace TAPI.SDK.UI
         /// <param name="i">The Item to get the info from</param>
         public static void MouseText(Item i)
         {
-            Main.mouseItem = (Item)i.Clone();
+            Main.toolTip = i;
 
             MouseText(i.AffixName() + (i.stack > 1 ? " (" + i.stack + ")" : ""));
 
-            Main.mouseItem = new Item();
+            Main.toolTip = new ItemTooltip();
         }
 
         /// <summary>
