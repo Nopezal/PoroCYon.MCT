@@ -47,17 +47,25 @@ namespace TAPI.SDK.UI.MenuItems
                     IsGif = false;
                     tex = value as Texture2D;
                     gif = null;
-                    size = new Vector2(tex.Width, tex.Height);
                 }
                 else if (value is AnimatedGif)
                 {
                     IsGif = true;
                     tex = null;
                     gif = value as AnimatedGif;
-                    size = new Vector2(gif.Frames[0].Width, gif.Frames[0].Height);
                 }
                 else
                     throw new ArgumentException("value should be a Texture2D or an AnimatedGif", "value");
+
+                size = picAsTex.Size() + new Vector2(16f);
+            }
+        }
+
+        Texture2D picAsTex
+        {
+            get
+            {
+                return IsGif ? gif.Frames[gif.Current] : tex;
             }
         }
 
@@ -112,9 +120,9 @@ namespace TAPI.SDK.UI.MenuItems
                 return;
 
             if (Picture is Texture2D)
-                sb.Draw(Picture as Texture2D, position, null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+                sb.Draw(Picture as Texture2D, position + new Vector2(8f), null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
             else if (Picture is AnimatedGif)
-                sb.Draw(Picture as AnimatedGif, position, null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+                sb.Draw(Picture as AnimatedGif, position + new Vector2(8f), null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
             else
                 throw new BadImageFormatException("This should never happen."); // a pun, I guess?
         }

@@ -157,7 +157,13 @@ namespace TAPI.SDK.UI.MenuItems
         public Control()
             : base(0, "", "", "")
         {
-            With(w => w.Click = () => { if (!w.leadsTo.IsEmpty()) Menu.MoveTo(w.leadsTo); }); // IMPORTANT!
+            With(w => w.Click = () =>
+            {
+                if (!w.leadsTo.IsEmpty())
+                    Menu.MoveTo(w.leadsTo);
+
+                Main.PlaySound(12);
+            }); // IMPORTANT!
 
             base.Update += () => Update();
 
