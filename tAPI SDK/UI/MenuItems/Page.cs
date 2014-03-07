@@ -23,6 +23,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// Called when the Page is drawn
         /// </summary>
         public Action<Page, SpriteBatch> OnDraw;
+
         /// <summary>
         /// Called when a Page is initialized
         /// </summary>
@@ -77,12 +78,12 @@ namespace TAPI.SDK.UI.MenuItems
         /// <param name="sb">The SpriteBatch used to draw the Page</param>
         public override void Draw(SpriteBatch sb)
         {
+            base.Draw(sb);
+
             if (OnDraw != null)
                 OnDraw(this, sb);
             if (GlobalDraw != null)
                 GlobalDraw(this, sb);
-
-            base.Draw(sb);
         }
     }
 }

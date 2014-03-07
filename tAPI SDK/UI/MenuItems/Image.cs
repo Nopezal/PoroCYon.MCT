@@ -20,17 +20,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// <summary>
         /// Wether the Image can be used as a button or not.
         /// </summary>
-        public bool IsButton
-        {
-            get
-            {
-                return canMouseOver;
-            }
-            set
-            {
-                canMouseOver = value;
-            }
-        }
+        public bool IsButton = true;
 
         /// <summary>
         /// Wether the image is a gif or not
@@ -90,6 +80,26 @@ namespace TAPI.SDK.UI.MenuItems
             Picture = image;
         }
 
+        /// <summary>
+        /// Gets wether the mouse hovers over the MenuButton or not
+        /// </summary>
+        /// <param name="mouse">The current mouse position</param>
+        /// <returns>true if the MenuButton is hovered, false otherwise.</returns>
+        public override bool MouseOver(Vector2 mouse)
+        {
+            return base.MouseOver(mouse) && IsButton;
+        }
+
+        /// <summary>
+        /// Before the Control is drawn
+        /// </summary>
+        /// <param name="sb">The SpriteBatch used to draw the Control</param>
+        protected override void PreDraw(SpriteBatch sb)
+        {
+            DrawBackground(sb);
+
+            base.PreDraw(sb);
+        }
         /// <summary>
         /// Draws the Image
         /// </summary>

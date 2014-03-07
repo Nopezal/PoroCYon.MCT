@@ -59,28 +59,27 @@ namespace TAPI.SDK.UI.MenuItems
         /// Creates a new instance of the CheckBox class
         /// </summary>
         public CheckBox()
-            : base()
+            : this(false, "CheckBox")
         {
-            canMouseOver = true;
-            Text = "CheckBox";
+
         }
         /// <summary>
         /// Creates a new instance of the CheckBox class
         /// </summary>
         /// <param name="isChecked">Wether the CheckBox is checked or not</param>
         public CheckBox(bool isChecked)
-            : this()
+            : this(isChecked, "CheckBox")
         {
-            this.isChecked = isChecked;
+
         }
         /// <summary>
         /// Creates a new instance of the CheckBox class
         /// </summary>
         /// <param name="text">The text of the CheckBox</param>
         public CheckBox(string text)
-            : this()
+            : this(false, text)
         {
-            Text = text;
+
         }
         /// <summary>
         /// Creates a new instance of the CheckBox class
@@ -88,8 +87,9 @@ namespace TAPI.SDK.UI.MenuItems
         /// <param name="isChecked">Wether the CheckBox is checked or not</param>
         /// <param name="text">The text of the CheckBox</param>
         public CheckBox(bool isChecked, string text)
-            : this(isChecked)
+            : base()
         {
+            this.isChecked = isChecked;
             Text = text;
         }
 
@@ -129,21 +129,21 @@ namespace TAPI.SDK.UI.MenuItems
             // draw box
 
             // top, horizontal
-            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position(), null, MouseOver ? colorMouseOver : colorText, Rotation, Origin,
+            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position(), null, IsMouseOver ? colorMouseOver : colorText, Rotation, Origin,
                 new Vector2(charSize.X + 6f, 2f) * Scale, SpriteEffects, LayerDepth);
             // bottom, horizontal
-            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position() + new Vector2(0f, charSize.Y - 4f) * Scale, null, MouseOver ? colorMouseOver : colorText, Rotation, Origin,
+            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position() + new Vector2(0f, charSize.Y - 4f) * Scale, null, IsMouseOver ? colorMouseOver : colorText, Rotation, Origin,
                 new Vector2(charSize.X + 8f, 2f) * Scale, SpriteEffects, LayerDepth);
 
             // left, vertical
-            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position(), null, MouseOver ? colorMouseOver : colorText, Rotation, Origin,
+            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position(), null, IsMouseOver ? colorMouseOver : colorText, Rotation, Origin,
                 new Vector2(2f, charSize.Y - 4f) * Scale, SpriteEffects, LayerDepth);
             // right, vertical
-            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position() + new Vector2(charSize.X + 6f, 0f) * Scale, null, MouseOver ? colorMouseOver : colorText, Rotation, Origin,
+            sb.Draw(SdkUI.WhitePixel, BoxHitbox.Position() + new Vector2(charSize.X + 6f, 0f) * Scale, null, IsMouseOver ? colorMouseOver : colorText, Rotation, Origin,
                 new Vector2(2f, charSize.Y - 4f) * Scale, SpriteEffects, LayerDepth);
 
             if (IsChecked)
-                SdkUI.DrawOutlinedString(sb, Font, DisplayChar.ToString(), BoxHitbox.Position() + new Vector2(4f, 2f), MouseOver ? colorMouseOver : colorText, null, 2f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
+                SdkUI.DrawOutlinedString(sb, Font, DisplayChar.ToString(), BoxHitbox.Position() + new Vector2(4f, 2f), IsMouseOver ? colorMouseOver : colorText, null, 2f, Scale, Rotation, Origin, SpriteEffects, LayerDepth);
         }
 
         /// <summary>
@@ -153,7 +153,7 @@ namespace TAPI.SDK.UI.MenuItems
         {
             base.Update();
 
-            if (MouseOver && Main.mouseLeft && Main.mouseLeftRelease)
+            if (IsMouseOver && Main.mouseLeft && Main.mouseLeftRelease)
             {
                 IsChecked = !IsChecked;
                 Main.PlaySound(12);

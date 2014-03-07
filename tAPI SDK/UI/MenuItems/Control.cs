@@ -145,7 +145,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// <summary>
         /// Wether the mouse hovers over the Control or not
         /// </summary>
-        public new bool MouseOver
+        public bool IsMouseOver
         {
             get;
             private set;
@@ -161,8 +161,6 @@ namespace TAPI.SDK.UI.MenuItems
 
             base.Update += () => Update();
 
-            canMouseOver = false;
-
             colorFrame = colorMouseOver = new Color(255, 255, 255, 0);
             colorText = new Color(127, 127, 127, 0);
         }
@@ -174,7 +172,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// <param name="mouseOver">Wether the mouse hovers over the MenuButton or not</param>
         public override void Draw(SpriteBatch sb, bool mouseOver)
         {
-            MouseOver = mouseOver;
+            IsMouseOver = mouseOver;
 
             PreDraw(sb);
 
@@ -232,6 +230,16 @@ namespace TAPI.SDK.UI.MenuItems
         }
 
         /// <summary>
+        /// Gets wether the mouse hovers over the MenuButton or not
+        /// </summary>
+        /// <param name="mouse">The current mouse position</param>
+        /// <returns>true if the MenuButton is hovered, false otherwise.</returns>
+        public override bool MouseOver(Vector2 mouse)
+        {
+            return mouse.X >= position.X && mouse.X < position.X + size.X * Scale.X && mouse.Y >= position.Y && mouse.Y < position.Y + size.Y * Scale.Y;
+        }
+
+        /// <summary>
         /// Draws a blue background around the Control. Call this in PreDraw.
         /// </summary>
         /// <param name="sb">The SpriteBatch used to draw the background</param>
@@ -246,7 +254,7 @@ namespace TAPI.SDK.UI.MenuItems
         /// <param name="bg">The region of the background</param>
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
-            Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, MouseOver ? 0.85f : 0.75f);
+            Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, IsMouseOver ? 0.85f : 0.75f);
 
             //Rectangle?
             //    topLeft = new Rectangle(0, 0, 16, 16),
