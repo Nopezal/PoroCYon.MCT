@@ -103,7 +103,7 @@ namespace TAPI.SDK.UI.Interface.Controls
             set
             {
                 ItemChanged(ContainedItem, value);
-                ContainedItem = value;
+                item = value;
             }
         }
 
