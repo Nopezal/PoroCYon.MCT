@@ -1,0 +1,12 @@
+﻿{
+	"displayName": "Mod Creation Tools",
+	"author": "PoroCYon",
+	"version": "1.0.0.0",
+	"info": "PoroCYon's Mod Creation Tools",
+    
+	"internalName": "PoroCYon.MCT",
+
+    "MSBuild": true,
+
+    "includePDB": true
+}
