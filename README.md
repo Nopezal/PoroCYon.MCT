@@ -1,12 +1,28 @@
-tAPI SDK
-========
+Mod Creation Tools
+==================
 
-The Software Developement Kit for the Terraria Application (Mod) Programming Interface
+Mod Creaiton tools
 
 http://www.terrariaonline.com/threads/132361/
 
-Initialize SDK
+Initialize MCT
 --------------
 
     // in ModBase.OnLoad:
-    Sdk.Init();
+    Mct.Init();
+    
+Invoke MCT Tools.exe
+--------------------
+
+The MCT Tools is a command-line program
+that can build a mod from a managed .dll,
+decompile a .tapi or .tapimod file,
+or pack a mod written in JScript.NET or Visual Basic.
+
+use the /? argument to display help info.
+
+Examples:
+
+    -build "C:\SomeDll.dll"
+    -decompile "Unsorted\MyMod.tapi"
+    -pack "MyJSMod"
