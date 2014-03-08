@@ -56,7 +56,7 @@ namespace PoroCYon.MCT.Installer
 
                 WebClient client = new WebClient();
 
-                const string baseUri = "https://dl.dropboxusercontent.com/u/151130168/tAPI%20SDK/";
+                const string baseUri = "https://dl.dropboxusercontent.com/u/151130168/MCT/";
 
                 List<string> ToDownload = new List<string>()
                 {

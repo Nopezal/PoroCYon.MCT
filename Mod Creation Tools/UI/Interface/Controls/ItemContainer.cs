@@ -178,6 +178,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// Creates a new instance of the ItemContainer class
         /// </summary>
         /// <param name="i">Sets the ContainedItem field</param>
+        /// <param name="base">The calling mod's ModBase</param>
+        /// <param name="index">The index of the Item slot</param>
         public ItemContainer(Item i, ModBase @base, int index = 0)
             : base()
         {
