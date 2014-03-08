@@ -1,7 +1,7 @@
 Mod Creation Tools
 ==================
 
-Mod Creaiton tools
+Mod Creaiton Tools for the Terraria Application (Mod) Programming Interface
 
 http://www.terrariaonline.com/threads/132361/
 
