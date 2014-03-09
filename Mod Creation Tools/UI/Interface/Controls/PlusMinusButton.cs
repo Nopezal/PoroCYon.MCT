@@ -145,6 +145,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             Value = value;
             Step = step;
+            Text = text;
         }
 
         /// <summary>
