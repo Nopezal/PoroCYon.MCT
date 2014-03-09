@@ -67,6 +67,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                 ret.X += (base.Hitbox.Width + 72) - 48;
                 ret.Y += 8;
                 ret.Width = 24;
+                ret.Height -= 16;
 
                 return ret;
             }
@@ -83,6 +84,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                 ret.X += (base.Hitbox.Width + 72) - 24;
                 ret.Y += 8;
                 ret.Width = 24;
+                ret.Height -= 16;
 
                 return ret;
             }
