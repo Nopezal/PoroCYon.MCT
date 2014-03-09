@@ -106,7 +106,11 @@ namespace PoroCYon.MCT.UI.Interface
         public virtual void Init()
         {
             for (int i = 0; i < controls.Count; i++)
+            {
+                controls[i].Parent = new WeakReference<IControlParent>(this);
+
                 controls[i].Init();
+            }
 
             inited = true;
         }

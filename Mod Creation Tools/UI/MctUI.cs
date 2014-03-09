@@ -283,6 +283,8 @@ namespace PoroCYon.MCT.UI
             ItemContainer.GlobalItemChanged = null;
             ItemContainer.GlobalStackChanged = null;
 
+            PlusMinusButton.GlobalValueChanged = null;
+
             Slider.GlobalValueChanged = null;
 
             Window.GlobalClosed = null;

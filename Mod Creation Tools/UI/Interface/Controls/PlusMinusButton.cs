@@ -3,6 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
+using PoroCYon.XnaExtensions.Geometry;
+using TAPI;
+using PoroCYon.MCT.Input;
+using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
@@ -12,7 +17,16 @@ namespace PoroCYon.MCT.UI.Interface.Controls
     /// </summary>
     public class PlusMinusButton : TextBlock
     {
-        TextButton incr, decr;
+        int cd = 7;
+
+        /// <summary>
+        /// Called when the value of the PlusMinusButton has changed
+        /// </summary>
+        public Action<PlusMinusButton, float, float> OnValueChanged;
+        /// <summary>
+        /// Called when the value of a PlusMinusButton has changed
+        /// </summary>
+        public static Action<PlusMinusButton, float, float> GlobalValueChanged;
 
         /// <summary>
         /// The value of the PlusMinusButton
@@ -28,10 +42,66 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public bool ShowValue = true;
 
         /// <summary>
+        /// The hitbox of the Control
+        /// </summary>
+        public override Rectangle Hitbox
+        {
+            get
+            {
+                Rectangle ret = base.Hitbox;
+
+                ret.Width += 72;
+
+                return ret;
+            }
+        }
+        /// <summary>
+        /// The Hitbox of the '+' button
+        /// </summary>
+        public Rectangle IncreaseHitbox
+        {
+            get
+            {
+                Rectangle ret = base.Hitbox;
+
+                ret.X += (base.Hitbox.Width + 72) - 48;
+                ret.Y += 8;
+                ret.Width = 24;
+
+                return ret;
+            }
+        }
+        /// <summary>
+        /// The Hitbox of the '-' button
+        /// </summary>
+        public Rectangle DecreaseHitbox
+        {
+            get
+            {
+                Rectangle ret = base.Hitbox;
+
+                ret.X += (base.Hitbox.Width + 72) - 24;
+                ret.Y += 8;
+                ret.Width = 24;
+
+                return ret;
+            }
+        }
+
+        /// <summary>
         /// Creates a new instance of the PlusMinusButton class
         /// </summary>
         public PlusMinusButton()
-            : this(0f, 1f)
+            : this(0f, 1f, "")
+        {
+
+        }
+        /// <summary>
+        /// Creates a new instance of the PlusMinusButton class
+        /// </summary>
+        /// <param name="text">The text of the PlusMinusButton</param>
+        public PlusMinusButton(string text)
+            : this(0f, 1f, text)
         {
 
         }
@@ -40,7 +110,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// </summary>
         /// <param name="value">The value of the PlusMinusButton</param>
         public PlusMinusButton(float value)
-            : this(value, 1f)
+            : this(value, 1f, "")
         {
 
         }
@@ -50,40 +120,31 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <param name="value">The value of the PlusMinusButton</param>
         /// <param name="step">The step size of the PlusMinusButton</param>
         public PlusMinusButton(float value, float step)
+            : this(value, step, "")
+        {
+
+        }
+        /// <summary>
+        /// Creates a new instance of the PlusMinusButton class
+        /// </summary>
+        /// <param name="value">The value of the PlusMinusButton</param>
+        /// <param name="text">The text of the PlusMinusButton</param>
+        public PlusMinusButton(float value, string text)
+            : this(value, 1f, text)
+        {
+
+        }
+        /// <summary>
+        /// Creates a new instance of the PlusMinusButton class
+        /// </summary>
+        /// <param name="value">The value of the PlusMinusButton</param>
+        /// <param name="step">The step size of the PlusMinusButton</param>
+        /// <param name="text">The text of the PlusMinusButton</param>
+        public PlusMinusButton(float value, float step, string text)
             : base()
         {
-            incr = new TextButton("+")
-            {
-                StayFocused = true
-            };
-            incr.OnClicked += (b) =>
-            {
-                Value += Step;
-            };
-
-            decr = new TextButton("-")
-            {
-                StayFocused = true
-            };
-            decr.OnClicked += (b) =>
-            {
-                Value += Step;
-            };
-        }
-
-        /// <summary>
-        /// The hitbox of the Control
-        /// </summary>
-        public override Rectangle Hitbox
-        {
-            get
-            {
-                Rectangle ret = base.Hitbox;
-
-                ret.Width += incr.Hitbox.Width + decr.Hitbox.Width + 16;
-
-                return ret;
-            }
+            Value = value;
+            Step = step;
         }
 
         /// <summary>
@@ -93,13 +154,27 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             base.Update();
 
-            incr.Position += Position + new Vector2(Hitbox.Width - decr.Hitbox.Width - 16f, 0f);
-            incr.Update();
-            incr.Position -= Position + new Vector2(Hitbox.Width - decr.Hitbox.Width - 16f, 0f);
+            if (cd > 0)
+                cd--;
 
-            decr.Position += Position + new Vector2(Hitbox.Width - 8f, 0f);
-            decr.Update();
-            decr.Position -= Position + new Vector2(Hitbox.Width - 8f, 0f);
+            if (GInput.Mouse.Rectangle.Intersects(IncreaseHitbox) && GInput.Mouse.Left && cd <= 0)
+            {
+                cd = 7;
+
+                Value += Step;
+                ValueChanged(Value - Step, Value);
+
+                Main.PlaySound(12);
+            }
+            if (GInput.Mouse.Rectangle.Intersects(DecreaseHitbox) && GInput.Mouse.Left && cd <= 0)
+            {
+                cd = 7;
+
+                Value -= Step;
+                ValueChanged(Value + Step, Value);
+
+                Main.PlaySound(12);
+            }
         }
         /// <summary>
         /// Draws the Control
@@ -107,20 +182,32 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <param name="sb">The SpriteBatch used to draw the Control</param>
         public override void Draw(SpriteBatch sb)
         {
-            (this as Control).Draw(sb); // skip TextBlock.Draw
+            string oldText = Text;
 
-            if (HasBackground)
-                DrawBackground(sb);
+            Text = Text + (ShowValue ? (Text.IsEmpty() ? "" : ": ") + Value : "");
 
-            DrawOutlinedString(sb, Font, Text + (ShowValue ? ": " + Value : ""), Colour);
+            base.Draw(sb);
 
-            incr.Position += Position + new Vector2(Hitbox.Width - decr.Hitbox.Width - 16f, 0f);
-            incr.Draw(sb);
-            incr.Position -= Position + new Vector2(Hitbox.Width - decr.Hitbox.Width - 16f, 0f);
+            Text = oldText;
 
-            decr.Position += Position + new Vector2(Hitbox.Width - 8f, 0f);
-            decr.Draw(sb);
-            decr.Position -= Position + new Vector2(Hitbox.Width - 8f, 0f);
+            DrawBackground(sb, IncreaseHitbox);
+            DrawBackground(sb, DecreaseHitbox);
+
+            MctUI.DrawOutlinedString(sb, Font, "+", IncreaseHitbox.Centre() - Font.MeasureString("+") / 2f + new Vector2(0f, 4f), Colour);
+            MctUI.DrawOutlinedString(sb, Font, "-", DecreaseHitbox.Centre() - Font.MeasureString("-") / 2f + new Vector2(0f, 4f), Colour);
+        }
+
+        /// <summary>
+        /// Changes the value of the PlsuMinusButton
+        /// </summary>
+        /// <param name="oldValue">The old value</param>
+        /// <param name="newValue">The new value</param>
+        protected virtual void ValueChanged(float oldValue, float newValue)
+        {
+            if (OnValueChanged != null)
+                OnValueChanged(this, oldValue, newValue);
+            if (GlobalValueChanged != null)
+                GlobalValueChanged(this, oldValue, newValue);
         }
     }
 }

@@ -64,8 +64,12 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         {
             base.Init();
 
-            for (int i = 0; i < Controls.Count; i++)
+            for (int i = 0; i < controls.Count; i++)
+            {
+                controls[i].Parent = new WeakReference<IControlParent>(this);
+
                 controls[i].Init();
+            }
         }
         /// <summary>
         /// Updates the Control
