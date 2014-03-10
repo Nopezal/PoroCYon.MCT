@@ -74,7 +74,7 @@ namespace PoroCYon.MCT
             #region instantiate mod[...]
             modBase.modPlayers.Add(new MPlayer(modBase, null));
             modBase.modWorlds.Add(new MWorld(modBase));
-            modBase.modItems.Add(new MItem(modBase, null));
+            //modBase.modItems.Add(new MItem(modBase, null));
             modBase.modNPCs.Add(new MNPC(modBase, null));
             modBase.modPrefixes.Add(new MPrefix(modBase, null));
             modBase.modProjectiles.Add(new MProj(modBase, null));

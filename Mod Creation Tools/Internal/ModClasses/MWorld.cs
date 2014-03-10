@@ -21,7 +21,7 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.PostUpdate();
 
-            MctUI.Update();
+            //MctUI.Update();
         }
     }
 }

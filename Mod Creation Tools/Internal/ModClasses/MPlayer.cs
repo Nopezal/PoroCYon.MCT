@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using TAPI;
+using PoroCYon.MCT.UI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
@@ -12,6 +13,15 @@ namespace PoroCYon.MCT.Internal.ModClasses
             : base(@base, p)
         {
 
+        }
+
+        public override void OnUpdate()
+        {
+            // ensure it's the local player >__>
+            if (player == Main.localPlayer)
+                MctUI.Update();
+
+            base.OnUpdate();
         }
     }
 }
