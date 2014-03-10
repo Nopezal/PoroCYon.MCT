@@ -229,27 +229,35 @@ namespace PoroCYon.MCT.Installer
             }
         }
 
-        static bool CheckCanInstall()
-        {
+		static bool CheckCanInstall()
+		{
 			if (!NetworkInterface.GetIsNetworkAvailable())
 				return false;
 
-            RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
-            if (regKey == null)
-                return false;
+			RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
+			if (regKey == null)
+				return false;
 
-            string steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
-            steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+			string steamDir = "";
+			try
+			{
+				steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
+				steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+			}
+			catch (NullReferenceException) // key does not exist
+			{
+				return false;
+			}
 
-            if (!Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
-                return false;
+			if (steamDir == "" || !Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
+				return false;
 
-            Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe");
-            if ((uint)a.GetType("TAPI.Constants").GetField("versionAssembly").GetValue(null) < 4u) // not r4
-                return false;
+			Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
+			if ((uint)a.GetType("TAPI.Constants").GetField("versionAssembly").GetValue(null) < 4u) // not r4
+				return false;
 
-            #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
-            Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
+			#region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
+			Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             {
                 {
                     VSVersion.VCSExpress,
@@ -278,18 +286,22 @@ namespace PoroCYon.MCT.Installer
                     "VisualStudio\\12.0"
                 },
             };
-            #endregion
+			#endregion
 
-            for (int i = 1; i <= 32; i *= 2)
-            {
-                RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
-                if (key != null)
-                    if (key.GetValue("FullScreen") != null) // random key
-                        VsVersions.PossibleVersions |= (VSVersion)i;
-            }
+			for (int i = 1; i <= 32; i *= 2)
+			{
+				try
+				{
+					RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
+					if (key != null)
+						if (key.GetValue("FullScreen") != null) // random key
+							VsVersions.PossibleVersions |= (VSVersion)i;
+				}
+				catch (NullReferenceException) { } // VS key does not exist, do not return false this time
+			}
 
-            return true;
-        }
+			return true;
+		}
 
         protected override void OnClosing(CancelEventArgs e)
         {
