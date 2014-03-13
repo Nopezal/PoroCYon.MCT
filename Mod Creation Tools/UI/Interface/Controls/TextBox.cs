@@ -8,6 +8,7 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using PoroCYon.XnaExtensions;
+using PoroCYon.XnaExtensions.Geometry;
 using TAPI;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
@@ -83,6 +84,19 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         static int enterCount = 0;
 
         /// <summary>
+        /// The size of the TextBox
+        /// </summary>
+        public Vector2? Size = null;
+
+        /// <summary>
+        /// Gets the maximum length for the input string. Negative (and nonzero) means infinite.
+        /// </summary>
+        /// <remarks>
+        /// This is ignored if Size is smaller.
+        /// </remarks>
+        public int MaxLength = -1;
+
+        /// <summary>
         /// The behaviour of the TextBox when Enter is pressed
         /// </summary>
         public EnterMode EnterMode = EnterMode.Enter;
@@ -149,7 +163,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get
             {
                 return new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
-                    (int)(Scale.X * Font.MeasureString(TextWithCaret).X) + 16, (int)(Scale.Y * Font.MeasureString(TextWithCaret).Y) + 16);
+                    (int)(Scale.X * (Size.HasValue ? Size.Value.X : Font.MeasureString(TextWithCaret).X)) + 16,
+                    (int)(Scale.Y * (Size.HasValue ? Size.Value.Y : Font.MeasureString(TextWithCaret).Y)) + 16);
             }
         }
 
@@ -217,22 +232,14 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
                 string @new = Main.GetInputText(Text);
 
-                if (@new != Text)
-                {
-                    Text = @new;
-                    Main.PlaySound("vanilla:menuTick");
-                }
-
                 // tabs
                 if (GInput.Keyboard.IsKeyDown(Keys.Tab))
                 {
                     if (TabMode <= 0)
-                        Text += '\t';
+                        @new += '\t';
                     else
                         for (int i = 0; i < (int)TabMode; i++)
-                            Text += ' ';
-
-                    Main.PlaySound("vanilla:menuTick");
+                            @new += ' ';
                 }
 
                 #region enter
@@ -256,11 +263,47 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                     if (((EnterMode & EnterMode.Enter) != 0 && !shift) || ((EnterMode & EnterMode.ShiftEnter) != 0 && shift))
                         IsFocused = Listening = false;
                     else
-                        Text += '\n';
+                        @new += '\n';
+                }
+                #endregion
+
+                if (@new != Text)
+                {
+                    Text = @new;
+
+                    if (Text.Length > MaxLength && MaxLength > 0)
+                        Text = Text.Substring(0, MaxLength);
+
+                    if (Size.HasValue)
+                    {
+                        while (Font.MeasureString(Text).X > Size.Value.X)
+                            Text = Text.Substring(0, Text.Length - 1);
+
+                        while (Font.MeasureString(Text).Y > Size.Value.Y)
+                        {
+                            string old = Text;
+                            Text = Text.Remove(Text.LastIndexOf("\r\n"), 1);
+
+                            // no \r\n, \n maybe?
+                            if (old == Text)
+                            {
+                                Text = Text.Remove(Text.LastIndexOf('\n'), 1);
+
+                                // no \n either, \r maybe?
+                                if (old == Text)
+                                {
+                                    Text = Text.Remove(Text.LastIndexOf('\r'), 1);
+
+                                    // none of the above (no newlines found), prevent an infinite loop.
+                                    if (old == Text)
+                                        break;
+                                }
+                            }
+                        }
+                    }
 
                     Main.PlaySound("vanilla:menuTick");
                 }
-                #endregion
 
                 if (--CaretTimer <= 0)
                     CaretTimer = 60;
@@ -276,7 +319,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
             DrawBackground(sb);
 
-            DrawOutlinedString(sb, Font, TextWithCaret, Colour);
+            DrawOutlinedString(sb, Font, Text, Position + (Size.HasValue ? Size.Value / 2f - Font.MeasureString(Text) / 2f : Vector2.Zero), Colour);
         }
     }
 }

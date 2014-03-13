@@ -4,6 +4,8 @@ using System.Linq;
 using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using PoroCYon.XnaExtensions;
+using PoroCYon.XnaExtensions.Geometry;
 using TAPI;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
@@ -15,6 +17,11 @@ namespace PoroCYon.MCT.UI.Interface.Controls
     /// </summary>
     public class TextBlock : Control, ITextObject
     {
+        /// <summary>
+        /// The size of the TextBlock
+        /// </summary>
+        public Vector2? Size = null;
+
         /// <summary>
         /// The font of the text
         /// </summary>
@@ -41,7 +48,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get
             {
                 return new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
-                    (int)(Scale.X * Font.MeasureString(Text).X) + 16, (int)(Scale.Y * Font.MeasureString(Text).Y) + 16);
+                    (int)(Scale.X * (Size.HasValue ? Size.Value.X : Font.MeasureString(Text).X)) + 16,
+                    (int)(Scale.Y * (Size.HasValue ? Size.Value.Y : Font.MeasureString(Text).Y)) + 16);
             }
         }
 
@@ -75,7 +83,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             if (HasBackground)
                 DrawBackground(sb);
 
-            DrawOutlinedString(sb, Font, Text, Colour);
+            DrawOutlinedString(sb, Font, Text, Position + (Size.HasValue ? Size.Value / 2f - Font.MeasureString(Text) / 2f : Vector2.Zero), Colour);
         }
     }
 }
