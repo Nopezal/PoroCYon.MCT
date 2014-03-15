@@ -125,6 +125,16 @@ namespace PoroCYon.MCT.UI
             get;
             internal set;
         }
+        /// <summary>
+        /// Gets the <see cref="Microsoft.Xna.Framework.Graphics.GraphicsDevice"/> used by the game
+        /// </summary>
+        public static GraphicsDevice SharedGraphicsDevice
+        {
+            get
+            {
+                return Constants.mainInstance.GraphicsDevice;
+            }
+        }
 
 
         /// <summary>
