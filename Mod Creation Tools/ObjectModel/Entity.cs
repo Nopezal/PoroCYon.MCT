@@ -15,6 +15,10 @@ namespace PoroCYon.MCT.ObjectModel
         Vector2? origin = null;
 
         /// <summary>
+        /// The main flag used to determinate wether the Entity is active or not.
+        /// </summary>
+        public bool Active = false;
+        /// <summary>
         /// The position of the Entity
         /// </summary>
         public Vector2 Position = Vector2.Zero;
@@ -71,6 +75,17 @@ namespace PoroCYon.MCT.ObjectModel
         /// Called when an Entity is drawn
         /// </summary>
         public static Action<Entity, SpriteBatch> GlobalDraw;
+
+        /// <summary>
+        /// Gets wether the Entity is active or not
+        /// </summary>
+        public virtual bool IsActive
+        {
+            get
+            {
+                return Active;
+            }
+        }
 
         /// <summary>
         /// Finalizes the Entity
