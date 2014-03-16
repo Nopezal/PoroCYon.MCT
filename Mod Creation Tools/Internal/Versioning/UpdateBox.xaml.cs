@@ -26,6 +26,13 @@ namespace PoroCYon.MCT.Internal.Versioning
             if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                 throw new InvalidOperationException("You shall not create an UpdateBox");
 
+            try
+            {
+                Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri(
+                    "PresentationFramework.AeroLite;V4.0.0.0;31bf3856ad364e35;component\\themes/aerolite.normalcolor.xaml", UriKind.Relative)) as ResourceDictionary);
+            }
+            catch { } // assembly not found
+
             InitializeComponent();
 
             CloseBorder.MouseEnter += (s, e) =>
