@@ -73,6 +73,7 @@
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Net" />
     <Reference Include="System.Numerics" />
     <Reference Include="System.Windows.Forms" />
     <Reference Include="System.Xaml" />
@@ -83,6 +84,7 @@
     </Reference>
     <Reference Include="WindowsBase" />
     <Reference Include="WindowsFormsIntegration" />
+    <Reference Include="XamlBuildTask" />
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Content\LoadParameters.cs" />
@@ -150,6 +152,11 @@
     <Compile Include="VanillaData\ItemData.cs" />
     <Compile Include="VanillaData\NPCData.cs" />
     <Compile Include="VanillaData\ProjData.cs" />
+    <Compile Include="Internal\Versioning\UpdateBox.xaml.cs">
+      <DependentUpon>UpdateBox.xaml</DependentUpon>
+    </Compile>
+    <Compile Include="Internal\Versioning\UpdateBoxInjector.cs" />
+    <Compile Include="Internal\Versioning\UpdateChecker.cs" />
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -158,6 +165,12 @@
   <ItemGroup>
     <Content Include="Logo.ico" />
   </ItemGroup>
+  <ItemGroup>
+    <Page Include="Internal\Versioning\UpdateBox.xaml">
+      <SubType>Designer</SubType>
+      <Generator>MSBuild:Compile</Generator>
+    </Page>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" (
@@ -165,6 +178,8 @@
         copy "$(TargetDir)$(TargetName).pdb" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).pdb" /y
 
     if "$(ConfigurationName)"=="Release" (
+        copy "$(SolutionDir)Version.xml" "%25userprofile%25\Dropbox\Public\MCT\Version.xml"
+
         copy "$(TargetDir)$(TargetName).xml" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).xml" /y
 
         copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)" /y

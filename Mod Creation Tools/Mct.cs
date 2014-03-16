@@ -11,6 +11,7 @@ using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Internal.ModClasses;
+using PoroCYon.MCT.Internal.Versioning;
 using PoroCYon.MCT.Interop;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
@@ -43,6 +44,9 @@ namespace PoroCYon.MCT
         {
             if (Inited)
                 return;
+
+            if (UpdateChecker.IsUpdateAvailable())
+                UpdateBoxInjector.Inject();
 
             // hacky stuff #1
             // add mod etc to list...
