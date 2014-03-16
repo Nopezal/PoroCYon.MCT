@@ -138,6 +138,7 @@
     <Compile Include="UI\Interface\Controls\Window.cs" />
     <Compile Include="UI\Interface\CustomUI.cs" />
     <Compile Include="UI\Interface\Controls\TextButton.cs" />
+    <Compile Include="UI\Interface\LayerUI.cs" />
     <Compile Include="UI\Interface\MessageBox.cs" />
     <Compile Include="UI\MenuItems\CheckBox.cs" />
     <Compile Include="UI\MenuItems\Control.cs" />

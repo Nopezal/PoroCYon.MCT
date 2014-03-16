@@ -329,6 +329,10 @@ namespace PoroCYon.MCT.UI
             for (int i = 0; i < customUIs.Count; i++)
                 if (customUIs[i].IsVisible)
                     customUIs[i].Update();
+
+            for (int i = 0; i < InterfaceLayer.cachedList.Count; i++)
+                if (InterfaceLayer.cachedList[i] is LayerUI)
+                    ((LayerUI)InterfaceLayer.cachedList[i]).Update();
         }
         internal static void Draw(SpriteBatch sb, DrawCalled called)
         {
