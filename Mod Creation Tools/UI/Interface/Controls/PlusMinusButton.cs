@@ -162,6 +162,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
             if (GInput.Mouse.Rectangle.Intersects(IncreaseHitbox) && GInput.Mouse.Left && cd <= 0)
             {
+                GInput.BlockMouse = true;
+
                 cd = 7;
 
                 Value += Step;
@@ -171,6 +173,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             }
             if (GInput.Mouse.Rectangle.Intersects(DecreaseHitbox) && GInput.Mouse.Left && cd <= 0)
             {
+                GInput.BlockMouse = true;
+
                 cd = 7;
 
                 Value -= Step;

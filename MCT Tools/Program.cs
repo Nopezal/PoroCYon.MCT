@@ -46,8 +46,9 @@ namespace PoroCYon.MCT.Tools
                 }
             };
             Commands.Add("cls",   Commands["clear"]);
-            Commands.Add("stop",  Commands["exit"] );
-            Commands.Add("close", Commands["exit"] );
+            Commands.Add("stop",  Commands["exit" ]);
+            Commands.Add("close", Commands["exit" ]);
+            Commands.Add("?",     Commands["help" ]);
 
             ToolCommands = new Dictionary<string, Action<string>>()
             {
@@ -110,7 +111,7 @@ namespace PoroCYon.MCT.Tools
         {
             CommonToolUtilities.Init();
 
-            for (int i = 0; i < args.Length - 1; i++)
+            for (int i = 0; i < args.Length; i++)
             {
                 string s = TrimCommand(args[i]);
 
