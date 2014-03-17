@@ -22,13 +22,13 @@ namespace PoroCYon.MCT.Internal.Versioning
         static ElementHost host;
         static Form mainForm;
 
-        internal static void Inject()
+        internal static void Inject(string newVersion)
         {
             mainForm = Form.FromHandle(Constants.mainInstance.Window.Handle) as Form; // the game window as a Form
 
             mainForm.Controls.Add(host = new ElementHost()
             {
-                BackColor = Color.Transparent,
+                BackColor = Color.SkyBlue,
                 BackColorTransparent = true,
 
                 Location = new Point(Main.screenWidth / 2 - 250, Main.screenHeight / 2 - 150),
@@ -37,7 +37,7 @@ namespace PoroCYon.MCT.Internal.Versioning
 
                 Size = new Size(500, 300),
 
-                Child = new UpdateBox()
+                Child = new UpdateBox(newVersion)
             });
         }
 

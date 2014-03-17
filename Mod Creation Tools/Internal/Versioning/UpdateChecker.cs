@@ -9,11 +9,11 @@ namespace PoroCYon.MCT.Internal.Versioning
 {
     static class UpdateChecker
     {
-        internal static bool IsUpdateAvailable()
+        internal static string IsUpdateAvailable()
         {
             // this might be useful
             if (!NetworkInterface.GetIsNetworkAvailable())
-                return false;
+                return null;
 
             try
             {
@@ -27,11 +27,11 @@ namespace PoroCYon.MCT.Internal.Versioning
                 string version_str = downloaded.Attributes["String"].Value;
                 Version version = new Version(downloaded.Attributes["Version"].Value);
 
-                return version_num > MctConstants.VERSION_NUM || version_str != MctConstants.VERSION_STRING || version > MctConstants.VERSION;
+                return version_num > MctConstants.VERSION_NUM || version_str != MctConstants.VERSION_STRING || version > MctConstants.VERSION ? version_str : null;
             }
             catch
             {
-                return false;
+                return null;
             }
         }
     }

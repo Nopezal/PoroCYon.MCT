@@ -21,7 +21,7 @@ namespace PoroCYon.MCT.Internal.Versioning
 {
     public partial class UpdateBox : UserControl
     {
-        public UpdateBox()
+        public UpdateBox(string newVersion)
         {
             if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                 throw new InvalidOperationException("You shall not create an UpdateBox");
@@ -37,44 +37,68 @@ namespace PoroCYon.MCT.Internal.Versioning
 
             CloseBorder.MouseEnter += (s, e) =>
             {
-                CloseBorder.BorderBrush = Brushes.OrangeRed;
-                CloseText.Foreground = Brushes.OrangeRed;
+                CloseBorder.BorderBrush = Brushes.LightGray;
+                CloseText.Foreground = Brushes.LightGray;
+
+                CloseBorder.RenderTransform = new ScaleTransform(1.15d, 1.15d, CloseBorder.ActualWidth / 2d, CloseBorder.ActualHeight / 2d);
+                CloseText.RenderTransform = new ScaleTransform(1.15d, 1.15d, CloseText.ActualWidth / 2d, CloseText.ActualHeight / 2d);
             };
             CloseBorder.MouseLeave += (s, e) =>
             {
-                CloseBorder.BorderBrush = Brushes.Lime;
-                CloseText.Foreground = Brushes.Lime;
+                CloseBorder.BorderBrush = Brushes.White;
+                CloseText.Foreground = Brushes.White;
+
+                CloseBorder.RenderTransform = new ScaleTransform(1d, 1d, CloseBorder.ActualWidth / 2d, CloseBorder.ActualHeight / 2d);
+                CloseText.RenderTransform = new ScaleTransform(1d, 1d, CloseText.ActualWidth / 2d, CloseText.ActualHeight / 2d);
             };
             CloseText.MouseEnter += (s, e) =>
             {
-                CloseBorder.BorderBrush = Brushes.OrangeRed;
-                CloseText.Foreground = Brushes.OrangeRed;
+                CloseBorder.BorderBrush = Brushes.LightGray;
+                CloseText.Foreground = Brushes.LightGray;
+
+                CloseBorder.RenderTransform = new ScaleTransform(1.15d, 1.15d, CloseBorder.ActualWidth / 2d, CloseBorder.ActualHeight / 2d);
+                CloseText.RenderTransform = new ScaleTransform(1.15d, 1.15d, CloseText.ActualWidth / 2d, CloseText.ActualHeight / 2d);
             };
             CloseText.MouseLeave += (s, e) =>
             {
-                CloseBorder.BorderBrush = Brushes.Lime;
-                CloseText.Foreground = Brushes.Lime;
+                CloseBorder.BorderBrush = Brushes.White;
+                CloseText.Foreground = Brushes.White;
+
+                CloseBorder.RenderTransform = new ScaleTransform(1d, 1d, CloseBorder.ActualWidth / 2d, CloseBorder.ActualHeight / 2d);
+                CloseText.RenderTransform = new ScaleTransform(1d, 1d, CloseText.ActualWidth / 2d, CloseText.ActualHeight / 2d);
             };
 
             UpdateBorder.MouseEnter += (s, e) =>
             {
-                UpdateBorder.BorderBrush = Brushes.OrangeRed;
-                UpdateText.Foreground = Brushes.OrangeRed;
+                UpdateBorder.BorderBrush = Brushes.LightGray;
+                UpdateText.Foreground = Brushes.LightGray;
+
+                UpdateBorder.RenderTransform = new ScaleTransform(1.15d, 1.15d, UpdateBorder.ActualWidth / 2d, UpdateBorder.ActualHeight / 2d);
+                UpdateText.RenderTransform = new ScaleTransform(1.15d, 1.15d, UpdateText.ActualWidth / 2d, UpdateText.ActualHeight / 2d);
             };
             UpdateBorder.MouseLeave += (s, e) =>
             {
-                UpdateBorder.BorderBrush = Brushes.Lime;
-                UpdateText.Foreground = Brushes.Lime;
+                UpdateBorder.BorderBrush = Brushes.White;
+                UpdateText.Foreground = Brushes.White;
+
+                UpdateBorder.RenderTransform = new ScaleTransform(1d, 1d, UpdateBorder.ActualWidth / 2d, UpdateBorder.ActualHeight / 2d);
+                UpdateText.RenderTransform = new ScaleTransform(1d, 1d, UpdateText.ActualWidth / 2d, UpdateText.ActualHeight / 2d);
             };
             UpdateText.MouseEnter += (s, e) =>
             {
-                UpdateBorder.BorderBrush = Brushes.OrangeRed;
-                UpdateText.Foreground = Brushes.OrangeRed;
+                UpdateBorder.BorderBrush = Brushes.LightGray;
+                UpdateText.Foreground = Brushes.LightGray;
+
+                UpdateBorder.RenderTransform = new ScaleTransform(1.15d, 1.15d, UpdateBorder.ActualWidth / 2d, UpdateBorder.ActualHeight / 2d);
+                UpdateText.RenderTransform = new ScaleTransform(1.15d, 1.15d, UpdateText.ActualWidth / 2d, UpdateText.ActualHeight / 2d);
             };
             UpdateText.MouseLeave += (s, e) =>
             {
-                UpdateBorder.BorderBrush = Brushes.Lime;
-                UpdateText.Foreground = Brushes.Lime;
+                UpdateBorder.BorderBrush = Brushes.White;
+                UpdateText.Foreground = Brushes.White;
+
+                UpdateBorder.RenderTransform = new ScaleTransform(1d, 1d, UpdateBorder.ActualWidth / 2d, UpdateBorder.ActualHeight / 2d);
+                UpdateText.RenderTransform = new ScaleTransform(1d, 1d, UpdateText.ActualWidth / 2d, UpdateText.ActualHeight / 2d);
             };
 
             CloseBorder.MouseLeftButtonDown += (s, e) =>
@@ -96,6 +120,9 @@ namespace PoroCYon.MCT.Internal.Versioning
                 Process.Start("https://dl.dropboxusercontent.com/u/151130168/MCT/MCT%20Installer.exe");
                 Constants.mainInstance.Exit();
             };
+
+            CurrentVersion.Text = "Current: " + MctConstants.VERSION_STRING;
+            NewVersion.Text = "New: " + newVersion;
         }
     }
 }
