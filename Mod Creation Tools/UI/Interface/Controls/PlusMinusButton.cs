@@ -20,6 +20,17 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         int cd = 7;
 
         /// <summary>
+        /// Gets the text and the value, if it should be shown.
+        /// </summary>
+        public string TextWithValue
+        {
+            get
+            {
+                return Text + (ShowValue ? (Text.IsEmpty() ? "" : ": ") + Value : "");
+            }
+        }
+
+        /// <summary>
         /// Called when the value of the PlusMinusButton has changed
         /// </summary>
         public Action<PlusMinusButton, float, float> OnValueChanged;
@@ -48,9 +59,11 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                Rectangle ret = base.Hitbox;
+                Rectangle ret = new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
+                    (int)(Scale.X * (Size.HasValue ? Size.Value.X : Font.MeasureString(TextWithValue).X)) + 16,
+                    (int)(Scale.Y * (Size.HasValue ? Size.Value.Y : Font.MeasureString(TextWithValue).Y)) + 16);
 
-                ret.Width += 72;
+                ret.Width += 32;
 
                 return ret;
             }
@@ -62,9 +75,9 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                Rectangle ret = base.Hitbox;
+                Rectangle ret = Hitbox;
 
-                ret.X += (base.Hitbox.Width + 72) - 48;
+                ret.X += Hitbox.Width + 40 - 16 - 48;
                 ret.Y += 8;
                 ret.Width = 24;
                 ret.Height -= 16;
@@ -79,9 +92,9 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                Rectangle ret = base.Hitbox;
+                Rectangle ret = Hitbox;
 
-                ret.X += (base.Hitbox.Width + 72) - 24;
+                ret.X += Hitbox.Width + 40 - 16 - 24;
                 ret.Y += 8;
                 ret.Width = 24;
                 ret.Height -= 16;
@@ -191,7 +204,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             string oldText = Text;
 
-            Text = Text + (ShowValue ? (Text.IsEmpty() ? "" : ": ") + Value : "");
+            Text = TextWithValue;
 
             base.Draw(sb);
 
