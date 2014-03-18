@@ -1,4 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.4" String="1.0.0.4" />
+  <CurrentVersion Number="1" Version="1.0.0.5" String="1.0.0.5" />
+  <Changelog>
+    <Release Version ="1.0.0.5">
+      <Change>Added changelog in update screen</Change>
+    </Release>
+    <Release Version ="1.0.0.4">
+      <Change>Fixed +/- button positioning</Change>
+    </Release>
+  </Changelog>
 </Version>

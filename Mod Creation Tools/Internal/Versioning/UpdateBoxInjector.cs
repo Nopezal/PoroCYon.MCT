@@ -22,7 +22,7 @@ namespace PoroCYon.MCT.Internal.Versioning
         static ElementHost host;
         static Form mainForm;
 
-        internal static void Inject(string newVersion)
+        internal static void Inject()
         {
             mainForm = Form.FromHandle(Constants.mainInstance.Window.Handle) as Form; // the game window as a Form
 
@@ -37,7 +37,7 @@ namespace PoroCYon.MCT.Internal.Versioning
 
                 Size = new Size(500, 300),
 
-                Child = new UpdateBox(newVersion)
+                Child = new UpdateBox()
             });
         }
 

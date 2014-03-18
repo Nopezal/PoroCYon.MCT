@@ -126,6 +126,14 @@ namespace PoroCYon.MCT.UI
             internal set;
         }
         /// <summary>
+        /// A 1-by-1, white pixel (#FFFFFFFF)
+        /// </summary>
+        public static Texture2D InversedWhitePixel
+        {
+            get;
+            internal set;
+        }
+        /// <summary>
         /// Gets the <see cref="Microsoft.Xna.Framework.Graphics.GraphicsDevice"/> used by the game
         /// </summary>
         public static GraphicsDevice SharedGraphicsDevice
@@ -253,6 +261,7 @@ namespace PoroCYon.MCT.UI
         internal static void Uninit()
         {
             WhitePixel.Dispose();
+            InversedWhitePixel.Dispose();
 
             defaultUI = null;
 

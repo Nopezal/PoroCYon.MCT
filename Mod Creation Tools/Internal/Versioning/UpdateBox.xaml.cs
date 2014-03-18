@@ -15,13 +15,14 @@ using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using System.Windows.Navigation;
 using System.Windows.Shapes;
+using System.Xml;
 using TAPI;
 
 namespace PoroCYon.MCT.Internal.Versioning
 {
     public partial class UpdateBox : UserControl
     {
-        public UpdateBox(string newVersion)
+        public UpdateBox()
         {
             if (Assembly.GetCallingAssembly() != Assembly.GetExecutingAssembly())
                 throw new InvalidOperationException("You shall not create an UpdateBox");
@@ -104,10 +105,12 @@ namespace PoroCYon.MCT.Internal.Versioning
             CloseBorder.MouseLeftButtonDown += (s, e) =>
             {
                 UpdateBoxInjector.RemoveInjection();
+                UpdateChecker.LastUpdateAvailable = false;
             };
             CloseText.MouseLeftButtonDown += (s, e) =>
             {
                 UpdateBoxInjector.RemoveInjection();
+                UpdateChecker.LastUpdateAvailable = false;
             };
 
             UpdateBorder.MouseLeftButtonDown += (s, e) =>
@@ -121,8 +124,20 @@ namespace PoroCYon.MCT.Internal.Versioning
                 Constants.mainInstance.Exit();
             };
 
+            XmlNode
+                version = UpdateChecker.GetXml().ChildNodes[1],
+                current = version.ChildNodes[0];
+
             CurrentVersion.Text = "Current: " + MctConstants.VERSION_STRING;
-            NewVersion.Text = "New: " + newVersion;
+            NewVersion.Text = "New: " + current.Attributes["String"].Value;
+
+            foreach (XmlNode xn in version.ChildNodes[1])
+            {
+                Changelog.Items.Add("v" + xn.Attributes["Version"].Value);
+
+                foreach (XmlNode Xn in xn.ChildNodes)
+                    Changelog.Items.Add("  " + Xn.InnerText);
+            }
         }
     }
 }

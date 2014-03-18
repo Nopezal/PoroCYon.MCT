@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
 using TAPI;
+using PoroCYon.MCT.Internal.Versioning;
 
 namespace PoroCYon.MCT.Input
 {
@@ -160,7 +161,7 @@ namespace PoroCYon.MCT.Input
 
             MouseHandler ret = new MouseHandler()
             {
-                Left = xm.LeftButton == ButtonState.Pressed,
+                Left = xm.LeftButton == ButtonState.Pressed && !UpdateChecker.LastUpdateAvailable,
                 Right = xm.RightButton == ButtonState.Pressed,
                 Middle = xm.MiddleButton == ButtonState.Pressed,
                 XButton1 = xm.XButton1 == ButtonState.Pressed,

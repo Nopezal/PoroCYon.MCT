@@ -26,16 +26,39 @@
             </TextBlock.Effect>
         </TextBlock>
 
-        <Border Name="UpdateBorder" Cursor="Hand" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center" Height="43" Margin="157,0,147,63" VerticalAlignment="Bottom" Width="196" >
+        <Border Name="UpdateBorder" Cursor="Hand" BorderBrush="White" BorderThickness="3" HorizontalAlignment="Center" Height="43" Margin="157,0,147,9" VerticalAlignment="Bottom" Width="196" >
             <Border.Effect>
                 <DropShadowEffect ShadowDepth="0" Direction="50" />
             </Border.Effect>
         </Border>
-        <TextBlock Name="UpdateText" Cursor="Hand" HorizontalAlignment="Center" Margin="157,0,147,63" TextWrapping="Wrap" Text="UPDATE" Width="196" FontSize="36" ToolTip="This will close tAPI" Foreground="White" TextAlignment="Center" VerticalAlignment="Bottom" >
+        <TextBlock Name="UpdateText" Cursor="Hand" HorizontalAlignment="Center" Margin="157,0,147,9" TextWrapping="Wrap" Text="UPDATE" Width="196" FontSize="36" ToolTip="This will close tAPI" Foreground="White" TextAlignment="Center" VerticalAlignment="Bottom" >
             <TextBlock.Effect>
                 <DropShadowEffect ShadowDepth="0" Direction="50" />
             </TextBlock.Effect>
         </TextBlock>
+
+        <ListBox Name="Changelog" SelectionMode="Extended" Margin="10,131,10,57" Background="{x:Null}" BorderBrush="{x:Null}" Foreground="White" FontSize="18" >
+            <ListBox.Effect>
+                <DropShadowEffect Direction="50" ShadowDepth="0" />
+            </ListBox.Effect>
+            <!-- disable selection -->
+            <ListBox.ItemContainerStyle>
+                <Style TargetType="{x:Type ListBoxItem}">
+                    <Setter Property="Focusable" Value="False" />
+                </Style>
+            </ListBox.ItemContainerStyle>
+            <!-- does the exact same thing, but is longer -->
+            <!--<ListBox.Resources>
+                <Style TargetType="ListBoxItem">
+                    <Style.Resources>
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.ControlBrushKey}" Color="Transparent" />
+                        <SolidColorBrush x:Key="{x:Static SystemColors.HighlightTextBrushKey}" Color="White" />
+                    </Style.Resources>
+                    <Setter Property="FocusVisualStyle" Value="{x:Null}" />
+                </Style>
+            </ListBox.Resources>-->
+        </ListBox>
 
     </Grid>
 </UserControl>
