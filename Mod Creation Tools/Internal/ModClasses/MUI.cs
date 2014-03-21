@@ -72,8 +72,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             // putting it here so it is also drawn when the inventory is closed
             list.Insert(list.IndexOf(InterfaceLayer.LayerInventory) + 1, new PostInventoryLayer());
-
-            Interface i = new Interface();
         }
     }
 }
