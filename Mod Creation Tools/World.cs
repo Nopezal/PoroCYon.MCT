@@ -38,6 +38,34 @@ namespace PoroCYon.MCT
     public static class World
     {
         /// <summary>
+        /// Gets the current invasion type
+        /// </summary>
+        public static InvasionType CurrentInvasion
+        {
+            get
+            {
+                return (InvasionType)Main.invasionType;
+            }
+        }
+
+        /// <summary>
+        /// Sets wether the game should be in christmas state or not
+        /// </summary>
+        public static bool ForceChristmas
+        {
+            internal get;
+            set;
+        }
+        /// <summary>
+        /// Sets wether the game should be in halloween state or not
+        /// </summary>
+        public static bool ForceHalloween
+        {
+            internal get;
+            set;
+        }
+
+        /// <summary>
         /// Starts an invasion.
         /// </summary>
         /// <param name="invasion">
@@ -52,7 +80,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stops all active invasions
         /// </summary>
-        public static void StopInvasion()
+        public static void StopInvasions()
         {
             Main.invasionSize = 0;
             InvasionWarning();

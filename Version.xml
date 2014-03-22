@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.6" String="1.0.0.6" />
+  <CurrentVersion Number="1" Version="1.0.0.7" String="1.0.0.7" />
   <Changelog>
+    <Release Version ="1.0.0.7">
+      <Change>Able to force christmas/halloween state (World.ForceChristmas/Halloween = true;)</Change>
+    </Release>
     <Release Version ="1.0.0.6">
       <Change>Updated PoroCYon.XnaExtensions.dll (includes geometric transformations)</Change>
     </Release>
