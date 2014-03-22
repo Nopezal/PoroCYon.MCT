@@ -77,7 +77,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             {
                 Rectangle ret = Hitbox;
 
-                ret.X += Hitbox.Width + 40 - 16 - 48;
+                ret.X += Hitbox.Width + 40 - 28 - 48;
                 ret.Y += 8;
                 ret.Width = 24;
                 ret.Height -= 16;
@@ -94,7 +94,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             {
                 Rectangle ret = Hitbox;
 
-                ret.X += Hitbox.Width + 40 - 16 - 24;
+                ret.X += Hitbox.Width + 40 - 28 - 24;
                 ret.Y += 8;
                 ret.Width = 24;
                 ret.Height -= 16;

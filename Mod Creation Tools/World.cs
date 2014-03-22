@@ -64,7 +64,7 @@ namespace PoroCYon.MCT
                 double timeOffset = 7.5; // day/night offset
                 time -= timeOffset - 12d;
 
-                if (time < 0.0)
+                if (time < 0d)
                     time += 24d;
 
                 int
@@ -72,7 +72,7 @@ namespace PoroCYon.MCT
                     minute = (int)((time - hour) * 60d),
                     second = (int)(((time - hour) * 60d - minute) * 60d);
 
-                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, (Main.moonPhase + 1) * 4, hour, minute, second);
+                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, (Main.moonPhase + 1) * 4, hour % 24, minute % 60, second % 60);
             }
         }
         /// <summary>

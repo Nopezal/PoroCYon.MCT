@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.8" String="1.0.0.8" />
+  <CurrentVersion Number="1" Version="1.0.0.9" String="1.0.0.9" />
   <Changelog>
+    <Release Version ="1.0.0.9">
+      <Change>Fixed World.TimeAsDateTime throwing an ArgumentOutOfRangeException when it is midnight.</Change>
+    </Release>
     <Release Version ="1.0.0.8">
       <Change>Conversion from Main.time to a DateTime/TimeSpan/string</Change>
     </Release>
