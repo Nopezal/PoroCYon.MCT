@@ -152,6 +152,9 @@ namespace PoroCYon.MCT
         /// </param>
         public static void StartInvasion(InvasionType invasion)
         {
+            if (CurrentInvasion != InvasionType.None)
+                StopInvasions();
+
             Main.invasionDelay = 0;
             Main.StartInvasion((int)invasion);
         }
