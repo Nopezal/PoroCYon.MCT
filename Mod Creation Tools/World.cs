@@ -49,6 +49,84 @@ namespace PoroCYon.MCT
         }
 
         /// <summary>
+        /// Gets Main.time as a <see cref="System.DateTime"/>
+        /// </summary>
+        public static DateTime TimeAsDateTime
+        {
+            get
+            {
+                double time = Main.time;
+
+                if (!Main.dayTime)
+                    time += 54000d;
+                time = time / 86400d * 24d;
+
+                double timeOffset = 7.5; // day/night offset
+                time -= timeOffset - 12d;
+
+                if (time < 0.0)
+                    time += 24d;
+
+                int
+                    hour = (int)time,
+                    minute = (int)((time - hour) * 60d),
+                    second = (int)(((time - hour) * 60d - minute) * 60d);
+
+                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, (Main.moonPhase + 1) * 4, hour, minute, second);
+            }
+        }
+        /// <summary>
+        /// Gets Main.time as a <see cref="System.TimeSpan"/>
+        /// </summary>
+        public static TimeSpan TimeAsTimeSpan
+        {
+            get
+            {
+                return TimeAsDateTime.TimeOfDay;
+            }
+        }
+        /// <summary>
+        /// Gets Main.time as a string
+        /// </summary>
+        public static string TimeAsString
+        {
+            get
+            {
+                string amOrPm = "AM";
+                double time = Main.time;
+
+                if (!Main.dayTime)
+                    time += 54000d;
+                time = time / 86400d * 24d;
+
+                double timeOffset = 7.5; // day/night offset
+                time -= timeOffset - 12d;
+
+                if (time < 0.0)
+                    time += 24.0;
+
+                if (time >= 12.0)
+                    amOrPm = "PM";
+
+                int
+                    hour = (int)time,
+                    minute = (int)((time - (double)hour) * 60d);
+
+                string minText = minute.ToString();
+
+                if (minute < 10.0)
+                    minText = "0" + minText;
+
+                if (hour > 12)
+                    hour -= 12;
+                if (hour == 0)
+                    hour = 12;
+
+                return hour + ":" + minText + " " + amOrPm;
+            }
+        }
+
+        /// <summary>
         /// Sets wether the game should be in christmas state or not
         /// </summary>
         public static bool ForceChristmas
