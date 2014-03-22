@@ -102,6 +102,7 @@
     <Compile Include="Internal\ModClasses\MUI.cs" />
     <Compile Include="Internal\ModClasses\MWorld.cs" />
     <Compile Include="Internal\MctCustomUI.cs" />
+    <Compile Include="Internal\SettingsPage.cs" />
     <Compile Include="Interop\ModMessages.cs" />
     <Compile Include="ObjectModel\Entity.cs" />
     <Compile Include="ObjectModel\ICaretObject.cs" />

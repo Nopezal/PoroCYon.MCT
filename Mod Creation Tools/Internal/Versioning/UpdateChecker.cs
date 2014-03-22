@@ -9,10 +9,15 @@ namespace PoroCYon.MCT.Internal.Versioning
 {
     static class UpdateChecker
     {
-        internal static bool LastUpdateAvailable;
+        internal static bool
+            CheckForUpdates = true,
+            LastUpdateAvailable = false;
 
         internal static bool IsUpdateAvailable()
         {
+            if (!CheckForUpdates)
+                return LastUpdateAvailable = false;
+
             // this might be useful
             if (!NetworkInterface.GetIsNetworkAvailable())
                 return LastUpdateAvailable = false;

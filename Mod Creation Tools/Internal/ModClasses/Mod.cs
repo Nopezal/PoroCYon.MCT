@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
@@ -18,6 +19,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
     [GlobalMod]
     sealed class Mod : ModBase
     {
+        internal readonly static string MCTDataFile = Main.SavePath + "\\MCT_Data.sav";
+
         internal static Mod instance;
 
         public Mod()
@@ -35,13 +38,73 @@ namespace PoroCYon.MCT.Internal.ModClasses
             (MctUI.InversedWhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 255) });
 
             instance = this;
+
+            FileStream fs = null;
+            try
+            {
+                fs = new FileStream(MCTDataFile, FileMode.Open);
+                ReadSettings(fs);
+            }
+            catch (IOException)
+            {
+                if (fs != null)
+                    fs.Close();
+
+                fs = new FileStream(MCTDataFile, FileMode.Create);
+
+                WriteSettings(fs);
+            }
+            finally
+            {
+                if (fs != null)
+                    fs.Close();
+            }
         }
         [CallPriority(Single.Epsilon)]
         public override void OnUnload()
         {
             Mct.Uninit();
 
+            FileStream fs = new FileStream(MCTDataFile, FileMode.Create);
+            WriteSettings(fs);
+            fs.Close();
+
+            instance = null;
+            SettingsPage.PageInstance = null;
+
             base.OnUnload();
+        }
+
+        internal static void ReadSettings(Stream s)
+        {
+            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
+
+            UpdateChecker.CheckForUpdates = bb.ReadBool();
+        }
+        internal static void WriteSettings(Stream s)
+        {
+            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
+
+            bb.Write(UpdateChecker.CheckForUpdates);
+        }
+
+        [CallPriority(Single.Epsilon)]
+        public override void OnAllModsLoaded()
+        {
+            base.OnAllModsLoaded();
+
+            // insert settings menu button in the Options menu
+            Menu.menuPages.Add("MCT:Settings", new SettingsPage());
+
+            MenuAnchor aOptions = new MenuAnchor()
+            {
+                anchor = new Vector2(0.5f, 0f),
+                offset = new Vector2(315f, 200f),
+                offset_button = new Vector2(0f, 50f)
+            };
+
+            Menu.menuPages["Options"].anchors.Add(aOptions);
+            Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
         }
 
         [CallPriority(Single.PositiveInfinity)]
