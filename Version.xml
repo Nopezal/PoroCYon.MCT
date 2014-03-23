@@ -1,7 +1,10 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.10" String="1.0.0.10" />
+  <CurrentVersion Number="1" Version="1.0.0.11" String="1.0.0.11" />
   <Changelog>
+    <Release Version ="1.0.0.11">
+      <Change>Updated PoroCYon.XnaExtensions.dll (includes a new, powerful XInput wrapper)</Change>
+    </Release>
     <Release Version ="1.0.0.10">
       <Change>Added an options menu.</Change>
     </Release>
