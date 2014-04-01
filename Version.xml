@@ -1,29 +1,33 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.11" String="1.0.0.11" />
+  <CurrentVersion Number="1" Version="1.0.0.12" String="1.0.0.12" />
   <Changelog>
-    <Release Version ="1.0.0.11">
+    <Release Version="1.0.0.12">
+      <Change>Updated data to newer tAPI r4 version</Change>
+      <Change>Added projectile AI 0 and 1 to VanillaData.ProjData.AICode</Change>
+    </Release>
+    <Release Version="1.0.0.11">
       <Change>Updated PoroCYon.XnaExtensions.dll (includes a new, powerful XInput wrapper)</Change>
     </Release>
-    <Release Version ="1.0.0.10">
+    <Release Version="1.0.0.10">
       <Change>Added an options menu.</Change>
     </Release>
-    <Release Version ="1.0.0.9">
+    <Release Version="1.0.0.9">
       <Change>Fixed World.TimeAsDateTime throwing an ArgumentOutOfRangeException when it is midnight.</Change>
     </Release>
-    <Release Version ="1.0.0.8">
+    <Release Version="1.0.0.8">
       <Change>Conversion from Main.time to a DateTime/TimeSpan/string</Change>
     </Release>
-    <Release Version ="1.0.0.7">
+    <Release Version="1.0.0.7">
       <Change>Able to force christmas/halloween state (World.ForceChristmas/Halloween = true;)</Change>
     </Release>
-    <Release Version ="1.0.0.6">
+    <Release Version="1.0.0.6">
       <Change>Updated PoroCYon.XnaExtensions.dll (includes geometric transformations)</Change>
     </Release>
-    <Release Version ="1.0.0.5">
+    <Release Version="1.0.0.5">
       <Change>Added changelog in update screen</Change>
     </Release>
-    <Release Version ="1.0.0.4">
+    <Release Version="1.0.0.4">
       <Change>Fixed +/- button positioning</Change>
     </Release>
   </Changelog>
