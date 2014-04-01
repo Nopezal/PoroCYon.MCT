@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAPI;
 
 namespace PoroCYon.MCT.VanillaData
 {
@@ -437,6 +438,6 @@ namespace PoroCYon.MCT.VanillaData
         /// <summary>
         /// The default AI codes as an Action
         /// </summary>
-        public static Dictionary<int, Action> AICode = new Dictionary<int, Action>();
+        public static Dictionary<int, Action<NPC, object[]>> AICode = new Dictionary<int, Action<NPC, object[]>>();
     }
 }

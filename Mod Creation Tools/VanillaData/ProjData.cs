@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using TAPI;
 
 namespace PoroCYon.MCT.VanillaData
 {
@@ -376,6 +377,47 @@ namespace PoroCYon.MCT.VanillaData
         /// <summary>
         /// The default AI codes as an Action
         /// </summary>
-        public static Dictionary<int, Action> AICode = new Dictionary<int, Action>();
+        public static Dictionary<int, Action<Projectile, object[]>> AICode = new Dictionary<int, Action<Projectile, object[]>>();
+
+        static ProjData()
+        {
+            // 0
+            AICode.Add(0, (p, args) => { });
+
+            // arrow, bullet (noGravity : bool = false, addRot : float = 0f, limitYVelocity : float = NaN, gravityAdd : float = 0.1f, gravityCooldown : float = 15f)
+            AICode.Add(1, (p, args) =>
+            {
+                bool noGravity = false;
+                if (args.Length > 0)
+                    noGravity = (bool)args[0];
+
+                float addRot = 0f;
+                if (args.Length > 1)
+                    addRot = (float)args[1];
+
+                float limitYVelocity = Single.NaN;
+                if (args.Length > 2)
+                    limitYVelocity = (float)args[2];
+
+                float gravityAdd = 0.1f;
+                if (args.Length > 3)
+                    gravityAdd = (float)args[3];
+
+                float gravityCooldown = 15f;
+                if (args.Length > 4)
+                    gravityCooldown = (float)args[4];
+
+                if (!noGravity && p.ai[0] >= gravityCooldown)
+                {
+                    p.ai[0] = gravityCooldown;
+                    p.velocity.Y += gravityAdd;
+                }
+
+                if (!Single.IsNaN(limitYVelocity) && p.velocity.Y > limitYVelocity)
+                    p.velocity.Y = limitYVelocity;
+
+                p.rotation = (float)Math.Atan2(p.velocity.Y, p.velocity.X) + addRot;
+            });
+        }
     }
 }

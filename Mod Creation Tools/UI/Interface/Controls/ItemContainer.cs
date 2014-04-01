@@ -11,8 +11,8 @@ using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
-    using ItemSlot = TAPI.Interface.Inventory.ItemSlot;
-    using ItemSlotCustom = TAPI.Interface.Inventory.ItemSlotCustom;
+    using ItemSlot = TAPI.Interface.ItemSlot;
+    using ItemSlotCustom = TAPI.Interface.ItemSlotCustom;
 
     /// <summary>
     /// An Item slot
@@ -23,8 +23,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             WeakReference<ItemContainer> parent;
 
-            internal ItemSlotWrapper(ItemContainer container, ModBase @base, int index = 0)
-                : base(@base.modName, index, (s, it) => { container.ContainedItem = it; }, (s) => { return container.ContainedItem; })
+            internal ItemSlotWrapper(ItemContainer container, ModBase @base, string type, int index)
+                : base(@base, type, index, (s, it) => { container.ContainedItem = it; }, (s) => { return container.ContainedItem; })
             {
                 parent = new WeakReference<ItemContainer>(container);
             }
@@ -180,12 +180,12 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <param name="i">Sets the ContainedItem field</param>
         /// <param name="base">The calling mod's ModBase</param>
         /// <param name="index">The index of the Item slot</param>
-        public ItemContainer(Item i, ModBase @base, int index = 0)
+        public ItemContainer(Item i, ModBase @base, int index = 0, string type = null)
             : base()
         {
             item = i;
 
-            slot = new ItemSlotWrapper(this, @base, index);
+            slot = new ItemSlotWrapper(this, @base, type ?? "ItemContainerImpl", index);
         }
 
         /// <summary>
