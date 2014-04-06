@@ -14,8 +14,6 @@ using PoroCYon.MCT.UI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
-    using Extensions = PoroCYon.XnaExtensions.Extensions;
-
     [GlobalMod]
     sealed class Mod : ModBase
     {
@@ -34,8 +32,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.OnLoad();
 
-            (MctUI.WhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
-            (MctUI.InversedWhitePixel = new Texture2D(Constants.mainInstance.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 255) });
+            (MctUI.WhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
+            (MctUI.InversedWhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 255) });
 
             instance = this;
 
@@ -181,7 +179,7 @@ namespace PoroCYon.MCT.Internal.ModClasses
                 sb.End();
                 sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
 
-                Constants.mainInstance.IsMouseVisible = true;
+                API.main.IsMouseVisible = true;
 
                 sb.Draw(MctUI.InversedWhitePixel, Vector2.Zero, null, new Color(50, 50, 50, 150), 0f, Vector2.Zero,
                     new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);

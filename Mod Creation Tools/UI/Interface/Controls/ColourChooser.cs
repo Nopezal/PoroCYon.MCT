@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TAPI;
-using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
@@ -19,14 +18,14 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return Constants.mainInstance.colorBarTexture;
+                return API.main.colorBarTexture;
             }
         }
         static Texture2D hueBG
         {
             get
             {
-                return Constants.mainInstance.hueTexture;
+                return API.main.hueTexture;
             }
         }
 

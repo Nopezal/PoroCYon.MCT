@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return Constants.mainInstance.colorSliderTexture;
+                return API.main.colorSliderTexture;
             }
         }
 
@@ -57,7 +57,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return background ?? Constants.mainInstance.colorBarTexture;
+                return background ?? API.main.colorBarTexture;
             }
             set
             {

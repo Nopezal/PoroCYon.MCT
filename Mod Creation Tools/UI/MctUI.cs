@@ -17,9 +17,7 @@ namespace PoroCYon.MCT.UI
     // the number of ambiguous matches is too damn high
     using IControl = PoroCYon.MCT.UI.Interface.Controls.Control;
     using MControl = PoroCYon.MCT.UI.MenuItems.Control;
-    using ICheckBox = PoroCYon.MCT.UI.Interface.Controls.CheckBox;
     using MCheckBox = PoroCYon.MCT.UI.MenuItems.CheckBox;
-    using IRadioButton = PoroCYon.MCT.UI.Interface.Controls.RadioButton;
     using MRadioButton = PoroCYon.MCT.UI.MenuItems.RadioButton;
 
     /// <summary>
@@ -114,7 +112,7 @@ namespace PoroCYon.MCT.UI
         {
             get
             {
-                return Constants.mainInstance.spriteBatch;
+                return API.main.spriteBatch;
             }
         }
         /// <summary>
@@ -140,7 +138,7 @@ namespace PoroCYon.MCT.UI
         {
             get
             {
-                return Constants.mainInstance.GraphicsDevice;
+                return API.main.GraphicsDevice;
             }
         }
 
@@ -177,7 +175,7 @@ namespace PoroCYon.MCT.UI
         /// <param name="diff">No idea</param>
         public static void MouseText(string text, int rare = 0, byte diff = 0)
         {
-            Constants.mainInstance.MouseText(text, rare, diff);
+            API.main.MouseText(text, rare, diff);
         }
         /// <summary>
         /// Draws Item information at the mouse

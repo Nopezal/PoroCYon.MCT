@@ -106,7 +106,7 @@ namespace PoroCYon.MCT.Tools.Builder
 
             BinBuffer bb = new BinBuffer();
 
-            bb.Write(Constants.versionAssembly);
+            bb.Write(API.versionAssembly);
 
             bb.Write(modInfo);
 

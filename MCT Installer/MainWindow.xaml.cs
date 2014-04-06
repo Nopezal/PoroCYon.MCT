@@ -1,15 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.IO;
-using System.Net;
 using System.Net.NetworkInformation;
 using System.Reflection;
-using System.Threading;
 using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Input;
 using System.Windows.Media;
 using Microsoft.Win32;
 
@@ -229,35 +224,35 @@ namespace PoroCYon.MCT.Installer
             }
         }
 
-		static bool CheckCanInstall()
-		{
-			if (!NetworkInterface.GetIsNetworkAvailable())
-				return false;
+        static bool CheckCanInstall()
+        {
+            if (!NetworkInterface.GetIsNetworkAvailable())
+                return false;
 
-			RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
-			if (regKey == null)
-				return false;
+            RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
+            if (regKey == null)
+                return false;
 
-			string steamDir = "";
-			try
-			{
-				steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
-				steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
-			}
-			catch (NullReferenceException) // key does not exist
-			{
-				return false;
-			}
+            string steamDir = "";
+            try
+            {
+                steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
+                steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+            }
+            catch (NullReferenceException) // key does not exist
+            {
+                return false;
+            }
 
-			if (steamDir == "" || !Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
-				return false;
+            if (steamDir == "" || !Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
+                return false;
 
-			Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
-			if ((uint)a.GetType("TAPI.Constants").GetField("versionAssembly").GetValue(null) < 4u) // not r4
-				return false;
+            Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
+            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 4u) // not r4
+                return false;
 
-			#region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
-			Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
+            #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
+            Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             {
                 {
                     VSVersion.VCSExpress,
@@ -267,7 +262,7 @@ namespace PoroCYon.MCT.Installer
                     VSVersion.VisualStudio10,
                     "VisualStudio\\10.0"
                 },
-                
+
                 {
                     VSVersion.WDExpress11,
                     "WDExpress\\11.0"
@@ -276,7 +271,7 @@ namespace PoroCYon.MCT.Installer
                     VSVersion.VisualStudio11,
                     "VisualStudio\\11.0"
                 },
-                
+
                 {
                     VSVersion.WDExpress12,
                     "WDExpress\\12.0"
@@ -286,22 +281,23 @@ namespace PoroCYon.MCT.Installer
                     "VisualStudio\\12.0"
                 },
             };
-			#endregion
+            #endregion
 
-			for (int i = 1; i <= 32; i *= 2)
-			{
-				try
-				{
-					RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
-					if (key != null)
-						if (key.GetValue("FullScreen") != null) // random key
-							VsVersions.PossibleVersions |= (VSVersion)i;
-				}
-				catch (NullReferenceException) { } // VS key does not exist, do not return false this time
-			}
+            for (int i = 1; i <= 32; i *= 2)
+            {
+                try
+                {
+                    RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
+                    if (key != null)
+                        if (key.GetValue("FullScreen") != null) // random key
+                            VsVersions.PossibleVersions |= (VSVersion)i;
+                }
+                catch (NullReferenceException)
+                { } // VS key does not exist, do not return false this time
+            }
 
-			return true;
-		}
+            return true;
+        }
 
         protected override void OnClosing(CancelEventArgs e)
         {

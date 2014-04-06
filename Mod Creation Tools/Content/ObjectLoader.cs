@@ -8,7 +8,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Audio;
 using Microsoft.Xna.Framework.Content;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
 using TAPI;
 
 namespace PoroCYon.MCT.Content
@@ -25,7 +24,7 @@ namespace PoroCYon.MCT.Content
         {
             get
             {
-                return Constants.mainInstance.Content;
+                return API.main.Content;
             }
         }
 
@@ -215,7 +214,7 @@ namespace PoroCYon.MCT.Content
             TileDef.frameWidth[type] = Tparam.FrameWidth;
             TileDef.frameHeight[type] = Tparam.FrameHeight;
             TileDef.sheetColumns[type] = Tparam.SheetColumns;
-            TileDef.sheetLines[type] = Tparam.SheetLines;
+            TileDef.sheetRows[type] = Tparam.SheetRows;
 
             TileDef.solid[type] = Tparam.Solid;
             TileDef.solidTop[type] = Tparam.SolidTop;
@@ -376,7 +375,7 @@ namespace PoroCYon.MCT.Content
         /// <returns>The .png data as a Texture2D</returns>
         public static Texture2D LoadTexture(Stream stream)
         {
-            return Texture2D.FromStream(Constants.mainInstance.GraphicsDevice, stream);
+            return Texture2D.FromStream(API.main.GraphicsDevice, stream);
         }
         /// <summary>
         /// Loads a SoundEffect from a stream as a .wav
@@ -453,7 +452,7 @@ namespace PoroCYon.MCT.Content
         /// <param name="component">The IGameComponent to add</param>
         public static void AddComponent(IGameComponent component)
         {
-            Constants.mainInstance.Components.Add(component);
+            API.main.Components.Add(component);
         }
         /// <summary>
         /// Adds a service provider to the Game Services
@@ -461,7 +460,7 @@ namespace PoroCYon.MCT.Content
         /// <param name="serviceProvider">The service provider to add</param>
         public static void AddService(object serviceProvider)
         {
-            Constants.mainInstance.Services.AddService(serviceProvider.GetType(), serviceProvider);
+            API.main.Services.AddService(serviceProvider.GetType(), serviceProvider);
         }
     }
 }

@@ -17,11 +17,11 @@ namespace PoroCYon.MCT.Input
         {
             get
             {
-                return Constants.mainInstance.blockMouse || Main.localPlayer.mouseInterface;
+                return API.main.blockMouse || Main.localPlayer.mouseInterface;
             }
             set
             {
-                Constants.mainInstance.blockMouse = Main.localPlayer.mouseInterface = value;
+                API.main.blockMouse = Main.localPlayer.mouseInterface = value;
             }
         }
 

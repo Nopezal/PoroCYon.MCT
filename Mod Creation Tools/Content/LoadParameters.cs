@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using TAPI;
 
@@ -153,7 +152,7 @@ namespace PoroCYon.MCT.Content
         /// <summary>
         /// The amoutn of rows on the tile sheet
         /// </summary>
-        public int SheetLines;
+        public int SheetRows;
         /// <summary>
         /// The chance the tile has to sparkle
         /// </summary>
