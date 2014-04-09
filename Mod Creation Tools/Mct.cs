@@ -4,19 +4,13 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using LitJson;
 using TAPI;
-using PoroCYon.MCT.Input;
-using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.Internal.Versioning;
-using PoroCYon.MCT.Interop;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
-using PoroCYon.MCT.UI.MenuItems;
 
 namespace PoroCYon.MCT
 {

@@ -32,6 +32,8 @@ namespace PoroCYon.MCT.Installer
 
         internal static MainWindow instance;
 
+        internal static string CannotInstallError = "";
+
         internal static bool CanClose
         {
             get
@@ -173,7 +175,7 @@ namespace PoroCYon.MCT.Installer
                 PreviousBorder.BorderBrush = Brushes.Lime;
             };
 
-            if (!CheckCanInstall())
+            if (!String.IsNullOrEmpty(CannotInstallError = CheckCanInstall()))
                 currentPage = Page.CannotInstall;
 
             UpdateGrid();
@@ -224,14 +226,14 @@ namespace PoroCYon.MCT.Installer
             }
         }
 
-        static bool CheckCanInstall()
+        static string CheckCanInstall()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
-                return false;
+                return "You are not connected to the Internet.";
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
             if (regKey == null)
-                return false;
+                return "You do not have Steam installed.";
 
             string steamDir = "";
             try
@@ -241,15 +243,15 @@ namespace PoroCYon.MCT.Installer
             }
             catch (NullReferenceException) // key does not exist
             {
-                return false;
+                return "You do not have Steam or Terraria installed";
             }
 
             if (steamDir == "" || !Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
-                return false;
+                return "You do not have Terraria or tAPI installed";
 
             Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
             if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 4u) // not r4
-                return false;
+                return "You do not have tAPI r4 installed";
 
             #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
@@ -296,7 +298,7 @@ namespace PoroCYon.MCT.Installer
                 { } // VS key does not exist, do not return false this time
             }
 
-            return true;
+            return "";
         }
 
         protected override void OnClosing(CancelEventArgs e)

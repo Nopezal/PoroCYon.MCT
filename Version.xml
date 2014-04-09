@@ -1,7 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.0.12" String="1.0.0.12" />
+  <CurrentVersion Number="1" Version="1.0.1.0" String="1.0.1.0" />
+  
   <Changelog>
+    <Release Version="1.0.1.0">
+      <Change>Fixed lots of bugs which were caused by refactoring etc. in tAPI.</Change>
+    </Release>
+    
     <Release Version="1.0.0.12">
       <Change>Updated data to newer tAPI r4 version</Change>
       <Change>Added projectile AI 0 and 1 to VanillaData.ProjData.AICode</Change>

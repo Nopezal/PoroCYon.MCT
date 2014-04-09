@@ -5,6 +5,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using Ionic.Zip;
+using LitJson;
 using PoroCYon.XnaExtensions;
 using TAPI;
 using PoroCYon.MCT.Internal;

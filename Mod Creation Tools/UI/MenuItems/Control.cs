@@ -4,8 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Geometry;
-using PoroCYon.MCT.Input;
 using PoroCYon.MCT.ObjectModel;
 using TAPI;
 
@@ -262,7 +260,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         /// <param name="bg">The region of the background</param>
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
-            Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, IsMouseOver ? 0.85f : 0.75f);
+            Drawing.DrawBox(sb, bg.X, bg.Y, bg.Width, bg.Height, IsMouseOver ? 0.85f : 0.75f);
 
             //Rectangle?
             //    topLeft = new Rectangle(0, 0, 16, 16),

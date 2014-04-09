@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="PoroCYon.MCT.Installer.CannotInstall" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
              mc:Ignorable="d" d:DesignHeight="255" d:DesignWidth="505">
     <Grid>
-        <TextBlock TextWrapping="Wrap" Text="You cannot install the MCT on your PC." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="36" Foreground="Red">
+        <TextBlock Name="Error" TextWrapping="Wrap" Text="You cannot install the MCT on your PC." VerticalAlignment="Top" FontFamily="Xolonium" FontSize="36" Foreground="Red">
             <TextBlock.Effect>
                 <DropShadowEffect Direction="0" ShadowDepth="0" BlurRadius="12" Color="Red" />
             </TextBlock.Effect>

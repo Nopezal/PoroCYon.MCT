@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Graphics;
 using PoroCYon.MCT.ObjectModel;
-using TAPI;
 
 namespace PoroCYon.MCT.UI.MenuItems
 {
@@ -15,9 +14,6 @@ namespace PoroCYon.MCT.UI.MenuItems
     /// </summary>
     public class Image : Control, IImageObject
     {
-        AnimatedGif gif = null;
-        Texture2D tex = null;
-
         /// <summary>
         /// Wether the Image can be used as a button or not.
         /// </summary>
@@ -28,38 +24,19 @@ namespace PoroCYon.MCT.UI.MenuItems
         /// </summary>
         public bool IsGif
         {
-            get;
-            private set;
+            get
+            {
+                return Picture.UsedObjectNum == 1;
+            }
         }
 
         /// <summary>
         /// The picture of the IImageObject
         /// </summary>
-        public object Picture
+        public Union<Texture2D, AnimatedGif> Picture
         {
-            get
-            {
-                return IsGif ? gif : tex as object;
-            }
-            set
-            {
-                if (value is Texture2D)
-                {
-                    IsGif = false;
-                    tex = value as Texture2D;
-                    gif = null;
-                }
-                else if (value is AnimatedGif)
-                {
-                    IsGif = true;
-                    tex = null;
-                    gif = value as AnimatedGif;
-                }
-                else
-                    throw new ArgumentException("value should be a Texture2D or an AnimatedGif", "value");
-
-                size = PicAsTexture.Size() + new Vector2(16f);
-            }
+            get;
+            set;
         }
 
         /// <summary>
@@ -69,7 +46,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         {
             get
             {
-                return IsGif ? gif.Frames[gif.Current] : tex;
+                return IsGif ? ((AnimatedGif)Picture.Item).Frames[((AnimatedGif)Picture.Item).Current] : ((Texture2D)Picture.Item);
             }
         }
 
@@ -80,7 +57,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         public Image(Texture2D image)
             : base()
         {
-            Picture = image;
+            Picture = new Union<Texture2D, AnimatedGif>(image, null);
         }
         /// <summary>
         /// Creates a new instance of the Image class
@@ -89,7 +66,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         public Image(AnimatedGif image)
             : base()
         {
-            Picture = image;
+            Picture = new Union<Texture2D, AnimatedGif>(null, image);
         }
 
         /// <summary>
@@ -123,12 +100,7 @@ namespace PoroCYon.MCT.UI.MenuItems
             if (Picture == null)
                 return;
 
-            if (Picture is Texture2D)
-                sb.Draw(Picture as Texture2D, position + new Vector2(8f), null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
-            else if (Picture is AnimatedGif)
-                sb.Draw(Picture as AnimatedGif, position + new Vector2(8f), null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
-            else
-                throw new BadImageFormatException("This should never happen."); // a pun, I guess?
+            sb.Draw(Picture, position + new Vector2(8f), null, colorText, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
         }
     }
 }

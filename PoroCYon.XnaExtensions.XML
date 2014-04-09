@@ -11,6 +11,54 @@
             <typeparam name="TForward">The forward type, TKey for the forward dictionary and TValue for the reversed dictionary.</typeparam>
             <typeparam name="TReverse">The reverse type, TValue for the forward dictionary and TKey for the reversed dictionary.</typeparam>
         </member>
+        <member name="T:PoroCYon.XnaExtensions.BiDictionary`2.Indexer`2">
+            <summary>
+            Index helper for a <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/>.
+            </summary>
+            <typeparam name="TKey">The key type</typeparam>
+            <typeparam name="TValue">The value type</typeparam>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Indexer`2.Item(`2)">
+            <summary>
+            Gets or sets the value of a <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/> with a specified key
+            </summary>
+            <param name="key">The key of the Key/Value pair</param>
+            <returns>The value of the Key/Value pair</returns>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Forward">
+            <summary>
+            The forward accessor
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Reverse">
+            <summary>
+            The reverse accossor
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Keys">
+            <summary>
+            All keys of the current instance
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Values">
+            <summary>
+            All values of the current instance
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Item(`0)">
+            <summary>
+            Gets the <typeparamref name="TReverse"/> with the specified <typeparamref name="TForward"/>
+            </summary>
+            <param name="tfw">The <typeparamref name="TForward"/> used to retrieve the <typeparamref name="TReverse"/></param>
+            <returns>The <typeparamref name="TReverse"/> associated with the specified <typeparamref name="TForward"/></returns>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Item(System.Int32)">
+            <summary>
+            Gets the Key/Value pair at the specified index
+            </summary>
+            <param name="index">The index of the Key/Value pair</param>
+            <returns>The Key/Value pair at the specified index</returns>
+        </member>
         <member name="M:PoroCYon.XnaExtensions.BiDictionary`2.TryGetValue(`0,`1@)">
             <summary>
             Tries to get a <typeparamref name="TReverse"/> value from the specified <typeparamref name="TForward"/> value
@@ -18,6 +66,16 @@
             <param name="tfw">The specified forward key</param>
             <param name="trev">If the key exists, this will be the matching <typeparamref name="TReverse"/></param>
             <returns>True wether the key exist (and the value is return by trev parameter) or not.</returns>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Count">
+            <summary>
+            The amount of Key/Value pairs in the <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/>
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.IsReadOnly">
+            <summary>
+            Wether the <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/> is read-only or not. This will always return false.
+            </summary>
         </member>
         <member name="M:PoroCYon.XnaExtensions.BiDictionary`2.#ctor">
             <summary>
@@ -105,7 +163,7 @@
             <param name="array">The array to copy the data to</param>
             <param name="startIndex">The starting index of the copying; default is 0</param>
         </member>
-        <member name="M:PoroCYon.XnaExtensions.BiDictionary`2.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{TForward@TReverse}}#GetEnumerator">
+        <member name="M:PoroCYon.XnaExtensions.BiDictionary`2.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{TForward,TReverse}}#GetEnumerator">
             <summary>
             Gets the generic Enumerator of the Key/Value pair collection
             </summary>
@@ -129,68 +187,10 @@
             </summary>
             <returns>The Enumerator of the Key/Value pair collection</returns>
         </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Forward">
-            <summary>
-            The forward accessor
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Reverse">
-            <summary>
-            The reverse accossor
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Keys">
-            <summary>
-            All keys of the current instance
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Values">
-            <summary>
-            All values of the current instance
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Item(`0)">
-            <summary>
-            Gets the <typeparamref name="TReverse"/> with the specified <typeparamref name="TForward"/>
-            </summary>
-            <param name="tfw">The <typeparamref name="TForward"/> used to retrieve the <typeparamref name="TReverse"/></param>
-            <returns>The <typeparamref name="TReverse"/> associated with the specified <typeparamref name="TForward"/></returns>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Item(System.Int32)">
-            <summary>
-            Gets the Key/Value pair at the specified index
-            </summary>
-            <param name="index">The index of the Key/Value pair</param>
-            <returns>The Key/Value pair at the specified index</returns>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Count">
-            <summary>
-            The amount of Key/Value pairs in the <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/>
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.IsReadOnly">
-            <summary>
-            Wether the <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/> is read-only or not. This will always return false.
-            </summary>
-        </member>
         <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Reversed">
             <summary>
             Gets the current <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/> in its reversed state
             </summary>
-        </member>
-        <member name="T:PoroCYon.XnaExtensions.BiDictionary`2.Indexer`2">
-            <summary>
-            Index helper for a <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/>.
-            </summary>
-            <typeparam name="TKey">The key type</typeparam>
-            <typeparam name="TValue">The value type</typeparam>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BiDictionary`2.Indexer`2.Item(`2)">
-            <summary>
-            Gets or sets the value of a <see cref="!:PoroCYon.XnaExtensions.BiDictionary"/> with a specified key
-            </summary>
-            <param name="key">The key of the Key/Value pair</param>
-            <returns>The value of the Key/Value pair</returns>
         </member>
         <member name="T:PoroCYon.XnaExtensions.BitsByte">
             <summary>
@@ -201,6 +201,13 @@
             <summary>
             Gets or sets the byte value associated with the <see cref="T:PoroCYon.XnaExtensions.BitsByte"/> structure
             </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BitsByte.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:System.Boolean"/> value at the speicifed <paramref name="index"/>
+            </summary>
+            <param name="index">The index of the <see cref="T:System.Boolean"/> to get/set (from 0 to 7)</param>
+            <returns>The <see cref="T:System.Boolean"/> value at the specified <paramref name="index"/></returns>
         </member>
         <member name="M:PoroCYon.XnaExtensions.BitsByte.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
             <summary>
@@ -305,13 +312,6 @@
             <param name="b">The <see cref="T:System.Byte"/> to cast</param>
             <returns>The specified <paramref name="b"/> as a <see cref="T:PoroCYon.XnaExtensions.BitsByte"/></returns>
         </member>
-        <member name="P:PoroCYon.XnaExtensions.BitsByte.Item(System.Int32)">
-            <summary>
-            Gets or sets the <see cref="T:System.Boolean"/> value at the speicifed <paramref name="index"/>
-            </summary>
-            <param name="index">The index of the <see cref="T:System.Boolean"/> to get/set (from 0 to 7)</param>
-            <returns>The <see cref="T:System.Boolean"/> value at the specified <paramref name="index"/></returns>
-        </member>
         <member name="T:PoroCYon.XnaExtensions.BitsBytes">
             <summary>
             A <see cref="T:PoroCYon.XnaExtensions.BitsByte"/> as a <see cref="T:System.Int32"/>
@@ -327,6 +327,21 @@
             Creates a new instance of the <see cref="T:PoroCYon.XnaExtensions.BitsBytes"/> structure with the specified size in bytes
             </summary>
             <param name="bytes">The size of the <see cref="T:PoroCYon.XnaExtensions.BitsBytes"/> instance in bytes</param>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BitsBytes.Item(System.Int32)">
+            <summary>
+            Gets the <see cref="T:System.Boolean"/> at the specified index
+            </summary>
+            <param name="index">The index of the <see cref="T:System.Boolean"/></param>
+            <returns>The <see cref="T:System.Boolean"/> at the specified index</returns>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.BitsBytes.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the <see cref="T:System.Boolean"/> at the specified extended index
+            </summary>
+            <param name="index">The first index of the <see cref="T:System.Boolean"/></param>
+            <param name="indexExt">The second index of the <see cref="T:System.Boolean"/></param>
+            <returns>The <see cref="T:System.Boolean"/> at the specified index</returns>
         </member>
         <member name="M:PoroCYon.XnaExtensions.BitsBytes.AsBytes(System.Int32,System.Int32)">
             <summary>
@@ -359,21 +374,6 @@
             <param name="length">The amount of bytes to copy</param>
             <param name="startIndex">Where to start copying</param>
         </member>
-        <member name="P:PoroCYon.XnaExtensions.BitsBytes.Item(System.Int32)">
-            <summary>
-            Gets the <see cref="T:System.Boolean"/> at the specified index
-            </summary>
-            <param name="index">The index of the <see cref="T:System.Boolean"/></param>
-            <returns>The <see cref="T:System.Boolean"/> at the specified index</returns>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.BitsBytes.Item(System.Int32,System.Int32)">
-            <summary>
-            Gets the <see cref="T:System.Boolean"/> at the specified extended index
-            </summary>
-            <param name="index">The first index of the <see cref="T:System.Boolean"/></param>
-            <param name="indexExt">The second index of the <see cref="T:System.Boolean"/></param>
-            <returns>The <see cref="T:System.Boolean"/> at the specified index</returns>
-        </member>
         <member name="T:PoroCYon.XnaExtensions.Geometry.Circle">
             <summary>
             Repersents a 2D circle
@@ -382,6 +382,16 @@
         <member name="F:PoroCYon.XnaExtensions.Geometry.Circle.None">
             <summary>
             Represents a circle with centre (0;0) and radius 0
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.Geometry.Circle.Centre">
+            <summary>
+            The centre of the circle
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.Geometry.Circle.Radius">
+            <summary>
+            The radius of the circle
             </summary>
         </member>
         <member name="M:PoroCYon.XnaExtensions.Geometry.Circle.#ctor(Microsoft.Xna.Framework.Vector2,System.Single)">
@@ -622,32 +632,10 @@
             <param name="r"></param>
             <returns></returns>
         </member>
-        <member name="P:PoroCYon.XnaExtensions.Geometry.Circle.Centre">
-            <summary>
-            The centre of the circle
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.Geometry.Circle.Radius">
-            <summary>
-            The radius of the circle
-            </summary>
-        </member>
         <member name="T:PoroCYon.XnaExtensions.Input.MouseHandler">
             <summary>
             Custom structure to make calculations with the Mouse easier
             </summary>
-        </member>
-        <member name="M:PoroCYon.XnaExtensions.Input.MouseHandler.GetState">
-            <summary>
-            Retrieves the current mouse state
-            </summary>
-            <returns>The current mouse state</returns>
-        </member>
-        <member name="M:PoroCYon.XnaExtensions.Input.MouseHandler.SetPosition(Microsoft.Xna.Framework.Vector2)">
-            <summary>
-            Sets the position of the mouse
-            </summary>
-            <param name="position">The new position of the mouse</param>
         </member>
         <member name="P:PoroCYon.XnaExtensions.Input.MouseHandler.Left">
             <summary>
@@ -684,11 +672,44 @@
             Gets the current scroll wheel value
             </summary>
         </member>
+        <member name="M:PoroCYon.XnaExtensions.Input.MouseHandler.GetState">
+            <summary>
+            Retrieves the current mouse state
+            </summary>
+            <returns>The current mouse state</returns>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Input.MouseHandler.SetPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the position of the mouse
+            </summary>
+            <param name="position">The new position of the mouse</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Interop.Shell.ExecuteCommand(System.String)">
+            <summary>
+            Executes cmd with the specified command
+            </summary>
+            <param name="command"></param>
+        </member>
         <member name="T:PoroCYon.XnaExtensions.QueueStack`1">
             <summary>
             A mixed Queue/Stack collection (FIFO/FILO)
             </summary>
             <typeparam name="T">The type of elements in the queue/stack.</typeparam>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.Count">
+            <summary>
+            The amount of elements in the queue/stack
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.IsSynchronized">
+            <summary>
+            Wether the collection is synchronized
+            </summary>
+        </member>
+        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.SyncRoot">
+            <summary>
+            
+            </summary>
         </member>
         <member name="M:PoroCYon.XnaExtensions.QueueStack`1.#ctor">
             <summary>
@@ -762,21 +783,6 @@
             <param name="array">The array to copy data to</param>
             <param name="startIndex">Where to start copying to</param>
         </member>
-        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.Count">
-            <summary>
-            The amount of elements in the queue/stack
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.IsSynchronized">
-            <summary>
-            Wether the collection is synchronized
-            </summary>
-        </member>
-        <member name="P:PoroCYon.XnaExtensions.QueueStack`1.SyncRoot">
-            <summary>
-            
-            </summary>
-        </member>
         <member name="T:PoroCYon.XnaExtensions.WeakReference`1">
             <summary>
             Represents a weak reference, which references an object while still allowing
@@ -813,6 +819,95 @@
                 or if the object has been finalized during the set operation.
             </summary>
         </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+            <param name="rotation">The rotation of the image to draw</param>
+            <param name="origin">The origin of the image to draw</param>
+            <param name="scale">The scale of the image to draw</param>
+            <param name="effects">The sprite effects of the image to draw</param>
+            <param name="layerDepth">The layer depth of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.XnaExtensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.XnaExtensions.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+            <param name="rotation">The rotation of the image to draw</param>
+            <param name="origin">The origin of the image to draw</param>
+            <param name="scale">The scale of the image to draw</param>
+            <param name="effects">The sprite effects of the image to draw</param>
+            <param name="layerDepth">The layer depth of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Size(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the size of the Viewport
+            </summary>
+            <param name="viewport">The Viewport where to get the size from</param>
+            <returns>The size of the Viewport</returns>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Position(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the position of the Viewport
+            </summary>
+            <param name="viewport">The Viewport where to get the position from</param>
+            <returns>The position of the Viewport</returns>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.ToRectangle(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Casts the Viewport to a Rectangle
+            </summary>
+            <param name="viewport">The Viewport to cast</param>
+            <returns>The Viewport casted to a Rectangle</returns>
+        </member>
         <member name="M:PoroCYon.XnaExtensions.IO.BinBufferResource.Close">
             <summary>
             Closes sockets/file handles/..., if any
@@ -837,12 +932,6 @@
             </summary>
             <param name="values"></param>
             <returns></returns>
-        </member>
-        <member name="M:PoroCYon.XnaExtensions.Interop.Shell.ExecuteCommand(System.String)">
-            <summary>
-            Executes cmd with the specified command
-            </summary>
-            <param name="command"></param>
         </member>
         <member name="T:PoroCYon.XnaExtensions.WPF.GameControl">
             <summary>

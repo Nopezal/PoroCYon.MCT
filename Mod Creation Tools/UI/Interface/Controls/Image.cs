@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Graphics;
 using PoroCYon.MCT.ObjectModel;
-using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
@@ -15,9 +14,6 @@ namespace PoroCYon.MCT.UI.Interface.Controls
     /// </summary>
     public class Image : Control, IImageObject
     {
-        Texture2D texture = null;
-        AnimatedGif gif = null;
-
         /// <summary>
         /// Gets the Picture as a Texture2D, even if it's an AnimatedGif
         /// </summary>
@@ -25,52 +21,28 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return IsGif ? gif.Frames[gif.Current] : texture;
+                return IsGif ? ((AnimatedGif)Picture.Item).Frames[((AnimatedGif)Picture.Item).Current] : ((Texture2D)Picture.Item);
             }
         }
 
         /// <summary>
-        /// Wether the image is a .gif or not
+        /// Wether the ImageButton is a gif or not
         /// </summary>
         public bool IsGif
         {
-            get;
-            private set;
+            get
+            {
+                return Picture.UsedObjectNum == 1;
+            }
         }
 
         /// <summary>
-        /// The picture shown
+        /// The picture of the ImageButton
         /// </summary>
-        public object Picture
+        public Union<Texture2D, AnimatedGif> Picture
         {
-            get
-            {
-                return IsGif ? gif as object : texture;
-            }
-            set
-            {
-                if (value is AnimatedGif)
-                {
-                    IsGif = true;
-
-                    gif = value as AnimatedGif;
-
-                    texture.Dispose();
-                    texture = null;
-                }
-                else if (value is Texture2D)
-                {
-                    IsGif = false;
-
-                    foreach (Texture2D t in gif.Frames)
-                        t.Dispose();
-                    gif = null;
-
-                    texture = value as Texture2D;
-                }
-                else
-                    throw new ArgumentException("value has to be an AnimatedGif xor a Texture2D", "Image.set_Picture: value");
-            }
+            get;
+            set;
         }
 
         ///// <summary>
@@ -101,12 +73,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get
             {
                 // this might be a good idea
-                if (IsGif)
-                {
-                    if (gif == null)
-                        return Rectangle.Empty;
-                }
-                else if (texture == null)
+                if (Picture.Item == null)
                     return Rectangle.Empty;
 
                 return new Rectangle((int)Position.X - 8, (int)Position.Y - 8, (int)(PicAsTexture.Width * Scale.X) + 16, (int)(PicAsTexture.Height * Scale.Y) + 16);
@@ -120,7 +87,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public Image(Texture2D tex)
             : base()
         {
-            Picture = tex;
+            Picture = new Union<Texture2D, AnimatedGif>(tex, null);
         }
         /// <summary>
         /// Creates a new instance of the Image class
@@ -129,7 +96,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public Image(AnimatedGif gif)
             : base()
         {
-            Picture = gif;
+            Picture = new Union<Texture2D, AnimatedGif>(null, gif);
         }
 
         /// <summary>
@@ -144,18 +111,10 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                 DrawBackground(sb);
 
             // this might be a good idea
-            if (IsGif)
-            {
-                if (gif == null)
-                    return;
-            }
-            else if (texture == null)
+            if (Picture.Item == null)
                 return;
 
-            if (IsGif)
-                sb.Draw(gif, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
-            else
-                sb.Draw(texture, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            sb.Draw(Picture, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
         }
     }
 }

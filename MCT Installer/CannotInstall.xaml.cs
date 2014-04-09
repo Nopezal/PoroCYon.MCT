@@ -9,6 +9,9 @@ namespace PoroCYon.MCT.Installer
         public CannotInstall()
         {
             InitializeComponent();
+
+            if (!String.IsNullOrEmpty(MainWindow.CannotInstallError))
+                Error.Text = MainWindow.CannotInstallError;
         }
     }
 }

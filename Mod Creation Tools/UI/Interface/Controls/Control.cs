@@ -249,7 +249,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <param name="bg">The bounds of the background to draw</param>
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
-            Drawing.DrawBlueBox(sb, bg.X, bg.Y, bg.Width, bg.Height, GInput.Mouse.Rectangle.Intersects(bg) ? 0.85f : 0.75f);
+            Drawing.DrawBox(sb, bg.X, bg.Y, bg.Width, bg.Height, GInput.Mouse.Rectangle.Intersects(bg) ? 0.85f : 0.75f);
         }
 
         /// <summary>

@@ -15,9 +15,6 @@ namespace PoroCYon.MCT.UI.Interface.Controls
     /// </summary>
     public class ImageButton : Button, IImageObject
     {
-        Texture2D tex = null;
-        AnimatedGif gif = null;
-
         /// <summary>
         /// Gets the Picture as a Texture2D, even if it's an AnimatedGif
         /// </summary>
@@ -25,7 +22,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return IsGif ? gif.Frames[gif.Current] : tex;
+                return IsGif ? ((AnimatedGif)Picture.Item).Frames[((AnimatedGif)Picture.Item).Current] : ((Texture2D)Picture.Item);
             }
         }
 
@@ -34,45 +31,19 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// </summary>
         public bool IsGif
         {
-            get;
-            private set;
+            get
+            {
+                return Picture.UsedObjectNum == 1;
+            }
         }
 
         /// <summary>
         /// The picture of the ImageButton
         /// </summary>
-        public object Picture
+        public Union<Texture2D, AnimatedGif> Picture
         {
-            get
-            {
-                return IsGif ? gif as object : tex;
-            }
-            set
-            {
-                if (value is AnimatedGif)
-                {
-                    IsGif = true;
-
-                    gif = value as AnimatedGif;
-
-                    if (tex != null)
-                        tex.Dispose();
-                    tex = null;
-                }
-                else if (value is Texture2D)
-                {
-                    IsGif = false;
-
-                    if (gif != null)
-                        foreach (Texture2D t in gif.Frames)
-                            t.Dispose();
-                    gif = null;
-
-                    tex = value as Texture2D;
-                }
-                else
-                    throw new ArgumentException("value has to be (an AnimatedGif ^ a Texture2D)", "Image.set_Picture: value");
-            }
+            get;
+            set;
         }
 
         ///// <summary>
@@ -103,12 +74,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get
             {
                 // this might be a good idea
-                if (IsGif)
-                {
-                    if (gif == null)
-                        return Rectangle.Empty;
-                }
-                else if (tex == null)
+                if (Picture.Item == null)
                     return Rectangle.Empty;
 
                 return new Rectangle((int)Position.X - 8, (int)Position.Y - 8, (int)(PicAsTexture.Width * Scale.X) + 16, (int)(PicAsTexture.Height * Scale.Y) + 16);
@@ -122,7 +88,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public ImageButton(Texture2D tex)
             : base()
         {
-            Picture = tex;
+            Picture = new Union<Texture2D, AnimatedGif>(tex, null);
         }
         /// <summary>
         /// Creates a new instance of the ImageButton class
@@ -131,7 +97,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public ImageButton(AnimatedGif gif)
             : base()
         {
-            Picture = gif;
+            Picture = new Union<Texture2D, AnimatedGif>(null, gif);
         }
 
         /// <summary>
@@ -146,18 +112,10 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                 DrawBackground(sb);
 
             // this might be a good idea
-            if (IsGif)
-            {
-                if (gif == null)
-                    return;
-            }
-            else if (tex == null)
+            if (Picture.Item == null)
                 return;
 
-            if (IsGif)
-                sb.Draw(gif, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
-            else
-                sb.Draw(tex, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
+            sb.Draw(Picture, Position, null, Colour, Rotation, Origin, Scale, SpriteEffects, LayerDepth);
         }
     }
 }

@@ -297,7 +297,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
             if (!HasBackground)
                 return;
 
-            Drawing.DrawBlueBox(sb, hb.X, hb.Y, hb.Width, hb.Height, IsHovered ? 0.85f : 0.75f);
+            Drawing.DrawBox(sb, hb.X, hb.Y, hb.Width, hb.Height, IsHovered ? 0.85f : 0.75f);
         }
     }
 }
