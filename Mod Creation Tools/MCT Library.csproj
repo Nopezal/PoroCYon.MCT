@@ -172,6 +172,10 @@
       <Generator>MSBuild:Compile</Generator>
     </Page>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Schemas\ItemSchema.json" />
+    <None Include="Schemas\ModInfoSchema.json" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" (

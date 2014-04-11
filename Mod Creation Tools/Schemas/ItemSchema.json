@@ -1,0 +1,335 @@
+﻿{
+    "id": "http://dev.willhuxtable.com/schemas/item#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "description": "schema for an Item .json file",
+    
+    "properties": {
+        "texture": {
+            "type": "string"
+        },
+        "code": {
+            "type": "string"
+        },
+        "displayName": {
+            "type": "string"
+        },
+        "rare": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 7
+        },
+        "toolTip": {
+            "type": {
+                "enum": [
+                    "string",
+                    "array"
+                ]
+            }
+        },
+        "size": {
+            "type": "array"
+        },
+        "width": {
+            "type": "integer"
+        },
+        "height": {
+            "type": "integer"
+        },
+        "scale": {
+            "type": "number"
+        },
+        "color": {
+            "type": "array"
+        },
+        "value": {
+            "type": {
+                "enum": [
+                    "array",
+                    "integer"
+                ]
+            }
+        },
+        "maxStack": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "useStyle": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 5
+        },
+        "holdStyle": {
+            "type": "integer",
+            "minimum": 2
+        },
+        "useTime": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "useAnimation": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "holdoutOffset": {
+            "type": "array"
+        },
+        "holdoutOrigin": {
+            "type": "array"
+        },
+        "reuseDelay": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "noUseGraphic": {
+            "type": "boolean"
+        },
+        "channel": {
+            "type": "boolean"
+        },
+        "noMelee": {
+            "type": "boolean"
+        },
+        "melee": {
+            "type": "boolean"
+        },
+        "ranged": {
+            "type": "boolean"
+        },
+        "magic": {
+            "type": "boolean"
+        },
+        "summon": {
+            "type": "boolean"
+        },
+        "damage": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "crit": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "knockBack": {
+            "type": "number",
+            "minimum": 0
+        },
+        "pick": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "axe": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "hammer": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "autoReuse": {
+            "type": "boolean"
+        },
+        "useTurn": {
+            "type": "boolean"
+        },
+        "useSound": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "mana": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "shoot": {
+            "type": {
+                "enum": [
+                    "string",
+                    "integer"
+                ]
+            }
+        },
+        "shootSpeed": {
+            "type": "number"
+        },
+        "useAmmo": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "ammo": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "notAmmo": {
+            "type": "boolean"
+        },
+        "vanity": {
+            "type": "boolean"
+        },
+        "accessory": {
+            "type": "boolean"
+        },
+        "defense": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "lifeRegen": {
+            "type": "number",
+            "minimum": 0
+        },
+        "manaIncrease": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "tileBoost": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "consumable": {
+            "type": "boolean"
+        },
+        "setName": {
+            "type": "string"
+        },
+        "armorHead": {
+            "type": "boolean"
+        },
+        "armorBody": {
+            "type": "boolean"
+        },
+        "armorLegs": {
+            "type": "boolean"
+        },
+        "textureHand": {
+            "type": "string"
+        },
+        "textureBody": {
+            "type": "string"
+        },
+        "textureLegs": {
+            "type": "string"
+        },
+        "textureArm": {
+            "type": "string"
+        },
+        "textureFemale": {
+            "type": "string"
+        },
+        "hairType": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 2
+        },
+        "hasHands": {
+            "type": "boolean"
+        },
+        "potion": {
+            "type": "boolean"
+        },
+        "healLife": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "healMana": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "buff": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "buffTime": {
+            "type": "integer",
+            "minimum": 1
+        },
+        "notMaterial": {
+            "type": "boolean"
+        },
+        "placeStyle": {
+            "type": "integer",
+            "minimum": 0
+        },
+        "createTile": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "createWall": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+        "tileWand": {
+            "type": {
+                "enum": [
+                    "integer",
+                    "string"
+                ]
+            }
+        },
+
+        "recipes": {
+            "type": "object",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/itemRecipeList"
+                }
+            ]
+        }
+    },
+    "definitions": {
+        "itemRecipeList": {
+            "type": "array",
+            "oneOf": [
+                {
+                    "$ref": "#/definitions/itemRecipe"
+                }
+            ],
+            "additionalProperties": false
+        },
+
+        "itemRecipe": {
+            "items": {
+                "type": "object"
+            },
+            "tiles": {
+                "type": "array",
+                "oneOf": [
+                    "string"
+                ]
+            },
+            "creates": {
+                "type": "integer",
+                "minimum": 1
+            },
+            "additionalProperties": false
+        }
+    },
+
+    "additionalProperties": false,
+
+    "required": [
+        "displayName"
+    ]
+}

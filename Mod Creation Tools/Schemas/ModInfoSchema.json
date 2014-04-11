@@ -1,0 +1,64 @@
+﻿{
+    "id": "http://dev.willhuxtable.com/schemas/modinfo#",
+    "$schema": "http://json-schema.org/draft-04/schema#",
+    "type": "object",
+    "description": "schema for a ModInfo.json file",
+    
+    "properties": {
+        "internalName": {
+            "type": "string"
+        },
+        "displayName": {
+            "type": "string"
+        },
+
+        "author": {
+            "type": "string"
+        },
+        "info": {
+            "type": "string"
+        },
+
+        "version": {
+            "type": {
+                "enum": [
+                    "string",
+                    "array"
+                ]
+            }
+        },
+
+        "includePDB": {
+            "type": "boolean"
+        },
+        "warnOnReload": {
+            "type": "boolean"
+        },
+
+        "modReferences": {
+            "type": "array",
+            "oneOf": [
+                "string"
+            ]
+        },
+        "dllReferences": {
+            "type": "array",
+            "oneOf": [
+                "string"
+            ]
+        },
+
+        "MSBuild": {
+            "type": "boolean"
+        },
+        "msBuildFile": {
+            "type": "string"
+        }
+    },
+
+    "additionalProperties": false,
+    "required": [
+        "internalName",
+        "displayName"
+    ]
+}
