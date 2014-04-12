@@ -1,5 +1,5 @@
 ﻿{
-    "id": "http://dev.willhuxtable.com/schemas/modinfo#",
+    "id": "https://dl.dropboxusercontent.com/u/151130168/MCT/Schemas/ModInfoSchema.json",
     "$schema": "http://json-schema.org/draft-04/schema#",
     "type": "object",
     "description": "schema for a ModInfo.json file",
