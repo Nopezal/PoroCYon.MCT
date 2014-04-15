@@ -5,19 +5,21 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.safeprojectname.Prefix
+namespace $safeprojectname$
 {
     public class Prefix : TAPI.ModPrefix
     {
-        public Prefix(ModBase @base, TAPI.Prefix p)
-            : base(@base, p)
+        public Prefix(ModBase @base)
+            : base(@base)
         {
 
         }
 
-        public override void ApplyToItem(Item i)
+        public override void ApplyToItem(Terraria.Item i)
         {
             base.ApplyToItem(i);
 

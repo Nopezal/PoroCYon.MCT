@@ -194,6 +194,9 @@
         copy "$(TargetDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.dll" /y
         copy "$(TargetDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.pdb" /y
         copy "$(TargetDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.xml" /y
+
+        copy "$(ProjectDir)Schemas\ModInfoSchema.json" "%25userprofile%25\Dropbox\Public\MCT\Schemas\ModInfoSchema.json" /y
+        copy "$(ProjectDir)Schemas\ItemSchema.json" "%25userprofile%25\Dropbox\Public\MCT\Schemas\ItemSchema.json" /y
     )
 )
 </PostBuildEvent>

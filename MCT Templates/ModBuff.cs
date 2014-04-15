@@ -5,9 +5,11 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.safeprojectname
+namespace $safeprojectname$
 {
     [GlobalMod]
     public class ModBuff : TAPI.ModBuff
@@ -18,9 +20,9 @@ namespace TAPI.safeprojectname
 
         }
 
-        public override void Effects(NPC n, int index)
+        public override void Effects(NPC npc, int index)
         {
-            base.Effects(n, index);
+            base.Effects(npc, index);
 
 
         }

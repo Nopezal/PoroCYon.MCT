@@ -1,4 +1,6 @@
 ﻿{
+    "$schema": "https://dl.dropboxusercontent.com/u/151130168/MCT/Schemas/ItemSchema.json",
+
 	"stats" :
 	{
 		"size" : [16, 16],

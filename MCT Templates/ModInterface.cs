@@ -5,11 +5,14 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
-using PoroCYon.MCT.GUI;
-using PoroCYon.MCT.GUI.Controls;
+using PoroCYon.MCT.UI;
+using PoroCYon.MCT.UI.Interface;
+using PoroCYon.MCT.UI.Interface.Controls;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     public class ModInterface : TAPI.ModInterface
     {

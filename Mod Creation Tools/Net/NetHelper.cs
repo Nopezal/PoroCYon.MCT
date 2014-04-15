@@ -6,6 +6,7 @@ using System.Numerics;
 using System.Runtime.InteropServices;
 using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Xna.Framework;
+using Terraria;
 using TAPI;
 
 namespace PoroCYon.MCT.Net
@@ -35,6 +36,17 @@ namespace PoroCYon.MCT.Net
     /// </summary>
     public static class NetHelper
     {
+        /// <summary>
+        /// Gets the current net mode as a <see cref="PoroCYon.MCT.Net.NetMode" />
+        /// </summary>
+        public static NetMode CurrentMode
+        {
+            get
+            {
+                return (NetMode)Main.netMode;
+            }
+        }
+
         /// <summary>
         /// Sends data as a managed object
         /// </summary>

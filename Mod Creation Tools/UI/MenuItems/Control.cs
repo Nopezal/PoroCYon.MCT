@@ -4,8 +4,9 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
-using PoroCYon.MCT.ObjectModel;
+using Terraria;
 using TAPI;
+using PoroCYon.MCT.ObjectModel;
 
 namespace PoroCYon.MCT.UI.MenuItems
 {

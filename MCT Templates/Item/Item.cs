@@ -5,13 +5,15 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     public class Item : TAPI.ModItem
     {
-        public Item(TAPI.ModBase @base, TAPI.Item i)
+        public Item(TAPI.ModBase @base, Terraria.Item i)
             : base(@base, i)
         {
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
 using System.Windows.Forms.Integration;
+using Terraria;
 using TAPI;
 
 namespace PoroCYon.MCT.Internal.Versioning

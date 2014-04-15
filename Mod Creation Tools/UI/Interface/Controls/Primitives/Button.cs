@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Terraria;
 using TAPI;
-using PoroCYon.MCT.Input;
 
 namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
 {

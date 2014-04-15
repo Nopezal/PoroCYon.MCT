@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Input;
+using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal.Versioning;
 
 namespace PoroCYon.MCT.Input
 {
-    using XnaMouse = Microsoft.Xna.Framework.Input.Mouse;
-    using XnaExtMouse = PoroCYon.XnaExtensions.Input.MouseHandler;
-
     /// <summary>
     /// Custom structure to make calculations with the Mouse easier
     /// </summary>
@@ -180,7 +177,7 @@ namespace PoroCYon.MCT.Input
         /// <param name="position">The new position of the mouse</param>
         public static void SetPosition(Vector2 position)
         {
-            XnaMouse.SetPosition((int)position.X, (int)position.Y);
+            Mouse.SetPosition((int)position.X, (int)position.Y);
         }
     }
 }

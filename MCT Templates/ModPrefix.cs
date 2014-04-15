@@ -5,14 +5,16 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     [GlobalMod]
     public class ModPrefix : TAPI.ModPrefix
     {
-        public ModPrefix(ModBase @base, Prefix p)
+        public ModPrefix(ModBase @base, Terraria.Prefix p)
             : base(@base, p)
         {
 

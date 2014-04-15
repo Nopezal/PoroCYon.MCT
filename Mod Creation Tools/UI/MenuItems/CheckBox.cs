@@ -3,9 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Geometry;
-using PoroCYon.MCT.Input;
+using Terraria;
 using TAPI;
 
 namespace PoroCYon.MCT.UI.MenuItems

@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.MCT.Internal;
+using Terraria;
 using TAPI;
+using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Net
 {

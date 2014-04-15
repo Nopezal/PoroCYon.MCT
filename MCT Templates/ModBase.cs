@@ -5,9 +5,11 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     public class ModBase : TAPI.ModBase
     {

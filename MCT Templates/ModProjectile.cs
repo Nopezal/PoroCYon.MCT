@@ -5,13 +5,16 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
+using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     [GlobalMod]
     public class ModProjectile : TAPI.ModProjectile
     {
-        public ModProjectile(TAPI.ModBase @base, TAPI.Projectile p)
+        public ModProjectile(TAPI.ModBase @base, Terraria.Projectile p)
             : base(@base, p)
         {
 

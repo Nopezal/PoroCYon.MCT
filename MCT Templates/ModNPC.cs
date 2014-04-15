@@ -5,14 +5,16 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace $safeprojectname$
 {
     [GlobalMod]
     public class ModNPC : TAPI.ModNPC
     {
-        public ModNPC(TAPI.ModBase @base, TAPI.NPC n)
+        public ModNPC(TAPI.ModBase @base, Terraria.NPC n)
             : base(@base, n)
         {
 

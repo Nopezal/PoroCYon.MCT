@@ -5,6 +5,8 @@ using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT;
 
 namespace TAPI.$safeprojectname$
@@ -12,7 +14,7 @@ namespace TAPI.$safeprojectname$
     [GlobalMod]
     public class ModPlayer : TAPI.ModPlayer
     {
-        public ModPlayer(TAPI.ModBase @base, Player p)
+        public ModPlayer(TAPI.ModBase @base, Terraria.Player p)
             : base(@base, p)
         {
 

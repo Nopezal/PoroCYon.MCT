@@ -4,9 +4,10 @@ using System.Linq;
 using System.Reflection;
 using System.Windows.Forms;
 using Microsoft.Xna.Framework;
+using Terraria;
+using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.UI.Interface.Controls;
-using TAPI;
 
 namespace PoroCYon.MCT.UI.Interface
 {
