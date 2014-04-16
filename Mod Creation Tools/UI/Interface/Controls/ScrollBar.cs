@@ -211,16 +211,26 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
             if (IsFocused && GInput.Mouse.ScrollWheel != 0)
             {
+                float old = val;
                 Value += (GInput.Mouse.ScrollWheel / 120f) * MouseScrollStep;
+
+                ValueChanged(old, val);
+
                 Main.PlaySound(12);
             }
 
             if (IsHovered && (GInput.Mouse.Left || ForceFocus))
+            {
+                float old = val;
+
                 Value = MathHelper.Clamp(
                     orientation == ScrollBarOrientation.Horizontal
                         ? (GInput.Mouse.Position.X - (Position.X + 4f + Scale.X / 2)) / (Size.X - 8f)
                         : (GInput.Mouse.Position.Y - (Position.Y + 4f + Scale.Y / 2)) / (Size.Y - 8f),
                     0f, 1f) * (max - min);
+
+                ValueChanged(old, val);
+            }
         }
         /// <summary>
         /// Draws the Contorl
