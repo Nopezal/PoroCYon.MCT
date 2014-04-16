@@ -1,11 +1,16 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.2.0" String="1.0.2.0" />
+  <CurrentVersion Number="1" Version="1.0.2.1" String="1.0.2.1" />
   
   <Changelog>
+    <Release Version="1.0.2.1">
+      <Change>Added a ScrollBar control</Change>
+      <Change>Fixed update box messing up because multithreading.</Change>
+    </Release>
     <Release Version="1.0.2.0">
       <Change>Updated the code to the r4 release.</Change>
     </Release>
+    
     <Release Version="1.0.1.0">
       <Change>Fixed lots of bugs which were caused by refactoring etc. in tAPI.</Change>
     </Release>

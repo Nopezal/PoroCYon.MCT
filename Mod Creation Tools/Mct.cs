@@ -39,9 +39,6 @@ namespace PoroCYon.MCT
             if (Inited)
                 return;
 
-            if (UpdateChecker.IsUpdateAvailable())
-                UpdateBoxInjector.Inject();
-
             // hacky stuff #1
             // add mod etc to list...
 

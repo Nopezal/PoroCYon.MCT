@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.ObjectModel;
@@ -127,7 +126,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         /// </summary>
         public bool ForceHover
         {
-            private get;
+            protected get;
             set;
         }
         /// <summary>
@@ -135,7 +134,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         /// </summary>
         public bool ForceFocus
         {
-            private get;
+            protected get;
             set;
         }
 

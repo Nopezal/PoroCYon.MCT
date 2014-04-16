@@ -14,6 +14,8 @@ namespace PoroCYon.MCT.Input
     /// </summary>
     public struct MouseHandler
     {
+        static int currentSW, oldSW;
+
         Vector2 pos;
 
         /// <summary>
@@ -166,7 +168,12 @@ namespace PoroCYon.MCT.Input
             };
 
             ret.pos = xm.Position();
-            ret.ScrollWheel = xm.ScrollWheelValue;
+
+            oldSW = currentSW;
+
+            currentSW = xm.ScrollWheelValue;
+
+            ret.ScrollWheel = currentSW - oldSW;
 
             return ret;
         }

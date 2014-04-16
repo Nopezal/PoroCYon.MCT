@@ -3,12 +3,10 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using TAPI;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.Internal.Versioning;
-using PoroCYon.MCT.UI;
 using PoroCYon.MCT.UI.MenuItems;
 
 namespace PoroCYon.MCT.Internal

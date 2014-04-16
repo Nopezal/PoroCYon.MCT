@@ -62,7 +62,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <summary>
         /// The colour of the control. Default is #FFFFFF00
         /// </summary>
-        public Color Colour = new Color(255, 255, 255, 255);
+        public Color Colour = new Color(255, 255, 255, 0);
         /// <summary>
         /// The secondary colour of the control. Not used for all types of controls. Default is #00000000
         /// </summary>

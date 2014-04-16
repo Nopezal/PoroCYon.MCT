@@ -104,6 +104,9 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             Menu.menuPages["Options"].anchors.Add(aOptions);
             Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
+
+            if (UpdateChecker.IsUpdateAvailable())
+                UpdateBoxInjector.Inject();
         }
 
         [CallPriority(Single.PositiveInfinity)]
@@ -175,21 +178,21 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             base.PostGameDraw(sb);
 
-            if (UpdateChecker.LastUpdateAvailable)
-            {
-                sb.End();
-                sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
+            //if (UpdateChecker.LastUpdateAvailable)
+            //{
+            //    sb.End();
+            //    sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
 
-                API.main.IsMouseVisible = true;
+            //    API.main.IsMouseVisible = true;
 
-                sb.Draw(MctUI.InversedWhitePixel, Vector2.Zero, null, new Color(50, 50, 50, 150), 0f, Vector2.Zero,
-                    new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);
+            //    sb.Draw(MctUI.InversedWhitePixel, Vector2.Zero, null, new Color(50, 50, 50, 150), 0f, Vector2.Zero,
+            //        new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);
 
-                Main.mouseLeft = Main.mouseLeftRelease = Main.mouseRight = Main.mouseRightRelease = false;
+            //    Main.mouseLeft = Main.mouseLeftRelease = Main.mouseRight = Main.mouseRightRelease = false;
 
-                sb.End();
-                sb.Begin();
-            }
+            //    sb.End();
+            //    sb.Begin();
+            //}
         }
     }
 }
