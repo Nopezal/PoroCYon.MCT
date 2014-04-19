@@ -238,8 +238,8 @@ namespace PoroCYon.MCT.Installer
             string steamDir = "";
             try
             {
-                steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
-                steamDir = steamDir.Substring(0, steamDir.Length - "sourcemods".Length) + "common\\Terraria\\";
+                steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SteamPath").ToString() // without this call, it would actually be bugging
+                    + "\\SteamApps\\common\\Terraria\\";
             }
             catch (NullReferenceException) // key does not exist
             {
