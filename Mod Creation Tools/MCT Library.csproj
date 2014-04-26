@@ -151,6 +151,7 @@
     <Compile Include="UI\MenuItems\Page.cs" />
     <Compile Include="UI\MenuItems\RadioButton.cs" />
     <Compile Include="UI\MctUI.cs" />
+    <Compile Include="Util.cs" />
     <Compile Include="VanillaData\BuffData.cs" />
     <Compile Include="VanillaData\ItemData.cs" />
     <Compile Include="VanillaData\NPCData.cs" />
