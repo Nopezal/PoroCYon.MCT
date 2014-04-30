@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime;
 using System.Text;
+using System.Windows.Forms;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal.ModClasses;
-using PoroCYon.MCT.Internal.Versioning;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
@@ -27,6 +28,22 @@ namespace PoroCYon.MCT
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Ensures that the MCT is installed. This method is inlined in compile-time.
+        /// </summary>
+        /// <param name="displayModName">The display name of the calling mod.</param>
+        /// <remarks>This method is inlined in compile-time.</remarks>
+        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")] // probably hacky stuff #3 (or something)
+        public static void EnsureMct(string displayModName)
+        {
+            if (!File.Exists("PoroCYon.MCT.dll"))
+            {
+                API.main.Exit();
+
+                MessageBox.Show("You must have the MCT installed in order to load " + displayModName + ".");
+            }
         }
 
         /// <summary>

@@ -219,7 +219,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                 Main.PlaySound(12);
             }
 
-            if (IsHovered && (GInput.Mouse.Left || ForceFocus))
+            if (IsHovered && IsFocused && (GInput.Mouse.Left || ForceFocus))
             {
                 float old = val;
 
@@ -242,10 +242,10 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
             DrawBackground(sb, Hitbox);
 
-            float pxSize = Math.Max(4f, (orientation == ScrollBarOrientation.Horizontal ? Size.X : Size.Y) / max);
+            float pxSize = Math.Max(4f, (orientation == ScrollBarOrientation.Horizontal ? Size.X : Size.Y) / (max - min));
             Vector2
                 offset = orientation == ScrollBarOrientation.Horizontal
-                ? new Vector2((val / (max - min)) * (Size.X - 16f) + 8f, 7f)
+                ? new Vector2(    (val / (max - min)) * (Size.X - 16f) + 8f, 7f)
                 : new Vector2(7f, (val / (max - min)) * (Size.Y - 16f) + 8f),
                 scale  = orientation == ScrollBarOrientation.Horizontal ? new Vector2(pxSize, 8f) : new Vector2(8f, pxSize);
             
@@ -254,6 +254,14 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                     offset.X = Size.X - offset.X;
                 else
                     offset.Y = Size.Y - offset.Y;
+
+            if (orientation == ScrollBarOrientation.Horizontal)
+            {
+                if (offset.X > (Size.X - 16f) + 8f - pxSize)
+                    offset.X = (Size.X - 16f) + 8f - pxSize;
+            }
+            else if (offset.Y > (Size.Y - 16f) + 8f - pxSize)
+                     offset.Y = (Size.Y - 16f) + 8f - pxSize;
 
             sb.Draw(MctUI.WhitePixel, Position + offset * Scale, null, Colour, Rotation, Origin, scale * Scale, SpriteEffects, LayerDepth);
         }
