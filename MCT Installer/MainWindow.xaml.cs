@@ -250,8 +250,8 @@ namespace PoroCYon.MCT.Installer
                 return "You do not have Terraria or tAPI installed";
 
             Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
-            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 4u) // not r4
-                return "You do not have tAPI r4 installed";
+            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 5u) // not r5
+                return "You do not have tAPI r5 installed";
 
             #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
