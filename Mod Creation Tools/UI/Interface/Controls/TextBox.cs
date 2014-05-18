@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 using PoroCYon.MCT.Input;
@@ -271,6 +270,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                     if (Text.Length > MaxLength && MaxLength > 0)
                         Text = Text.Substring(0, MaxLength);
 
+                    #region resize
                     if (Size.HasValue)
                     {
                         while (Font.MeasureString(Text).X > Size.Value.X)
@@ -298,8 +298,9 @@ namespace PoroCYon.MCT.UI.Interface.Controls
                             }
                         }
                     }
+                    #endregion
 
-                    Main.PlaySound("vanilla:menuTick");
+                    Main.PlaySound("Vanilla:menuTick");
                 }
 
                 if (--CaretTimer <= 0)

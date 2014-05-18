@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.ObjectModel;
 
 namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
@@ -207,7 +206,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Check()
         {
-            Main.PlaySound("vanilla:menuTick");
+            Main.PlaySound("Vanilla:menuTick");
 
             if (OnChecked != null)
                 OnChecked(this);
@@ -219,7 +218,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Uncheck()
         {
-            Main.PlaySound("vanilla:menuTick");
+            Main.PlaySound("Vanilla:menuTick");
 
             if (OnUnchecked != null)
                 OnUnchecked(this);

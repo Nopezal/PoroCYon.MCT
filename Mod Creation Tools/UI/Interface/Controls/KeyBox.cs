@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
@@ -163,7 +162,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
                     GotInput(Pressed);
 
-                    Main.PlaySound("vanilla:menuTick");
+                    Main.PlaySound("Vanilla:menuTick");
 
                     IsFocused = Listening = false;
                 }

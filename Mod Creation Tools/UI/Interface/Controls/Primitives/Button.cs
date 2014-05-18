@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.Linq;
 using Terraria;
-using TAPI;
 
 namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
 {
@@ -61,7 +60,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
         /// </summary>
         protected virtual void Click()
         {
-            Main.PlaySound("vanilla:menuTick");
+            Main.PlaySound("Vanilla:menuTick");
 
             if (OnClicked != null)
                 OnClicked(this);

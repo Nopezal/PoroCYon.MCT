@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="1" Version="1.0.2.4" String="1.0.2.4" />
+  <CurrentVersion Number="1" Version="1.0.3.0" String="1.0.3.0" />
   
   <Changelog>
+    <Release Version="1.0.3.0">
+      <Change>Fixed a bug that made the MCT throw exceptions when trying to play a sound in the UI.</Change>
+      <Change>Updated to r6.</Change>
+    </Release>
+    
     <Release Version="1.0.2.4">
       <Change>Updated XnaExt.</Change>
     </Release>
