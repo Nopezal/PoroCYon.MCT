@@ -1,0 +1,47 @@
+﻿- clear, powerful, easy-to-use API
+- compilation from program arguments
+- JSON validation
+- code checking, incl. mod classes
+- mulitple language support (modular, see bottom of file)
+- MSBuild support
+- build from managed DLL
+
+
+    The compiler consists of the following parts:
+       (- Extractor (Only when building from a .dll))
+        - Validator (validate code, etc)
+        - Builder   (build code to .dll - MSBuild or CodeDom)
+                    (skipped when building from a .dll, obviously)
+        - Checker   (checks assembly for ModBase and other stuff)
+        - Writer    (write to tapi/tapimod file)
+
+    Each part gives the result to the next part, together with the CompilerOptions.
+
+    - assembly: Input -> Extractor  -> Validator -> ------- -> Checker -> Writer -> Output
+    - source:         -> FileLoader ->           -> Builder ->
+
+    done   : Extractor, FileLoader
+    working: Validator
+    todo   : Builder, Checker, Writer
+
+    Input:  mod folder name or assembly path
+    Output: wether it succeeded or not, output file (if succeeded), errors (if failed)
+
+    If the compilation fails at one part of the chain, the next one(s) aren't executed,
+    and the CompilerOutput is returned immedately.
+
+supported languages:
+  built-in:
+    C#
+    VB
+    JScript.NET
+
+  separately:
+    Boo
+    ClojureCLR
+    F#
+
+  C++/CLI will only be supported through MSBuild or DLL building
+
+
+This might be considered a hack.

@@ -3,9 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using TAPI;
 using PoroCYon.MCT.Internal;
-using PoroCYon.MCT.Tools.Builder;
-using PoroCYon.MCT.Tools.Decompiler;
-using PoroCYon.MCT.Tools.Packer;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -115,7 +112,7 @@ namespace PoroCYon.MCT.Tools
             {
                 string s = TrimCommand(args[i]);
 
-                for (int j = 0; j <     Commands.Count; j++)
+                for (int j = 0; j < Commands.Count; j++)
                 {
                     string c = Commands.Keys.ElementAt(j);
 
@@ -128,13 +125,13 @@ namespace PoroCYon.MCT.Tools
                         }
                         catch (CloseConsoleException)
                         {
-                            goto EXIT;
+                            return;
                         }
                         catch (Exception e)
                         {
                             Console.Error.WriteLine("error: " + e); // logged to std::cerr
                         }
-                        goto NEXT;
+                        goto NEXT; // those velociraptors aren't real
                     }
                 }
 
@@ -160,8 +157,6 @@ namespace PoroCYon.MCT.Tools
             NEXT:
                 ;
             }
-        EXIT:
-            ;
         }
         static string TrimCommand(string command)
         {

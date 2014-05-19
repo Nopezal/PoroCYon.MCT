@@ -10,10 +10,10 @@ using PoroCYon.XnaExtensions;
 using TAPI;
 using PoroCYon.MCT.Internal;
 
-namespace PoroCYon.MCT.Tools.Builder
+namespace PoroCYon.MCT.Tools
 {
     /// <summary>
-    /// The tAPI SDK Mod builder
+    /// The MCT Mod builder
     /// </summary>
     public static class ModBuilder
     {
@@ -101,6 +101,7 @@ namespace PoroCYon.MCT.Tools.Builder
 
             WriteData(modInfo, modPath, files);
         }
+
         static void WriteData(string modInfo, string outputPath, List<Tuple<string, byte[]>> files)
         {
             JsonData json = JsonMapper.ToObject(modInfo);

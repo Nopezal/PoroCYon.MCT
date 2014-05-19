@@ -6,10 +6,10 @@ using Ionic.Zip;
 using TAPI;
 using PoroCYon.MCT.Internal;
 
-namespace PoroCYon.MCT.Tools.Decompiler
+namespace PoroCYon.MCT.Tools
 {
     /// <summary>
-    /// The tAPI SDK Mod decompiler
+    /// The MCT Mod decompiler
     /// </summary>
     public static class ModDecompiler
     {

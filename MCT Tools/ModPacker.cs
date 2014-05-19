@@ -13,14 +13,12 @@ using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
 
-namespace PoroCYon.MCT.Tools.Packer
+namespace PoroCYon.MCT.Tools
 {
-    // not the ones in Microsoft.VisualBasic (or was it JScript?)
-    using CompilerError = System.CodeDom.Compiler.CompilerError;
-    using CompilerParameters = System.CodeDom.Compiler.CompilerParameters;
+    using CodeDomError = System.CodeDom.Compiler.CompilerError;
     // nested classes <_>
     using CompileException = TAPI.ModsCompile.CompileException;
-    using ValidateJson = TAPI.ModsCompile.ValidateJson;
+    using ValidateJson     = TAPI.ModsCompile.ValidateJson;
 
     /// <summary>
     /// The tAPI SDK Extended mod packed
@@ -274,7 +272,7 @@ namespace PoroCYon.MCT.Tools.Packer
 
             if (cr.Errors.HasErrors)
             {
-                foreach (CompilerError ce in cr.Errors)
+                foreach (CodeDomError ce in cr.Errors)
                 {
                     StringBuilder sb = new StringBuilder();
                     if (ce.FileName != "")
