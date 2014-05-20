@@ -1,11 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Windows.Forms;
-using System.Windows.Forms.Integration;
-using Terraria;
-using TAPI;
-using PoroCYon.MCT.UI.MenuItems;
+//using System.Windows.Forms;
+//using System.Windows.Forms.Integration;
+//using Terraria;
+//using TAPI;
+//using PoroCYon.MCT.UI.MenuItems;
 
 namespace PoroCYon.MCT.Internal.Versioning
 {
@@ -16,8 +16,8 @@ namespace PoroCYon.MCT.Internal.Versioning
 
     static class UpdateBoxInjector
     {
-        static ElementHost host;
-        static Form mainForm;
+        //static ElementHost host;
+        //static Form mainForm;
 
         static Action OnMainMenuEntry = () =>
         {

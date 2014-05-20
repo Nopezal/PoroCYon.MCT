@@ -3,17 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using Microsoft.Xna.Framework.Input;
 using PoroCYon.XnaExtensions;
 using Terraria;
 using TAPI;
-using PoroCYon.MCT.Input;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
     using ItemSlot = TAPI.Interface.ItemSlot;
-    using ItemSlotCustom = TAPI.Interface.ItemSlotCustom;
 
     /// <summary>
     /// An Item slot
@@ -181,6 +178,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <param name="i">Sets the ContainedItem field</param>
         /// <param name="base">The calling mod's ModBase</param>
         /// <param name="index">The index of the Item slot</param>
+        /// <param name="type">The type of the ItemContainer, used to identify it.</param>
         public ItemContainer(Item i, ModBase @base, int index = 0, string type = null)
             : base()
         {

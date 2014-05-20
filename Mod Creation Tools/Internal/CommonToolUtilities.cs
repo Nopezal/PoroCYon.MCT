@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Numerics;
 using System.Text;
 using LitJson;
 using TAPI;
@@ -33,6 +34,26 @@ namespace PoroCYon.MCT.Internal
             JsonMapper.ToJson(j, new JsonWriter(sb) { PrettyPrint = true });
 
             return sb.ToString();
+        }
+
+        internal static JsonType JsonTypeFromType(Type t)
+        {
+            if (t.IsArray)
+                return JsonType.Array;
+            if (t == typeof(bool))
+                return JsonType.Boolean;
+            if (t == typeof(string))
+                return JsonType.String;
+            if (t == typeof(double) || t == typeof(float) || t == typeof(BigInteger))
+                return JsonType.Double;
+            if (t == typeof(long) || t == typeof(ulong))
+                return JsonType.Long;
+            if (t == typeof(int) || t == typeof(uint) ||
+                t == typeof(short) || t == typeof(ushort) ||
+                t == typeof(sbyte) || t == typeof(byte))
+                return JsonType.Int;
+
+            return JsonType.Object;
         }
     }
 }

@@ -6,7 +6,7 @@ using LitJson;
 
 namespace PoroCYon.MCT.Tools.Internal.Validation
 {
-    class ModInfo
+    class ModInfo : ValidatorObject
     {
         internal readonly static string[] EmptyStringArr = new string[0];
 
@@ -39,235 +39,45 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
             ModInfo ret = new ModInfo();
 
-            #region internalName
-            if (!json.json.Has("internalName"))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = json.path,
-                    IsWarning = false,
-                    Message = "Could not find key 'internalName' in ModInfo.json file " + json.path
-                });
-            else if (!json.json["internalName"].IsString)
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.path,
-                    IsWarning = false,
-                    Message = "'internalName' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                });
-            else
-                ret.internalName = (string)json.json["internalName"];
-            #endregion
+            AddIfNotNull(SetJsonValue(json, "internalName", ref ret.internalName), errors);
+            AddIfNotNull(SetJsonValue(json, "includePDB", ref ret.includePDB, false), errors);
+            AddIfNotNull(SetJsonValue(json, "warnOnReload", ref ret.warnOnReload, false), errors);
 
-            #region includePDB
-            if (json.json.Has("includePDB"))
-            {
-                if (!json.json["includePDB"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'includePDB' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.includePDB = (bool)json.json["includePDB"];
-            }
-            #endregion
-
-            #region warnOnReload
-            if (json.json.Has("warnOnReload"))
-            {
-                if (!json.json["warnOnReload"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'warnOnReload' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.warnOnReload = (bool)json.json["warnOnReload"];
-            }
-            #endregion
-
-            #region modReferences
-            if (json.json.Has("modReferences"))
-            {
-                if (!json.json["modReferences"].IsArray)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'modReferences' in ModInfo.json file is a " + json.json.GetJsonType() + ", not an array."
-                    });
-                else
-                {
-                    List<string> refs = new List<string>();
-
-                    for (int i = 0; i < json.json["modReferences"].Count; i++)
-                    {
-                        JsonData @ref = json.json["modReferences"][i];
-
-                        if (!@ref.IsString)
-                            errors.Add(new CompilerError()
-                            {
-                                Cause = new InvalidCastException(),
-                                FilePath = json.path,
-                                IsWarning = false,
-                                Message = "'modReferences[" + i + "]' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                            });
-                        else
-                        {
-                            if (Validator.modDict.ContainsKey((string)@ref))
-                                refs.Add((string)@ref);
-                            else
-                                errors.Add(new CompilerError()
-                                {
-                                    Cause = new FileNotFoundException(),
-                                    FilePath = json.path,
-                                    IsWarning = false,
-                                    Message = "'modReferences[" + i + "]' in ModInfo.json file: could not find mod '" + (string)@ref + "'."
-                                });
-                        }
-                    }
-
-                    ret.modReferences = refs.ToArray();
-                }
-            }
-            #endregion
-
-            #region dllReferences
-            if (json.json.Has("dllReferences"))
-            {
-                if (!json.json["dllReferences"].IsArray)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'dllReferences' in ModInfo.json file is a " + json.json.GetJsonType() + ", not an array."
-                    });
-                else
-                {
-                    List<string> refs = new List<string>();
-
-                    for (int i = 0; i < json.json["dllReferences"].Count; i++)
-                    {
-                        JsonData @ref = json.json["dllReferences"][i];
-
-                        if (!@ref.IsString)
-                            errors.Add(new CompilerError()
-                            {
-                                Cause = new InvalidCastException(),
-                                FilePath = json.path,
-                                IsWarning = false,
-                                Message = "'dllReferences[" + i + "]' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                            });
-                        else
-                        {
-                            string refPath = (string)@ref;
-
-                            if (!File.Exists(refPath))
-                                refPath = Path.GetDirectoryName(json.path) + "\\References";
-
-                            if (!File.Exists(refPath))
-                            {
-                                errors.Add(new CompilerError()
-                                {
-                                    Cause = new InvalidCastException(),
-                                    FilePath = json.path,
-                                    IsWarning = false,
-                                    Message = "dllReferences in ModInfo.json file: Could not find reference '" + (string)@ref + "'."
-                                });
-                            }
-                            else
-                                refs.Add((string)@ref);
-                        }
-                    }
-
-                    ret.dllReferences = refs.ToArray();
-                }
-            }
-            #endregion
-
-            #region MSBuild
-            if (json.json.Has("MSBuild"))
-            {
-                if (!json.json["MSBuild"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'MSBuild' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.MSBuild = (bool)json.json["MSBuild"];
-            }
-            #endregion
-
-            #region msBuildFile
-            if (json.json.Has("msBuildFile"))
-            {
-                if (!json.json["msBuildFile"].IsString)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'msBuildFile' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                    });
-                else if (!File.Exists(Path.GetDirectoryName(json.path) + "\\" + (string)json.json["msBuildFile"]))
+            AddIfNotNull(SetJsonValue(json, "modReferences", ref ret.modReferences, EmptyStringArr), errors);
+            for (int i = 0; i < ret.modReferences.Length; i++)
+                if (!Validator.modDict.ContainsKey(ret.modReferences[i]))
                     errors.Add(new CompilerError()
                     {
                         Cause = new FileNotFoundException(),
                         FilePath = json.path,
                         IsWarning = false,
-                        Message = "'msBuildFile' in ModInfo.json file: could not find MSBuild script '" + (string)json.json["msBuildFile"] + "'."
+                        Message = "'modReferences[" + i + "]': could not find mod '" + ret.modReferences[i] + "'."
                     });
-                else
-                    ret.msBuildFile = (string)json.json["msBuildFile"];
-            }
-            #endregion
 
-            #region displayName
-            if (json.json.Has("displayName"))
+            AddIfNotNull(SetJsonValue(json, "dllReferences", ref ret.dllReferences, EmptyStringArr), errors);
+            for (int i = 0; i < ret.dllReferences.Length; i++)
             {
-                if (!json.json["displayName"].IsString)
+                if (!File.Exists(ret.dllReferences[i]))
+                    ret.dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References";
+
+                if (!File.Exists(ret.dllReferences[i]))
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.path,
                         IsWarning = false,
-                        Message = "'displayName' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
+                        Message = "'dllReferences[" + i + "]': Could not find reference '" + ret.dllReferences[i] + "'."
                     });
-                else
-                    ret.displayName = (string)json.json["displayName"];
             }
-            else
-                ret.displayName = ret.internalName;
-            #endregion
 
-            #region author
-            if (json.json.Has("author"))
-            {
-                if (!json.json["author"].IsString)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'author' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                    });
-                else
-                    ret.author = (string)json.json["author"];
-            }
-            else
-                ret.author = "<unknown>";
-            #endregion
+            AddIfNotNull(SetJsonValue(json, "MSBuild", ref ret.MSBuild, false), errors);
+            if (ret.MSBuild)
+                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref ret.msBuildFile, String.Empty), errors);
+
+            // ---
+
+            AddIfNotNull(SetJsonValue(json, "displayName", ref ret.displayName, ret.internalName), errors);
+            AddIfNotNull(SetJsonValue(json, "author", ref ret.author, "<unknown>"), errors);
 
             #region version
             if (json.json.Has("version"))
@@ -282,7 +92,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                             Cause = new InvalidCastException(),
                             FilePath = json.path,
                             IsWarning = false,
-                            Message = "'version' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string or an int[]."
+                            Message = "'version' is a " + json.json.GetJsonType() + ", not a string or an int[]."
                         });
 
                     int[] values = new int[4] { 1, 0, 0, 0 };
@@ -294,7 +104,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                                 Cause = new InvalidCastException(),
                                 FilePath = json.path,
                                 IsWarning = false,
-                                Message = "'version[" + i + "]' in ModInfo.json file is a " + json.json.GetJsonType() + ", not an int."
+                                Message = "'version[" + i + "]' is a " + json.json.GetJsonType() + ", not an int."
                             });
                         else
                             values[i] = (int)ver[i];
@@ -314,94 +124,21 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                             Cause = e,
                             FilePath = json.path,
                             IsWarning = false,
-                            Message = "'version' in ModInfo.json file: invalid string format."
+                            Message = "'version': invalid string format."
                         });
                     }
                 }
             }
             #endregion
 
-            #region info
-            if (json.json.Has("info"))
-            {
-                if (!json.json["info"].IsString)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'info' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                    });
-                else
-                    ret.info = (string)json.json["info"];
-            }
-            else
-                ret.info = "Mod " + ret.displayName + " v" + ret.version + " by " + ret.author;
-            #endregion
-            
-            #region language
-            if (json.json.Has("language"))
-            {
-                if (!json.json["language"].IsString)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'language' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
-                    });
-                else
-                    ret.language = (string)json.json["language"];
-            }
-            #endregion
+            AddIfNotNull(SetJsonValue(json, "info", ref ret.info, "Mod " + ret.displayName + " v" + ret.version + " by " + ret.author), errors);
 
-            #region compress
-            if (json.json.Has("compress"))
-            {
-                if (!json.json["compress"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'compress' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.compress = (bool)json.json["compress"];
-            }
-            #endregion
+            // ---
 
-            #region validate
-            if (json.json.Has("validate"))
-            {
-                if (!json.json["validate"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'validate' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.validate = (bool)json.json["validate"];
-            }
-            #endregion
-
-            #region check
-            if (json.json.Has("check"))
-            {
-                if (!json.json["check"].IsBoolean)
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new InvalidCastException(),
-                        FilePath = json.path,
-                        IsWarning = false,
-                        Message = "'check' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
-                    });
-                else
-                    ret.check = (bool)json.json["check"];
-            }
-            #endregion
+            AddIfNotNull(SetJsonValue(json, "language", ref ret.language, "C#"), errors);
+            AddIfNotNull(SetJsonValue(json, "compress", ref ret.compress, true), errors);
+            AddIfNotNull(SetJsonValue(json, "validate", ref ret.validate, true), errors);
+            AddIfNotNull(SetJsonValue(json, "check",    ref ret.check,    true), errors);
 
             return new Tuple<ModInfo, List<CompilerError>>(ret, errors);
         }

@@ -123,26 +123,26 @@ namespace PoroCYon.MCT.Content
     public class TileParameters
     {
         /// <summary>
-        /// The texture of the <see cref="TAPI.Tile" /> to add
+        /// The texture of the <see cref="Terraria.Tile" /> to add
         /// </summary>
         public Texture2D Texture;
 
         #region lots of stuff
         #region ints
         /// <summary>
-        /// The width of the <see cref="TAPI.Tile" />
+        /// The width of the <see cref="Terraria.Tile" />
         /// </summary>
         public int Width;
         /// <summary>
-        /// The height of the <see cref="TAPI.Tile" />
+        /// The height of the <see cref="Terraria.Tile" />
         /// </summary>
         public int Height;
         /// <summary>
-        /// The frame width of the <see cref="TAPI.Tile" />
+        /// The frame width of the <see cref="Terraria.Tile" />
         /// </summary>
         public int FrameWidth;
         /// <summary>
-        /// The frame height of the <see cref="TAPI.Tile" />
+        /// The frame height of the <see cref="Terraria.Tile" />
         /// </summary>
         public int FrameHeight;
         /// <summary>
@@ -193,7 +193,7 @@ namespace PoroCYon.MCT.Content
 
         // byte 1
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> is solid or not
+        /// Wether the <see cref="Terraria.Tile" /> is solid or not
         /// </summary>
         public bool Solid
         {
@@ -207,7 +207,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> has a solid top or not (like Wooden Planks)
+        /// Wether the <see cref="Terraria.Tile" /> has a solid top or not (like Wooden Planks)
         /// </summary>
         public bool SolidTop
         {
@@ -221,7 +221,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> should only change frame when told or when tried to mine it
+        /// Wether the <see cref="Terraria.Tile" /> should only change frame when told or when tried to mine it
         /// </summary>
         public bool FrameImportant
         {
@@ -235,7 +235,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> is destroyed by 1 'tick' of the tool or not
+        /// Wether the <see cref="Terraria.Tile" /> is destroyed by 1 'tick' of the tool or not
         /// </summary>
         public bool BreaksFast
         {
@@ -249,7 +249,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> is mineable by a pickaxe or not
+        /// Wether the <see cref="Terraria.Tile" /> is mineable by a pickaxe or not
         /// </summary>
         public bool BreaksByPic
         {
@@ -263,7 +263,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> is mineable by an axe or not
+        /// Wether the <see cref="Terraria.Tile" /> is mineable by an axe or not
         /// </summary>
         public bool BreaksByAxe
         {
@@ -277,7 +277,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> is mineable by a hammer or not
+        /// Wether the <see cref="Terraria.Tile" /> is mineable by a hammer or not
         /// </summary>
         public bool BreaksByHammer
         {
@@ -291,7 +291,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> breaks when hit with a melee item (sword, tool, ...), Projectile, ...
+        /// Wether the <see cref="Terraria.Tile" /> breaks when hit with a melee item (sword, tool, ...), Projectile, ...
         /// </summary>
         public bool BreaksByCut
         {
@@ -307,7 +307,7 @@ namespace PoroCYon.MCT.Content
 
         // byte 2
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> breaks when it touches water or not
+        /// Wether the <see cref="Terraria.Tile" /> breaks when it touches water or not
         /// </summary>
         public bool BreaksByWater
         {
@@ -321,7 +321,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> breaks when it touches lava or not
+        /// Wether the <see cref="Terraria.Tile" /> breaks when it touches lava or not
         /// </summary>
         public bool BreaksByLava
         {
@@ -335,7 +335,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> counts as a table or not
+        /// Wether the <see cref="Terraria.Tile" /> counts as a table or not
         /// </summary>
         public bool Table
         {
@@ -349,7 +349,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> counts as a rope or not
+        /// Wether the <see cref="Terraria.Tile" /> counts as a rope or not
         /// </summary>
         public bool Rope
         {
@@ -363,7 +363,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether other tiles can be attached to <see cref="TAPI.Tile" /> tile or not
+        /// Wether other tiles can be attached to <see cref="Terraria.Tile" /> tile or not
         /// </summary>
         public bool NoAttach
         {
@@ -377,7 +377,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether this <see cref="TAPI.Tile" /> counts as a dungeon tile or not
+        /// Wether this <see cref="Terraria.Tile" /> counts as a dungeon tile or not
         /// </summary>
         public bool Dungeon
         {
@@ -391,7 +391,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> blocks any light or not (including sunlight)
+        /// Wether the <see cref="Terraria.Tile" /> blocks any light or not (including sunlight)
         /// </summary>
         public bool BlocksAnyLight
         {
@@ -405,7 +405,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> blocks sunlight or not
+        /// Wether the <see cref="Terraria.Tile" /> blocks sunlight or not
         /// </summary>
         public bool BlocksSunlight
         {
@@ -421,7 +421,7 @@ namespace PoroCYon.MCT.Content
 
         // byte 3
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> merges with bricks
+        /// Wether the <see cref="Terraria.Tile" /> merges with bricks
         /// </summary>
         public bool Brick
         {
@@ -435,7 +435,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> merges with moss
+        /// Wether the <see cref="Terraria.Tile" /> merges with moss
         /// </summary>
         public bool Moss
         {
@@ -449,7 +449,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> merges with stone
+        /// Wether the <see cref="Terraria.Tile" /> merges with stone
         /// </summary>
         public bool Stone
         {
@@ -463,7 +463,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the Tiel merges with dirt
+        /// Wether the <see cref="Terraria.Tile" /> merges with dirt
         /// </summary>
         public bool Dirt
         {
@@ -477,7 +477,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> merges with sand or not
+        /// Wether the <see cref="Terraria.Tile" /> merges with sand or not
         /// </summary>
         public bool Sand
         {
@@ -491,7 +491,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> burns when you walk on it or not
+        /// Wether the <see cref="Terraria.Tile" /> burns when you walk on it or not
         /// </summary>
         public bool Flame
         {
@@ -505,7 +505,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> counts as an alchemy recepient or not (like the Bowl, Vase, ...)
+        /// Wether the <see cref="Terraria.Tile" /> counts as an alchemy recepient or not (like the Bowl, Vase, ...)
         /// </summary>
         public bool AlchemyFlower
         {
@@ -519,7 +519,7 @@ namespace PoroCYon.MCT.Content
             }
         }
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> glows or not
+        /// Wether the <see cref="Terraria.Tile" /> glows or not
         /// </summary>
         public bool Glows
         {
@@ -535,7 +535,7 @@ namespace PoroCYon.MCT.Content
 
         // byte 4 *foreveralone*
         /// <summary>
-        /// Wether the <see cref="TAPI.Tile" /> shines or not
+        /// Wether the <see cref="Terraria.Tile" /> shines or not
         /// </summary>
         public bool Shines
         {

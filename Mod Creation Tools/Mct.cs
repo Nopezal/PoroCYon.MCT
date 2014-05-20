@@ -8,6 +8,7 @@ using System.Text;
 using System.Windows.Forms;
 using LitJson;
 using TAPI;
+using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
@@ -35,7 +36,7 @@ namespace PoroCYon.MCT
         /// </summary>
         /// <param name="displayModName">The display name of the calling mod.</param>
         /// <remarks>This method is inlined in compile-time.</remarks>
-        [TargetedPatchingOptOut("Performance critical to inline across NGen image boundaries")] // probably hacky stuff #3 (or something)
+        [TargetedPatchingOptOut(Consts.TPOOReason)] // probably hacky stuff #3 (or something)
         public static void EnsureMct(string displayModName)
         {
             if (!File.Exists("PoroCYon.MCT.dll"))
