@@ -82,6 +82,15 @@
     <Compile Include="Compiler\Internal\FileLoader.cs" />
     <Compile Include="Compiler\Internal\JsonFile.cs" />
     <Compile Include="Compiler\Internal\Validation\ModInfo.cs" />
+    <Compile Include="Compiler\Internal\Validation\ModOptions.cs" />
+    <Compile Include="Compiler\Internal\Validation\Option.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\BoolOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\DynamicOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\FloatOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\IntegerOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\KeybindingOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\ListOption.cs" />
+    <Compile Include="Compiler\Internal\Validation\Options\StringOption.cs" />
     <Compile Include="Compiler\Internal\Validation\ValidatorObject.cs" />
     <Compile Include="Compiler\ModCompiler.cs" />
     <Compile Include="Compiler\Internal\Validator.cs" />

@@ -6,7 +6,6 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.XnaExtensions;
 using PoroCYon.XnaExtensions.Geometry;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.Input;
 
 namespace PoroCYon.MCT.UI.Interface.Controls

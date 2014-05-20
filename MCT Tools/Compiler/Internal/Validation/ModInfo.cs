@@ -31,53 +31,49 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
         public bool validate = true;
         public bool check = true;
 
-        ModInfo() { }
-
-        internal static Tuple<ModInfo, List<CompilerError>> CreateAndValidate(JsonFile json)
+        internal override List<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            ModInfo ret = new ModInfo();
+            AddIfNotNull(SetJsonValue(json, "internalName", ref internalName), errors);
+            AddIfNotNull(SetJsonValue(json, "includePDB", ref includePDB, false), errors);
+            AddIfNotNull(SetJsonValue(json, "warnOnReload", ref warnOnReload, false), errors);
 
-            AddIfNotNull(SetJsonValue(json, "internalName", ref ret.internalName), errors);
-            AddIfNotNull(SetJsonValue(json, "includePDB", ref ret.includePDB, false), errors);
-            AddIfNotNull(SetJsonValue(json, "warnOnReload", ref ret.warnOnReload, false), errors);
-
-            AddIfNotNull(SetJsonValue(json, "modReferences", ref ret.modReferences, EmptyStringArr), errors);
-            for (int i = 0; i < ret.modReferences.Length; i++)
-                if (!Validator.modDict.ContainsKey(ret.modReferences[i]))
+            AddIfNotNull(SetJsonValue(json, "modReferences", ref modReferences, EmptyStringArr), errors);
+            for (int i = 0; i < modReferences.Length; i++)
+                if (!Validator.modDict.ContainsKey(modReferences[i]))
                     errors.Add(new CompilerError()
                     {
                         Cause = new FileNotFoundException(),
                         FilePath = json.path,
                         IsWarning = false,
-                        Message = "'modReferences[" + i + "]': could not find mod '" + ret.modReferences[i] + "'."
+                        Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i] + "'."
                     });
 
-            AddIfNotNull(SetJsonValue(json, "dllReferences", ref ret.dllReferences, EmptyStringArr), errors);
-            for (int i = 0; i < ret.dllReferences.Length; i++)
+            AddIfNotNull(SetJsonValue(json, "dllReferences", ref dllReferences, EmptyStringArr), errors);
+            for (int i = 0; i < dllReferences.Length; i++)
             {
-                if (!File.Exists(ret.dllReferences[i]))
-                    ret.dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References";
+                if (!File.Exists(dllReferences[i]))
+                    dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References";
 
-                if (!File.Exists(ret.dllReferences[i]))
+                if (!File.Exists(dllReferences[i]))
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.path,
                         IsWarning = false,
-                        Message = "'dllReferences[" + i + "]': Could not find reference '" + ret.dllReferences[i] + "'."
+                        Message = "'dllReferences[" + i + "]': Could not find reference '" + dllReferences[i] + "'."
                     });
             }
 
-            AddIfNotNull(SetJsonValue(json, "MSBuild", ref ret.MSBuild, false), errors);
-            if (ret.MSBuild)
-                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref ret.msBuildFile, String.Empty), errors);
+            AddIfNotNull(SetJsonValue(json, "MSBuild", ref MSBuild, false), errors);
+            if (MSBuild)
+                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref msBuildFile, String.Empty), errors);
 
             // ---
 
-            AddIfNotNull(SetJsonValue(json, "displayName", ref ret.displayName, ret.internalName), errors);
-            AddIfNotNull(SetJsonValue(json, "author", ref ret.author, "<unknown>"), errors);
+            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
+            AddIfNotNull(SetJsonValue(json, "author", ref author, "<unknown>"), errors);
 
             #region version
             if (json.json.Has("version"))
@@ -109,13 +105,13 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                         else
                             values[i] = (int)ver[i];
 
-                    ret.version = new Version(values[0], values[1], values[2], values[3]);
+                    version = new Version(values[0], values[1], values[2], values[3]);
                 }
                 else
                 {
                     try
                     {
-                        ret.version = new Version((string)ver);
+                        version = new Version((string)ver);
                     }
                     catch (Exception e)
                     {
@@ -131,16 +127,16 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             }
             #endregion
 
-            AddIfNotNull(SetJsonValue(json, "info", ref ret.info, "Mod " + ret.displayName + " v" + ret.version + " by " + ret.author), errors);
+            AddIfNotNull(SetJsonValue(json, "info", ref info, "Mod " + displayName + " v" + version + " by " + author), errors);
 
             // ---
 
-            AddIfNotNull(SetJsonValue(json, "language", ref ret.language, "C#"), errors);
-            AddIfNotNull(SetJsonValue(json, "compress", ref ret.compress, true), errors);
-            AddIfNotNull(SetJsonValue(json, "validate", ref ret.validate, true), errors);
-            AddIfNotNull(SetJsonValue(json, "check",    ref ret.check,    true), errors);
+            AddIfNotNull(SetJsonValue(json, "language", ref language, "C#"), errors);
+            AddIfNotNull(SetJsonValue(json, "compress", ref compress, true), errors);
+            AddIfNotNull(SetJsonValue(json, "validate", ref validate, true), errors);
+            AddIfNotNull(SetJsonValue(json, "check",    ref check,    true), errors);
 
-            return new Tuple<ModInfo, List<CompilerError>>(ret, errors);
+            return errors;
         }
     }
 }

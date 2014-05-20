@@ -114,7 +114,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// The text of the TextBox
         /// </summary>
         /// <remarks>
-        /// Does not include the caret.
+        /// Does not include the ca
         /// </remarks>
         public string Text
         {

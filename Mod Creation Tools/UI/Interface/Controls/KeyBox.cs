@@ -41,7 +41,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <summary>
         /// The text of the KeyBox.
         /// Setting it will thow a NotSupportedException.
-        /// Includes the caret.
+        /// Includes the ca
         /// </summary>
         public string Text
         {
@@ -75,7 +75,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         }
 
         /// <summary>
-        /// The text of the KeyBox. Includes the caret.
+        /// The text of the KeyBox. Includes the ca
         /// </summary>
         public string TextWithCaret
         {

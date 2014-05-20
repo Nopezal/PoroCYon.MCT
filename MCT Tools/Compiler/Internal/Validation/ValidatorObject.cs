@@ -16,7 +16,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                 list.Add(err);
         }
 
-        protected static CompilerError SetJsonValue<T>(JsonFile json, string key, ref T value)
+        protected static CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
         {
             if (!json.json.Has(key))
                 return new CompilerError()
@@ -29,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
             return SetJsonValueInternal(json, key, ref value);
         }
-        protected static CompilerError SetJsonValue<T>(JsonFile json, string key, ref T value, T defaultValue)
+        protected static CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value, TJsonObj defaultValue)
         {
             if (!json.json.Has(key))
             {
@@ -41,22 +41,22 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             return SetJsonValueInternal(json, key, ref value);
         }
 
-        static CompilerError SetJsonValueInternal<T>(JsonFile json, string key, ref T value)
+        static CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
         {
-            if (typeof(T).IsArray)
+            if (typeof(TJsonObj).IsArray)
             {
                 dynamic arr = new dynamic[json.json[key].Count];
 
                 for (int i = 0; i < json.json[key].Count; i++)
                 {
-                    if (json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(T)))
+                    if (json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
                         return new CompilerError()
                         {
                             Cause = new InvalidCastException(),
                             FilePath = json.path,
                             IsWarning = false,
                             Message = "'" + key + "[" + i + "]' is a " + json.json.GetJsonType() +
-                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(T)) + "."
+                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
                         };
 
                     arr[i] = json.json[key][i];
@@ -67,19 +67,21 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                 return null;
             }
 
-            if (json.json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(T)))
+            if (json.json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
                 return new CompilerError()
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.path,
                     IsWarning = false,
                     Message = "'" + key + "' is a " + json.json.GetJsonType() +
-                              ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(T)) + "."
+                              ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
                 };
 
             value = (dynamic)json.json[key]; // dynamic++
 
             return null;
         }
+
+        internal abstract List<CompilerError> CreateAndValidate(JsonFile json);
     }
 }
