@@ -338,8 +338,70 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             else
                 ret.info = "Mod " + ret.displayName + " v" + ret.version + " by " + ret.author;
             #endregion
+            
+            #region language
+            if (json.json.Has("language"))
+            {
+                if (!json.json["language"].IsString)
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'language' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a string."
+                    });
+                else
+                    ret.language = (string)json.json["language"];
+            }
+            #endregion
 
-            /* language, compress, validate, check */
+            #region compress
+            if (json.json.Has("compress"))
+            {
+                if (!json.json["compress"].IsBoolean)
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'compress' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
+                    });
+                else
+                    ret.compress = (bool)json.json["compress"];
+            }
+            #endregion
+
+            #region validate
+            if (json.json.Has("validate"))
+            {
+                if (!json.json["validate"].IsBoolean)
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'validate' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
+                    });
+                else
+                    ret.validate = (bool)json.json["validate"];
+            }
+            #endregion
+
+            #region check
+            if (json.json.Has("check"))
+            {
+                if (!json.json["check"].IsBoolean)
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'check' in ModInfo.json file is a " + json.json.GetJsonType() + ", not a bool."
+                    });
+                else
+                    ret.check = (bool)json.json["check"];
+            }
+            #endregion
 
             return new Tuple<ModInfo, List<CompilerError>>(ret, errors);
         }
