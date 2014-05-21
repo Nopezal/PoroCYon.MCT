@@ -8,42 +8,54 @@ namespace PoroCYon.MCT.Tools.Internal
 {
     using ModInfo = Validation.ModInfo;
 
+    class CurrentMod
+    {
+        internal ModInfo info;
+        internal ModOptions options;
+        internal CraftGroups craftGroups;
+
+        internal List<JsonFile> jsons = new List<JsonFile>();
+        internal Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
+    }
+
     static class Validator
     {
         internal static Dictionary<string, string> modDict;
-        internal static CraftGroups currentCraftGroups = null;
+        internal static CurrentMod current = new CurrentMod();
 
-        internal static List<CompilerError> ValidateJsons(List<JsonFile> jsons, bool validateModInfo = true)
+        internal static List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
+            current = new CurrentMod();
+
+            current.jsons = jsons;
+            current.files = files;
+
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
 
             List<CompilerError> errors = new List<CompilerError>();
 
             JsonFile
-                modInfoJson = jsons[0],
-                modOptionsJson = jsons[1],
+                modInfoJson     = jsons[0],
+                modOptionsJson  = jsons[1],
                 craftGroupsJson = jsons[2];
 
-            ModInfo modInfo = new ModInfo();
-            errors.AddRange(modInfo.CreateAndValidate(modInfoJson));
+            current.info = new ModInfo();
+            errors.AddRange(current.info.CreateAndValidate(modInfoJson));
 
-            ModOptions modOptions = new ModOptions();
+            current.options = new ModOptions();
             if (modOptionsJson != null)
-                errors.AddRange(modOptions.CreateAndValidate(modOptionsJson));
+                errors.AddRange(current.options.CreateAndValidate(modOptionsJson));
 
-            CraftGroups craftGroups = new CraftGroups();
+            current.craftGroups = new CraftGroups();
             if (craftGroupsJson != null)
-            {
-                errors.AddRange(craftGroups.CreateAndValidate(modOptionsJson));
-                currentCraftGroups = craftGroups;
-            }
+                errors.AddRange(current.craftGroups.CreateAndValidate(modOptionsJson));
 
             for (int i = 2; i < errors.Count; i++)
             {
                 // stuff
             }
 
-            currentCraftGroups = null;
+            current = null;
 
             return errors;
         }

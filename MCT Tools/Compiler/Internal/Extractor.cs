@@ -43,7 +43,13 @@ namespace PoroCYon.MCT.Tools.Internal
 
                         try
                         {
-                            current = new JsonFile(res, JsonMapper.ToObject(new StreamReader(s)));
+                            string fileName = res;
+                            int index;
+
+                            while ((index = fileName.IndexOf(".")) != fileName.LastIndexOf("."))
+                                fileName = fileName.Remove(index, 1).Insert(index, "\\");
+
+                            current = new JsonFile(fileName, JsonMapper.ToObject(new StreamReader(s)));
                         }
                         catch (Exception e)
                         {

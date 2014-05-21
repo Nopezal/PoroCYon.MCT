@@ -49,7 +49,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
                 for (int i = 0; i < json.json[key].Count; i++)
                 {
-                    if (json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
+                    if (typeof(TJsonObj) != typeof(object) && json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
                         return new CompilerError()
                         {
                             Cause = new ArrayTypeMismatchException(),
@@ -67,7 +67,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                 return null;
             }
 
-            if (json.json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
+            if (typeof(TJsonObj) != typeof(object) && json.json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
                 return new CompilerError()
                 {
                     Cause = new InvalidCastException(),
