@@ -45,3 +45,5 @@ supported languages:
 
 
 This might be considered a hack.
+
+BTW, this everything in here is done by some 15-year-old...
