@@ -86,7 +86,9 @@
     <Compile Include="Compiler\Internal\Validation\Entities\EntityValidator.cs" />
     <Compile Include="Compiler\Internal\Validation\Entities\Item.cs" />
     <Compile Include="Compiler\Internal\Validation\Entities\NPC.cs" />
+    <Compile Include="Compiler\Internal\Validation\Entities\Projectile.cs" />
     <Compile Include="Compiler\Internal\Validation\Entities\Recipe.cs" />
+    <Compile Include="Compiler\Internal\Validation\Entities\Tile.cs" />
     <Compile Include="Compiler\Internal\Validation\ItemCraftGroup.cs" />
     <Compile Include="Compiler\Internal\Validation\ModInfo.cs" />
     <Compile Include="Compiler\Internal\Validation\ModOptions.cs" />
