@@ -188,8 +188,46 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     Message = "'soundKilled' must be an int or a string, but is a " + soundKilled.GetType()
                 });
             AddIfNotNull(SetJsonValue(json, "music", ref music, String.Empty), errors);
-            
-            // drops ._.
+
+            #region drops
+            if (json.json.Has("drops"))
+            {
+                JsonData drs = json.json["drops"];
+
+                if (drs.IsObject)
+                    drs = JsonMapper.ToObject("[" + drs.ToJson() + "]");
+
+                if (drs.IsArray)
+                    for (int i = 0; i < drs.Count; i++)
+                    {
+                        JsonData drop = drs[i];
+
+                        if (drs.IsObject)
+                        {
+                            Drop d = new Drop();
+
+                            errors.AddRange(d.CreateAndValidate(new JsonFile(json.path, drop)));
+                            drops.Add(d);
+                        }
+                        else
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = new ArrayTypeMismatchException(),
+                                FilePath = json.path,
+                                IsWarning = false,
+                                Message = "'drops[" + i + "]' must be a Drop, but is a " + drop.GetJsonType() + "."
+                            });
+                    }
+                else
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'drops' must be a Drop or an array of drops, but is a " + drs.GetJsonType() + "."
+                    });
+            }
+            #endregion
 
             return errors;
         }

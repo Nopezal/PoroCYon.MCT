@@ -106,7 +106,6 @@
     <Compile Include="ModBuilder.cs" />
     <Compile Include="ModDecompiler.cs" />
     <Compile Include="ModPacker.cs" />
-    <Compile Include="Pick3x3.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
