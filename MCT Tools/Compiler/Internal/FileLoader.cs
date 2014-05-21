@@ -14,16 +14,17 @@ namespace PoroCYon.MCT.Tools.Internal
         /// </summary>
         /// <param name="directory">The mod's source folder.</param>
         /// <returns>A tuple containing the list of the JSON files an a list of the other files, together with all errors.</returns>
-        internal static Tuple<List<JsonFile>, List<byte[]>, List<CompilerError>> LoadFiles(string directory)
+        internal static Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>> LoadFiles(string directory)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
             List<JsonFile> jsons = new List<JsonFile>();
-            List<byte[]> files = new List<byte[]>();
+            Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
 
             JsonFile
                 modInfo = null,
-                modOptions = null;
+                modOptions = null,
+                craftGroups = null;
 
             foreach (string s in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
             {
@@ -56,11 +57,13 @@ namespace PoroCYon.MCT.Tools.Internal
                         modInfo = current;
                     else if (relativeFileName == "ModOptions.json")
                         modOptions = current;
+                    else if (relativeFileName == "CraftGroups.json")
+                        craftGroups = current;
                     else
                         jsons.Add(current);
                 }
                 else
-                    files.Add(fileBin);
+                    files.Add(relativeFileName, fileBin);
             }
 
             if (modInfo == null)
@@ -77,8 +80,9 @@ namespace PoroCYon.MCT.Tools.Internal
 
             jsons.Insert(0, modInfo);
             jsons.Insert(1, modOptions); // check if it's null later
+            jsons.Insert(2, craftGroups); // same here
 
-            return new Tuple<List<JsonFile>, List<byte[]>, List<CompilerError>>(jsons, files, errors);
+            return new Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>>(jsons, files, errors);
         }
     }
 }

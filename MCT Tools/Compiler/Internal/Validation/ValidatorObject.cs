@@ -24,7 +24,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                     Cause = new KeyNotFoundException(),
                     FilePath = json.path,
                     IsWarning = false,
-                    Message = "Key '" + key + "' not found."
+                    Message = "Required key '" + key + "' not found."
                 };
 
             return SetJsonValueInternal(json, key, ref value);
@@ -49,14 +49,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
                 for (int i = 0; i < json.json[key].Count; i++)
                 {
-                    if (json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
+                    if (json.json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
                         return new CompilerError()
                         {
-                            Cause = new InvalidCastException(),
+                            Cause = new ArrayTypeMismatchException(),
                             FilePath = json.path,
                             IsWarning = false,
                             Message = "'" + key + "[" + i + "]' is a " + json.json.GetJsonType() +
-                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
+                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()) + "."
                         };
 
                     arr[i] = json.json[key][i];
