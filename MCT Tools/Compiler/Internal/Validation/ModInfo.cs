@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using LitJson;
 
 namespace PoroCYon.MCT.Tools.Internal.Validation
@@ -28,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
         // new compiler stuff
         public string language = null;
         public bool compress = true;
-        public bool validate = true;
+        public bool validate = true; // even if false, ModInfo will always be validated
         public bool check = true;
 
         internal override List<CompilerError> CreateAndValidate(JsonFile json)
@@ -52,23 +53,45 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
             AddIfNotNull(SetJsonValue(json, "dllReferences", ref dllReferences, EmptyStringArr), errors);
             for (int i = 0; i < dllReferences.Length; i++)
-            {
-                if (!File.Exists(dllReferences[i]))
-                    dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References";
+                try
+                {
+                    try
+                    {
+                        Assembly.LoadFrom(dllReferences[i]);
+                    }
+                    catch
+                    {
+                        dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References\\" + dllReferences[i];
 
-                if (!File.Exists(dllReferences[i]))
+                        Assembly.LoadFrom(dllReferences[i]);
+                    }
+                }
+                catch (Exception e)
+                {
                     errors.Add(new CompilerError()
                     {
-                        Cause = new InvalidCastException(),
+                        Cause = e,
                         FilePath = json.path,
                         IsWarning = false,
                         Message = "'dllReferences[" + i + "]': Could not find reference '" + dllReferences[i] + "'."
                     });
-            }
+                }
 
             AddIfNotNull(SetJsonValue(json, "MSBuild", ref MSBuild, false), errors);
             if (MSBuild)
-                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref msBuildFile, String.Empty), errors);
+            {
+                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref msBuildFile, Path.GetDirectoryName(json.path)
+                    + "\\" + new DirectoryInfo(Path.GetDirectoryName(json.path)).Name + ".csproj"), errors);
+
+                if (!File.Exists(msBuildFile))
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = new FileNotFoundException(),
+                        FilePath = json.path,
+                        IsWarning = false,
+                        Message = "'msBuildFile': file '" + msBuildFile + "' not found."
+                    });
+            }
 
             // ---
 

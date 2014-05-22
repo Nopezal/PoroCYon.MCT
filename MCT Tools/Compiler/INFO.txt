@@ -9,8 +9,8 @@
 
     The compiler consists of the following parts:
        (- Extractor (Only when building from a .dll))
-        - Validator (validate code, etc)
-        - Builder   (build code to .dll - MSBuild or CodeDom)
+        - Validator (validate json, etc)
+       (- Builder   (build code to .dll - MSBuild or CodeDom))
                     (skipped when building from a .dll, obviously)
         - Checker   (checks assembly for ModBase and other stuff)
         - Writer    (write to tapi/tapimod file)

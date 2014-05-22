@@ -74,6 +74,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compiler\CompilerWarning.cs" />
+    <Compile Include="Compiler\ICompiler.cs" />
     <Compile Include="Compiler\Internal\Builder.cs" />
     <Compile Include="Compiler\Internal\Checker.cs" />
     <Compile Include="Compiler\CompilerException.cs" />
@@ -122,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="Compiler\INFO.txt" />
+    <Content Include="Compiler\Internal\Compilation\PUT THE COMPILERS HERE.txt" />
     <Content Include="Logo.ico" />
   </ItemGroup>
   <ItemGroup />
