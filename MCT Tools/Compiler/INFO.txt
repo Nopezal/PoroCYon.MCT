@@ -41,7 +41,7 @@ supported languages:
     ClojureCLR
     F#
 
-  C++/CLI will only be supported through MSBuild or DLL building
+  C++/CLI will only be supported through MSBuild or DLL building, because CL is shipped with Visual Studio, not .NET.
 
 
 This might be considered a hack.
