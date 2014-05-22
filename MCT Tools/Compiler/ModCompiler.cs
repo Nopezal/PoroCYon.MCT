@@ -41,9 +41,15 @@ namespace PoroCYon.MCT.Tools.Compiler
                 };
             #endregion
 
-            var readFiles = FileLoader.LoadFiles(folder);
+            CompilerOutput outp;
 
-            CompilerOutput outp = CreateOutput(readFiles.Item3);
+            var readFiles = FileLoader.LoadFiles(folder);
+            outp = CreateOutput(readFiles.Item3);
+            if (!outp.Succeeded)
+                return outp;
+
+            var validated = Validator.ValidateJsons(readFiles.Item1, readFiles.Item2, true);
+            outp = CreateOutput(validated);
             if (!outp.Succeeded)
                 return outp;
 
@@ -115,9 +121,15 @@ namespace PoroCYon.MCT.Tools.Compiler
             }
             #endregion
 
-            var extracted = Extractor.ExtractData(asm);
+            CompilerOutput outp;
 
-            CompilerOutput outp = CreateOutput(extracted.Item3);
+            var extracted = Extractor.ExtractData(asm);
+            outp = CreateOutput(extracted.Item3);
+            if (!outp.Succeeded)
+                return outp;
+
+            var validated = Validator.ValidateJsons(extracted.Item1, extracted.Item2, true);
+            outp = CreateOutput(validated);
             if (!outp.Succeeded)
                 return outp;
 

@@ -46,8 +46,8 @@ namespace PoroCYon.MCT.Tools.Internal
                             string fileName = res;
                             int index;
 
-                            while ((index = fileName.IndexOf(".")) != fileName.LastIndexOf("."))
-                                fileName = fileName.Remove(index, 1).Insert(index, "\\");
+                            while ((index = fileName.IndexOf('.')) != fileName.LastIndexOf('.') && index != -1) // keep extension
+                                fileName = fileName.Remove(index, 1).Insert(index, Path.DirectorySeparatorChar.ToString());
 
                             current = new JsonFile(fileName, JsonMapper.ToObject(new StreamReader(s)));
                         }

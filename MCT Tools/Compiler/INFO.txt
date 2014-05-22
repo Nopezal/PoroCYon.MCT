@@ -20,9 +20,9 @@
     - assembly: Input -> Extractor  -> Validator -> ------- -> Checker -> Writer -> Output
     - source:         -> FileLoader ->           -> Builder ->
 
-    done   : Extractor, FileLoader
-    working: Validator
-    todo   : Builder, Checker, Writer
+    done   : Extractor, FileLoader, Validator
+    working: Builder
+    todo   : Checker, Writer
 
     Input:  mod folder name or assembly path
     Output: wether it succeeded or not, output file (if succeeded), errors (if failed)
