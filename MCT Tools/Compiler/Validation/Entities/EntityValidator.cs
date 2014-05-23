@@ -32,10 +32,10 @@ namespace PoroCYon.MCT.Tools.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(SetJsonValue(json, "code", ref code, Validator.current.Info.internalName + "." + baseType + "." + Path.GetFileNameWithoutExtension(json.Path)), errors);
+            AddIfNotNull(SetJsonValue(json, "code", ref code, ModCompiler.current.Info.internalName + "." + baseType + "." + Path.GetFileNameWithoutExtension(json.Path)), errors);
 
             AddIfNotNull(SetJsonValue(json, "texture", ref texture, "Item/" + Path.GetFileNameWithoutExtension(json.Path)), errors);
-            if (!Validator.current.files.ContainsKey(texture + ".png"))
+            if (!ModCompiler.current.files.ContainsKey(texture + ".png"))
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),

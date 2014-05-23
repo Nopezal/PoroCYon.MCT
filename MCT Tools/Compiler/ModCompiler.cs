@@ -5,14 +5,18 @@ using System.Linq;
 using System.Reflection;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Internal;
+using TAPI;
 
-namespace PoroCYon.MCT.Tools.Compiler
+namespace PoroCYon.MCT.Tools
 {
     /// <summary>
     /// The MCT mod compiler
     /// </summary>
     public static class ModCompiler
     {
+        internal static ModData current;
+        internal static Dictionary<string, string> modDict;
+
         /// <summary>
         /// Compiles a mod from its source folder.
         /// </summary>
@@ -54,14 +58,13 @@ namespace PoroCYon.MCT.Tools.Compiler
             if (!outp.Succeeded)
                 return outp;
 
-            var compiled = Builder.Build(Validator.current);
+            var compiled = Builder.Build(current);
             outp = CreateOutput(compiled.Item3);
+            outp.Succeeded &= compiled.Item1 != null;
             if (!outp.Succeeded)
                 return outp;
 
-            outp = MainCompileStuff(compiled.Item1);
-
-            return null;
+            return MainCompileStuff(current, compiled.Item1);
         }
         /// <summary>
         /// Compiles a mod from a managed assembly.
@@ -140,9 +143,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             if (!outp.Succeeded)
                 return outp;
 
-            outp = MainCompileStuff(asm);
-
-            return outp;
+            return MainCompileStuff(current, asm);
         }
 
         static CompilerOutput CreateOutput(List<CompilerError> errors)
@@ -166,6 +167,8 @@ namespace PoroCYon.MCT.Tools.Compiler
         }
         static void BeginCompile()
         {
+            modDict = Mods.GetInternalNameToPathDictionary(); // dat name
+
             if (!Directory.Exists(Path.GetTempPath() + "\\MCT"))
                 Directory.CreateDirectory(Path.GetTempPath() + "\\MCT");
         }
@@ -173,14 +176,27 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             Directory.Delete(Path.GetTempPath() + "\\MCT", true);
         }
-        static CompilerOutput MainCompileStuff(Assembly asm)
+        static CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
         {
+            if (asm == null)
+                return null;
+
+            mod.Assembly = asm;
+
             // checker, writer
             // don't forget to set outputFile
 
+            List<CompilerError> errors = new List<CompilerError>();
+
+            errors.AddRange(Checker.Check(asm));
+            errors.AddRange(Writer.Write(mod));
+
+            CompilerOutput outp = CreateOutput(errors);
+            outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
+
             EndCompile();
-            
-            return null;
+
+            return outp;
         }
     }
 }

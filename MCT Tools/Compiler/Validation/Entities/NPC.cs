@@ -146,7 +146,7 @@ namespace PoroCYon.MCT.Tools.Validation.Entities
 
             // interface
             AddIfNotNull(SetJsonValue(json, "textureHead", ref textureHead, texture + "._Head"), errors);
-            if (!Validator.current.files.ContainsKey(textureHead))
+            if (!ModCompiler.current.files.ContainsKey(textureHead))
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),

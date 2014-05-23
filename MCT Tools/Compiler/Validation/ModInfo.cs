@@ -24,6 +24,7 @@ namespace PoroCYon.MCT.Tools.Validation
         public string[] dllReferences = EmptyStringArr;
         public bool MSBuild = false;
         public string msBuildFile = null;
+        public bool extractDLL = false;
 
         // informative
         public string displayName = null;
@@ -51,10 +52,11 @@ namespace PoroCYon.MCT.Tools.Validation
             AddIfNotNull(SetJsonValue(json, "internalName", ref internalName), errors);
             AddIfNotNull(SetJsonValue(json, "includePDB", ref includePDB, false), errors);
             AddIfNotNull(SetJsonValue(json, "warnOnReload", ref warnOnReload, false), errors);
+            AddIfNotNull(SetJsonValue(json, "extractDLL", ref extractDLL, false), errors);
 
             AddIfNotNull(SetJsonValue(json, "modReferences", ref modReferences, EmptyStringArr), errors);
             for (int i = 0; i < modReferences.Length; i++)
-                if (!Validator.modDict.ContainsKey(modReferences[i]))
+                if (!ModCompiler.modDict.ContainsKey(modReferences[i]))
                     errors.Add(new CompilerError()
                     {
                         Cause = new FileNotFoundException(),

@@ -49,8 +49,8 @@ namespace PoroCYon.MCT.Tools.Validation.Entities
                             string icgName = kvp.Key.ToString().Substring(2);
                             bool found = false;
 
-                            for (int i = 0; i < Validator.current.CraftGroups.itemGroups.Count; i++)
-                                if (Validator.current.CraftGroups.itemGroups[i].name == icgName)
+                            for (int i = 0; i < ModCompiler.current.CraftGroups.itemGroups.Count; i++)
+                                if (ModCompiler.current.CraftGroups.itemGroups[i].name == icgName)
                                 {
                                     found = true;
                                     break;
@@ -150,8 +150,8 @@ namespace PoroCYon.MCT.Tools.Validation.Entities
                             string icgName = tis[i].ToString().Substring(2);
                             bool found = false;
 
-                            for (int j = 0; j < Validator.current.CraftGroups.tileGroups.Count; j++)
-                                if (Validator.current.CraftGroups.tileGroups[j].name == icgName)
+                            for (int j = 0; j < ModCompiler.current.CraftGroups.tileGroups.Count; j++)
+                                if (ModCompiler.current.CraftGroups.tileGroups[j].name == icgName)
                                 {
                                     found = true;
                                     break;

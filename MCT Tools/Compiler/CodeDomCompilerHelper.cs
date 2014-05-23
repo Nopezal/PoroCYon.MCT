@@ -96,7 +96,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             for (int i = 0; i < mod.Info.modReferences.Length; i++)
                 try
                 {
-                    WriteAssembly(Validator.modDict[mod.Info.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mod.Info.modReferences[i] + ".dll");
+                    WriteAssembly(ModCompiler.modDict[mod.Info.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mod.Info.modReferences[i] + ".dll");
                 }
                 catch (Exception e)
                 {

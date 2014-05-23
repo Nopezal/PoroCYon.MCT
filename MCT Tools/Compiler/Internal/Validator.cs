@@ -2,27 +2,19 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using TAPI;
 using PoroCYon.MCT.Tools.Validation;
 using PoroCYon.MCT.Tools.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal
 {
-    using ModInfo = Validation.ModInfo;
-
     static class Validator
     {
-        internal static Dictionary<string, string> modDict;
-        internal static ModData current;
-
         internal static List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
-            current = new ModData();
+            ModCompiler.current = new ModData();
 
-            current.jsons = jsons;
-            current.files = files;
-
-            modDict = Mods.GetInternalNameToPathDictionary(); // dat name
+            ModCompiler.current.jsons = jsons;
+            ModCompiler.current.files = files;
 
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -31,19 +23,19 @@ namespace PoroCYon.MCT.Tools.Internal
                 modOptionsJson  = jsons[1],
                 craftGroupsJson = jsons[2];
 
-            current.Info = new ModInfo();
-            errors.AddRange(current.Info.CreateAndValidate(modInfoJson));
+            ModCompiler.current.Info = new ModInfo();
+            errors.AddRange(ModCompiler.current.Info.CreateAndValidate(modInfoJson));
 
-            if (!current.Info.validate) // HELLO HERE I AM, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT. KTHXBAI.
+            if (!ModCompiler.current.Info.validate) // HELLO, HERE AM I, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT, KTHXBAI.
                 return errors;
 
-            current.Options = new ModOptions();
+            ModCompiler.current.Options = new ModOptions();
             if (modOptionsJson != null)
-                errors.AddRange(current.Options.CreateAndValidate(modOptionsJson));
+                errors.AddRange(ModCompiler.current.Options.CreateAndValidate(modOptionsJson));
 
-            current.CraftGroups = new CraftGroups();
+            ModCompiler.current.CraftGroups = new CraftGroups();
             if (craftGroupsJson != null)
-                errors.AddRange(current.CraftGroups.CreateAndValidate(modOptionsJson));
+                errors.AddRange(ModCompiler.current.CraftGroups.CreateAndValidate(modOptionsJson));
 
             for (int i = 3; i < errors.Count; i++)
             {
@@ -91,15 +83,15 @@ namespace PoroCYon.MCT.Tools.Internal
 
                         // I'm too lazy to type casts today
                         if (obj is Item)
-                            current.items.Add(obj as Item);
+                            ModCompiler.current.items.Add(obj as Item);
                         if (obj is NPC)
-                            current.npcs.Add(obj as NPC);
+                            ModCompiler.current.npcs.Add(obj as NPC);
                         if (obj is Projectile)
-                            current.projs.Add(obj as Projectile);
+                            ModCompiler.current.projs.Add(obj as Projectile);
                         if (obj is Tile)
-                            current.tiles.Add(obj as Tile);
+                            ModCompiler.current.tiles.Add(obj as Tile);
                         if (obj is Wall)
-                            current.walls.Add(obj as Wall);
+                            ModCompiler.current.walls.Add(obj as Wall);
                     }
                 }
             }

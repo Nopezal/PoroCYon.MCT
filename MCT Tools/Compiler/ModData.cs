@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using PoroCYon.MCT.Tools.Validation;
 using PoroCYon.MCT.Tools.Validation.Entities;
 
@@ -116,6 +117,14 @@ namespace PoroCYon.MCT.Tools
             {
                 return files;
             }
+        }
+        /// <summary>
+        /// Gets the assembly of the mod.
+        /// </summary>
+        public Assembly Assembly
+        {
+            get;
+            internal set;
         }
     }
 }
