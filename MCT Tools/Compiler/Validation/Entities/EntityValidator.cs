@@ -2,11 +2,16 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using PoroCYon.MCT.Tools.Internal;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    abstract class EntityValidator : ValidatorObject
+    /// <summary>
+    /// An object that helps with the validation of an entity.
+    /// </summary>
+    public abstract class EntityValidator : ValidatorObject
     {
+#pragma warning disable 1591
         public string code;
 
         // appearance
@@ -14,26 +19,27 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
         public int[] size = new int[2] { 16, 16 };
         public float scale = 1f;
         public int[] colour = new int[4] { 255, 255, 255, 0 };
+#pragma warning restore 1591
 
         /// <summary>
-        /// 
+        /// Base class field validation.
         /// </summary>
-        /// <param name="json"></param>
+        /// <param name="json">The JSON file to validate.</param>
         /// <param name="baseFolder">Used for the 'texture' key ({baseFolder}/{fileName}.png)</param>
         /// <param name="baseType">Used for the 'code' key ({internalName}.{basetype}.{fileName})</param>
-        /// <returns></returns>
-        protected List<CompilerError> CreateAndValidateBase(JsonFile json, string baseFolder, string baseType)
+        /// <returns>A collection containing all (possible) errors.</returns>
+        protected IEnumerable<CompilerError> CreateAndValidateBase(JsonFile json, string baseFolder, string baseType)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(SetJsonValue(json, "code", ref code, Validator.current.info.internalName + "." + baseType + "." + Path.GetFileNameWithoutExtension(json.path)), errors);
+            AddIfNotNull(SetJsonValue(json, "code", ref code, Validator.current.Info.internalName + "." + baseType + "." + Path.GetFileNameWithoutExtension(json.Path)), errors);
 
-            AddIfNotNull(SetJsonValue(json, "texture", ref texture, "Item/" + Path.GetFileNameWithoutExtension(json.path)), errors);
+            AddIfNotNull(SetJsonValue(json, "texture", ref texture, "Item/" + Path.GetFileNameWithoutExtension(json.Path)), errors);
             if (!Validator.current.files.ContainsKey(texture + ".png"))
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Could not find item texture '" + texture + ".png'."
                 });
@@ -44,7 +50,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new IndexOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'size' should be an array of ints with length 2."
                 });
@@ -57,7 +63,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Invalid item size values -or- size values not set."
                 });
@@ -69,7 +75,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new IndexOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'color' should be an array of ints with length 3 or 4."
                 });
@@ -78,7 +84,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new ArgumentOutOfRangeException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'color[" + i + "] cannot be converted to a color channel. The value must be an element of [0;255]."
                     });

@@ -3,33 +3,44 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using LitJson;
+using PoroCYon.MCT.Tools.Internal;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    class Recipe : ValidatorObject
+    /// <summary>
+    /// An item recipe.
+    /// </summary>
+    public class Recipe : ValidatorObject
     {
+#pragma warning disable 1591
         public Dictionary<string, int> items = new Dictionary<string, int>();
         public List<string> tiles = new List<string>();
         public int creates = 1;
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
             #region items
-            if (json.json.Has("items"))
+            if (json.Json.Has("items"))
             {
-                if (!json.json["items"].IsObject)
+                if (!json.Json["items"].IsObject)
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
-                        Message = "Key 'items' is a " + json.json["items"] + ", not an object."
+                        Message = "Key 'items' is a " + json.Json["items"] + ", not an object."
                     });
                 else
                 {
-                    JsonData its = json.json["items"];
+                    JsonData its = json.Json["items"];
 
                     foreach (DictionaryEntry kvp in its)
                     {
@@ -38,8 +49,8 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             string icgName = kvp.Key.ToString().Substring(2);
                             bool found = false;
 
-                            for (int i = 0; i < Validator.current.craftGroups.itemGroups.Count; i++)
-                                if (Validator.current.craftGroups.itemGroups[i].name == icgName)
+                            for (int i = 0; i < Validator.current.CraftGroups.itemGroups.Count; i++)
+                                if (Validator.current.CraftGroups.itemGroups[i].name == icgName)
                                 {
                                     found = true;
                                     break;
@@ -50,7 +61,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                                 errors.Add(new CompilerError()
                                 {
                                     Cause = new KeyNotFoundException(),
-                                    FilePath = json.path,
+                                    FilePath = json.Path,
                                     IsWarning = false,
                                     Message = "CraftGroup " + kvp.Key + " not found."
                                 });
@@ -64,7 +75,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArgumentException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = true,
                                 Message = "The key '" + kvp.Key + " is already present in the items list, adding the two stacks..."
                             });
@@ -73,7 +84,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                                 errors.Add(new CompilerError()
                                 {
                                     Cause = new InvalidCastException(),
-                                    FilePath = json.path,
+                                    FilePath = json.Path,
                                     IsWarning = false,
                                     Message = "The key '" + kvp.Key + " 's value should be an int, not a "
                                               + (kvp.Value is JsonData ? ((JsonData)kvp.Value).GetJsonType() : (object)kvp.Value.GetType()) + "."
@@ -85,7 +96,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new InvalidCastException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "The key '" + kvp.Key + " 's value should be an int, not a "
                                           + (kvp.Value is JsonData ? ((JsonData)kvp.Value).GetJsonType() : (object)kvp.Value.GetType()) + "."
@@ -99,25 +110,25 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new KeyNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Required key 'items' not found."
                 });
             #endregion
             #region tiles
-            if (json.json.Has("tiles"))
+            if (json.Json.Has("tiles"))
             {
-                if (!json.json["tiles"].IsArray)
+                if (!json.Json["tiles"].IsArray)
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
-                        Message = "Key 'tiles' is a " + json.json["tiles"] + ", not an array of string."
+                        Message = "Key 'tiles' is a " + json.Json["tiles"] + ", not an array of string."
                     });
                 else
                 {
-                    JsonData tis = json.json["tiles"];
+                    JsonData tis = json.Json["tiles"];
 
                     for (int i = 0; i < tis.Count; i++)
                     {
@@ -126,7 +137,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new InvalidCastException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'tiles[" + i + "]' is a " + tis[i] + ", not a string."
                             });
@@ -139,8 +150,8 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             string icgName = tis[i].ToString().Substring(2);
                             bool found = false;
 
-                            for (int j = 0; j < Validator.current.craftGroups.tileGroups.Count; j++)
-                                if (Validator.current.craftGroups.tileGroups[j].name == icgName)
+                            for (int j = 0; j < Validator.current.CraftGroups.tileGroups.Count; j++)
+                                if (Validator.current.CraftGroups.tileGroups[j].name == icgName)
                                 {
                                     found = true;
                                     break;
@@ -151,7 +162,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                                 errors.Add(new CompilerError()
                                 {
                                     Cause = new KeyNotFoundException(),
-                                    FilePath = json.path,
+                                    FilePath = json.Path,
                                     IsWarning = false,
                                     Message = "CraftGroup " + tis[i] + " not found."
                                 });
@@ -170,7 +181,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new KeyNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Required key 'tiles' not found."
                 });

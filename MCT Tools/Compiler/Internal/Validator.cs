@@ -3,28 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using TAPI;
-using PoroCYon.MCT.Tools.Internal.Validation;
-using PoroCYon.MCT.Tools.Internal.Validation.Entities;
+using PoroCYon.MCT.Tools.Validation;
+using PoroCYon.MCT.Tools.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal
 {
     using ModInfo = Validation.ModInfo;
-
-    class ModData
-    {
-        internal ModInfo info;
-        internal ModOptions options;
-        internal CraftGroups craftGroups;
-
-        internal List<Item> items = new List<Item>();
-        internal List<NPC> npcs = new List<NPC>();
-        internal List<Projectile> projs = new List<Projectile>();
-        internal List<Tile> tiles = new List<Tile>();
-        internal List<Wall> walls = new List<Wall>();
-
-        internal List<JsonFile> jsons = new List<JsonFile>();
-        internal Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
-    }
 
     static class Validator
     {
@@ -47,23 +31,23 @@ namespace PoroCYon.MCT.Tools.Internal
                 modOptionsJson  = jsons[1],
                 craftGroupsJson = jsons[2];
 
-            current.info = new ModInfo();
-            errors.AddRange(current.info.CreateAndValidate(modInfoJson));
+            current.Info = new ModInfo();
+            errors.AddRange(current.Info.CreateAndValidate(modInfoJson));
 
-            if (!current.info.validate) // HELLO HERE I AM, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT. KTHXBAI.
+            if (!current.Info.validate) // HELLO HERE I AM, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT. KTHXBAI.
                 return errors;
 
-            current.options = new ModOptions();
+            current.Options = new ModOptions();
             if (modOptionsJson != null)
-                errors.AddRange(current.options.CreateAndValidate(modOptionsJson));
+                errors.AddRange(current.Options.CreateAndValidate(modOptionsJson));
 
-            current.craftGroups = new CraftGroups();
+            current.CraftGroups = new CraftGroups();
             if (craftGroupsJson != null)
-                errors.AddRange(current.craftGroups.CreateAndValidate(modOptionsJson));
+                errors.AddRange(current.CraftGroups.CreateAndValidate(modOptionsJson));
 
             for (int i = 3; i < errors.Count; i++)
             {
-                string path = jsons[i].path;
+                string path = jsons[i].Path;
                 int index = path.IndexOf(Path.DirectorySeparatorChar);
 
                 if (index != -1)
@@ -92,9 +76,9 @@ namespace PoroCYon.MCT.Tools.Internal
                             errors.Add(new CompilerError()
                             {
                                 Cause = new CompilerWarning(),
-                                FilePath = jsons[i].path,
+                                FilePath = jsons[i].Path,
                                 IsWarning = true,
-                                Message = "Unrecognised file '" + jsons[i].path + "'. Are you sure it is in the right folder?"
+                                Message = "Unrecognised file '" + jsons[i].Path + "'. Are you sure it is in the right folder?"
                             });
 
                             obj = null;

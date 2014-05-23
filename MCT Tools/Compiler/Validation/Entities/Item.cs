@@ -4,11 +4,15 @@ using System.IO;
 using System.Linq;
 using LitJson;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    class Item : EntityValidator
+    /// <summary>
+    /// An item.
+    /// </summary>
+    public class Item : EntityValidator
     {
         #region fields
+#pragma warning disable 1591
         // informative
         public int rare = 0;
         public string tooltip = String.Empty;
@@ -72,9 +76,15 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
         public object tileWand = 0;
         public object createWall = 0;
         public int placeStyle = 0;
+#pragma warning restore 1591
         #endregion
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -83,9 +93,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
             #region informative
             AddIfNotNull(SetJsonValue(json, "rare", ref rare, 0), errors);
             #region tooltip
-            if (json.json.Has("tooltip"))
+            if (json.Json.Has("tooltip"))
             {
-                JsonData tt = json.json["tooltip"];
+                JsonData tt = json.Json["tooltip"];
 
                 if (tt.IsString)
                     tooltip = (string)tt;
@@ -101,7 +111,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'tooltip[" + i + "]' should be a string, but is a " + tip.GetJsonType() + "."
                             });
@@ -121,16 +131,16 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'tooltip' should be a string or an array of strings, but is a " + tt.GetJsonType() + "."
                     });
             }
             #endregion
             #region value
-            if (json.json.Has("value"))
+            if (json.Json.Has("value"))
             {
-                JsonData v = json.json["value"];
+                JsonData v = json.Json["value"];
 
                 if (v.IsInt)
                     value = (int)v;
@@ -140,7 +150,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                         errors.Add(new CompilerError()
                         {
                             Cause = new IndexOutOfRangeException(),
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
                             Message = "'value' array's length should be ranging from 0 to 4."
                         });
@@ -155,7 +165,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'value[" + i + "]' should be an int, but is a " + val.GetJsonType() + "."
                             });
@@ -172,7 +182,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'value' should be an int or an array of ints, but is a " + v.GetJsonType() + "."
                     });
@@ -181,9 +191,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "maxStack",    ref maxStack,        1), errors);
             AddIfNotNull(SetJsonValue(json, "notMaterial", ref notMaterial, false), errors);
             #region recipes
-            if (json.json.Has("recipes"))
+            if (json.Json.Has("recipes"))
             {
-                JsonData recs = json.json["recipes"];
+                JsonData recs = json.Json["recipes"];
 
                 if (recs.IsArray)
                     for (int i = 0; i < recs.Count; i++)
@@ -193,7 +203,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'recipes[" + i + "]' is a " + recs[i].GetJsonType() + ", not a Recipe."
                             });
@@ -203,14 +213,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
 
                         Recipe r = new Recipe();
                         
-                        errors.AddRange(r.CreateAndValidate(new JsonFile(json.path, recs[i])));
+                        errors.AddRange(r.CreateAndValidate(new JsonFile(json.Path, recs[i])));
                         recipes.Add(r);
                     }
                 else
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "Key 'recipes' is a " + recs.GetJsonType() + ", not an array of Recipes."
                     });
@@ -242,7 +252,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'hairType': invalid value. The value must be an element of [0;3]."
                 });
@@ -255,7 +265,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'useStyle': invalid value. The value must be an element of [0;5]."
                 });
@@ -264,7 +274,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'holdStyle': invalid value. The value must be an element of [0;2]."
                 });
@@ -273,7 +283,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'useTime': invalid value. The value must be grater than 0."
                 });
@@ -282,7 +292,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'useAnimation': invalid value. The value must be grater than 0."
                 });
@@ -291,7 +301,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new IndexOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'holdoutOffset': array length must be 2."
                 });
@@ -300,7 +310,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new IndexOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'holdoutOrigin': array length must be 2."
                 });
@@ -316,7 +326,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'useSound' is a " + useSound.GetType() + ", not an int or a string."
                 });
@@ -338,7 +348,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'shoot' must be an int or a string, but is a " + shoot.GetType()
                 });
@@ -348,7 +358,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'useAmmo' must be an int or a string, but is a " + shoot.GetType()
                 });
@@ -357,7 +367,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'ammo' must be an int or a string, but is a " + shoot.GetType()
                 });
@@ -373,7 +383,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'buff' must be an int or a string, but is a " + buff.GetType()
                 });
@@ -386,7 +396,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'createTile' must be an int or a string, but is a " + createTile.GetType()
                 });
@@ -395,7 +405,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'tileWand' must be an int or a string, but is a " + tileWand.GetType()
                 });
@@ -404,7 +414,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'tileWand' must be an int or a string, but is a " + createWall.GetType()
                 });

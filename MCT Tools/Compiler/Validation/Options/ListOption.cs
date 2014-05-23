@@ -2,28 +2,38 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Options
+namespace PoroCYon.MCT.Tools.Validation.Options
 {
-    class ListOption : Option
+    /// <summary>
+    /// A list option.
+    /// </summary>
+    public class ListOption : Option
     {
+#pragma warning disable 1591
         public List<object> values = new List<object>();
         public object defaultValue;
+#pragma warning restore 1591
 
-        protected override List<CompilerError> CreateAndValidateOverride(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate subclass-only fields.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        protected override IEnumerable<CompilerError> CreateAndValidateOverride(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            if (!json.json.Has("list"))
+            if (!json.Json.Has("list"))
                 errors.Add(new CompilerError()
                 {
                     Cause = new KeyNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Key 'list' not found."
                 });
             else
             {
-                var list = json.json["list"];
+                var list = json.Json["list"];
 
                 for (int i = 0; i < list.Count; i++)
                     values.Add((string)list[i]);
@@ -34,11 +44,16 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Options
             return errors;
         }
 
+        /// <summary>
+        /// Sets the default value of the JSON Option object.
+        /// </summary>
+        /// <param name="json">The JSON object to check.</param>
+        /// <returns>The (possible) compiler error.</returns>
         protected CompilerError SetDefault(JsonFile json)
         {
-            if (json.json.Has("default"))
+            if (json.Json.Has("default"))
             {
-                var def = json.json["default"];
+                var def = json.Json["default"];
 
                 if (def.IsString)
                 {
@@ -46,7 +61,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Options
                         return new CompilerError()
                         {
                             Cause = new KeyNotFoundException(),
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
                             Message = "The list does not contain the value '" + defaultValue + "'."
                         };
@@ -59,7 +74,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Options
                         return new CompilerError()
                         {
                             Cause = new IndexOutOfRangeException(),
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
                             Message = "The index " + id + " is either below 0 or out of the bounds of the list."
                         };
@@ -68,7 +83,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Options
                     return new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "Key 'default' is a " + def.GetJsonType() + ", not an int or a string."
                     };

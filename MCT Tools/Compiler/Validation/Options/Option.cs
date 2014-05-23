@@ -1,22 +1,31 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.MCT.Tools.Internal.Validation.Options;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation
+namespace PoroCYon.MCT.Tools.Validation.Options
 {
-    abstract class Option : ValidatorObject
+    /// <summary>
+    /// The base class for all mod options
+    /// </summary>
+    public abstract class Option : ValidatorObject
     {
+#pragma warning disable 1591
         public bool notify = true;
         public bool sync = true;
         public string name;
         public string type;
         public string toolTip = String.Empty;
         public string displayName = String.Empty;
+#pragma warning restore 1591
 
         internal static Dictionary<string, Func<Option>> Options = new Dictionary<string, Func<Option>>(); // func should be paramless ctor ('() => return new MyOpt()')
 
-        internal static Tuple<Option, List<CompilerError>> NewOption(JsonFile json)
+        /// <summary>
+        /// Creates a new option object.
+        /// </summary>
+        /// <param name="json">The JSON useto create the objects. (ModOptions.json)</param>
+        /// <returns>A tuple containing the option, and a collection of errors.</returns>
+        public static Tuple<Option, IEnumerable<CompilerError>> NewOption(JsonFile json)
         {
             if (Options.Count == 0)
             {
@@ -33,23 +42,23 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             Option ret = null;
             List<CompilerError> errors = new List<CompilerError>();
 
-            if (!json.json.Has("type"))
+            if (!json.Json.Has("type"))
                 errors.Add(new CompilerError()
                 {
                     Cause = new KeyNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Key 'type' not found."
                 });
             else
             {
-                string type = ((string)json.json["type"]).ToLowerInvariant();
+                string type = ((string)json.Json["type"]).ToLowerInvariant();
 
                 if (!Options.ContainsKey(type))
                     errors.Add(new CompilerError()
                     {
                         Cause = new KeyNotFoundException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "Did nout found the '" + type + "' option."
                     });
@@ -62,12 +71,22 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                 }
             }
 
-            return new Tuple<Option, List<CompilerError>>(ret, errors);
+            return new Tuple<Option, IEnumerable<CompilerError>>(ret, errors);
         }
 
-        protected abstract List<CompilerError> CreateAndValidateOverride(JsonFile json);
+        /// <summary>
+        /// Create &amp; validate subclass-only fields.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        protected abstract IEnumerable<CompilerError> CreateAndValidateOverride(JsonFile json);
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 

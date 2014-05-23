@@ -3,12 +3,17 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LitJson;
+using PoroCYon.MCT.Tools.Internal;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    class NPC : EntityValidator
+    /// <summary>
+    /// An NPC.
+    /// </summary>
+    public class NPC : EntityValidator
     {
         #region fields
+#pragma warning disable 1591
         // internal
         public bool netAlways = false;
 
@@ -54,9 +59,15 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
         public object soundKilled = 0;
         public string music = String.Empty;
         public List<Drop> drops = new List<Drop>();
+#pragma warning restore 1591
         #endregion
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -65,12 +76,12 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "netAlways", ref netAlways, false), errors);
 
             // informative
-            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, Path.GetFileNameWithoutExtension(json.path)), errors);
-            AddIfNotNull(SetJsonValue(json, "occupation",  ref occupation,  Path.GetFileNameWithoutExtension(json.path)), errors);
+            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, Path.GetFileNameWithoutExtension(json.Path)), errors);
+            AddIfNotNull(SetJsonValue(json, "occupation",  ref occupation,  Path.GetFileNameWithoutExtension(json.Path)), errors);
             #region value
-            if (json.json.Has("value"))
+            if (json.Json.Has("value"))
             {
-                JsonData v = json.json["value"];
+                JsonData v = json.Json["value"];
 
                 if (v.IsInt)
                     value = (int)v;
@@ -80,7 +91,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                         errors.Add(new CompilerError()
                         {
                             Cause = new IndexOutOfRangeException(),
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
                             Message = "'value' array's length should be ranging from 0 to 4."
                         });
@@ -95,7 +106,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'value[" + i + "]' should be an int, but is a " + val.GetJsonType() + "."
                             });
@@ -112,7 +123,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'value' should be an int or an array of ints, but is a " + v.GetJsonType() + "."
                     });
@@ -139,7 +150,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'textureHead': file " + textureHead + " not found."
                 });
@@ -165,7 +176,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new ArrayTypeMismatchException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'buffImmune['" + i + "]' must be an int or a string, but is a " + buffImmune[i].GetType()
                     });
@@ -174,7 +185,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArrayTypeMismatchException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'soundHit' must be an int or a string, but is a " + soundHit.GetType()
                 });
@@ -183,16 +194,16 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArrayTypeMismatchException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'soundKilled' must be an int or a string, but is a " + soundKilled.GetType()
                 });
             AddIfNotNull(SetJsonValue(json, "music", ref music, String.Empty), errors);
 
             #region drops
-            if (json.json.Has("drops"))
+            if (json.Json.Has("drops"))
             {
-                JsonData drs = json.json["drops"];
+                JsonData drs = json.Json["drops"];
 
                 if (drs.IsObject)
                     drs = JsonMapper.ToObject("[" + drs.ToJson() + "]");
@@ -206,14 +217,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                         {
                             Drop d = new Drop();
 
-                            errors.AddRange(d.CreateAndValidate(new JsonFile(json.path, drop)));
+                            errors.AddRange(d.CreateAndValidate(new JsonFile(json.Path, drop)));
                             drops.Add(d);
                         }
                         else
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'drops[" + i + "]' must be a Drop, but is a " + drop.GetJsonType() + "."
                             });
@@ -222,7 +233,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'drops' must be a Drop or an array of drops, but is a " + drs.GetJsonType() + "."
                     });

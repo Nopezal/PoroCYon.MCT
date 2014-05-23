@@ -2,15 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    class Drop : ValidatorObject
+    /// <summary>
+    /// An NPC drop.
+    /// </summary>
+    public class Drop : ValidatorObject
     {
+#pragma warning disable 1591
         public string item = String.Empty;
         public int stack = 1;
         public float chance = 0f;
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -19,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'stack' is below 0. Please remove the Drop object from the array."
                 });
@@ -27,7 +37,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new CompilerWarning(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = true,
                     Message = "'stack' is equal to 0. It is a good idea to remove the Drop object from the array."
                 });
@@ -37,7 +47,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = true,
                     Message = "'chance' is above 1. Change it to 1."
                 });
@@ -45,7 +55,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = true,
                     Message = "'chance' is below 0. Please remove the Drop object from the array."
                 });
@@ -53,7 +63,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new CompilerWarning(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = true,
                     Message = "'chance' is equal to 0. It is a good idea to remove the Drop object from the array."
                 });

@@ -3,13 +3,23 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Input;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Options
+namespace PoroCYon.MCT.Tools.Validation.Options
 {
-    class KeybindingOption : Option
+    /// <summary>
+    /// A keybinding option.
+    /// </summary>
+    public class KeybindingOption : Option
     {
+#pragma warning disable 1591
         public Keys defaultValue;
+#pragma warning restore 1591
 
-        protected override List<CompilerError> CreateAndValidateOverride(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate subclass-only fields.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        protected override IEnumerable<CompilerError> CreateAndValidateOverride(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -23,7 +33,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Options
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "Key 'default': not a valid Keys enumeration value." 
                 });

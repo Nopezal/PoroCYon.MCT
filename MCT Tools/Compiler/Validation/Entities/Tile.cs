@@ -2,10 +2,14 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
+namespace PoroCYon.MCT.Tools.Validation.Entities
 {
-    class Wall : EntityValidator
+    /// <summary>
+    /// A wall.
+    /// </summary>
+    public class Wall : EntityValidator
     {
+#pragma warning disable 1591
         public bool house = true;
         public bool dungeon = false;
         public bool light = false;
@@ -16,8 +20,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
         public int dust = 0;
 
         public string drop = String.Empty;
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -37,8 +47,12 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
             return errors;
         }
     }
-    class Tile : EntityValidator
+    /// <summary>
+    /// A tile.
+    /// </summary>
+    public class Tile : EntityValidator
     {
+#pragma warning disable 1591
         public string displayName;
         public int frameWidth = 16;
         public int frameHeight = 16;
@@ -59,8 +73,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
         public bool brick, moss, stone, mergeDirt, tileSand, tileFlame, alchemyFlower;
         public int sound, soundGroup, dust;
         public object drop; // int or string
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -87,7 +107,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new IndexOutOfRangeException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'placementOrigin': length must be 1 or 2."
                 });
@@ -136,7 +156,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation.Entities
                 errors.Add(new CompilerError()
                 {
                     Cause = new InvalidCastException(),
-                    FilePath = json.path,
+                    FilePath = json.Path,
                     IsWarning = false,
                     Message = "'drop' must be an int or a string, but is a " + drop.GetType() + "."
                 });

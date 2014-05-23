@@ -3,21 +3,31 @@ using System.Collections.Generic;
 using System.Linq;
 using LitJson;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation
+namespace PoroCYon.MCT.Tools.Validation
 {
-    class CraftGroups : ValidatorObject
+    /// <summary>
+    /// A CraftGroup JSON file (CraftGroups.json)
+    /// </summary>
+    public class CraftGroups : ValidatorObject
     {
+#pragma warning disable 1591
         public List<ItemCraftGroup> itemGroups = new List<ItemCraftGroup>();
         public List<TileCraftGroup> tileGroups = new List<TileCraftGroup>();
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
             #region itemGroups
-            if (json.json.Has("itemGroups"))
+            if (json.Json.Has("itemGroups"))
             {
-                JsonData iGroups = json.json["itemGroups"];
+                JsonData iGroups = json.Json["itemGroups"];
 
                 if (iGroups.IsArray)
                     for (int i = 0; i < iGroups.Count; i++)
@@ -27,7 +37,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'itemGroups[" + i + "]' is a " + iGroups[i].GetJsonType() + ", not an ItemCraftGroup."
                             });
@@ -37,14 +47,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
                         ItemCraftGroup icg = new ItemCraftGroup();
 
-                        errors.AddRange(icg.CreateAndValidate(new JsonFile(json.path, iGroups[i])));
+                        errors.AddRange(icg.CreateAndValidate(new JsonFile(json.Path, iGroups[i])));
                         itemGroups.Add(icg);
                     }
                 else
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "Key 'itemGroups' is a " + iGroups.GetJsonType() + ", not an array of ItemCraftGroups."
                     });
@@ -52,9 +62,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             #endregion
 
             #region tileGroups
-            if (json.json.Has("tileGroups"))
+            if (json.Json.Has("tileGroups"))
             {
-                JsonData tGroups = json.json["tileGroups"];
+                JsonData tGroups = json.Json["tileGroups"];
 
                 if (tGroups.IsArray)
                     for (int i = 0; i < tGroups.Count; i++)
@@ -64,7 +74,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                             errors.Add(new CompilerError()
                             {
                                 Cause = new ArrayTypeMismatchException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
                                 Message = "'tileGroups[" + i + "]' is a " + tGroups[i].GetJsonType() + ", not an TileCraftGroup."
                             });
@@ -74,14 +84,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
                         TileCraftGroup tcg = new TileCraftGroup();
 
-                        errors.AddRange(tcg.CreateAndValidate(new JsonFile(json.path, tGroups[i])));
+                        errors.AddRange(tcg.CreateAndValidate(new JsonFile(json.Path, tGroups[i])));
                         tileGroups.Add(tcg);
                     }
                 else
                     errors.Add(new CompilerError()
                     {
                         Cause = new InvalidCastException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "Key 'tileGroups' is a " + tGroups.GetJsonType() + ", not an array of TileCraftGroups."
                     });

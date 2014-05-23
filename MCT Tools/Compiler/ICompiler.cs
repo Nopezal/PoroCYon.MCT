@@ -11,13 +11,35 @@ namespace PoroCYon.MCT.Tools
     public interface ICompiler
     {
         /// <summary>
+        /// Gets all file extensions which belong to the compiled language.
+        /// </summary>
+        string[] FileExtensions
+        {
+            get;
+        }
+        /// <summary>
+        /// Gets the paths to all assemblies where the compiler's language depends on.
+        /// </summary>
+        string[] LanguageDependancyAssemblies
+        {
+            get;
+        }
+        /// <summary>
+        /// Gets all possible names of the compiler's language (used in ModInfo.json)
+        /// </summary>
+        string[] LanguageNames
+        {
+            get;
+        }
+
+        /// <summary>
         /// Compiles all source files of the mod into a managed assembly.
         /// </summary>
-        /// <param name="files">All non-json files the mod has.</param>
+        /// <param name="mod">The mod to compile.</param>
         /// <returns>
         /// A tuple containing the built assembly (null if failed), and a collection of all errors.
         /// The assembly must be saved on the disk, because the .pdb file must be loaded afterwards.
         /// </returns>
-        Tuple<Assembly, IEnumerable<CompilerError>> Compile(Dictionary<string, byte[]> files);
+        Tuple<Assembly, IEnumerable<CompilerError>> Compile(ModData mod);
     }
 }

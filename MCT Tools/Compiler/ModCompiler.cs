@@ -21,6 +21,8 @@ namespace PoroCYon.MCT.Tools.Compiler
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromSource(string folder)
         {
+            BeginCompile();
+
             // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
             if (Path.IsPathRooted(folder) && !Directory.Exists(folder))
                 folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
@@ -48,12 +50,16 @@ namespace PoroCYon.MCT.Tools.Compiler
             if (!outp.Succeeded)
                 return outp;
 
-            var validated = Validator.ValidateJsons(readFiles.Item1, readFiles.Item2, true);
-            outp = CreateOutput(validated);
+            outp = Validate(readFiles.Item1, readFiles.Item2, true);
             if (!outp.Succeeded)
                 return outp;
 
-            // stuffs
+            var compiled = Builder.Build(Validator.current);
+            outp = CreateOutput(compiled.Item3);
+            if (!outp.Succeeded)
+                return outp;
+
+            outp = MainCompileStuff(compiled.Item1);
 
             return null;
         }
@@ -64,6 +70,8 @@ namespace PoroCYon.MCT.Tools.Compiler
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
+            BeginCompile();
+
             #region check if file exists
             if (!File.Exists(assemblyPath))
                 return new CompilerOutput()
@@ -128,12 +136,11 @@ namespace PoroCYon.MCT.Tools.Compiler
             if (!outp.Succeeded)
                 return outp;
 
-            var validated = Validator.ValidateJsons(extracted.Item1, extracted.Item2, true);
-            outp = CreateOutput(validated);
+            outp = Validate(extracted.Item1, extracted.Item2, true);
             if (!outp.Succeeded)
                 return outp;
 
-            // stuffs
+            outp = MainCompileStuff(asm);
 
             return outp;
         }
@@ -152,6 +159,28 @@ namespace PoroCYon.MCT.Tools.Compiler
             outp.errors = errors;
 
             return outp;
+        }
+        static CompilerOutput Validate(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
+        {
+            return CreateOutput(Validator.ValidateJsons(jsons, files, validateModInfo));
+        }
+        static void BeginCompile()
+        {
+            if (!Directory.Exists(Path.GetTempPath() + "\\MCT"))
+                Directory.CreateDirectory(Path.GetTempPath() + "\\MCT");
+        }
+        static void EndCompile()
+        {
+            Directory.Delete(Path.GetTempPath() + "\\MCT", true);
+        }
+        static CompilerOutput MainCompileStuff(Assembly asm)
+        {
+            // checker, writer
+            // don't forget to set outputFile
+
+            EndCompile();
+            
+            return null;
         }
     }
 }

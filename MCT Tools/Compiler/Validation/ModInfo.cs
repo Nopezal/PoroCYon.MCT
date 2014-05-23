@@ -4,13 +4,18 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using LitJson;
+using PoroCYon.MCT.Tools.Internal;
 
-namespace PoroCYon.MCT.Tools.Internal.Validation
+namespace PoroCYon.MCT.Tools.Validation
 {
-    class ModInfo : ValidatorObject
+    /// <summary>
+    /// A ModInfo JSON file (ModInfo.json)
+    /// </summary>
+    public class ModInfo : ValidatorObject
     {
         internal readonly static string[] EmptyStringArr = new string[0];
 
+#pragma warning disable 1591
         // internal
         public string internalName = null;
         public bool includePDB = false;
@@ -31,8 +36,15 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
         public bool compress = true;
         public bool validate = true; // even if false, ModInfo will always be validated
         public bool check = true;
+        public int warningLevel = 4;
+#pragma warning restore 1591
 
-        internal override List<CompilerError> CreateAndValidate(JsonFile json)
+        /// <summary>
+        /// Create &amp; validate a JSON file.
+        /// </summary>
+        /// <param name="json">The json to validate</param>
+        /// <returns>A collection of all validation errors.</returns>
+        public override IEnumerable<CompilerError> CreateAndValidate(JsonFile json)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -46,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                     errors.Add(new CompilerError()
                     {
                         Cause = new FileNotFoundException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i] + "'."
                     });
@@ -61,7 +73,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                     }
                     catch
                     {
-                        dllReferences[i] = Path.GetDirectoryName(json.path) + "\\References\\" + dllReferences[i];
+                        dllReferences[i] = Path.GetDirectoryName(json.Path) + "\\References\\" + dllReferences[i];
 
                         Assembly.LoadFrom(dllReferences[i]);
                     }
@@ -71,7 +83,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                     errors.Add(new CompilerError()
                     {
                         Cause = e,
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'dllReferences[" + i + "]': Could not find reference '" + dllReferences[i] + "'."
                     });
@@ -80,14 +92,14 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             AddIfNotNull(SetJsonValue(json, "MSBuild", ref MSBuild, false), errors);
             if (MSBuild)
             {
-                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref msBuildFile, Path.GetDirectoryName(json.path)
-                    + "\\" + new DirectoryInfo(Path.GetDirectoryName(json.path)).Name + ".csproj"), errors);
+                AddIfNotNull(SetJsonValue(json, "msBuildFile", ref msBuildFile, Path.GetDirectoryName(json.Path)
+                    + "\\" + new DirectoryInfo(Path.GetDirectoryName(json.Path)).Name + ".csproj"), errors);
 
                 if (!File.Exists(msBuildFile))
                     errors.Add(new CompilerError()
                     {
                         Cause = new FileNotFoundException(),
-                        FilePath = json.path,
+                        FilePath = json.Path,
                         IsWarning = false,
                         Message = "'msBuildFile': file '" + msBuildFile + "' not found."
                     });
@@ -99,9 +111,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
             AddIfNotNull(SetJsonValue(json, "author", ref author, "<unknown>"), errors);
 
             #region version
-            if (json.json.Has("version"))
+            if (json.Json.Has("version"))
             {
-                JsonData ver = json.json["version"];
+                JsonData ver = json.Json["version"];
 
                 if (!ver.IsString)
                 {
@@ -109,9 +121,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                         errors.Add(new CompilerError()
                         {
                             Cause = new InvalidCastException(),
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
-                            Message = "'version' is a " + json.json.GetJsonType() + ", not a string or an int[]."
+                            Message = "'version' is a " + json.Json.GetJsonType() + ", not a string or an int[]."
                         });
 
                     int[] values = new int[4] { 1, 0, 0, 0 };
@@ -121,9 +133,9 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                             errors.Add(new CompilerError()
                             {
                                 Cause = new InvalidCastException(),
-                                FilePath = json.path,
+                                FilePath = json.Path,
                                 IsWarning = false,
-                                Message = "'version[" + i + "]' is a " + json.json.GetJsonType() + ", not an int."
+                                Message = "'version[" + i + "]' is a " + json.Json.GetJsonType() + ", not an int."
                             });
                         else
                             values[i] = (int)ver[i];
@@ -141,7 +153,7 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
                         errors.Add(new CompilerError()
                         {
                             Cause = e,
-                            FilePath = json.path,
+                            FilePath = json.Path,
                             IsWarning = false,
                             Message = "'version': invalid string format."
                         });
@@ -154,10 +166,19 @@ namespace PoroCYon.MCT.Tools.Internal.Validation
 
             // ---
 
-            AddIfNotNull(SetJsonValue(json, "language", ref language, "C#"), errors);
-            AddIfNotNull(SetJsonValue(json, "compress", ref compress, true), errors);
-            AddIfNotNull(SetJsonValue(json, "validate", ref validate, true), errors);
-            AddIfNotNull(SetJsonValue(json, "check",    ref check,    true), errors);
+            AddIfNotNull(SetJsonValue(json, "language",     ref language,     "C#"), errors);
+            AddIfNotNull(SetJsonValue(json, "compress",     ref compress,     true), errors);
+            AddIfNotNull(SetJsonValue(json, "validate",     ref validate,     true), errors);
+            AddIfNotNull(SetJsonValue(json, "check",        ref check,        true), errors);
+            AddIfNotNull(SetJsonValue(json, "warningLevel", ref warningLevel, 4   ), errors);
+            if (warningLevel < 0 || warningLevel > 4)
+                errors.Add(new CompilerError()
+                {
+                    Cause = new ArgumentOutOfRangeException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "'warningLevel': value must be an element of [0;4]."
+                });
 
             return errors;
         }
