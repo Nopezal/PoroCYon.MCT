@@ -35,7 +35,6 @@ supported languages:
   separately:
     ClojureCLR
     F#
-    IronPython
 
   C++/CLI will only be supported through MSBuild or DLL building, because CL is shipped with Visual Studio, not .NET.
 
