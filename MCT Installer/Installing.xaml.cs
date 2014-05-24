@@ -16,8 +16,8 @@ namespace PoroCYon.MCT.Installer
         readonly static string steamDir = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam").GetValue("SourceModInstallPath").ToString();
 
         static Queue<Tuple<string, byte[]>> downloaded = new Queue<Tuple<string, byte[]>>();
-		static bool finishedDownloading = false;
-		static int total = 0, applied = 0;
+        static bool finishedDownloading = false;
+        static int total = 0, applied = 0;
 
         static Installing()
         {
@@ -28,7 +28,7 @@ namespace PoroCYon.MCT.Installer
         {
             InitializeComponent();
 
-			finishedDownloading = false;
+            finishedDownloading = false;
 
             AquireProgress.ValueChanged += (s, e) =>
             {
@@ -58,16 +58,22 @@ namespace PoroCYon.MCT.Installer
 
                 List<string> ToDownload = new List<string>()
                 {
-					"PoroCYon.XnaExtensions.dll",  "PoroCYon.XnaExtensions.xml",
-					"PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
+                    "PoroCYon.XnaExtensions.dll",  "PoroCYon.XnaExtensions.xml",
+                    "PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
                     "MCT Tools.exe",               "MCT Tools.xml",
-
-                    "Compilers\\CSharpCompiler.dll",
-                    "Compilers\\JScriptCompiler.dll",
-                    "Compilers\\VBCompiler.dll",
 
                     "PoroCYon.MCT.Placeholder.dll"
                 };
+
+                if (ToInstall.FSharpCompiler)
+                {
+                    ToDownload.Add("FSharp.Core.dll");
+                    ToDownload.Add("FSharp.Compiler.CodeDom.dll");
+                    ToDownload.Add("FSharp.Core.xml");
+                    ToDownload.Add("FSharp.Compiler.CodeDom.xml");
+
+                    ToDownload.Add("Compilers\\FSharpCompiler.dll");
+                }
                 if (ToInstall.InstallPdb)
                 {
                     ToDownload.Add("PoroCYon.XnaExtensions.pdb");
@@ -76,9 +82,12 @@ namespace PoroCYon.MCT.Installer
 
                     ToDownload.Add("MCT Tools.pdb");
 
-                    ToDownload.Add("Compilers\\CSharpCompiler.pdb");
-                    ToDownload.Add("Compilers\\JScriptCompiler.pdb");
-                    ToDownload.Add("Compilers\\VBCompiler.pdb");
+                    if (ToInstall.FSharpCompiler)
+                    {
+                        ToDownload.Add("FSharp.Compiler.CodeDom.pdb");
+
+                        ToDownload.Add("Compilers\\FSharpCompiler.pdb");
+                    }
                 }
                 if (VsVersions.ChosenVersions != 0)
                 {
@@ -136,15 +145,15 @@ namespace PoroCYon.MCT.Installer
                 Action<double, string> UpdateProgress = (procent, text) =>
                 {
                     Dispatcher.Invoke(((Action)delegate
-					{
-						if (procent >= 0d && procent <= 100d)
-							ApplyProgress.Value = procent;
-						if (!String.IsNullOrEmpty(text))
-							ApplyProgressText.Text = "Applying: " + text;
+                    {
+                        if (procent >= 0d && procent <= 100d)
+                            ApplyProgress.Value = procent;
+                        if (!String.IsNullOrEmpty(text))
+                            ApplyProgressText.Text = "Applying: " + text;
                     }), DispatcherPriority.Render);
                 };
 
-				int i = 0;
+                int i = 0;
 
                 while (!finishedDownloading || applied > 0 || downloaded.Count > 0)
                 {
@@ -228,11 +237,11 @@ namespace PoroCYon.MCT.Installer
 
                 File.Delete(steamDir + "Temp\\PoroCYon.MCT.dll");
 
-				MainWindow.instance.Dispatcher.Invoke(((Action)delegate
-				{
-					MainWindow.currentPage++;
-					MainWindow.instance.UpdateGrid();
-				}), DispatcherPriority.Render);
+                MainWindow.instance.Dispatcher.Invoke(((Action)delegate
+                {
+                    MainWindow.currentPage++;
+                    MainWindow.instance.UpdateGrid();
+                }), DispatcherPriority.Render);
             });
             apply.SetApartmentState(ApartmentState.STA);
             apply.Start();

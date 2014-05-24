@@ -63,9 +63,82 @@ namespace PoroCYon.MCT.Tools.Internal
 
         internal static Tuple<Assembly, string, List<CompilerError>> Build(ModData mod)
         {
+            List<CompilerError> errors = new List<CompilerError>();
+
+            List<string> toRemove = new List<string>();
+
+            foreach (string key in mod.Files.Keys)
+            {
+                if (key.StartsWith("bin\\"))
+                    toRemove.Add(key);
+                else if (key.StartsWith("obj\\"))
+                    toRemove.Add(key);
+                else if (key.StartsWith("Debug\\"))
+                    toRemove.Add(key);
+                else if (key.StartsWith("Release\\"))
+                    toRemove.Add(key);
+                else if (key.StartsWith("ipch\\"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".sdf"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".opensdf"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".suo"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".user"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".cache"))
+                    toRemove.Add(key);
+
+                else if (!File.Exists(mod.OriginPath))
+                {
+                    foreach (string ignore in mod.Info.ignore)
+                    {
+                        try
+                        {
+                            foreach (string d in Directory.EnumerateFiles(mod.OriginPath, ignore, SearchOption.AllDirectories))
+                                if (d.Substring(mod.OriginPath.Length) == key)
+                                    toRemove.Add(d);
+                        }
+                        catch (Exception e)
+                        {
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = e,
+                                FilePath = mod.OriginPath,
+                                IsWarning = false,
+                                Message = "Error when searching for files to exclude."
+                            });
+                        }
+                        try
+                        {
+                            foreach (string d in Directory.EnumerateDirectories(mod.OriginPath, ignore, SearchOption.AllDirectories))
+                                if (d.Substring(mod.OriginPath.Length) == Path.GetDirectoryName(key))
+                                    toRemove.Add(d);
+                        }
+                        catch (Exception e)
+                        {
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = e,
+                                FilePath = mod.OriginPath,
+                                IsWarning = false,
+                                Message = "Error when searching for direcries to exclude."
+                            });
+                        }
+                    }
+                }
+            }
+            foreach (string r in toRemove)
+                mod.files.Remove(r);
+
             LoadCompilers();
 
-            return mod.Info.MSBuild ? BuildMSBuild(mod) : BuildICompiler(mod);
+            var ret = mod.Info.MSBuild ? BuildMSBuild(mod) : BuildICompiler(mod);
+
+            errors.AddRange(ret.Item3);
+
+            return new Tuple<Assembly, string, List<CompilerError>>(ret.Item1, ret.Item2, errors);
         }
 
         static Tuple<Assembly, string, List<CompilerError>> BuildMSBuild(ModData mod)
@@ -152,6 +225,17 @@ namespace PoroCYon.MCT.Tools.Internal
             else
                 try
                 {
+                    List<string> toRemove = new List<string>();
+
+                    foreach (string key in mod.Files.Keys)
+                    {
+                        for (int i = 0; i < compiler.FileExtensions.Length; i++)
+                            if (key.EndsWith(compiler.FileExtensions[i]))
+                                toRemove.Add(key);
+                    }
+                    foreach (string r in toRemove)
+                        mod.files.Remove(r);
+
                     var result = compiler.Compile(mod);
 
                     asm = result.Item1;

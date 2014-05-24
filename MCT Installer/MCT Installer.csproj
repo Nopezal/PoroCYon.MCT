@@ -148,6 +148,10 @@
       <Project>{adc0bff2-97ca-42f4-91b5-3bbd82e18981}</Project>
       <Name>MCT Mod placeholder</Name>
     </ProjectReference>
+    <ProjectReference Include="..\MCT Tools Compilers\_other compilers\FSharpCompiler\FSharpCompiler.fsproj">
+      <Project>{48fe4f3b-8f10-485d-b725-cc42ad7e965e}</Project>
+      <Name>FSharpCompiler</Name>
+    </ProjectReference>
     <ProjectReference Include="..\MCT Tools\MCT Tools.csproj">
       <Project>{fe1a503f-8b67-4d06-8bbe-ffec7956634e}</Project>
       <Name>MCT Tools</Name>

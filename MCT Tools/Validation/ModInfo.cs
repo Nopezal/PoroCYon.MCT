@@ -4,7 +4,6 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using LitJson;
-using PoroCYon.MCT.Tools.Internal;
 
 namespace PoroCYon.MCT.Tools.Validation
 {
@@ -38,6 +37,7 @@ namespace PoroCYon.MCT.Tools.Validation
         public bool validate = true; // even if false, ModInfo will always be validated
         public bool check = true;
         public int warningLevel = 4;
+        public string[] ignore = EmptyStringArr;
 #pragma warning restore 1591
 
         /// <summary>
@@ -176,6 +176,7 @@ namespace PoroCYon.MCT.Tools.Validation
             AddIfNotNull(SetJsonValue(json, "validate",     ref validate,     true), errors);
             AddIfNotNull(SetJsonValue(json, "check",        ref check,        true), errors);
             AddIfNotNull(SetJsonValue(json, "warningLevel", ref warningLevel, 4   ), errors);
+            AddIfNotNull(SetJsonValue(json, "ignore",       ref ignore, EmptyStringArr), errors);
             if (warningLevel < 0 || warningLevel > 4)
                 errors.Add(new CompilerError()
                 {

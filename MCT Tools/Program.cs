@@ -24,51 +24,15 @@ namespace PoroCYon.MCT.Tools
                         Console.WriteLine("BUILD\t\tBuilds a tAPI mod from a source folder or a managed .dll file.");
                         Console.WriteLine("DECOMPILE\t\tDecompiles a .tapi or .tapimod file");
                         Console.WriteLine("HELP\t\tDisplays this text. H or ? can also be used for this.");
-                        //Console.WriteLine("PACK\t\tPacks a tAPI mod from a different language.\n\t\t(JS/VB, specify it in the 'language' key in ModInfo.json)");
-                        //Console.WriteLine();
-                        //Console.WriteLine("CLEAR\t\tClears the console window");
-                        //Console.WriteLine();
-                        //Console.WriteLine("EXIT\t\tExits the console.");
                         Console.WriteLine();
                         Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP.");
                     }
                 },
-                //{
-                //    "clear", 
-                //    () => Console.Clear() 
-                //},
-                //{
-                //    "exit", 
-                //    () =>
-                //    {
-                //        throw new CloseConsoleException();
-                //    }
-                //}
             };
-            //Commands.Add("cls",   Commands["clear"]);
-            //Commands.Add("stop",  Commands["exit" ]);
-            //Commands.Add("close", Commands["exit" ]);
             Commands.Add("?",     Commands["help" ]);
 
             ToolCommands = new Dictionary<string, Action<string>>()
             {
-                //{
-                //    "pack",
-                //    (path) =>
-                //    {
-                //        string couldBeHelp = TrimCommand(path).ToLowerInvariant();
-                //        if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
-                //        {
-                //            Console.WriteLine("PACK <mod folder>\t\t 'mod folder' should be in Documents\\My Games\\Terraria\\tAPI\\Mods\\Sources.");
-                //            return;
-                //        }
-
-                //        if (!path.Contains('/') && !path.Contains('\\'))
-                //            path = Mods.pathDirModsSources + "\\" + path;
-
-                //        ModPacker.Pack(path, Mods.pathDirModsUnsorted);
-                //    }
-                //},
                 {
                     "build",
                     (path) =>
@@ -81,7 +45,6 @@ namespace PoroCYon.MCT.Tools
                         }
 
                         Debug.WriteLine(File.Exists(path) ? ModCompiler.CompileFromAssembly(path) :  ModCompiler.CompileFromSource(path));
-                        //ModBuilder.Build(path);
                     }
                 },
                 {

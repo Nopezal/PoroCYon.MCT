@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Installer
 {
     public partial class ToInstall : UserControl
     {
-        public static bool InstallPdb;
+        public static bool InstallPdb, FSharpCompiler;
 
         public ToInstall()
         {
@@ -16,14 +16,11 @@ namespace PoroCYon.MCT.Installer
 
             InitializeComponent();
 
-            PDBs.Checked += (s, e) =>
-            {
-                InstallPdb = PDBs.IsChecked == true;
-            };
-            PDBs.Unchecked += (s, e) =>
-            {
-                InstallPdb = PDBs.IsChecked == true;
-            };
+            PDBs.Checked += (s, e) => InstallPdb = PDBs.IsChecked == true;
+            PDBs.Unchecked += (s, e) => InstallPdb = PDBs.IsChecked == true;
+
+            FSharp.Checked += (s, e) => FSharpCompiler = FSharp.IsChecked == true;
+            FSharp.Unchecked += (s, e) => FSharpCompiler = FSharp.IsChecked == true;
         }
     }
 }

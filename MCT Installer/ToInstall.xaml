@@ -2,5 +2,6 @@
              mc:Ignorable="d" d:DesignHeight="255" d:DesignWidth="505">
     <Grid>
         <CheckBox Name="PDBs" Content="Install .pdb files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontFamily="Xolonium" FontSize="18" VerticalContentAlignment="Center" ToolTip=".pdb files give more information when errors occur so they are easier to fix." />
+        <CheckBox Name="FSharp" Content="Deploy F# Compiler" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontFamily="Xolonium" FontSize="18" VerticalContentAlignment="Center" ToolTip=".pdb files give more information when errors occur so they are easier to fix." />
     </Grid>
 </UserControl>
