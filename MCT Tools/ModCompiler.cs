@@ -25,6 +25,9 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromSource(string folder)
         {
+            if (folder.EndsWith("\\"))
+                folder = folder.Remove(folder.Length - 1);
+
             BeginCompile();
             current.OriginPath = folder;
 
