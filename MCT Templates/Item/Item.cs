@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     public class Item : TAPI.ModItem
     {
@@ -19,11 +24,11 @@ namespace $safeprojectname$
 
         }
 
-        public override void UseItem(Player p)
+        public override bool? UseItem(Player p)
         {
-            base.UseItem(p);
 
 
+            return base.UseItem(p);
         }
 
         public override void Effects(Player p)

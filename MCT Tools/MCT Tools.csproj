@@ -92,6 +92,7 @@
     <Compile Include="Validation\Entities\EntityValidator.cs" />
     <Compile Include="Validation\Entities\Item.cs" />
     <Compile Include="Validation\Entities\NPC.cs" />
+    <Compile Include="Validation\Entities\Prefix.cs" />
     <Compile Include="Validation\Entities\Projectile.cs" />
     <Compile Include="Validation\Entities\Recipe.cs" />
     <Compile Include="Validation\Entities\Tile.cs" />

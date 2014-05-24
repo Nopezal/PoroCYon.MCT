@@ -52,6 +52,9 @@ namespace PoroCYon.MCT.Tools.Internal
                         case "npc":
                             obj = new NPC();
                             break;
+                        case "prefix":
+                            obj = new Prefix();
+                            break;
                         case "projectile":
                             obj = new Projectile();
                             break;
@@ -84,6 +87,8 @@ namespace PoroCYon.MCT.Tools.Internal
                             ModCompiler.current.items.Add(obj as Item);
                         if (obj is NPC)
                             ModCompiler.current.npcs.Add(obj as NPC);
+                        if (obj is Prefix)
+                            ModCompiler.current.pfixes.Add(obj as Prefix);
                         if (obj is Projectile)
                             ModCompiler.current.projs.Add(obj as Projectile);
                         if (obj is Tile)

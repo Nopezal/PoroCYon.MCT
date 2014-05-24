@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.0" String="1.1.0.0" />
+  <CurrentVersion Number="2" Version="1.1.0.1" String="1.1.0.1" />
   
   <Changelog>
+    <Release Version="1.1.0.1">
+      <Change>Added Prefix validation to the MCT compiler.</Change>
+      <Change>Updated Visual Studio project/item templates.</Change>
+    </Release>
     <Release Version="1.1.0.0">
       <Change>Rewritten the MCT Tools Compiler. It's awesome now.</Change>
     </Release>

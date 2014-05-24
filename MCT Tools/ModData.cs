@@ -9,12 +9,13 @@ using PoroCYon.MCT.Tools.Validation.Entities;
 namespace PoroCYon.MCT.Tools
 {
     /// <summary>
-    /// A complete mod.
+    /// A mod.
     /// </summary>
     public class ModData
     {
         internal List<Item> items = new List<Item>();
         internal List<NPC> npcs = new List<NPC>();
+        internal List<Prefix> pfixes = new List<Prefix>();
         internal List<Projectile> projs = new List<Projectile>();
         internal List<Tile> tiles = new List<Tile>();
         internal List<Wall> walls = new List<Wall>();
@@ -65,6 +66,17 @@ namespace PoroCYon.MCT.Tools
             get
             {
                 return npcs.AsReadOnly();
+            }
+        }
+        /// <summary>
+        /// Gets all prefixes in the mod.
+        /// </summary>
+        public ReadOnlyCollection<Prefix> Prefixes
+        {
+            get
+            {
+                return pfixes
+                    .AsReadOnly();
             }
         }
         /// <summary>

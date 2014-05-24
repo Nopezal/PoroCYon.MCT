@@ -1,10 +1,10 @@
 ﻿{
     "$schema": "https://dl.dropboxusercontent.com/u/151130168/MCT/Schemas/ModInfoSchema.json",
 
-	"displayName" : "$projectname$",
-	"author" : "$registeredorganization$",
-	"version" : "1.0.0.0",
-	"info" : "$projectname$ by $registeredorganization$ v1.0.0.0",
+    "displayName" : "$projectname$",
+    "author" : "$registeredorganization$",
+    "version" : "1.0.0.0",
+    "info" : "$projectname$ by $registeredorganization$ v1.0.0.0",
 
-	"internalName" : "$projectname$"
+    "internalName" : "$projectname$"
 }

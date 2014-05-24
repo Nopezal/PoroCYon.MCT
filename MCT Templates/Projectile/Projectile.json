@@ -1,10 +1,7 @@
 ﻿{
-	"stats" :
-	{
-		"size" : [16, 16],
-		"displayName" : "Projectile1",
-		"aiStyle" : 1,
-		"damage" : 5,
-		"frameCount" : 1
-	}
+	"size" : [16, 16],
+	"displayName" : "Projectile1",
+	"aiStyle" : 1,
+	"damage" : 5,
+	"frameCount" : 1
 }

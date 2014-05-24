@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     public class Projectile : TAPI.ModProjectile
     {
@@ -25,7 +30,6 @@ namespace $safeprojectname$
 
 
         }
-
         public override void Kill()
         {
             base.Kill();

@@ -9,12 +9,17 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     [GlobalMod]
     public class ModPlayer : TAPI.ModPlayer
     {
-        public ModPlayer(TAPI.ModBase @base, Terraria.Player p)
+        public ModPlayer(TAPI.ModBase @base, Player p)
             : base(@base, p)
         {
 

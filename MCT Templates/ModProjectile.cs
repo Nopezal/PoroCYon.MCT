@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     [GlobalMod]
     public class ModProjectile : TAPI.ModProjectile

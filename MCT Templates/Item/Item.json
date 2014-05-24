@@ -1,19 +1,19 @@
 ﻿{
     "$schema": "https://dl.dropboxusercontent.com/u/151130168/MCT/Schemas/ItemSchema.json",
 
-	"stats" :
-	{
-		"size" : [16, 16],
-		"displayName" : "Item",
-		"maxStack" : 250
-	},
-	"recipe" :
-	{
-		"items" :
-		[
-			"1 Dirt Block"
-		],
-		"tiles" : "@Water",
-		"makes" : 1
-	}
+    "size" : [16, 16],
+    "displayName" : "Item",
+    "maxStack" : 250,
+
+    "recipes" : [
+        {
+            "items" : [
+                "1 Dirt Block"
+            ],
+            "tiles" : [
+                "@Water"
+            ],
+            "creates" : 1
+        }
+    ]
 }

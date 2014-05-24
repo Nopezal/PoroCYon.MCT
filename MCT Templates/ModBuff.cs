@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     [GlobalMod]
     public class ModBuff : TAPI.ModBuff
@@ -20,7 +25,7 @@ namespace $safeprojectname$
 
         }
 
-        public override void Effects(NPC npc, int index)
+        public override void Effects(Terraria.NPC npc, int index)
         {
             base.Effects(npc, index);
 

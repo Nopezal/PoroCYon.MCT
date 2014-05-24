@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     [GlobalMod]
     public class ModPrefix : TAPI.ModPrefix
@@ -20,7 +25,7 @@ namespace $safeprojectname$
 
         }
 
-        public override void ApplyToItem(Item i)
+        public override void ApplyToItem(Terraria.Item i)
         {
             base.ApplyToItem(i);
 

@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     public class ModWorld : TAPI.ModWorld
     {
@@ -22,20 +27,6 @@ namespace $safeprojectname$
         public override void PostUpdate()
         {
             base.PostUpdate();
-
-
-        }
-
-        public override void Load(BinBuffer bb)
-        {
-            base.Load(bb);
-
-
-        }
-
-        public override void Save(BinBuffer bb)
-        {
-            base.Save(bb);
 
 
         }

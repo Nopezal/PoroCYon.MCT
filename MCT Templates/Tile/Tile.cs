@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     public class Tile : TAPI.ModTile
     {
@@ -26,9 +31,9 @@ namespace $safeprojectname$
 
         }
 
-        public override void Kill(int x, int y)
+        public override void Kill(int x, int y, bool fail, bool effectsOnly, bool noItem)
         {
-            base.Kill(x, y);
+            base.Kill(x, y, fail, effectsOnly, noItem);
 
 
         }

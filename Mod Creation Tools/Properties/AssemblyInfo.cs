@@ -22,6 +22,4 @@ using PoroCYon.MCT.Internal;
 [assembly: InternalsVisibleTo("MCT Tools")]
 [assembly: InternalsVisibleTo("PoroCYon.MCT")]
 [assembly: InternalsVisibleTo("PoroCYon.MCT.Placeholder")]
-[assembly: InternalsVisibleTo("CSharpCompiler")]
-[assembly: InternalsVisibleTo("JScriptCompiler")]
-[assembly: InternalsVisibleTo("VBCompiler")]
+[assembly: InternalsVisibleTo("FSharpCompiler")]

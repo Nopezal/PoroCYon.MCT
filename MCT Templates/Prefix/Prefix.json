@@ -1,6 +1,3 @@
 ﻿{
-	"modifiers" :
-	{
-		"damage" : 5
-	}
+	"allDamage" : 5
 }

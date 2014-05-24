@@ -12,7 +12,12 @@ using PoroCYon.MCT.UI;
 using PoroCYon.MCT.UI.Interface;
 using PoroCYon.MCT.UI.Interface.Controls;
 
-namespace $safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     public class ModInterface : TAPI.ModInterface
     {
@@ -28,21 +33,18 @@ namespace $safeprojectname$
 
             return base.PreDrawInterface(sb);
         }
-
         public override bool PreDrawInventory(SpriteBatch sb)
         {
 
 
             return base.PreDrawInventory(sb);
         }
-
         public override void PostDrawInventory(SpriteBatch sb)
         {
 
 
             base.PostDrawInventory(sb);
         }
-
         public override void PostDrawInterface(SpriteBatch sb)
         {
 

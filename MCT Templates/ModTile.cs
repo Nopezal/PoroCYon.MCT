@@ -9,7 +9,12 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
-namespace TAPI.$safeprojectname$
+namespace
+#if CREATE_TEMPLATE
+    safeprojectname
+#else
+    $safeprojectname$
+#endif
 {
     [GlobalMod]
     public class ModTile : TAPI.ModTile
@@ -27,11 +32,9 @@ namespace TAPI.$safeprojectname$
 
         }
 
-        public override void Kill(int x, int y)
+        public override void Kill(int x, int y, bool fail, bool effectsOnly, bool noItem)
         {
-            base.Kill(x, y);
-
-
+            base.Kill(x, y, fail, effectsOnly, noItem);
         }
     }
 }
