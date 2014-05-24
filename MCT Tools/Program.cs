@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using TAPI;
 using PoroCYon.MCT.Internal;
+using System.Diagnostics;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -19,53 +21,54 @@ namespace PoroCYon.MCT.Tools
                     "help",
                     () =>
                     {
-                        Console.WriteLine("BUILD\t\tBuilds a tAPI mod from a managed .dll file.");
+                        Console.WriteLine("BUILD\t\tBuilds a tAPI mod from a source folder or a managed .dll file.");
                         Console.WriteLine("DECOMPILE\t\tDecompiles a .tapi or .tapimod file");
-                        Console.WriteLine("PACK\t\tPacks a tAPI mod from a different language.\n\t\t(JS/VB, specify it in the 'language' key in ModInfo.json)");
+                        Console.WriteLine("HELP\t\tDisplays this text. H or ? can also be used for this.");
+                        //Console.WriteLine("PACK\t\tPacks a tAPI mod from a different language.\n\t\t(JS/VB, specify it in the 'language' key in ModInfo.json)");
+                        //Console.WriteLine();
+                        //Console.WriteLine("CLEAR\t\tClears the console window");
+                        //Console.WriteLine();
+                        //Console.WriteLine("EXIT\t\tExits the console.");
                         Console.WriteLine();
-                        Console.WriteLine("CLEAR\t\tClears the console window");
-                        Console.WriteLine();
-                        Console.WriteLine("EXIT\t\tExits the console.");
-                        Console.WriteLine();
-                        Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP, CLEAR and EXIT");
+                        Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP.");
                     }
                 },
-                {
-                    "clear", 
-                    () => Console.Clear() 
-                },
-                {
-                    "exit", 
-                    () =>
-                    {
-                        throw new CloseConsoleException();
-                    }
-                }
+                //{
+                //    "clear", 
+                //    () => Console.Clear() 
+                //},
+                //{
+                //    "exit", 
+                //    () =>
+                //    {
+                //        throw new CloseConsoleException();
+                //    }
+                //}
             };
-            Commands.Add("cls",   Commands["clear"]);
-            Commands.Add("stop",  Commands["exit" ]);
-            Commands.Add("close", Commands["exit" ]);
+            //Commands.Add("cls",   Commands["clear"]);
+            //Commands.Add("stop",  Commands["exit" ]);
+            //Commands.Add("close", Commands["exit" ]);
             Commands.Add("?",     Commands["help" ]);
 
             ToolCommands = new Dictionary<string, Action<string>>()
             {
-                {
-                    "pack",
-                    (path) =>
-                    {
-                        string couldBeHelp = TrimCommand(path).ToLowerInvariant();
-                        if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
-                        {
-                            Console.WriteLine("PACK <mod folder>\t\t 'mod folder' should be in Documents\\My Games\\Terraria\\tAPI\\Mods\\Sources.");
-                            return;
-                        }
+                //{
+                //    "pack",
+                //    (path) =>
+                //    {
+                //        string couldBeHelp = TrimCommand(path).ToLowerInvariant();
+                //        if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
+                //        {
+                //            Console.WriteLine("PACK <mod folder>\t\t 'mod folder' should be in Documents\\My Games\\Terraria\\tAPI\\Mods\\Sources.");
+                //            return;
+                //        }
 
-                        if (!path.Contains('/') && !path.Contains('\\'))
-                            path = Mods.pathDirModsSources + "\\" + path;
+                //        if (!path.Contains('/') && !path.Contains('\\'))
+                //            path = Mods.pathDirModsSources + "\\" + path;
 
-                        ModPacker.Pack(path, Mods.pathDirModsUnsorted);
-                    }
-                },
+                //        ModPacker.Pack(path, Mods.pathDirModsUnsorted);
+                //    }
+                //},
                 {
                     "build",
                     (path) =>
@@ -73,11 +76,12 @@ namespace PoroCYon.MCT.Tools
                         string couldBeHelp = TrimCommand(path).ToLowerInvariant();
                         if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
                         {
-                            Console.WriteLine("BUILD <.dll file>");
+                            Console.WriteLine("BUILD <mod folder/dll file>");
                             return;
                         }
 
-                        ModBuilder.Build(path);
+                        Debug.WriteLine(File.Exists(path) ? ModCompiler.CompileFromAssembly(path) :  ModCompiler.CompileFromSource(path));
+                        //ModBuilder.Build(path);
                     }
                 },
                 {
@@ -104,6 +108,7 @@ namespace PoroCYon.MCT.Tools
         [Serializable]
         class CloseConsoleException : Exception { }
 
+        [STAThread]
         static void Main(string[] args)
         {
             CommonToolUtilities.Init();
@@ -116,8 +121,7 @@ namespace PoroCYon.MCT.Tools
                 {
                     string c = Commands.Keys.ElementAt(j);
 
-                    if (s.ToLowerInvariant() == c.ToLowerInvariant()
-                        || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
+                    if (s.ToLowerInvariant() == c.ToLowerInvariant() || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
                     {
                         try
                         {
@@ -129,7 +133,7 @@ namespace PoroCYon.MCT.Tools
                         }
                         catch (Exception e)
                         {
-                            Console.Error.WriteLine("error: " + e); // logged to std::cerr
+                            Console.Error.WriteLine("Error: " + e); // logged to std::cerr
                         }
                         goto NEXT; // those velociraptors aren't real
                     }
@@ -139,8 +143,7 @@ namespace PoroCYon.MCT.Tools
                 {
                     string c = ToolCommands.Keys.ElementAt(j);
 
-                    if (s.ToLowerInvariant() == c.ToLowerInvariant()
-                        || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
+                    if (s.ToLowerInvariant() == c.ToLowerInvariant() || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
                     {
                         try
                         {
@@ -148,7 +151,7 @@ namespace PoroCYon.MCT.Tools
                         }
                         catch (Exception e)
                         {
-                            Console.Error.WriteLine("error: " + e); // logged to std::cerr
+                            Console.Error.WriteLine("Error: " + e); // logged to std::cerr
                         }
                         break;
                     }

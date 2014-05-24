@@ -9,8 +9,6 @@ using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Tools.Internal
 {
-    using BinBuffer = PoroCYon.XnaExtensions.IO.BinBuffer;
-
     static class Writer
     {
         internal static IEnumerable<CompilerError> Write(ModData mod)
@@ -49,7 +47,7 @@ namespace PoroCYon.MCT.Tools.Internal
                 bb.Write(current.Value);
 
             bb.Write(File.ReadAllBytes(mod.Assembly.Location));
-            bb.Position = 0;
+            bb.Pos = 0;
 
             string outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
@@ -62,16 +60,18 @@ namespace PoroCYon.MCT.Tools.Internal
                     if (!Directory.Exists(CommonToolUtilities.modsBinDir))
                         Directory.CreateDirectory(CommonToolUtilities.modsBinDir);
 
-                    zf.AddEntry("Mod.tapimod", bb.ReadBytes(bb.Size));
+                    zf.AddEntry("Mod.tapimod", bb.ReadBytes(bb.GetSize()));
                     zf.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(mod.JSONs[0].Json.ToJson()));
                     if (pdb != null)
                         zf.AddEntry("DebugInformation.pdb", pdb);
 
                     foreach (KeyValuePair<string, byte[]> current in mod.Files)
                         zf.AddEntry(current.Key, current.Value);
+
+                    zf.Save(outputFile);
                 }
             else
-                File.WriteAllBytes(outputFile, bb.ReadBytes(bb.Size));
+                File.WriteAllBytes(outputFile, bb.ReadBytes(bb.GetSize()));
 
             if (mod.Info.extractDLL)
             {

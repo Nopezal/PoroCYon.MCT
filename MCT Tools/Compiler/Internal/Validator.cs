@@ -11,8 +11,6 @@ namespace PoroCYon.MCT.Tools.Internal
     {
         internal static List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
-            ModCompiler.current = new ModData();
-
             ModCompiler.current.jsons = jsons;
             ModCompiler.current.files = files;
 

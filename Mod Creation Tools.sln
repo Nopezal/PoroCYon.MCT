@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 2013
-VisualStudioVersion = 12.0.30501.0
+VisualStudioVersion = 12.0.30516.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCT Library", "Mod Creation Tools\MCT Library.csproj", "{20D85F91-12D1-4653-A46F-E7BA53FEEC1C}"
 EndProject
@@ -23,14 +23,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	EndProjectSection
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "MCT Tools Compilers", "MCT Tools Compilers", "{C533F936-5ABB-4589-9A56-3E6BD6429850}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Other languages", "Other languages", "{56FAB7BD-9440-42EA-B4F1-B5F596C96940}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CSharpCompiler", "MCT Tools Compilers\CSharpCompiler\CSharpCompiler.csproj", "{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "JScriptCompiler", "MCT Tools Compilers\JScriptCompiler\JScriptCompiler.vcxproj", "{A10E107D-B28B-46D6-B2FC-F09A94AC9392}"
-EndProject
-Project("{F184B08F-C81C-45F6-A57F-5ABD9991F28F}") = "VBCompiler", "MCT Tools Compilers\VBCompiler\VBCompiler.vbproj", "{98A2CA63-B5B0-458C-8E3F-6902C06742CE}"
 EndProject
 Project("{F2A71F9B-5D33-465A-A702-920D77279786}") = "FSharpCompiler", "MCT Tools Compilers\_other compilers\FSharpCompiler\FSharpCompiler.fsproj", "{48FE4F3B-8F10-485D-B725-CC42AD7E965E}"
 EndProject
@@ -92,36 +84,6 @@ Global
 		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Mixed Platforms.Build.0 = Release|Any CPU
 		{ADC0BFF2-97CA-42F4-91B5-3BBD82E18981}.Release|Win32.ActiveCfg = Release|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Release|Any CPU.Build.0 = Release|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9}.Release|Win32.ActiveCfg = Release|Any CPU
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Debug|Any CPU.ActiveCfg = Debug|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Debug|Mixed Platforms.ActiveCfg = Debug|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Debug|Mixed Platforms.Build.0 = Debug|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Debug|Win32.ActiveCfg = Debug|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Debug|Win32.Build.0 = Debug|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Release|Any CPU.ActiveCfg = Release|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Release|Mixed Platforms.ActiveCfg = Release|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Release|Mixed Platforms.Build.0 = Release|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Release|Win32.ActiveCfg = Release|Win32
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392}.Release|Win32.Build.0 = Release|Win32
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Debug|Win32.ActiveCfg = Debug|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Release|Any CPU.Build.0 = Release|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Release|Mixed Platforms.Build.0 = Release|Any CPU
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE}.Release|Win32.ActiveCfg = Release|Any CPU
 		{48FE4F3B-8F10-485D-B725-CC42AD7E965E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{48FE4F3B-8F10-485D-B725-CC42AD7E965E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{48FE4F3B-8F10-485D-B725-CC42AD7E965E}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
@@ -137,10 +99,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{56FAB7BD-9440-42EA-B4F1-B5F596C96940} = {C533F936-5ABB-4589-9A56-3E6BD6429850}
-		{9410D4BC-A829-40EF-9042-BFFEDEBEAFA9} = {C533F936-5ABB-4589-9A56-3E6BD6429850}
-		{A10E107D-B28B-46D6-B2FC-F09A94AC9392} = {C533F936-5ABB-4589-9A56-3E6BD6429850}
-		{98A2CA63-B5B0-458C-8E3F-6902C06742CE} = {C533F936-5ABB-4589-9A56-3E6BD6429850}
-		{48FE4F3B-8F10-485D-B725-CC42AD7E965E} = {56FAB7BD-9440-42EA-B4F1-B5F596C96940}
+		{48FE4F3B-8F10-485D-B725-CC42AD7E965E} = {C533F936-5ABB-4589-9A56-3E6BD6429850}
 	EndGlobalSection
 EndGlobal

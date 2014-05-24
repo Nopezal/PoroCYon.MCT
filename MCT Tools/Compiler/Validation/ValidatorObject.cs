@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
+using LitJson;
 using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Tools.Validation
@@ -70,7 +71,7 @@ namespace PoroCYon.MCT.Tools.Validation
             if (typeof(TJsonObj).IsArray)
             {
                 dynamic arr = new dynamic[json.Json[key].Count];
-
+                
                 for (int i = 0; i < json.Json[key].Count; i++)
                 {
                     if (typeof(TJsonObj) != typeof(object) && json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
@@ -83,9 +84,11 @@ namespace PoroCYon.MCT.Tools.Validation
                                       ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()) + "."
                         };
 
-                    arr[i] = json.Json[key][i];
+                    TJsonObj j = (TJsonObj)arr[i];
+                    SetJsonValueInternal(new JsonFile(json.Path, json.Json[key][i]), ref j);
+                    arr[i] = j;
                 }
-
+                
                 value = arr;
 
                 return null;
@@ -101,7 +104,47 @@ namespace PoroCYon.MCT.Tools.Validation
                               ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
                 };
 
-            value = (dynamic)json.Json[key]; // dynamic++
+            value = (TJsonObj)(dynamic)json.Json[key]; // dynamic++
+
+            return null;
+        }
+        static CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, ref TJsonObj value)
+        {
+            if (typeof(TJsonObj).IsArray)
+            {
+                dynamic arr = new dynamic[json.Json.Count];
+
+                for (int i = 0; i < json.Json.Count; i++)
+                {
+                    if (typeof(TJsonObj) != typeof(object) && json.Json[i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
+                        return new CompilerError()
+                        {
+                            Cause = new ArrayTypeMismatchException(),
+                            FilePath = json.Path,
+                            IsWarning = false,
+                            Message = "JSON value is a " + json.Json.GetJsonType() +
+                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()) + "."
+                        };
+
+                    SetJsonValueInternal(new JsonFile(json.Path, json.Json[i]), null, ref arr[i]);
+                }
+
+                value = arr;
+
+                return null;
+            }
+
+            if (typeof(TJsonObj) != typeof(object) && json.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
+                return new CompilerError()
+                {
+                    Cause = new InvalidCastException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "JSON value is a " + json.Json.GetJsonType() +
+                              ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
+                };
+
+            value = (TJsonObj)(dynamic)json.Json; // dynamic++
 
             return null;
         }

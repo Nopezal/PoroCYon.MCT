@@ -98,13 +98,16 @@ namespace PoroCYon.MCT.Tools.Validation
                     + "\\" + new DirectoryInfo(Path.GetDirectoryName(json.Path)).Name + ".csproj"), errors);
 
                 if (!File.Exists(msBuildFile))
-                    errors.Add(new CompilerError()
-                    {
-                        Cause = new FileNotFoundException(),
-                        FilePath = json.Path,
-                        IsWarning = false,
-                        Message = "'msBuildFile': file '" + msBuildFile + "' not found."
-                    });
+                    if (File.Exists(ModCompiler.current.OriginPath + "\\" + msBuildFile))
+                        msBuildFile = ModCompiler.current.OriginPath + "\\" + msBuildFile;
+                    else
+                        errors.Add(new CompilerError()
+                        {
+                            Cause = new FileNotFoundException(),
+                            FilePath = json.Path,
+                            IsWarning = false,
+                            Message = "'msBuildFile': file '" + msBuildFile + "' not found."
+                        });
             }
 
             // ---

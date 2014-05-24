@@ -10,9 +10,9 @@ open Microsoft.FSharp.Compiler.CodeDom
 type FSharpCompiler() = 
     inherit CodeDomCompilerHelper()
 
-    let ext  = [| ".fs"; ".fsx"        |]
-    let asm  = [| "FSharp.Core.dll"    |]
-    let name = [| "fsharp"; "f#"; "fs" |]
+    static let ext  = [| ".fs"; ".fsx"        |]
+    static let asm  = [| "FSharp.Core.dll"    |]
+    static let name = [| "fsharp"; "f#"; "fs" |]
 
     override this.FileExtensions               with get() = ext
     override this.LanguageDependancyAssemblies with get() = asm

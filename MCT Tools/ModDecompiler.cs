@@ -13,7 +13,7 @@ namespace PoroCYon.MCT.Tools
     /// </summary>
     public static class ModDecompiler
     {
-        internal readonly static string decompDir = CommonToolUtilities.modsDir + "\\Decompiled";
+        internal readonly static string decompDir = Consts.MctDirectory + "Decompiled";
 
         /// <summary>
         /// Decompiles a .tapimod file

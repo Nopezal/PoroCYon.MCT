@@ -7,7 +7,7 @@ using LitJson;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using PoroCYon.MCT.Internal;
-//using PoroCYon.MCT.Tools.Compiler.Internal.Compilation;
+using PoroCYon.MCT.Tools.Compiler.Internal.Compilation;
 using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal
@@ -15,17 +15,20 @@ namespace PoroCYon.MCT.Tools.Internal
     static class Builder
     {
         internal static List<ICompiler> compilers = new List<ICompiler>();
-        internal static string MSBOutputPath = Path.GetTempPath() + "\\MCT\\MSBuild";
+        internal static string MSBOutputPath = Path.GetTempPath() + "MCT\\MSBuild";
 
         static void LoadCompilers()
         {
             compilers.Clear();
 
-            //compilers.Add(new CSharpCompiler());
-            //compilers.Add(new JScriptCompiler());
-            //compilers.Add(new VBCompiler());
+            compilers.Add(new CSharpCompiler());
+            compilers.Add(new JScriptCompiler());
+            compilers.Add(new VBCompiler());
 
-            foreach (string f in Directory.EnumerateFiles(Consts.MctDirectory, "*.dll", SearchOption.TopDirectoryOnly))
+            if (!Directory.Exists(Consts.MctDirectory))
+                Directory.CreateDirectory(Consts.MctDirectory);
+
+            foreach (string f in Directory.EnumerateFiles(Consts.MctDirectory + "\\Compilers", "*.dll", SearchOption.TopDirectoryOnly))
             {
                 Assembly asm;
 
@@ -106,7 +109,7 @@ namespace PoroCYon.MCT.Tools.Internal
 
                 if (mod.Info.includePDB)
                 {
-                    pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(mod.Info.msBuildFile) + ".pdb";
+                    pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(mod.Info.msBuildFile);
 
                     if (!File.Exists(pdb))
                         errors.Add(new CompilerError()
@@ -119,8 +122,8 @@ namespace PoroCYon.MCT.Tools.Internal
                 }
             }
 
-            if (Directory.Exists(MSBOutputPath))
-                Directory.Delete(MSBOutputPath, true);
+            //if (Directory.Exists(MSBOutputPath))
+            //    Directory.Delete(MSBOutputPath, true);
 
             return new Tuple<Assembly, string, List<CompilerError>>(asm, pdb, errors);
         }

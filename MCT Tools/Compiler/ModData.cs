@@ -126,5 +126,13 @@ namespace PoroCYon.MCT.Tools
             get;
             internal set;
         }
+        /// <summary>
+        /// Gets the path of origin (source folder or assembly file) of the mod.
+        /// </summary>
+        public string OriginPath
+        {
+            get;
+            internal set;
+        }
     }
 }

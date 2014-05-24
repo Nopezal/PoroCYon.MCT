@@ -26,6 +26,7 @@ namespace PoroCYon.MCT.Tools
         public static CompilerOutput CompileFromSource(string folder)
         {
             BeginCompile();
+            current.OriginPath = folder;
 
             // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
             if (Path.IsPathRooted(folder) && !Directory.Exists(folder))
@@ -74,6 +75,7 @@ namespace PoroCYon.MCT.Tools
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
             BeginCompile();
+            current.OriginPath = assemblyPath;
 
             #region check if file exists
             if (!File.Exists(assemblyPath))
@@ -156,7 +158,7 @@ namespace PoroCYon.MCT.Tools
                 if (!errors[i].IsWarning)
                     err = true; // houston, we have a problem
 
-            outp.Succeeded = err;
+            outp.Succeeded = !err;
             outp.errors = errors;
 
             return outp;
@@ -167,6 +169,8 @@ namespace PoroCYon.MCT.Tools
         }
         static void BeginCompile()
         {
+            current = new ModData();
+
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
 
             if (!Directory.Exists(Path.GetTempPath() + "\\MCT"))
@@ -174,7 +178,7 @@ namespace PoroCYon.MCT.Tools
         }
         static void EndCompile()
         {
-            Directory.Delete(Path.GetTempPath() + "\\MCT", true);
+            //Directory.Delete(Path.GetTempPath() + "\\MCT", true);
         }
         static CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
         {
