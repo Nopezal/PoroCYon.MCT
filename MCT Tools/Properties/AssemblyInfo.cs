@@ -4,7 +4,7 @@ using System.Runtime.InteropServices;
 using PoroCYon.MCT;
 using PoroCYon.MCT.Internal;
 
-[assembly: AssemblyTitle("MCT Library")]
+[assembly: AssemblyTitle("MCT Tools")]
 [assembly: AssemblyDescription("Mod Creation Tools (MCT) for tAPI")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PoroCYon")]

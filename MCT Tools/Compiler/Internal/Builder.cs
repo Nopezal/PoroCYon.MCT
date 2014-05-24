@@ -7,7 +7,7 @@ using LitJson;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using PoroCYon.MCT.Internal;
-using PoroCYon.MCT.Tools.Compiler.Internal.Compilation;
+//using PoroCYon.MCT.Tools.Compiler.Internal.Compilation;
 using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal
@@ -21,9 +21,9 @@ namespace PoroCYon.MCT.Tools.Internal
         {
             compilers.Clear();
 
-            compilers.Add(new CSharpCompiler());
-            compilers.Add(new JScriptCompiler());
-            compilers.Add(new VBCompiler());
+            //compilers.Add(new CSharpCompiler());
+            //compilers.Add(new JScriptCompiler());
+            //compilers.Add(new VBCompiler());
 
             foreach (string f in Directory.EnumerateFiles(Consts.MctDirectory, "*.dll", SearchOption.TopDirectoryOnly))
             {

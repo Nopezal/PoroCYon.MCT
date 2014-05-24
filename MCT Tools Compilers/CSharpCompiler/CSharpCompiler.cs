@@ -1,18 +1,17 @@
 ﻿using System;
 using System.CodeDom.Compiler;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using Microsoft.VisualBasic;
+using Microsoft.CSharp;
 
-namespace PoroCYon.MCT.Tools.Compiler.Internal.Compilation
+namespace PoroCYon.MCT.Tools.Compiler.Compilers
 {
-    class VBCompiler : CodeDomCompilerHelper
+    class CSharpCompiler : CodeDomCompilerHelper
     {
         readonly static string[]
-            ext  = new string[] { ".vb", ".vbs" },
-            asm  = new string[] { "Microsoft.VisualBasic.dll" },
-            lang = new string[] { "visual basic", "visualbasic", "vb", "visual basic .net", "visualbasic.net" };
+            ext  = new string[] { ".cs", ".csx" },
+            asm  = new string[] { "Microsoft.CSharp.dll" },
+            lang = new string[] { "csharp", "c#", "cs" };
 
         public override string[] FileExtensions
         {
@@ -38,13 +37,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Internal.Compilation
 
         protected override CodeDomProvider CreateCompiler()
         {
-            return new VBCodeProvider();
-        }
-        protected override void ModifyCompilerParameters(CompilerParameters cp)
-        {
-            base.ModifyCompilerParameters(cp);
-
-            Path.ChangeExtension(cp.OutputAssembly, null);
+            return new CSharpCodeProvider();
         }
     }
 }

@@ -81,9 +81,6 @@
     <Compile Include="Compiler\Internal\Checker.cs" />
     <Compile Include="Compiler\CompilerException.cs" />
     <Compile Include="Compiler\CompilerOutput.cs" />
-    <Compile Include="Compiler\Internal\Compilation\CSharpCompiler.cs" />
-    <Compile Include="Compiler\Internal\Compilation\JScriptCompiler.cs" />
-    <Compile Include="Compiler\Internal\Compilation\VBCompiler.cs" />
     <Compile Include="Compiler\Internal\Extractor.cs" />
     <Compile Include="Compiler\Internal\FileLoader.cs" />
     <Compile Include="Compiler\JsonFile.cs" />

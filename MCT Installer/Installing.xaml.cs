@@ -62,6 +62,10 @@ namespace PoroCYon.MCT.Installer
 					"PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
                     "MCT Tools.exe",               "MCT Tools.xml",
 
+                    "Compilers\\CSharpCompiler.dll",
+                    "Compilers\\JScriptCompiler.dll",
+                    "Compilers\\VBCompiler.dll",
+
                     "PoroCYon.MCT.Placeholder.dll"
                 };
                 if (ToInstall.InstallPdb)
@@ -71,6 +75,10 @@ namespace PoroCYon.MCT.Installer
                     ToDownload.Add("PoroCYon.MCT.pdb");
 
                     ToDownload.Add("MCT Tools.pdb");
+
+                    ToDownload.Add("Compilers\\CSharpCompiler.pdb");
+                    ToDownload.Add("Compilers\\JScriptCompiler.pdb");
+                    ToDownload.Add("Compilers\\VBCompiler.pdb");
                 }
                 if (VsVersions.ChosenVersions != 0)
                 {
@@ -179,6 +187,15 @@ namespace PoroCYon.MCT.Installer
 
                             File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
                         }
+                    else if (t.Item1.StartsWith("Compilers\\"))
+                    {
+                        string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\MCT\\Compilers\\";
+
+                        if (!Directory.Exists(folder))
+                            Directory.CreateDirectory(folder);
+
+                        File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
+                    }
                     else if (t.Item1 == "PoroCYon.MCT.Placeholder.dll")
                     {
                         if (!Directory.Exists(steamDir + "Temp"))

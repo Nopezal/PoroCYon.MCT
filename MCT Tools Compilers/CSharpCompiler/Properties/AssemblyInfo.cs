@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Reflection;
-using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using PoroCYon.MCT;
 using PoroCYon.MCT.Internal;
 
-[assembly: AssemblyTitle("MCT Library")]
+[assembly: AssemblyTitle("MCT Tools - C# compiler")]
 [assembly: AssemblyDescription("Mod Creation Tools (MCT) for tAPI")]
 [assembly: AssemblyConfiguration("")]
 [assembly: AssemblyCompany("PoroCYon")]
@@ -17,11 +16,3 @@ using PoroCYon.MCT.Internal;
 [assembly: Guid(Consts.GUID)]
 [assembly: AssemblyVersion(MctConstants.VERSION_STRING)]
 [assembly: AssemblyFileVersion(MctConstants.VERSION_STRING)]
-
-// hehe..
-[assembly: InternalsVisibleTo("MCT Tools")]
-[assembly: InternalsVisibleTo("PoroCYon.MCT")]
-[assembly: InternalsVisibleTo("PoroCYon.MCT.Placeholder")]
-[assembly: InternalsVisibleTo("CSharpCompiler")]
-[assembly: InternalsVisibleTo("JScriptCompiler")]
-[assembly: InternalsVisibleTo("VBCompiler")]

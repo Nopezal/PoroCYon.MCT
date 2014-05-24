@@ -20,10 +20,6 @@
     - assembly: Input -> Extractor  -> Validator -> ------- -> Checker -> Writer -> Output
     - source:         -> FileLoader ->           -> Builder ->
 
-    done   : Extractor, FileLoader, Validator
-    working: Builder
-    todo   : Checker, Writer
-
     Input:  mod folder name or assembly path
     Output: wether it succeeded or not, output file (if succeeded), errors (if failed)
 
@@ -31,15 +27,15 @@
     and the CompilerOutput is returned immedately.
 
 supported languages:
-  built-in:
+  installed by default:
     C#
     VB
     JScript.NET
 
   separately:
-    Boo
     ClojureCLR
     F#
+    IronPython
 
   C++/CLI will only be supported through MSBuild or DLL building, because CL is shipped with Visual Studio, not .NET.
 
