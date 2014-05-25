@@ -43,8 +43,12 @@ namespace PoroCYon.MCT.Tools
                             Console.WriteLine("BUILD <mod folder/dll file>");
                             return;
                         }
+                        CompilerOutput ret = File.Exists(path) ? ModCompiler.CompileFromAssembly(path) :  ModCompiler.CompileFromSource(path);
 
-                        Debug.WriteLine(File.Exists(path) ? ModCompiler.CompileFromAssembly(path) :  ModCompiler.CompileFromSource(path));
+                        if (Debugger.IsAttached)
+                            Debug.WriteLine(ret);
+
+                        Console.WriteLine(ret);
                     }
                 },
                 {

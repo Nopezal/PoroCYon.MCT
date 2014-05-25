@@ -1,17 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Geometry;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
-namespace PoroCYon.MCT.UI.Interface
+namespace PoroCYon.MCT.UI.Interface.Controls
 {
     /// <summary>
     /// A button with text

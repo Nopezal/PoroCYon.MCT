@@ -136,39 +136,44 @@ namespace PoroCYon.MCT.Internal.ModClasses
         [CallPriority(Single.PositiveInfinity)]
         public override void NetReceive(int id, BinBuffer bb)
         {
+            base.NetReceive(id, bb);
+
             switch ((InternalNetMessages)id)
             {
                 case InternalNetMessages.SyncRandom_Sync:
-                    {
-                        string group = bb.ReadString();
-                        Random rand = (Random)NetHelper.ReadObject(typeof(Random), bb);
-                        int @ref = bb.ReadInt();
-
-                        SyncedRandom.rands[group] = rand;
-                        SyncedRandom.refs[group] = @ref;
-                    }
+                    SyncedRandom.GetCached(bb.ReadInt()).NextDouble();
                     break;
                 case InternalNetMessages.SyncRandom_CTOR:
                     {
                         string group = bb.ReadString();
                         int seed = bb.ReadInt();
 
-                        SyncedRandom.rands[group] = new Random(seed);
+                        SyncedRandom.rands[group] = seed;
                         SyncedRandom.refs[group]++;
                     }
                     break;
                 case InternalNetMessages.SyncRandom_DTOR:
                     {
-                        string group = bb.ReadString();
+                        int seed = bb.ReadInt();
+                        string group = null;
+
+                        foreach (var kvp in SyncedRandom.rands)
+                            if (kvp.Value == seed)
+                                group = kvp.Key;
+
+                        if (group == null)
+                            return;
 
                         SyncedRandom.refs[group]--;
                         if (SyncedRandom.refs[group] <= 0)
+                        {
                             SyncedRandom.rands.Remove(group);
+                            SyncedRandom.refs.Remove(group);
+                            SyncedRandom.RemoveCached(seed);
+                        }
                     }
                     break;
             }
-
-            base.NetReceive(id, bb);
         }
 
         [CallPriority(Single.PositiveInfinity)]

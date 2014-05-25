@@ -8,6 +8,8 @@ using System.Runtime.Serialization.Formatters.Binary;
 using Microsoft.Xna.Framework;
 using Terraria;
 using TAPI;
+using System.Runtime;
+using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Net
 {
@@ -50,35 +52,60 @@ namespace PoroCYon.MCT.Net
         /// <summary>
         /// Sends data as a managed object
         /// </summary>
-        /// <param name="name">The name of the mod which is sending a message</param>
+        /// <param name="base">The name of the mod which is sending a message</param>
         /// <param name="message">The message ID</param>
         /// <param name="toSend">The objects to send</param>
-        public static void SendModData(string name, Enum message, params object[] toSend)
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
+        public static void SendModData(ModBase @base, Enum message, params object[] toSend)
         {
-            SendModData(name, message, -1, -1, toSend);
+            SendModData(@base, message, -1, -1, toSend);
         }
         /// <summary>
         /// Sends data as a managed object
         /// </summary>
-        /// <param name="name">The name of the mod which is sending a message</param>
+        /// <param name="base">The name of the mod which is sending a message</param>
+        /// <param name="message">The message ID</param>
+        /// <param name="toSend">The objects to send</param>
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
+        public static void SendModData(ModBase @base, int message, params object[] toSend)
+        {
+            SendModData(@base, message, -1, -1, toSend);
+        }
+        /// <summary>
+        /// Sends data as a managed object
+        /// </summary>
+        /// <param name="base">The name of the mod which is sending a message</param>
         /// <param name="message">The message ID</param>
         /// <param name="remoteClient">The client ID where the message should be sent to if Main.netMode equals 2</param>
         /// <param name="ignoreClient">The client ID where the message should not be sent to if Main.netMode equals 2</param>
         /// <param name="toSend">The objects to send</param>
-        public static void SendModData(string name, Enum message, int remoteClient, int ignoreClient, params object[] toSend)
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
+        public static void SendModData(ModBase @base, Enum message, int remoteClient, int ignoreClient, params object[] toSend)
+        {
+            SendModData(@base, Convert.ToInt32(message), remoteClient, ignoreClient, toSend);
+        }
+        /// <summary>
+        /// Sends data as a managed object
+        /// </summary>
+        /// <param name="base">The name of the mod which is sending a message</param>
+        /// <param name="message">The message ID</param>
+        /// <param name="remoteClient">The client ID where the message should be sent to if Main.netMode equals 2</param>
+        /// <param name="ignoreClient">The client ID where the message should not be sent to if Main.netMode equals 2</param>
+        /// <param name="toSend">The objects to send</param>
+        public static unsafe void SendModData(ModBase @base, int message, int remoteClient, int ignoreClient, params object[] toSend)
         {
             if (Main.netMode == 0)
-				return;
+                return;
 
-			int num = 256;
-			if (Main.netMode == 2 && remoteClient >= 0)
-				num = remoteClient;
+            int num = 256;
+            if (Main.netMode == 2 && remoteClient >= 0)
+                num = remoteClient;
 
             lock (NetMessage.buffer[num])
             {
                 BinBuffer bb = new BinBuffer(new BinBufferByte(NetMessage.buffer[num].writeBuffer, false));
                 bb.Pos = 4; //for size
-                bb.WriteX((byte)100, (byte)Mods.modBases.FindIndex(0, Mods.modBases.Count, (b) => { return b.modName == name; }), (byte)Convert.ToInt32(message));
+                bb.WriteX((byte)100, (byte)@base.modIndex, (byte)message);
 
                 // write stuff here
 
@@ -89,81 +116,93 @@ namespace PoroCYon.MCT.Net
                     #region primitives
                     if (t == typeof(byte))
                         bb.Write((byte)toSend[i]);
-                    if (t == typeof(sbyte))
+                    else if (t == typeof(sbyte))
                         bb.Write((sbyte)toSend[i]);
 
-                    if (t == typeof(ushort))
+                    else if (t == typeof(ushort))
                         bb.Write((ushort)toSend[i]);
-                    if (t == typeof(short))
+                    else if (t == typeof(short))
                         bb.Write((short)toSend[i]);
 
-                    if (t == typeof(int))
+                    else if (t == typeof(int))
                         bb.Write((int)toSend[i]);
-                    if (t == typeof(uint))
+                    else if (t == typeof(uint))
                         bb.Write((uint)toSend[i]);
 
-                    if (t == typeof(long))
+                    else if (t == typeof(long))
                         bb.Write((long)toSend[i]);
-                    if (t == typeof(ulong))
+                    else if (t == typeof(ulong))
                         bb.Write((ulong)toSend[i]);
 
-                    if (t == typeof(float))
+                    else if (t == typeof(float))
                         bb.Write((float)toSend[i]);
-                    if (t == typeof(double))
+                    else if (t == typeof(double))
                         bb.Write((double)toSend[i]);
-                    if (t == typeof(decimal))
+                    else if (t == typeof(decimal))
                         bb.Write((decimal)toSend[i]);
 
-                    if (t == typeof(DateTime))
+                    else if (t == typeof(DateTime))
                         bb.Write((DateTime)toSend[i]);
-                    if (t == typeof(TimeSpan))
+                    else if (t == typeof(TimeSpan))
                         bb.Write((TimeSpan)toSend[i]);
 
-                    if (t == typeof(BigInteger))
+                    else if (t == typeof(BigInteger))
                         bb.Write((BigInteger)toSend[i]);
-                    if (t == typeof(Complex))
+                    else if (t == typeof(Complex))
                         bb.Write((Complex)toSend[i]);
 
-                    if (t == typeof(MemoryStream))
+                    else if (t == typeof(MemoryStream))
                     {
                         bb.Write(((MemoryStream)toSend[i]).ToArray().Length);
                         bb.Write(((MemoryStream)toSend[i]).ToArray());
                     }
-                    if (t == typeof(BinBuffer))
+                    else if (t == typeof(BinBuffer))
                     {
                         bb.Write(((BinBuffer)toSend[i]).BytesLeft());
                         bb.Write(((BinBuffer)toSend[i]));
                     }
-                    if (t == typeof(BinBufferBuffer))
+                    else if (t == typeof(BinBufferBuffer) || t.IsSubclassOf(typeof(BinBufferBuffer)))
                     {
                         bb.Write(((BinBufferBuffer)toSend[i]).BytesLeft());
                         bb.Write((new BinBuffer((BinBufferBuffer)toSend[i])));
                     }
 
-                    if (t == typeof(Vector2))
+                    else if (t == typeof(Vector2))
                         bb.Write((Vector2)toSend[i]);
-                    if (t == typeof(Color))
+                    else if (t == typeof(Color))
                         bb.Write((Color)toSend[i]);
-                    if (t == typeof(Item))
+                    else if (t == typeof(Item))
                         bb.Write((Item)toSend[i]);
                     #endregion
 
                     #region value type -> can read from memory
-                    if (t.IsValueType && (t.IsExplicitLayout || t.IsLayoutSequential))
+                    else if (t.IsValueType && (t.IsExplicitLayout || t.IsLayoutSequential) && !t.IsGenericType)
                     {
-                        IntPtr ptr = IntPtr.Zero;
-                        Marshal.StructureToPtr(toSend[i], ptr, false);
+                        // this is probably lunacy
                         int size = Marshal.SizeOf(toSend[i]);
 
-                        bb.Write(size);
+                        GCHandle argHandle = GCHandle.Alloc(toSend[i], GCHandleType.Pinned);
+                        IntPtr offset = argHandle.AddrOfPinnedObject();
 
-                        for (IntPtr addr = ptr; addr.ToInt64() < ptr.ToInt64() + size; addr += 1) // read byte per byte
-                            bb.Write(Marshal.ReadByte(addr));
+                        bb.Write(size);
+                        for (IntPtr ptr = offset; ptr.ToInt64() < offset.ToInt64() + size; ptr += 1)
+                            bb.Write(*(byte*)ptr.ToPointer());
+
+                        argHandle.Free();
+
+                        //IntPtr ptr = IntPtr.Zero;
+                        //Marshal.StructureToPtr(toSend[i], ptr, false);
+                        //int size = Marshal.SizeOf(toSend[i]);
+
+                        //bb.Write(size);
+
+                        //for (IntPtr addr = ptr; addr.ToInt64() < ptr.ToInt64() + size; addr += 1) // read byte per byte
+                        //    bb.Write(Marshal.ReadByte(addr));
                     }
                     #endregion
 
                     #region serilizable -> can use binaryformatter
-                    if (t.IsSerializable)
+                    else if (t.IsSerializable || t.GetInterface("System.Runtime.Serialization.ISerializable") != null)
                     {
                         BinaryFormatter bf = new BinaryFormatter();
                         MemoryStream ms = new MemoryStream();
@@ -173,31 +212,33 @@ namespace PoroCYon.MCT.Net
                         ms.Close();
                     }
                     #endregion
+                    else
+                        throw new ArgumentException("Object must be a primitive, struct, or serializable.", "toSend[" + i + "]");
                 }
 
                 #region send some other stuff
                 int pos = bb.Pos;
                 bb.Pos = 0;
-                bb.Write((int)(pos - 4));
+                bb.Write(pos - 4);
                 bb.Pos = pos;
 
                 if (Main.netMode == 1)
                     if (!Netplay.clientSock.tcpClient.Connected)
                         goto End;
 
-                    try
-                    {
-                        NetMessage.buffer[num].spamCount++;
-                        Main.txMsg++;
-                        Main.txData += pos;
-                        Main.txMsgType[100]++;
-                        Main.txDataType[100] += pos;
-                        Netplay.clientSock.networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, pos, new AsyncCallback(Netplay.clientSock.ClientWriteCallBack), Netplay.clientSock.networkStream);
-                    }
-                    catch
-                    {
-                        goto End;
-                    }
+                try
+                {
+                    NetMessage.buffer[num].spamCount++;
+                    Main.txMsg++;
+                    Main.txData += pos;
+                    Main.txMsgType[100]++;
+                    Main.txDataType[100] += pos;
+                    Netplay.clientSock.networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, pos, new AsyncCallback(Netplay.clientSock.ClientWriteCallBack), Netplay.clientSock.networkStream);
+                }
+                catch
+                {
+                    goto End;
+                }
 
                 if (remoteClient == -1)
                     for (int i = 0; i < 256; i++)
@@ -211,21 +252,23 @@ namespace PoroCYon.MCT.Net
                                 Main.txDataType[100] += pos;
                                 Netplay.serverSock[i].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, pos, new AsyncCallback(Netplay.serverSock[i].ServerWriteCallBack), Netplay.serverSock[i].networkStream);
                             }
-                            catch (Exception) { }
+                            catch (Exception)
+                            { }
 
-                else if (Netplay.serverSock[remoteClient].tcpClient.Connected)
-                    try
-                    {
-                        NetMessage.buffer[remoteClient].spamCount++;
-                        Main.txMsg++;
-                        Main.txData += pos;
-                        Main.txMsgType[100]++;
-                        Main.txDataType[100] += pos;
-                        Netplay.serverSock[remoteClient].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, pos, new AsyncCallback(Netplay.serverSock[remoteClient].ServerWriteCallBack), Netplay.serverSock[remoteClient].networkStream);
-                    }
-                    catch (Exception) { }
+                        else if (Netplay.serverSock[remoteClient].tcpClient.Connected)
+                            try
+                            {
+                                NetMessage.buffer[remoteClient].spamCount++;
+                                Main.txMsg++;
+                                Main.txData += pos;
+                                Main.txMsgType[100]++;
+                                Main.txDataType[100] += pos;
+                                Netplay.serverSock[remoteClient].networkStream.BeginWrite(NetMessage.buffer[num].writeBuffer, 0, pos, new AsyncCallback(Netplay.serverSock[remoteClient].ServerWriteCallBack), Netplay.serverSock[remoteClient].networkStream);
+                            }
+                            catch (Exception)
+                            { }
 
-            End:
+                End:
                 NetMessage.buffer[num].writeLocked = false;
                 #endregion
             }
@@ -237,78 +280,89 @@ namespace PoroCYon.MCT.Net
         /// <param name="t">The type of the sent object to read. It must have a parameterless constructor defined.</param>
         /// <param name="bb">The data that is received from the network</param>
         /// <returns>The data as a managed object</returns>
-        public static object ReadObject(Type t, BinBuffer bb)
+        public static unsafe object ReadObject(Type t, BinBuffer bb)
         {
-            object ret = Activator.CreateInstance(t);
+            object ret = null;
 
             #region primitives
             if (t == typeof(byte))
                 ret = bb.ReadByte();
-            if (t == typeof(sbyte))
+            else if (t == typeof(sbyte))
                 ret = bb.ReadSByte();
 
-            if (t == typeof(ushort))
+            else if (t == typeof(ushort))
                 ret = bb.ReadUShort();
-            if (t == typeof(short))
+            else if (t == typeof(short))
                 ret = bb.ReadShort();
 
-            if (t == typeof(int))
+            else if (t == typeof(int))
                 ret = bb.ReadInt();
-            if (t == typeof(uint))
+            else if (t == typeof(uint))
                 ret = bb.ReadUInt();
 
-            if (t == typeof(long))
+            else if (t == typeof(long))
                 ret = bb.ReadLong();
-            if (t == typeof(ulong))
+            else if (t == typeof(ulong))
                 ret = bb.ReadULong();
 
-            if (t == typeof(float))
+            else if (t == typeof(float))
                 ret = bb.ReadFloat();
-            if (t == typeof(double))
+            else if (t == typeof(double))
                 ret = bb.ReadDouble();
-            if (t == typeof(decimal))
+            else if (t == typeof(decimal))
                 ret = bb.ReadDecimal();
 
-            if (t == typeof(DateTime))
+            else if (t == typeof(DateTime))
                 ret = bb.ReadDateTime();
-            if (t == typeof(TimeSpan))
+            else if (t == typeof(TimeSpan))
                 ret = bb.ReadTimeSpan();
 
-            if (t == typeof(BigInteger))
+            else if (t == typeof(BigInteger))
                 ret = bb.ReadBigInt();
-            if (t == typeof(Complex))
+            else if (t == typeof(Complex))
                 ret = bb.ReadComplex();
 
-            if (t == typeof(MemoryStream))
+            else if (t == typeof(MemoryStream))
                 ret = new MemoryStream(bb.ReadBytes(bb.ReadInt()));
-            if (t == typeof(BinBuffer))
+            else if (t == typeof(BinBuffer))
+                ret = new BinBuffer(new BinBufferByte(bb.ReadBytes(bb.ReadInt())));
+            else if (t == typeof(BinBufferBuffer))
                 ret = new BinBuffer(new BinBufferByte(bb.ReadBytes(bb.ReadInt())));
 
-            if (t == typeof(Vector2))
+            else if (t == typeof(Vector2))
                 ret = bb.ReadVector2();
-            if (t == typeof(Color))
+            else if (t == typeof(Color))
                 ret = bb.ReadColor();
-            if (t == typeof(Item))
+            else if (t == typeof(Item))
                 ret = bb.ReadItem();
             #endregion
 
             #region value type -> can read from memory
-            if (t.IsValueType && (t.IsExplicitLayout || t.IsLayoutSequential))
+            else if (t.IsValueType && (t.IsExplicitLayout || t.IsLayoutSequential) && !t.IsGenericType)
             {
+                // this is probably lunacy
                 int size = bb.ReadInt();
-                IntPtr ptr = Marshal.AllocHGlobal(size); // malloc
+                byte[] data = bb.ReadBytes(size);
 
-                for (IntPtr addr = ptr; addr.ToInt64() < ptr.ToInt64() + size; addr += 1)
-                    Marshal.WriteByte(addr, bb.ReadByte());
+                // ret = *(T*)data;
+                fixed (byte* dataPtr = data)
+                {
+                    ret = Marshal.PtrToStructure(new IntPtr(dataPtr), t);
+                }
 
-                ret = Marshal.PtrToStructure(ptr, t);
+                //IntPtr ptr = Marshal.AllocHGlobal(size); // malloc
 
-                Marshal.FreeHGlobal(ptr); // free
+                //for (IntPtr addr = ptr; addr.ToInt64() < ptr.ToInt64() + size; addr += 1)
+                //    Marshal.WriteByte(addr, bb.ReadByte());
+
+                //ret = Marshal.PtrToStructure(ptr, t);
+
+                //Marshal.FreeHGlobal(ptr); // free
             }
             #endregion
 
             #region serilizable -> can use binaryformatter
-            if (t.IsSerializable)
+            else if (t.IsSerializable || t.GetInterface("System.Runtime.Serialization.ISerializable") != null)
             {
                 BinaryFormatter bf = new BinaryFormatter();
                 MemoryStream ms = new MemoryStream(bb.ReadBytes(bb.ReadInt()));
@@ -319,6 +373,17 @@ namespace PoroCYon.MCT.Net
 
             return ret;
         }
+        /// <summary>
+        /// Retrieves a managed object sent by <see cref="PoroCYon.MCT.Net.NetHelper"/>.SendModData
+        /// </summary>
+        /// <typeparam name="T">The type of the object to read.</typeparam>
+        /// <param name="bb">The data that is received from the network</param>
+        /// <returns>The data as a managed object</returns>
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
+        public static T ReadObject<T>(BinBuffer bb)
+        {
+            return (T)(dynamic)ReadObject(typeof(T), bb);
+        }
 
         /// <summary>
         /// Sends a message to the chat lines.
@@ -327,6 +392,7 @@ namespace PoroCYon.MCT.Net
         /// If Main.netMode equals 2, the message is sent as NetMessage 25.
         /// </summary>
         /// <param name="text">The text to send</param>
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
         public static void SendText(string text)
         {
             SendText(text, Color.White);
