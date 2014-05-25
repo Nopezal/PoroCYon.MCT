@@ -28,8 +28,27 @@ namespace PoroCYon.MCT.Tools.Internal
 
             foreach (string s in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
             {
-                byte[] fileBin = File.ReadAllBytes(s);
-                string fileStr = File.ReadAllText (s);
+                byte[] fileBin = null;
+                string fileStr = null;
+
+                try
+                {
+                    fileBin = File.ReadAllBytes(s);
+                    fileStr = File.ReadAllText (s);
+                }
+                catch (IOException e)
+                {
+                    errors.Add(new CompilerError()
+                    {
+                        Cause = e,
+                        FilePath = s,
+                        IsWarning = true,
+                        Message = "A file handle is open. Please close the file in the program which owns the file handle.\n"
+                            + "This file will not be included in the build, but the build itself will continue."
+                    });
+
+                    continue;
+                }
 
                 string
                     fileName = Path.GetFileName(s),
