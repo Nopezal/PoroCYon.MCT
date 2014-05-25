@@ -41,7 +41,16 @@ namespace PoroCYon.MCT.Tools
             try
             {
                 if (!BeginCompile(folder))
-                    return null;
+                    return CreateOutput(new List<CompilerError>()
+                    {
+                        new CompilerError()
+                        {
+                            Cause = new CompilerException("Mod already building!"),
+                            FilePath = folder,
+                            IsWarning = true,
+                            Message = "The mod is already being built."
+                        }
+                    });
                 current.OriginPath = folder;
 
                 #region check if folder exists
@@ -96,16 +105,28 @@ namespace PoroCYon.MCT.Tools
             }
             catch (Exception e)
             {
-                try
-                {
-                    EndCompile(folder);
-                }
-                catch (Exception ex)
-                {
-                    throw new AggregateException(e, ex);
-                }
+                EndCompile(folder);
 
-                throw new CompilerException(e.Message, e);
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = e,
+                        FilePath = folder,
+                        IsWarning = false,
+                        Message = "An unexpected error occured while compiling."
+                    }
+                });
+                //try
+                //{
+                //    EndCompile(folder);
+                //}
+                //catch (Exception ex)
+                //{
+                //    throw new AggregateException(e, ex);
+                //}
+
+                //throw new CompilerException(e.Message, e);
             }
         }
         /// <summary>
@@ -116,15 +137,26 @@ namespace PoroCYon.MCT.Tools
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
             if (!BeginCompile(assemblyPath))
-                return null;
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = new CompilerException("Mod already building!"),
+                        FilePath = assemblyPath,
+                        IsWarning = true,
+                        Message = "The mod is already being built."
+                    }
+                });
             current.OriginPath = assemblyPath;
 
-            #region check if file exists
-            if (!File.Exists(assemblyPath))
-                return new CompilerOutput()
-                {
-                    Succeeded = false,
-                    errors = new List<CompilerError>()
+            try
+            {
+                #region check if file exists
+                if (!File.Exists(assemblyPath))
+                    return new CompilerOutput()
+                    {
+                        Succeeded = false,
+                        errors = new List<CompilerError>()
                     {
                         new CompilerError()
                         {
@@ -132,22 +164,22 @@ namespace PoroCYon.MCT.Tools
                             Message = "The assembly to build the mod from (" + assemblyPath + ") was not found."
                         }
                     }
-                };
-            #endregion
+                    };
+                #endregion
 
-            Assembly asm;
+                Assembly asm;
 
-            try
-            {
-                asm = Assembly.LoadFile(assemblyPath);
-            }
-            #region check if assembly is valid
-            catch (BadImageFormatException e)
-            {
-                return new CompilerOutput()
+                try
                 {
-                    Succeeded = false,
-                    errors = new List<CompilerError>()
+                    asm = Assembly.LoadFile(assemblyPath);
+                }
+                #region check if assembly is valid
+                catch (BadImageFormatException e)
+                {
+                    return new CompilerOutput()
+                    {
+                        Succeeded = false,
+                        errors = new List<CompilerError>()
                     {
                         new CompilerError()
                         {
@@ -156,14 +188,14 @@ namespace PoroCYon.MCT.Tools
                             FilePath = assemblyPath
                         }
                     }
-                };
-            }
-            catch (Exception e)
-            {
-                return new CompilerOutput()
+                    };
+                }
+                catch (Exception e)
                 {
-                    Succeeded = false,
-                    errors = new List<CompilerError>()
+                    return new CompilerOutput()
+                    {
+                        Succeeded = false,
+                        errors = new List<CompilerError>()
                     {
                         new CompilerError()
                         {
@@ -172,28 +204,44 @@ namespace PoroCYon.MCT.Tools
                             FilePath = assemblyPath
                         }
                     }
-                };
+                    };
+                }
+                #endregion
+
+                CompilerOutput outp;
+
+                var extracted = Extractor.ExtractData(asm);
+                outp = CreateOutput(extracted.Item3);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(assemblyPath);
+                    return outp;
+                }
+
+                outp = Validate(extracted.Item1, extracted.Item2, true);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(assemblyPath);
+                    return outp;
+                }
+
+                return MainCompileStuff(current, asm);
             }
-            #endregion
-
-            CompilerOutput outp;
-
-            var extracted = Extractor.ExtractData(asm);
-            outp = CreateOutput(extracted.Item3);
-            if (!outp.Succeeded)
+            catch (Exception e)
             {
                 EndCompile(assemblyPath);
-                return outp;
-            }
 
-            outp = Validate(extracted.Item1, extracted.Item2, true);
-            if (!outp.Succeeded)
-            {
-                EndCompile(assemblyPath);
-                return outp;
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = e,
+                        FilePath = assemblyPath,
+                        IsWarning = false,
+                        Message = "An unexpected error occured while compiling."
+                    }
+                });
             }
-
-            return MainCompileStuff(current, asm);
         }
 
         static CompilerOutput CreateOutput(List<CompilerError> errors)
