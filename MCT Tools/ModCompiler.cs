@@ -31,57 +31,82 @@ namespace PoroCYon.MCT.Tools
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
 
-            if (!BeginCompile(folder))
-                return null;
-            current.OriginPath = folder;
-
             // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
-            if (Path.IsPathRooted(folder) && !Directory.Exists(folder))
-                folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
+            if (!Path.IsPathRooted(folder))
+                if (!Directory.Exists(folder))
+                    folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
+                else
+                    folder = Path.GetFullPath(folder);
 
-            #region check if folder exists
-            if (!Directory.Exists(folder))
-                return new CompilerOutput()
+            try
+            {
+                if (!BeginCompile(folder))
+                    return null;
+                current.OriginPath = folder;
+
+                #region check if folder exists
+                if (!Directory.Exists(folder))
                 {
-                    Succeeded = false,
-                    errors = new List<CompilerError>()
+                    EndCompile(folder);
+
+                    return new CompilerOutput()
                     {
-                        new CompilerError()
+                        Succeeded = false,
+                        errors = new List<CompilerError>()
                         {
-                            Cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."),
-                            Message = "The mod directory (" + folder + ") was not found"
+                            new CompilerError()
+                            {
+                                Cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."),
+                                Message = "The mod directory (" + folder + ") was not found",
+                                IsWarning = false,
+                                FilePath = folder
+                            }
                         }
-                    }
-                };
-            #endregion
+                    };
+                }
+                #endregion
 
-            CompilerOutput outp;
+                CompilerOutput outp;
 
-            var readFiles = FileLoader.LoadFiles(folder);
-            outp = CreateOutput(readFiles.Item3);
-            if (!outp.Succeeded)
-            {
-                EndCompile(folder);
-                return outp;
+                var readFiles = FileLoader.LoadFiles(folder);
+                outp = CreateOutput(readFiles.Item3);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(folder);
+                    return outp;
+                }
+
+                outp = Validate(readFiles.Item1, readFiles.Item2, true);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(folder);
+                    return outp;
+                }
+
+                var compiled = Builder.Build(current);
+                outp = CreateOutput(compiled.Item3);
+                outp.Succeeded &= compiled.Item1 != null;
+                if (!outp.Succeeded)
+                {
+                    EndCompile(folder);
+                    return outp;
+                }
+
+                return MainCompileStuff(current, compiled.Item1);
             }
-
-            outp = Validate(readFiles.Item1, readFiles.Item2, true);
-            if (!outp.Succeeded)
+            catch (Exception e)
             {
-                EndCompile(folder);
-                return outp;
-            }
+                try
+                {
+                    EndCompile(folder);
+                }
+                catch (Exception ex)
+                {
+                    throw new AggregateException(e, ex);
+                }
 
-            var compiled = Builder.Build(current);
-            outp = CreateOutput(compiled.Item3);
-            outp.Succeeded &= compiled.Item1 != null;
-            if (!outp.Succeeded)
-            {
-                EndCompile(folder);
-                return outp;
+                throw new CompilerException(e.Message, e);
             }
-
-            return MainCompileStuff(current, compiled.Item1);
         }
         /// <summary>
         /// Compiles a mod from a managed assembly.
@@ -216,16 +241,14 @@ namespace PoroCYon.MCT.Tools
 
             mod.Assembly = asm;
 
-            // checker, writer
-            // don't forget to set outputFile
-
             List<CompilerError> errors = new List<CompilerError>();
 
             errors.AddRange(Checker.Check(asm));
             errors.AddRange(Writer.Write(mod));
 
             CompilerOutput outp = CreateOutput(errors);
-            outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
+            if (outp.Succeeded)
+                outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
             EndCompile(mod.OriginPath);
 

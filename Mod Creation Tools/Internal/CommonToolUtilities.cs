@@ -25,7 +25,7 @@ namespace PoroCYon.MCT.Internal
             JsonData j = JsonMapper.ToObject("{}");
 
             j["displayName"] = "TAPI." + modName;
-            j["author"] = Environment.UserName;
+            j["author"] = "<unknown>";
             j["info"] = "A mod called " + modName;
             j["internalName"] = modName;
 

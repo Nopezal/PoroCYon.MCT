@@ -69,7 +69,7 @@ namespace PoroCYon.MCT.Tools
         public override string ToString()
         {
             return (IsWarning ? "Warning: " : "Error: ") + Message + Environment.NewLine +
-                FilePath + "(" + LocationInFile.X + ";" + LocationInFile.Y + ")" + Environment.NewLine +
+                FilePath + " (" + LocationInFile.X + ";" + LocationInFile.Y + ")" + Environment.NewLine + Environment.NewLine +
                 Cause;
         }
     }
@@ -131,12 +131,23 @@ namespace PoroCYon.MCT.Tools
                 if (Succeeded)
                     s += "Warnings: " + errors.Count;
                 else
-                    s += "Errors/Warnings: " + errors.Count;
+                {
+                    bool hasWarnings = false;
 
-                s += Environment.NewLine;
+                    for (int i = 0; i < errors.Count; i++)
+                        if (errors[i].IsWarning)
+                        {
+                            hasWarnings = true;
+                            break;
+                        }
+
+                    s += "Errors" + (hasWarnings ? "/Warnings" : String.Empty) + ": " + errors.Count;
+                }
+
+                s += Environment.NewLine + Environment.NewLine;
 
                 for (int i = 0; i < errors.Count; i++)
-                    s += errors[i] + Environment.NewLine;
+                    s += errors[i] + Environment.NewLine + Environment.NewLine;
             }
 
             return s;

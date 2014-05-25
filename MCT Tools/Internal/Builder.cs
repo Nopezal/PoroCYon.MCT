@@ -3,15 +3,130 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using LitJson;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
+using Microsoft.Build.Framework;
+using Microsoft.Xna.Framework;
+using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler.Internal.Compilation;
-using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal
 {
+    class BuildLogger : ILogger
+    {
+        internal bool succeeded = true;
+        internal List<CompilerError> errors = new List<CompilerError>();
+        internal List<object> log = new List<object>();
+
+        public string Parameters
+        {
+            get;
+            set;
+        }
+        public LoggerVerbosity Verbosity
+        {
+            get;
+            set;
+        }
+
+        public void Initialize(IEventSource eventSource)
+        {
+            eventSource.ErrorRaised += (s, e) =>
+            {
+                CompilerError ce = new CompilerError()
+                {
+                    Cause = new CompilerException(e.Message),
+                    FilePath = e.File,
+                    IsWarning = false,
+                    LocationInFile = new Point(e.ColumnNumber, e.LineNumber),
+                    Message = e.Code + ": " + e.Message + " (in project " + e.ProjectFile + ")"
+                        + (!String.IsNullOrEmpty(e.HelpKeyword) ? ": " + e.HelpKeyword : String.Empty)
+                };
+
+                errors.Add(ce);
+                log.Add(ce);
+            };
+            eventSource.WarningRaised += (s, e) =>
+            {
+                //if (Verbosity >= LoggerVerbosity.Minimal)
+                //{
+                    CompilerError ce = new CompilerError()
+                    {
+                        Cause = new CompilerWarning(e.Message),
+                        FilePath = e.File,
+                        IsWarning = true,
+                        LocationInFile = new Point(e.ColumnNumber, e.LineNumber),
+                        Message = e.Code + ": " + e.Message + " (in project " + e.ProjectFile + ")"
+                        + (!String.IsNullOrEmpty(e.HelpKeyword) ? ": " + e.HelpKeyword : String.Empty)
+                    };
+
+                    errors.Add(ce);
+                    log.Add(ce);
+                //}
+            };
+            #region commented event hooking (except checking if succeeded)
+            eventSource.BuildFinished += (s, e) =>
+            {
+                //if (Verbosity >= LoggerVerbosity.Normal)
+                //    log.Add("Build finished.");
+                succeeded &= e.Succeeded;
+            };
+            //eventSource.BuildStarted += (s, e) =>
+            //{
+            //    if (Verbosity >= LoggerVerbosity.Normal)
+            //        log.Add("Build started.");
+            //};
+            eventSource.ProjectFinished += (s, e) =>
+            {
+                //if (Verbosity >= LoggerVerbosity.Normal)
+                //    log.Add("Project " + e.ProjectFile + " finished.");
+                succeeded &= e.Succeeded;
+            };
+            //eventSource.ProjectStarted += (s, e) =>
+            //{
+            //    if (Verbosity >= LoggerVerbosity.Normal)
+            //    log.Add("Project " + e.ProjectFile + " started.");
+            //};
+            eventSource.TargetFinished += (s, e) =>
+            {
+                //if (Verbosity >= LoggerVerbosity.Detailed)
+                //    log.Add("Target " + e.TargetFile + " (" + e.TargetName + ") finished.");
+                succeeded &= e.Succeeded;
+            };
+            //eventSource.TargetStarted += (s, e) =>
+            //{
+            //    if (Verbosity >= LoggerVerbosity.Detailed)
+            //        log.Add("Target " + e.TargetFile + " (" + e.TargetName + ") started.");
+            //};
+            eventSource.TaskFinished += (s, e) =>
+            {
+                //if (Verbosity >= LoggerVerbosity.Diagnostic)
+                //    log.Add("Task " + e.TaskFile + " (" + e.TaskName + ") finished.");
+                succeeded &= e.Succeeded;
+            };
+            //eventSource.TaskStarted += (s, e) =>
+            //{
+            //    if (Verbosity >= LoggerVerbosity.Diagnostic)
+            //        log.Add("Task " + e.TaskFile + " (" + e.TaskName + ") started.");
+            //};
+            //eventSource.MessageRaised += (s, e) =>
+            //{
+            //    if (e.Importance == MessageImportance.Low    && Verbosity >= LoggerVerbosity.Diagnostic ||
+            //        e.Importance == MessageImportance.Normal && Verbosity >= LoggerVerbosity.Detailed   ||
+            //        e.Importance == MessageImportance.High   && Verbosity >= LoggerVerbosity.Normal       )
+            //        log.Add(e.Message);
+            //};    
+            //eventSource.StatusEventRaised += (s, e) =>
+            //{
+            //    if (Verbosity >= LoggerVerbosity.Detailed)
+            //        log.Add(e.Message);
+            //};
+            #endregion
+        }
+        public void Shutdown() { }
+    }
+
     static class Builder
     {
         internal static List<ICompiler> compilers = new List<ICompiler>();
@@ -166,23 +281,38 @@ namespace PoroCYon.MCT.Tools.Internal
             foreach (string r in toRemove)
                 mod.files.Remove(r);
 
-            BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection()),
+            BuildLogger logger = new BuildLogger();
+            BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection())
+                { Loggers = new List<ILogger>() { logger } },
                 new BuildRequestData(mod.Info.msBuildFile, new Dictionary<string, string>
-            {
-                { "Configuration", mod.Info.includePDB ? "Debug" : "Release" },
-                { "Platform",      "x86"                                     },
-                { "OutputPath",    MSBOutputPath                                }
-            }, "4.0", new string[] { "Build" }, null));
-
-            if (result.OverallResult != BuildResultCode.Success)
-                errors.Add(new CompilerError()
                 {
-                    Cause = result.Exception ?? new CompilerException(),
-                    FilePath = mod.Info.msBuildFile,
-                    IsWarning = false,
-                    Message = "Something went wrong when compiling the MSBuild script. Please check it in Visual Studio."
-                });
-            else
+                    { "Configuration", mod.Info.includePDB ? "Debug" : "Release" },
+                    { "Platform",      "x86"                                     },
+                    { "OutputPath",    MSBOutputPath                             }
+                }, "4.0", new string[] { "Build" }, null));
+
+            //foreach (object o in logger.errors)
+            //    if (o is CompilerError)
+            //        errors.Add(o as CompilerError);
+            //    else
+            //    {
+            //        if (Debugger.IsAttached)
+            //            Debug.WriteLine(o.ToString());
+            //        Console.WriteLine(o.ToString());
+            //    }
+
+            errors.AddRange(logger.errors);
+
+            if (result.OverallResult == BuildResultCode.Success && logger.succeeded)
+            //if (result.OverallResult != BuildResultCode.Success || !logger.succeeded)
+            //    errors.Add(new CompilerError()
+            //    {
+            //        Cause = result.Exception ?? new CompilerException("Something wen wrong when compiling the MSBuild script."),
+            //        FilePath = mod.Info.msBuildFile,
+            //        IsWarning = false,
+            //        Message = "Something went wrong when compiling the MSBuild script. Please check it in Visual Studio. See the build errors for more information."
+            //    });
+            //else
             {
                 try
                 {
