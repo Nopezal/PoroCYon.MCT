@@ -39,7 +39,8 @@ namespace PoroCYon.MCT.Tools
 
             uint versionAssembly = 0u;
 
-            Directory.Delete(decompDir, true);
+            if (Directory.Exists(decompDir))
+                Directory.Delete(decompDir, true);
             Directory.CreateDirectory(decompPath);
 
             #region load data from zip

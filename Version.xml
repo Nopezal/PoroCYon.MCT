@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.1" String="1.1.0.1" />
+  <CurrentVersion Number="2" Version="1.1.0.2" String="1.1.0.2" />
   
   <Changelog>
+    <Release Version="1.1.0.2">
+      <Change>MCT.Net optimization.</Change>
+      <Change>A mod cannot be built twice at the same time using the MCT Tools.</Change>
+    </Release>
     <Release Version="1.1.0.1">
       <Change>Added Prefix validation to the MCT compiler.</Change>
       <Change>Updated Visual Studio project/item templates.</Change>

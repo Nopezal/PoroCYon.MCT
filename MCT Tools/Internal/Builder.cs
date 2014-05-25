@@ -69,15 +69,19 @@ namespace PoroCYon.MCT.Tools.Internal
 
             foreach (string key in mod.Files.Keys)
             {
-                if (key.StartsWith("bin\\"))
+                if (key.Contains("bin\\"))
                     toRemove.Add(key);
-                else if (key.StartsWith("obj\\"))
+                else if (key.Contains("obj\\"))
                     toRemove.Add(key);
-                else if (key.StartsWith("Debug\\"))
+                else if (key.Contains("Debug\\"))
                     toRemove.Add(key);
-                else if (key.StartsWith("Release\\"))
+                else if (key.Contains("Release\\"))
                     toRemove.Add(key);
-                else if (key.StartsWith("ipch\\"))
+                else if (key.Contains("ipch\\"))
+                    toRemove.Add(key);
+                else if (key.Contains(".git\\"))
+                    toRemove.Add(key);
+                else if (key.Contains(".sln.ide\\"))
                     toRemove.Add(key);
                 else if (key.EndsWith(".sdf"))
                     toRemove.Add(key);
@@ -88,6 +92,10 @@ namespace PoroCYon.MCT.Tools.Internal
                 else if (key.EndsWith(".user"))
                     toRemove.Add(key);
                 else if (key.EndsWith(".cache"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".gitignore"))
+                    toRemove.Add(key);
+                else if (key.EndsWith(".gitattributes"))
                     toRemove.Add(key);
 
                 else if (!File.Exists(mod.OriginPath))
@@ -146,6 +154,17 @@ namespace PoroCYon.MCT.Tools.Internal
             List<CompilerError> errors = new List<CompilerError>();
             Assembly asm = null;
             string pdb = null;
+
+            List<string> toRemove = new List<string>();
+            string
+                ext = Path.GetExtension(mod.Info.msBuildFile),
+                probableFileExt = ext.Remove(ext.IndexOf("proj"));
+
+            foreach (string key in mod.Files.Keys)
+                if (key.EndsWith(probableFileExt))
+                    toRemove.Add(key);
+            foreach (string r in toRemove)
+                mod.files.Remove(r);
 
             BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection()),
                 new BuildRequestData(mod.Info.msBuildFile, new Dictionary<string, string>
@@ -228,11 +247,9 @@ namespace PoroCYon.MCT.Tools.Internal
                     List<string> toRemove = new List<string>();
 
                     foreach (string key in mod.Files.Keys)
-                    {
                         for (int i = 0; i < compiler.FileExtensions.Length; i++)
                             if (key.EndsWith(compiler.FileExtensions[i]))
                                 toRemove.Add(key);
-                    }
                     foreach (string r in toRemove)
                         mod.files.Remove(r);
 

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using LitJson;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Internal;
 using TAPI;
@@ -14,8 +15,10 @@ namespace PoroCYon.MCT.Tools
     /// </summary>
     public static class ModCompiler
     {
+        internal readonly static string BuildingList = Consts.MctDirectory + ".building.json";
         internal static ModData current;
         internal static Dictionary<string, string> modDict;
+        static JsonData list;
 
         /// <summary>
         /// Compiles a mod from its source folder.
@@ -28,7 +31,8 @@ namespace PoroCYon.MCT.Tools
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
 
-            BeginCompile();
+            if (!BeginCompile(folder))
+                return null;
             current.OriginPath = folder;
 
             // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
@@ -56,17 +60,26 @@ namespace PoroCYon.MCT.Tools
             var readFiles = FileLoader.LoadFiles(folder);
             outp = CreateOutput(readFiles.Item3);
             if (!outp.Succeeded)
+            {
+                EndCompile(folder);
                 return outp;
+            }
 
             outp = Validate(readFiles.Item1, readFiles.Item2, true);
             if (!outp.Succeeded)
+            {
+                EndCompile(folder);
                 return outp;
+            }
 
             var compiled = Builder.Build(current);
             outp = CreateOutput(compiled.Item3);
             outp.Succeeded &= compiled.Item1 != null;
             if (!outp.Succeeded)
+            {
+                EndCompile(folder);
                 return outp;
+            }
 
             return MainCompileStuff(current, compiled.Item1);
         }
@@ -77,7 +90,8 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
-            BeginCompile();
+            if (!BeginCompile(assemblyPath))
+                return null;
             current.OriginPath = assemblyPath;
 
             #region check if file exists
@@ -142,11 +156,17 @@ namespace PoroCYon.MCT.Tools
             var extracted = Extractor.ExtractData(asm);
             outp = CreateOutput(extracted.Item3);
             if (!outp.Succeeded)
+            {
+                EndCompile(assemblyPath);
                 return outp;
+            }
 
             outp = Validate(extracted.Item1, extracted.Item2, true);
             if (!outp.Succeeded)
+            {
+                EndCompile(assemblyPath);
                 return outp;
+            }
 
             return MainCompileStuff(current, asm);
         }
@@ -170,17 +190,23 @@ namespace PoroCYon.MCT.Tools
         {
             return CreateOutput(Validator.ValidateJsons(jsons, files, validateModInfo));
         }
-        static void BeginCompile()
+        static bool BeginCompile(string path)
         {
+            if (AppendBuilding(path))
+                return false;
+
             current = new ModData();
 
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
 
             if (!Directory.Exists(Path.GetTempPath() + "\\MCT"))
                 Directory.CreateDirectory(Path.GetTempPath() + "\\MCT");
+
+            return true;
         }
-        static void EndCompile()
+        static void EndCompile(string path)
         {
+            RemoveBuilding(path);
             //Directory.Delete(Path.GetTempPath() + "\\MCT", true);
         }
         static CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
@@ -201,9 +227,53 @@ namespace PoroCYon.MCT.Tools
             CompilerOutput outp = CreateOutput(errors);
             outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
-            EndCompile();
+            EndCompile(mod.OriginPath);
 
             return outp;
+        }
+        static bool AppendBuilding(string path)
+        {
+            string json = "[]";
+            if (File.Exists(BuildingList))
+                json = File.ReadAllText(BuildingList);
+
+            list = JsonMapper.ToObject(json);
+            for (int i = 0; i < list.Count; i++)
+                if ((string)list[i] == path)
+                    return true;
+            //List<JsonData> arr = new List<JsonData>(list.Count + 1);
+
+            //for (int i = 0; i < list.Count; i++)
+            //    arr.Add(list[i]);
+            //arr.Add(path);
+
+            //list = new JsonData();
+            list.Add(path);
+
+            json = list.ToJson();
+            File.WriteAllText(BuildingList, json);
+            return false;
+        }
+        static void RemoveBuilding(string path)
+        {
+            string json = String.Empty;
+            if (File.Exists(BuildingList))
+                json = File.ReadAllText(BuildingList);
+
+            list = JsonMapper.ToObject(json);
+            List<JsonData> arr = new List<JsonData>();
+
+            for (int i = 0; i < list.Count; i++)
+                if ((string)list[i] != path)
+                    arr.Add((string)list[i]);
+
+            list = JsonMapper.ToObject("[]");
+
+            for (int i = 0; i < arr.Count; i++)
+                list.Add(arr[i]);
+
+            json = list.ToJson();
+            File.WriteAllText(BuildingList, json);
         }
     }
 }

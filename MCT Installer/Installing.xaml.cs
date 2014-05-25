@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Net;
+using System.Reflection;
 using System.Threading;
 using System.Windows.Controls;
 using System.Windows.Threading;
@@ -39,6 +40,7 @@ namespace PoroCYon.MCT.Installer
                 ApplyProgressPercent.Text = (int)ApplyProgress.Value + "%";
             };
 
+            #region aquire
             Thread aquire = new Thread(() =>
             {
                 Action<double, string> UpdateProgress = (procent, text) =>
@@ -139,7 +141,46 @@ namespace PoroCYon.MCT.Installer
             });
             aquire.SetApartmentState(ApartmentState.STA);
             aquire.Start();
+            #endregion
 
+            #region envvar
+            Thread envvar = new Thread(() =>
+            {
+                Environment.SetEnvironmentVariable("TAPIBINDIR", steamDir.Remove(steamDir.Length - 1), EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("TAPIMODDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                    + "\\My Games\\Terraria\\tAPI\\Mods", EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("TAPIMODSRCDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                    + "\\My Games\\Terraria\\tAPI\\Mods\\Sources", EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("TAPIMODOUTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                    + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted", EnvironmentVariableTarget.Machine);
+                Environment.SetEnvironmentVariable("MCTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                    + "\\My Games\\Terraria\\tAPI\\MCT", EnvironmentVariableTarget.Machine);
+
+                RegistryKey hklm = Registry.LocalMachine;
+                RegistryKey mctk = hklm.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\mct.exe", RegistryKeyPermissionCheck.ReadWriteSubTree);
+                mctk.SetValue(null, steamDir + "MCT Tools.exe");
+                mctk.SetValue("Path", steamDir);
+
+                string
+                    path = Environment.GetEnvironmentVariable("path"),
+                    mcttPath = steamDir + "MCTT_EXEC"; // second t intentional
+
+                if (!Directory.Exists(mcttPath))
+                    Directory.CreateDirectory(mcttPath);
+
+                using (Stream s = Assembly.GetExecutingAssembly().GetManifestResourceStream("PoroCYon.MCT.Installer.mct.bat"))
+                {
+                    File.WriteAllText(mcttPath + "\\mct.bat", new StreamReader(s).ReadToEnd());
+                }
+
+                if (!path.Contains(mcttPath))
+                    Environment.SetEnvironmentVariable("path", path + (String.IsNullOrEmpty(path) ? "" : ";") + mcttPath, EnvironmentVariableTarget.Machine);
+            });
+            envvar.SetApartmentState(ApartmentState.STA);
+            envvar.Start();
+            #endregion
+
+            #region apply
             Thread apply = new Thread(() =>
             {
                 Action<double, string> UpdateProgress = (procent, text) =>
@@ -220,7 +261,7 @@ namespace PoroCYon.MCT.Installer
                     applied--;
                 }
 
-                UpdateProgress(99, "Creating .tapi file for PoroCYon.MCT.dll");
+                UpdateProgress(98, "Creating .tapi file for PoroCYon.MCT.dll");
 
                 Process p = new Process()
                 {
@@ -235,6 +276,10 @@ namespace PoroCYon.MCT.Installer
                 p.Start();
                 p.WaitForExit();
 
+                UpdateProgress(99, "Creating environment variables");
+
+                envvar.Join();
+
                 File.Delete(steamDir + "Temp\\PoroCYon.MCT.dll");
 
                 MainWindow.instance.Dispatcher.Invoke(((Action)delegate
@@ -245,6 +290,7 @@ namespace PoroCYon.MCT.Installer
             });
             apply.SetApartmentState(ApartmentState.STA);
             apply.Start();
+            #endregion
         }
     }
 }

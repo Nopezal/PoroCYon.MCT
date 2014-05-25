@@ -10,6 +10,8 @@ namespace PoroCYon.MCT.Tools
 {
     static class Program
     {
+        static bool suppressBanner = false;
+
         static Dictionary<string, Action> Commands;
         static Dictionary<string, Action<string>> ToolCommands;
 
@@ -18,8 +20,7 @@ namespace PoroCYon.MCT.Tools
             Commands = new Dictionary<string, Action>()
             {
                 {
-                    "help",
-                    () =>
+                    "help", () =>
                     {
                         Console.WriteLine("BUILD\t\tBuilds a tAPI mod from a source folder or a managed .dll file.");
                         Console.WriteLine("DECOMPILE\t\tDecompiles a .tapi or .tapimod file");
@@ -28,15 +29,24 @@ namespace PoroCYon.MCT.Tools
                         Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP.");
                     }
                 },
+                { "nobanner", () => suppressBanner = !suppressBanner }
             };
             Commands.Add("?",     Commands["help" ]);
 
             ToolCommands = new Dictionary<string, Action<string>>()
             {
                 {
-                    "build",
-                    (path) =>
+                    "build", (path) =>
                     {
+                        if (!suppressBanner)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("MCT Tools mod compiler");
+                            Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
+                            Console.WriteLine("MCT Copyright © PoroCYon 2014");
+                            Console.WriteLine();
+                        }
+
                         string couldBeHelp = TrimCommand(path).ToLowerInvariant();
                         if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
                         {
@@ -49,12 +59,21 @@ namespace PoroCYon.MCT.Tools
                             Debug.WriteLine(ret);
 
                         Console.WriteLine(ret);
+                        Console.WriteLine();
                     }
                 },
                 {
-                    "decompile",
-                    (path) => 
+                    "decompile", (path) =>
                     {
+                        if (!suppressBanner)
+                        {
+                            Console.WriteLine();
+                            Console.WriteLine("MCT Tools mod decompiler");
+                            Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
+                            Console.WriteLine("MCT Copyright © PoroCYon 2014");
+                            Console.WriteLine();
+                        }
+
                         string couldBeHelp = TrimCommand(path).ToLowerInvariant();
                         if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
                         {
@@ -66,10 +85,14 @@ namespace PoroCYon.MCT.Tools
                             path = Mods.pathDirMods + "\\" + path;
 
                         ModDecompiler.Decompile(path);
+                        Console.WriteLine("Finished decompilation.");
                     }
-                }
+                },
+                { "skip", (nothing) => { } }
             };
             ToolCommands.Add("compile", ToolCommands["build"]);
+            ToolCommands.Add("ignore", ToolCommands["skip"]);
+            ToolCommands.Add("nothing", ToolCommands["skip"]);
         }
 
         [Serializable]
