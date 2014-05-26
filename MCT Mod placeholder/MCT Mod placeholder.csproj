@@ -39,9 +39,6 @@
     <StartupObject />
   </PropertyGroup>
   <ItemGroup>
-    <Reference Include="PoroCYon.MCT">
-      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.MCT.dll</HintPath>
-    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
     <Reference Include="System.Numerics" />
@@ -49,16 +46,6 @@
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
-    <Reference Include="PoroCYon.XnaExtensions">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.XnaExtensions.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
-    <Reference Include="Ionic.Zip.Reduced">
-      <SpecificVersion>False</SpecificVersion>
-      <HintPath>C:\Program Files (x86)\Steam\steamapps\Common\Terraria\Ionic.Zip.Reduced.dll</HintPath>
-      <Private>False</Private>
-    </Reference>
     <Reference Include="tAPI">
       <SpecificVersion>False</SpecificVersion>
       <HintPath>C:\Program Files (x86)\Steam\steamapps\Common\Terraria\tAPI.exe</HintPath>
@@ -77,11 +64,7 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
-    copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)" /y
-    copy "$(TargetDir)$(TargetName).pdb" "%25userprofile%25\Dropbox\Public\MCT\$(TargetName).pdb" /y
-) )
-</PostBuildEvent>
+    <PostBuildEvent>rem everything is done in the MCT installer</PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

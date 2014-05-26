@@ -64,7 +64,7 @@ namespace PoroCYon.MCT.Installer
                     "PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
                     "MCT Tools.exe",               "MCT Tools.xml",
 
-                    "PoroCYon.MCT.Placeholder.dll"
+                    "PoroCYon.MCT.tapi"
                 };
 
                 if (ToInstall.FSharpCompiler)
@@ -246,11 +246,13 @@ namespace PoroCYon.MCT.Installer
 
                         File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
                     }
-                    else if (t.Item1 == "PoroCYon.MCT.Placeholder.dll")
+                    else if (t.Item1.EndsWith(".tapi"))
                     {
-                        if (!Directory.Exists(steamDir + "Temp"))
-                            Directory.CreateDirectory(steamDir + "Temp");
-                        File.WriteAllBytes(steamDir + "Temp\\PoroCYon.MCT.dll", t.Item2);
+                        //if (!Directory.Exists(steamDir + "Temp"))
+                        //    Directory.CreateDirectory(steamDir + "Temp");
+                        //File.WriteAllBytes(steamDir + "Temp\\PoroCYon.MCT.dll", t.Item2);
+                        File.WriteAllBytes(Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                            + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\" + Path.GetFileName(t.Item1), t.Item2);
                     }
                     else
                         File.WriteAllBytes(steamDir + t.Item1, t.Item2);
@@ -261,24 +263,24 @@ namespace PoroCYon.MCT.Installer
                     applied--;
                 }
 
-                UpdateProgress(98, "Creating .tapi file for PoroCYon.MCT.dll");
-
-                Process p = new Process()
-                {
-                    StartInfo = new ProcessStartInfo(steamDir + "\\MCT Tools.exe", "build \"" + steamDir + "Temp\\PoroCYon.MCT.dll" + "\"")
-                    {
-                        CreateNoWindow = true,
-                        UseShellExecute = false,
-                        RedirectStandardError = true,
-                        RedirectStandardOutput = true
-                    }
-                };
-                p.Start();
-                p.WaitForExit();
-
                 UpdateProgress(99, "Creating environment variables");
 
                 envvar.Join();
+
+                //UpdateProgress(99, "Installing & deploying PoroCYon.MCT.tapi placeholder.");
+                
+                //Process p = new Process()
+                //{
+                //    StartInfo = new ProcessStartInfo(steamDir + "\\MCT Tools.exe", "build \"" + steamDir + "Temp\\PoroCYon.MCT.dll" + "\"")
+                //    {
+                //        CreateNoWindow = true,
+                //        UseShellExecute = false,
+                //        RedirectStandardError = true,
+                //        RedirectStandardOutput = true
+                //    }
+                //};
+                //p.Start();
+                //p.WaitForExit();
 
                 File.Delete(steamDir + "Temp\\PoroCYon.MCT.dll");
 

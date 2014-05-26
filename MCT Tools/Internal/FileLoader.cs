@@ -52,7 +52,7 @@ namespace PoroCYon.MCT.Tools.Internal
 
                 string
                     fileName = Path.GetFileName(s),
-                    relativeFileName = s.Substring(directory.Length + 1);
+                    relativeFileName = s.Substring(directory.Length + 1).Replace('\\', '/');
 
                 if (s.EndsWith(".json"))
                 {

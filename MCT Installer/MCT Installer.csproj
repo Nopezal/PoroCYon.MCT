@@ -176,6 +176,8 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
+    mct compile "$(SolutionDir)MCT Mod placeholder"
+    copy "%25tapimodoutdir%25\PoroCYon.MCT.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi"
     copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)"
 ) )
 </PostBuildEvent>

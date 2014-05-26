@@ -9,6 +9,7 @@
     "internalName": "PoroCYon.MCT",
 
     "MSBuild": true,
+    "msBuildFile": "MCT Mod placeholder.csproj",
 
     "includePDB": true
 }

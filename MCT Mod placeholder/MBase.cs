@@ -1,10 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using Microsoft.Xna.Framework;
-using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
 using TAPI;
 
 namespace PoroCYon.MCT
@@ -17,9 +13,10 @@ namespace PoroCYon.MCT
 
         }
 
-        public override void OnLoad()
+        [CallPriority(Single.NegativeInfinity)]
+        public override void OnAllModsLoaded()
         {
-            base.OnLoad();
+            base.OnAllModsLoaded();
 
             // hacky stuff #2
 
@@ -38,14 +35,20 @@ namespace PoroCYon.MCT
             modWorlds = new List<ModWorld>();
 
             int tempIndex = modIndex;
+
+            Mods.loadOrder.RemoveAt(tempIndex);
+            Mods.loadOrderBackup.RemoveAt(tempIndex);
+
+            Mods.dlls.Remove(GetType().Assembly);
+            Mods.modJsons.Remove(modName);
+            Mods.modOptions.Remove(modName);
+
             modIndex = -1;
             modName = "";
             fileName = "";
-            textures = new Dictionary<string, Texture2D>();
-            files = new Dictionary<string, byte[]>();
+            textures.Clear();
+            files.Clear();
             code = null;
-
-            Mods.loadOrder.RemoveAt(tempIndex);
 
             Mods.modBases.Remove(this);
         }

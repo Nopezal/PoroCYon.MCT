@@ -184,19 +184,19 @@ namespace PoroCYon.MCT.Tools.Internal
 
             foreach (string key in mod.Files.Keys)
             {
-                if (key.Contains("bin\\"))
+                if (key.Contains("bin/"))
                     toRemove.Add(key);
-                else if (key.Contains("obj\\"))
+                else if (key.Contains("obj/"))
                     toRemove.Add(key);
-                else if (key.Contains("Debug\\"))
+                else if (key.Contains("Debug/"))
                     toRemove.Add(key);
-                else if (key.Contains("Release\\"))
+                else if (key.Contains("Release/"))
                     toRemove.Add(key);
-                else if (key.Contains("ipch\\"))
+                else if (key.Contains("ipch/"))
                     toRemove.Add(key);
-                else if (key.Contains(".git\\"))
+                else if (key.Contains(".git/"))
                     toRemove.Add(key);
-                else if (key.Contains(".sln.ide\\"))
+                else if (key.Contains(".sln.ide/"))
                     toRemove.Add(key);
                 else if (key.EndsWith(".sdf"))
                     toRemove.Add(key);

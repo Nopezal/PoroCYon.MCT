@@ -1,8 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.3" String="1.1.0.3" />
+  <CurrentVersion Number="2" Version="1.1.0.5" String="1.1.0.5" />
   
   <Changelog>
+    <Release Version="1.1.0.5">
+      <Change>Fixed MCT placeholder mod not installing correctly.</Change>
+    </Release>
+    <Release Version="1.1.0.4">
+      <Change>Fixed MCT Tools not changing \ into /.</Change>
+    </Release>
     <Release Version="1.1.0.3">
       <Change>MCT Tools bugfixing.</Change>
     </Release>
