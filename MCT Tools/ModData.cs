@@ -146,5 +146,14 @@ namespace PoroCYon.MCT.Tools
             get;
             internal set;
         }
+        /// <summary>
+        /// Gets the directory name or file name of the origin directory/file. (source folder or assembly file).
+        /// </summary>
+        public string OriginName
+        {
+            get;
+            internal set;
+        }
+        }
     }
 }
