@@ -119,6 +119,7 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             int id = (int)arguments[0];
 
+#pragma warning disable 1522
             if (id >= Consts.ENUM_OFFSET)
                 switch ((InternalModMessages)id)
                 {
@@ -129,6 +130,7 @@ namespace PoroCYon.MCT.Internal.ModClasses
                 {
 
                 }
+#pragma warning disable 1522
 
             return base.OnModCall(mod, arguments);
         }
