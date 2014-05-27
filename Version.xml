@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.5" String="1.1.0.5" />
+  <CurrentVersion Number="2" Version="1.1.0.6" String="1.1.0.6" />
   
   <Changelog>
+    <Release Version="1.1.0.6">
+      <Change>MCT Tools' output file now has the same name as the mod directory, instead of its internal name.</Change>
+    </Release>
     <Release Version="1.1.0.5">
       <Change>Fixed MCT placeholder mod not installing correctly.</Change>
     </Release>
