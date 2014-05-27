@@ -154,6 +154,5 @@ namespace PoroCYon.MCT.Tools
             get;
             internal set;
         }
-        }
     }
 }
