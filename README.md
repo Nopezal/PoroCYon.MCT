@@ -14,15 +14,14 @@ Initialize MCT
 Invoke MCT Tools.exe
 --------------------
 
-The MCT Tools is a command-line program
-that can build a mod from a managed .dll,
-decompile a .tapi or .tapimod file,
-or pack a mod written in JScript.NET or Visual Basic.
+The MCT Tools is a command-line program that has a custom built compiler and a mod decompiler.
+It can be invoked through CMD using the 'mct' command. You can also use the TAPIBINDIR, TAPIMODDIR, TAPIMODSRCDIR, TAPIMODOUTDIR and MCTDIR environment variables.
 
 use the /? argument to display help info.
 
 Examples:
 
-    -build "C:\SomeDll.dll"
-    -decompile "Unsorted\MyMod.tapi"
-    -pack "MyJSMod"
+    mct compile "Ingame Cheat Menu"
+(that's the command I use to compile the ICM)
+
+    mct decompile "Unsorted\\MyMod.tapi"
