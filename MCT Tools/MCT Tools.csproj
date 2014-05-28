@@ -89,6 +89,7 @@
     <Compile Include="Internal\FileLoader.cs" />
     <Compile Include="JsonFile.cs" />
     <Compile Include="Validation\CraftGroups.cs" />
+    <Compile Include="Validation\Entities\Buff.cs" />
     <Compile Include="Validation\Entities\Drop.cs" />
     <Compile Include="Validation\Entities\EntityValidator.cs" />
     <Compile Include="Validation\Entities\Item.cs" />

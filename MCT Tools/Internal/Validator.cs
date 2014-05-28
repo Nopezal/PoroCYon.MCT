@@ -42,10 +42,13 @@ namespace PoroCYon.MCT.Tools.Internal
 
                 if (index != -1)
                 {
-                    ValidatorObject obj;
+                    ValidatorObject obj = null;
 
                     switch (path.Remove(index).ToLowerInvariant())
                     {
+                        case "buff":
+                            obj = new Buff();
+                            break;
                         case "item":
                             obj = new Item();
                             break;
@@ -73,8 +76,6 @@ namespace PoroCYon.MCT.Tools.Internal
                                 IsWarning = true,
                                 Message = "Unrecognised file '" + jsons[i].Path + "'. Are you sure it is in the right folder?"
                             });
-
-                            obj = null;
                             break;
                     }
 
@@ -83,6 +84,8 @@ namespace PoroCYon.MCT.Tools.Internal
                         errors.AddRange(obj.CreateAndValidate(jsons[i])); // ACTUAL VALIDATION
 
                         // I'm too lazy to type casts today
+                        if (obj is Buff)
+                            ModCompiler.current.buffs.Add(obj as Buff);
                         if (obj is Item)
                             ModCompiler.current.items.Add(obj as Item);
                         if (obj is NPC)

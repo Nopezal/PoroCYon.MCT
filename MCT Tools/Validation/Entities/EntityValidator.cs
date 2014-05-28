@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using PoroCYon.MCT.Tools.Internal;
 
 namespace PoroCYon.MCT.Tools.Validation.Entities
 {

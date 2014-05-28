@@ -7,6 +7,9 @@ open System.Linq
 open PoroCYon.MCT.Tools.Compiler
 open Microsoft.FSharp.Compiler.CodeDom
 
+/// <summary>
+/// The MCT Tools F# compiler
+/// </summary>
 type FSharpCompiler() = 
     inherit CodeDomCompilerHelper()
 

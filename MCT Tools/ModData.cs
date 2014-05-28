@@ -13,6 +13,7 @@ namespace PoroCYon.MCT.Tools
     /// </summary>
     public class ModData
     {
+        internal List<Buff> buffs = new List<Buff>();
         internal List<Item> items = new List<Item>();
         internal List<NPC> npcs = new List<NPC>();
         internal List<Prefix> pfixes = new List<Prefix>();
@@ -48,6 +49,16 @@ namespace PoroCYon.MCT.Tools
             internal set;
         }
 
+        /// <summary>
+        /// Gets all buffs in the mod.
+        /// </summary>
+        public ReadOnlyCollection<Buff> Buffs
+        {
+            get
+            {
+                return buffs.AsReadOnly();
+            }
+        }
         /// <summary>
         /// Gets all items in the mod.
         /// </summary>

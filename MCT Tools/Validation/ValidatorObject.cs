@@ -23,6 +23,18 @@ namespace PoroCYon.MCT.Tools.Validation
             if (err != null)
                 list.Add(err);
         }
+        /// <summary>
+        /// Adds a collection of CompilerErrors to a List of CompilerErrors if the value is not null.
+        /// </summary>
+        /// <param name="coll">The collection of errors to add.</param>
+        /// <param name="list">The list of errors.</param>
+        [TargetedPatchingOptOut(Consts.TPOOReason)]
+        protected static void AddIfNotNull(IEnumerable<CompilerError> coll, List<CompilerError> list)
+        {
+            if (coll != null && coll.Count() != 0)
+                foreach (CompilerError e in coll)
+                    AddIfNotNull(e, list);
+        }
 
         /// <summary>
         /// Sets a JSON value. If the key isn't specified, a CompilerError is returned.
