@@ -48,6 +48,9 @@
   <PropertyGroup>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>Always</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
     <Reference Include="System.Core" />
@@ -176,8 +179,15 @@
   </PropertyGroup>
   <PropertyGroup>
     <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
+    if exist "%25tapimodoutdir%25\PoroCYon.MCT.tapi" (
+        del "%25tapimodoutdir%25\PoroCYon.MCT.tapi"
+    )
+
     mct compile "$(SolutionDir)MCT Mod placeholder"
-    copy "%25tapimodoutdir%25\PoroCYon.MCT.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi"
+
+    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi"
+    rename "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "PoroCYon.MCT.tapi"
+
     copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)"
 ) )
 </PostBuildEvent>
