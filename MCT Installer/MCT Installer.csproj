@@ -49,7 +49,7 @@
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
   <PropertyGroup>
-    <RunPostBuildEvent>Always</RunPostBuildEvent>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -178,18 +178,17 @@
 </PreBuildEvent>
   </PropertyGroup>
   <PropertyGroup>
-    <PostBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
-    if exist "%25tapimodoutdir%25\PoroCYon.MCT.tapi" (
-        del "%25tapimodoutdir%25\PoroCYon.MCT.tapi"
-    )
-
+    <PostBuildEvent>if "%25username%25"=="Pieter" (
     mct compile "$(SolutionDir)MCT Mod placeholder"
 
-    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi"
-    rename "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "PoroCYon.MCT.tapi"
+    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi" /y
+    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "PoroCYon.MCT.tapi" /y
+    del "%25tapimodoutdir%25\MCT Mod placeholder.tapi"
 
-    copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)"
-) )
+    if "$(ConfigurationName)"=="Release" (
+        copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)" /y
+    )
+)
 </PostBuildEvent>
   </PropertyGroup>
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
