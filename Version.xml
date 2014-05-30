@@ -1,11 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.6" String="1.1.0.6" />
+  <CurrentVersion Number="2" Version="1.1.0.7" String="1.1.0.7" />
   
   <Changelog>
     <!--<Release Version="1.1.0.7">
       <Change>MCT Tools now check wether an object (referenced in a JSON file) exists while compiling.</Change>
     </Release>-->
+    <Release Version="1.1.0.7">
+      <Change>Fixed MenuItems.Control.DrawBackground box colour.</Change>
+    </Release>
     <Release Version="1.1.0.6">
       <Change>MCT Tools' output file now has the same name as the mod directory, instead of its internal name.</Change>
     </Release>

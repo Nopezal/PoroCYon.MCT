@@ -168,7 +168,7 @@ namespace PoroCYon.MCT.UI.MenuItems
 
             base.Update += () => Update();
 
-            colorFrame = colorMouseOver = new Color(255, 255, 255, 0);
+            colorMouseOver = new Color(255, 255, 255, 0);
             colorText = new Color(127, 127, 127, 0);
         }
 
@@ -261,7 +261,8 @@ namespace PoroCYon.MCT.UI.MenuItems
         /// <param name="bg">The region of the background</param>
         protected void DrawBackground(SpriteBatch sb, Rectangle bg)
         {
-            Drawing.DrawBox(sb, bg.X, bg.Y, bg.Width, bg.Height, IsMouseOver ? 0.85f : 0.75f);
+            Drawing.DrawBox(sb, bg.X, bg.Y, bg.Width, bg.Height,
+                new Color(colorFrame.R, colorFrame.G, colorFrame.B, (int)(colorFrame.A * (IsMouseOver ? 0.85f : 0.75f))));
 
             //Rectangle?
             //    topLeft = new Rectangle(0, 0, 16, 16),
