@@ -15,12 +15,32 @@ using PoroCYon.MCT.UI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
+    enum UpdateMode
+    {
+        AudioUpdate,
+        PlayerUpdate,
+        PreGameDraw
+    }
+
     [GlobalMod]
     sealed class Mod : ModBase
     {
         internal readonly static string MCTDataFile = Main.SavePath + "\\MCT_Data.sav";
 
         internal static Mod instance;
+
+        internal static UpdateMode UpdateMode
+        {
+            get
+            {
+                if (AudioDef.volume > 0f)
+                    return UpdateMode.AudioUpdate;
+                if (!Main.gameMenu && !Main.gamePaused)
+                    return UpdateMode.PlayerUpdate;
+
+                return UpdateMode.PreGameDraw;
+            }
+        }
 
         public Mod()
             : base()
@@ -73,20 +93,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             base.OnUnload();
         }
-
-        internal static void ReadSettings(Stream s)
-        {
-            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
-
-            UpdateChecker.CheckForUpdates = bb.ReadBool();
-        }
-        internal static void WriteSettings(Stream s)
-        {
-            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
-
-            bb.Write(UpdateChecker.CheckForUpdates);
-        }
-
         [CallPriority(Single.Epsilon)]
         public override void OnAllModsLoaded()
         {
@@ -109,6 +115,19 @@ namespace PoroCYon.MCT.Internal.ModClasses
                 UpdateBoxInjector.Inject();
         }
 
+        internal static void ReadSettings(Stream s)
+        {
+            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
+
+            UpdateChecker.CheckForUpdates = bb.ReadBool();
+        }
+        internal static void WriteSettings(Stream s)
+        {
+            BinBuffer bb = new BinBuffer(new BinBufferStream(s));
+
+            bb.Write(UpdateChecker.CheckForUpdates);
+        }
+
         [CallPriority(Single.PositiveInfinity)]
         public override object OnModCall(ModBase mod, params object[] arguments)
         {
@@ -120,21 +139,20 @@ namespace PoroCYon.MCT.Internal.ModClasses
             int id = (int)arguments[0];
 
 #pragma warning disable 1522
-            if (id >= Consts.ENUM_OFFSET)
-                switch ((InternalModMessages)id)
-                {
+            //if (id >= Consts.ENUM_OFFSET)
+            //    switch ((InternalModMessages)id)
+            //    {
 
-                }
-            else
-                switch ((ModMessages)id)
-                {
+            //    }
+            //else
+            //    switch ((ModMessages)id)
+            //    {
 
-                }
+            //    }
 #pragma warning disable 1522
 
             return base.OnModCall(mod, arguments);
         }
-
         [CallPriority(Single.PositiveInfinity)]
         public override void NetReceive(int id, BinBuffer bb)
         {
@@ -179,27 +197,29 @@ namespace PoroCYon.MCT.Internal.ModClasses
         }
 
         [CallPriority(Single.PositiveInfinity)]
-        public override void PostGameDraw(SpriteBatch sb)
+        public override void PreGameDraw(SpriteBatch sb)
         {
+            base.PreGameDraw(sb);
+
+            UpdateThings(UpdateMode.PreGameDraw);
+        }
+        [CallPriority(Single.PositiveInfinity)]
+        public override void ChooseTrack(ref string next)
+        {
+            base.ChooseTrack(ref next);
+
+            UpdateThings(UpdateMode.AudioUpdate);
+        }
+
+        internal static void UpdateThings(UpdateMode mode)
+        {
+            if (mode != UpdateMode)
+                return;
+
             GInput.Update();
 
-            base.PostGameDraw(sb);
-
-            //if (UpdateChecker.LastUpdateAvailable)
-            //{
-            //    sb.End();
-            //    sb.Begin(SpriteSortMode.Deferred, BlendState.NonPremultiplied, SamplerState.PointClamp, null, null);
-
-            //    API.main.IsMouseVisible = true;
-
-            //    sb.Draw(MctUI.InversedWhitePixel, Vector2.Zero, null, new Color(50, 50, 50, 150), 0f, Vector2.Zero,
-            //        new Vector2(Main.screenWidth, Main.screenHeight), SpriteEffects.None, 0f);
-
-            //    Main.mouseLeft = Main.mouseLeftRelease = Main.mouseRight = Main.mouseRightRelease = false;
-
-            //    sb.End();
-            //    sb.Begin();
-            //}
+            if (!Main.gameMenu)
+                MctUI.Update();
         }
     }
 }
