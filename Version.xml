@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.7" String="1.1.0.7" />
+  <CurrentVersion Number="2" Version="1.1.0.8" String="1.1.0.8" />
   
   <Changelog>
+    <Release Version="1.1.0.8">
+      <Change>Fixed UI updating not running when autopause is turned on.</Change>
+      <Change>Fixed updater chrashing when a comment is in the XML changelog file.</Change>
+    </Release>
     <Release Version="1.1.0.7">
       <Change>Fixed MenuItems.Control.DrawBackground box colour.</Change>
       <Change>Fixed MCT Tools output file (printed path didn't match the actual path).</Change>
