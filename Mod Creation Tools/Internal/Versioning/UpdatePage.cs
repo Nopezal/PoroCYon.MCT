@@ -55,6 +55,9 @@ namespace PoroCYon.MCT.Internal.Versioning
 
             foreach (XmlNode xn in version.ChildNodes[1])
             {
+                if (xn.NodeType != XmlNodeType.Element)
+                    continue;
+
                 text += "v" + xn.Attributes["Version"].Value + "\n";
 
                 foreach (XmlNode Xn in xn.ChildNodes)

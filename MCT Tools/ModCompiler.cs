@@ -298,7 +298,7 @@ namespace PoroCYon.MCT.Tools
 
             CompilerOutput outp = CreateOutput(errors);
             if (outp.Succeeded)
-                outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.internalName + (mod.Info.compress ? ".tapi" : ".tapimod");
+                outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.OriginName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
             EndCompile(mod.OriginPath);
 
