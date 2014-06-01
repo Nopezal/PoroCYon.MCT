@@ -16,7 +16,7 @@ namespace PoroCYon.MCT.Tools.Internal
 
     static class Checker
     {
-        static Game main;
+        //static Game main;
 
         static void CreateMainAndLoadContent()
         {
