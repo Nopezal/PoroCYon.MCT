@@ -5,12 +5,22 @@ using System.IO;
 using System.Net.NetworkInformation;
 using System.Reflection;
 using System.Windows;
+using System.Windows.Forms; // I'm sorry
+using System.Windows.Interop;
 using System.Windows.Media;
 using Microsoft.Win32;
 
 namespace PoroCYon.MCT.Installer
 {
-    public enum Page : int
+    using FormsWin32Window  = System.Windows.Forms.IWin32Window;
+    using AvalonWin32Window = System.Windows.Forms.IWin32Window;
+
+    using FormsDialogResult = System.Windows.Forms.DialogResult;
+
+    using MessageBox  = System.Windows.MessageBox;
+    using MessageForm = System.Windows.Forms.MessageBox;
+
+    public enum Page : sbyte
     {
         CannotInstall = -1,
 
@@ -24,14 +34,33 @@ namespace PoroCYon.MCT.Installer
         Count = 7
     }
 
+    class WpfWin32Window : FormsWin32Window
+    {
+        Window wnd;
+
+        internal WpfWin32Window(Window window)
+        {
+            wnd = window;
+        }
+        ~WpfWin32Window()
+        {
+            wnd = null; // avoid circular reference
+        }
+
+        public IntPtr Handle
+        {
+            get
+            {
+                return new WindowInteropHelper(wnd).Handle;
+            }
+        }
+    }
+
     public partial class MainWindow : Window
     {
         internal static Page currentPage = Page.Welcome;
-
         internal static bool warnForClose = true;
-
         internal static MainWindow instance;
-
         internal static string CannotInstallError = "";
 
         internal static bool CanClose
@@ -229,7 +258,7 @@ namespace PoroCYon.MCT.Installer
         static string CheckCanInstall()
         {
             if (!NetworkInterface.GetIsNetworkAvailable())
-                return "You are not connected to the Internet.";
+                return "You are not connected to the Internet. The installer requres an internet connection.";
 
             RegistryKey regKey = Registry.CurrentUser.OpenSubKey("Software\\Valve\\Steam");
             if (regKey == null)
@@ -243,15 +272,54 @@ namespace PoroCYon.MCT.Installer
             }
             catch (NullReferenceException) // key does not exist
             {
-                return "You do not have Steam or Terraria installed";
+                // select dir here
+
+                FolderBrowserDialog fbd = new FolderBrowserDialog()
+                {
+                    Description = "Steam folder not found, please select the folder manually.",
+                    ShowNewFolderButton = false
+                };
+                DialogResult result = FormsDialogResult.None;
+
+                while (result != FormsDialogResult.OK && result != FormsDialogResult.Yes)
+                    result = fbd.ShowDialog(new WpfWin32Window(instance));
+
+                if (String.IsNullOrEmpty(fbd.SelectedPath) || !Directory.Exists(fbd.SelectedPath))
+                    return "The directory you entered is invalid.";
             }
 
-            if (steamDir == "" || !Directory.Exists(steamDir) || !File.Exists(steamDir + "Terraria.exe") || !File.Exists(steamDir + "tAPI.exe"))
-                return "You do not have Terraria or tAPI installed";
+            string ret = CheckCanInstall(steamDir);
 
-            Assembly a = Assembly.LoadFrom(steamDir + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
-            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 5u) // not r5
-                return "You do not have tAPI r5 installed";
+            if (ret == "The directory you entered is invalid.")
+            {
+                FolderBrowserDialog fbd = new FolderBrowserDialog()
+                {
+                    Description = "Steam folder not found, please select the folder manually.",
+                    RootFolder = Environment.SpecialFolder.ProgramFilesX86,
+                    ShowNewFolderButton = false
+                };
+                DialogResult result = FormsDialogResult.None;
+
+                while (result != FormsDialogResult.OK && result != FormsDialogResult.Yes)
+                    result = fbd.ShowDialog(new WpfWin32Window(instance));
+
+                ret = CheckCanInstall(fbd.SelectedPath);
+            }
+
+            return ret;
+        }
+        static string CheckCanInstall(string baseFolder)
+        {
+            if (String.IsNullOrEmpty(baseFolder) || !Directory.Exists(baseFolder))
+                return "The directory you entered is invalid.";
+            if (!File.Exists(baseFolder + "Terraria.exe"))
+                return "You do not have Terraria installed";
+            if (!File.Exists(baseFolder + "tAPI.exe"))
+                return "You do not have tAPI installed";
+
+            Assembly a = Assembly.LoadFrom(baseFolder + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
+            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 6u) // not r6
+                return "You do not have tAPI r6 installed";
 
             #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
             Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
@@ -264,7 +332,6 @@ namespace PoroCYon.MCT.Installer
                     VSVersion.VisualStudio10,
                     "VisualStudio\\10.0"
                 },
-
                 {
                     VSVersion.WDExpress11,
                     "WDExpress\\11.0"
@@ -273,7 +340,6 @@ namespace PoroCYon.MCT.Installer
                     VSVersion.VisualStudio11,
                     "VisualStudio\\11.0"
                 },
-
                 {
                     VSVersion.WDExpress12,
                     "WDExpress\\12.0"
@@ -290,15 +356,13 @@ namespace PoroCYon.MCT.Installer
                 try
                 {
                     RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
-                    if (key != null)
-                        if (key.GetValue("FullScreen") != null) // random key
-                            VsVersions.PossibleVersions |= (VSVersion)i;
+                    if (key != null && key.GetValue("FullScreen") != null) // random key
+                        VsVersions.PossibleVersions |= (VSVersion)i;
                 }
-                catch (NullReferenceException)
-                { } // VS key does not exist, do not return false this time
+                catch (NullReferenceException) { } // VS key does not exist, do not return false this time
             }
 
-            return "";
+            return String.Empty;
         }
 
         protected override void OnClosing(CancelEventArgs e)
@@ -306,7 +370,7 @@ namespace PoroCYon.MCT.Installer
             if (!CanClose)
                 e.Cancel = true;
             else if (warnForClose && MessageBox.Show("This will cancel the installation of the Mod Creation Tools.\n\nContinue?", "Mod Creation Tools Installer",
-                MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
+                    MessageBoxButton.YesNo, MessageBoxImage.Warning) != MessageBoxResult.Yes)
                 e.Cancel = true;
 
             base.OnClosing(e);
