@@ -292,7 +292,7 @@ namespace PoroCYon.MCT.Installer
                     //p.Start();
                     //p.WaitForExit();
 
-                    File.Delete(steamDir + "Temp\\PoroCYon.MCT.dll");
+                    //File.Delete(steamDir + "Temp\\PoroCYon.MCT.dll");
 
                     MainWindow.instance.Dispatcher.Invoke(((Action)delegate
                     {
