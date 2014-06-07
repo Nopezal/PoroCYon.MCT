@@ -295,7 +295,7 @@ namespace PoroCYon.MCT.Installer
                 FolderBrowserDialog fbd = new FolderBrowserDialog()
                 {
                     Description = "Steam folder not found, please select the folder manually.",
-                    RootFolder = Environment.SpecialFolder.ProgramFilesX86,
+                    //RootFolder = Environment.SpecialFolder.ProgramFilesX86,
                     ShowNewFolderButton = false
                 };
                 DialogResult result = FormsDialogResult.None;
