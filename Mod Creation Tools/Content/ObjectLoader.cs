@@ -18,6 +18,8 @@ namespace PoroCYon.MCT.Content
     /// </summary>
     public static class ObjectLoader
     {
+        static int invasionNextType = 0;
+
         /// <summary>
         /// Constants.mainInstance.Content
         /// </summary>
@@ -462,6 +464,23 @@ namespace PoroCYon.MCT.Content
         public static void AddService(object serviceProvider)
         {
             API.main.Services.AddService(serviceProvider.GetType(), serviceProvider);
+        }
+
+        /// <summary>
+        /// Adds an Invasion to the Game.
+        /// </summary>
+        /// <param name="base">The ModBase of the Invasion to add.</param>
+        /// <param name="name">The (internal) name of the Invasion to add.</param>
+        /// <param name="invasion">The Invasion to add.</param>
+        /// <returns>The ID of the added Invasion.</returns>
+        public static int AddInvasion(ModBase @base, string name, Invasion invasion)
+        {
+            invasion.ID = ++invasionNextType;
+
+            Invasion.invasions.Add(@base.modName + ":" + name, invasion);
+            Invasion.invasionTypes.Add(invasion.ID, @base.modName + ":" + name);
+
+            return invasion.ID;
         }
     }
 }

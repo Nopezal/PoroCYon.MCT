@@ -4,7 +4,6 @@ using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.Net;
 
 namespace PoroCYon.MCT
@@ -145,6 +144,15 @@ namespace PoroCYon.MCT
         }
 
         /// <summary>
+        /// Gets the Invasion instance of a vanilla invasion.
+        /// </summary>
+        /// <param name="invasion">The invasion type of the invasion.</param>
+        /// <returns>The Invasion instance of the vanilla invasion.</returns>
+        public static Invasion VanillaInvasion(InvasionType invasion)
+        {
+            return Invasion.FromID((int)invasion);
+        }
+        /// <summary>
         /// Starts an invasion.
         /// </summary>
         /// <param name="invasion">
@@ -153,11 +161,21 @@ namespace PoroCYon.MCT
         /// </param>
         public static void StartInvasion(InvasionType invasion)
         {
+            StopInvasions();
+
             if (CurrentInvasion != InvasionType.None)
-                StopInvasions();
+                StartInvasion(VanillaInvasion(invasion));
+        }
+        /// <summary>
+        /// Starts an invasion.
+        /// </summary>
+        /// <param name="invasion">The invasion to start.</param>
+        public static void StartInvasion(Invasion invasion)
+        {
+            StopInvasions();
 
             Main.invasionDelay = 0;
-            Main.StartInvasion((int)invasion);
+            Main.StartInvasion(invasion.ID);
         }
         /// <summary>
         /// Stops all active invasions
@@ -165,7 +183,7 @@ namespace PoroCYon.MCT
         public static void StopInvasions()
         {
             Main.invasionSize = 0;
-            InvasionWarning();
+            InvasionWarning(Invasion.FromID(Main.invasionType));
             Main.invasionType = Main.invasionDelay = 0;
         }
 
@@ -305,49 +323,20 @@ namespace PoroCYon.MCT
             return i;
         }
 
-        static void InvasionWarning()
+        static void InvasionWarning(Invasion inv)
         {
             // got from Terraria source
-            string text;
+
+            Color c = new Color(175, 75, 255);
 
             if (Main.invasionSize <= 0)
-            {
-                if (Main.invasionType == 2)
-                    text = Lang.misc[4];
-                else if (Main.invasionType == 3)
-                    text = Lang.misc[24];
-                else
-                    text = Lang.misc[0];
-            }
+                NetHelper.SendText(inv.DefeatedText, c);
             else if (Main.invasionX < Main.spawnTileX)
-            {
-                if (Main.invasionType == 2)
-                    text = Lang.misc[5];
-                else if (Main.invasionType == 3)
-                    text = Lang.misc[25];
-                else
-                    text = Lang.misc[1];
-            }
+                NetHelper.SendText(inv.StartText("west"), c);
             else if (Main.invasionX > Main.spawnTileX)
-            {
-                if (Main.invasionType == 2)
-                    text = Lang.misc[6];
-                else if (Main.invasionType == 3)
-                    text = Lang.misc[26];
-                else
-                    text = Lang.misc[2];
-            }
-            else if (Main.invasionType == 2)
-                text = Lang.misc[7];
-            else if (Main.invasionType == 3)
-                text = Lang.misc[27];
+                NetHelper.SendText(inv.StartText("east"), c);
             else
-                text = Lang.misc[3];
-
-            if (Main.netMode == 0)
-                Main.NewText(text, 175, 75, 255, false);
-            if (Main.netMode == 2)
-                NetMessage.SendData(25, -1, -1, text, 255, 175f, 75f, 255f, 0);
+                NetHelper.SendText(inv.ArrivedText, c);
         }
     }
 }

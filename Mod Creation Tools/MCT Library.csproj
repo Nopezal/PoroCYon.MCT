@@ -105,6 +105,7 @@
     <Compile Include="Internal\SettingsPage.cs" />
     <Compile Include="Internal\Versioning\UpdatePage.cs" />
     <Compile Include="Interop\ModMessages.cs" />
+    <Compile Include="Invasion.cs" />
     <Compile Include="ObjectModel\Entity.cs" />
     <Compile Include="ObjectModel\ICaretObject.cs" />
     <Compile Include="ObjectModel\IControlParent.cs" />
