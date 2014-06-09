@@ -176,6 +176,7 @@ namespace PoroCYon.MCT
 
             Main.invasionDelay = 0;
             Main.StartInvasion(invasion.ID);
+            invasion.IsActive = true;
         }
         /// <summary>
         /// Stops all active invasions
@@ -185,6 +186,8 @@ namespace PoroCYon.MCT
             Main.invasionSize = 0;
             InvasionWarning(Invasion.FromID(Main.invasionType));
             Main.invasionType = Main.invasionDelay = 0;
+            foreach (Invasion i in Invasion.invasions.Values)
+                i.IsActive = false;
         }
 
         /// <summary>
