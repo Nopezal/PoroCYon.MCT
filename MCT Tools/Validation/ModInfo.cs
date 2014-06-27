@@ -34,6 +34,7 @@ namespace PoroCYon.MCT.Tools.Validation
         // new compiler stuff
         public string language = null;
         public bool compress = true;
+        public bool includeSource = false;
         public bool validate = true; // even if false, ModInfo will always be validated
         public bool check = true;
         public int warningLevel = 4;
@@ -171,12 +172,13 @@ namespace PoroCYon.MCT.Tools.Validation
 
             // ---
 
-            AddIfNotNull(SetJsonValue(json, "language",     ref language,     "C#"), errors);
-            AddIfNotNull(SetJsonValue(json, "compress",     ref compress,     true), errors);
-            AddIfNotNull(SetJsonValue(json, "validate",     ref validate,     true), errors);
-            AddIfNotNull(SetJsonValue(json, "check",        ref check,        true), errors);
-            AddIfNotNull(SetJsonValue(json, "warningLevel", ref warningLevel, 4   ), errors);
-            AddIfNotNull(SetJsonValue(json, "ignore",       ref ignore, EmptyStringArr), errors);
+            AddIfNotNull(SetJsonValue(json, "language",      ref language,      "C#" ), errors);
+            AddIfNotNull(SetJsonValue(json, "compress",      ref compress,      true ), errors);
+            AddIfNotNull(SetJsonValue(json, "validate",      ref validate,      true ), errors);
+            AddIfNotNull(SetJsonValue(json, "includeSource", ref includeSource, false), errors);
+            AddIfNotNull(SetJsonValue(json, "check",         ref check,         true ), errors);
+            AddIfNotNull(SetJsonValue(json, "warningLevel",  ref warningLevel,  4    ), errors);
+            AddIfNotNull(SetJsonValue(json, "ignore", ref ignore, EmptyStringArr     ), errors);
             if (warningLevel < 0 || warningLevel > 4)
                 errors.Add(new CompilerError()
                 {

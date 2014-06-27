@@ -270,16 +270,30 @@ namespace PoroCYon.MCT.Tools.Internal
             Assembly asm = null;
             string pdb = null;
 
-            List<string> toRemove = new List<string>();
-            string
-                ext = Path.GetExtension(mod.Info.msBuildFile),
-                probableFileExt = ext.Remove(ext.IndexOf("proj"));
+            if (!mod.Info.includeSource)
+            {
+                List<string> toRemove = new List<string>();
+                string ext = Path.GetExtension(mod.Info.msBuildFile);
+                string[] probableFileExt = new[] { ext.Remove(ext.IndexOf("proj")) };
 
-            foreach (string key in mod.Files.Keys)
-                if (key.EndsWith(probableFileExt))
-                    toRemove.Add(key);
-            foreach (string r in toRemove)
-                mod.files.Remove(r);
+            if (probableFileExt[0] == "vcx")
+                probableFileExt = new[] { "cpp", "cxx", "c", "c++", "hpp", "hxx", "h", "h++" };
+            if (probableFileExt[0] == "cs")
+                probableFileExt = new[] { "cs", "csx" };
+            if (probableFileExt[0] == "vb")
+                probableFileExt = new[] { "vb", "vba", "vbs" };
+            if (probableFileExt[0] == "js")
+                probableFileExt = new[] { "js", "ts" };
+            if (probableFileExt[0] == "fs")
+                probableFileExt = new[] { "fs", "fsx" };
+
+                foreach (string key in mod.Files.Keys)
+                    for (int i = 0; i < probableFileExt.Length; i++)
+                        if (key.EndsWith(probableFileExt[i]))
+                            toRemove.Add(key);
+                foreach (string r in toRemove)
+                    mod.files.Remove(r);
+            }
 
             BuildLogger logger = new BuildLogger();
             BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection())
@@ -374,14 +388,17 @@ namespace PoroCYon.MCT.Tools.Internal
             else
                 try
                 {
-                    List<string> toRemove = new List<string>();
+                    if (!mod.Info.includeSource)
+                    {
+                        List<string> toRemove = new List<string>();
 
-                    foreach (string key in mod.Files.Keys)
-                        for (int i = 0; i < compiler.FileExtensions.Length; i++)
-                            if (key.EndsWith(compiler.FileExtensions[i]))
-                                toRemove.Add(key);
-                    foreach (string r in toRemove)
-                        mod.files.Remove(r);
+                        foreach (string key in mod.Files.Keys)
+                            for (int i = 0; i < compiler.FileExtensions.Length; i++)
+                                if (key.EndsWith(compiler.FileExtensions[i]))
+                                    toRemove.Add(key);
+                        foreach (string r in toRemove)
+                            mod.files.Remove(r);
+                    }
 
                     var result = compiler.Compile(mod);
 

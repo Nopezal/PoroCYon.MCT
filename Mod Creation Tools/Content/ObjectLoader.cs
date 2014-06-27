@@ -346,9 +346,26 @@ namespace PoroCYon.MCT.Content
         {
             int id = Main.wingsTexture.Count;
 
-            Main.wingsTexture.Add(id, texture);
-            Array.Resize(ref Main.wingsLoaded, Main.wingsLoaded.Length + 1);
-            Main.wingsLoaded[id] = true;
+            if (Main.wingsTexture.ContainsValue(texture))
+            {
+                foreach (KeyValuePair<int, Texture2D> kvp in Main.wingsTexture)
+                    if (kvp.Value == texture)
+                    {
+                        if (Main.wingsLoaded.ContainsKey(id))
+                            Main.wingsLoaded[id] = true;
+                        else
+                            Main.wingsLoaded.Add(id, true);
+
+                        id = kvp.Key;
+                    }
+            }
+            else
+                Main.wingsTexture.Add(id, texture);
+
+            if (Main.wingsLoaded.ContainsKey(id))
+                Main.wingsLoaded[id] = true;
+            else
+                Main.wingsLoaded.Add(id, true);
 
             return id;
         }

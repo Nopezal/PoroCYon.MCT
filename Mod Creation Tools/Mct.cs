@@ -88,7 +88,7 @@ namespace PoroCYon.MCT
             modBase.modPlayers.Add(new MPlayer(modBase, null));
             modBase.modWorlds.Add(new MWorld(modBase));
             //modBase.modItems.Add(new MItem(modBase, null));
-            modBase.modNPCs.Add(new MNPC(modBase, null));
+            //modBase.modNPCs.Add(new MNPC(modBase, null));
             modBase.modPrefixes.Add(new MPrefix(modBase));
             modBase.modProjectiles.Add(new MProj(modBase, null));
             modBase.modInterfaces.Add(new MUI(modBase));
