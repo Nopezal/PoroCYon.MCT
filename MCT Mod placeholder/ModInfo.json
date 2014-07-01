@@ -3,7 +3,7 @@
 
     "displayName": "Mod Creation Tools",
     "author": "PoroCYon",
-    "version": "1.1.0.9",
+    "version": "1.1.0.10",
     "info": "PoroCYon's Mod Creation Tools\n\nDo not change the state of this mod.\nIt's automatically turned on when a mod needs it,\nand turned off otherwise.",
     
     "internalName": "PoroCYon.MCT",
