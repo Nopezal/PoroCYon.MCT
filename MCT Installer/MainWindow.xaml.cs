@@ -312,9 +312,9 @@ namespace PoroCYon.MCT.Installer
         {
             if (String.IsNullOrEmpty(baseFolder) || !Directory.Exists(baseFolder))
                 return "The directory you entered is invalid.";
-            if (!File.Exists(baseFolder + "Terraria.exe"))
+            if (!File.Exists(baseFolder + "\\Terraria.exe"))
                 return "You do not have Terraria installed";
-            if (!File.Exists(baseFolder + "tAPI.exe"))
+            if (!File.Exists(baseFolder + "\\tAPI.exe"))
                 return "You do not have tAPI installed";
 
             Assembly a = Assembly.LoadFrom(baseFolder + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement

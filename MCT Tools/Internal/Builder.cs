@@ -212,6 +212,8 @@ namespace PoroCYon.MCT.Tools.Internal
                     toRemove.Add(key);
                 else if (key.EndsWith(".gitattributes"))
                     toRemove.Add(key);
+                else if (key.EndsWith(".db"))
+                    toRemove.Add(key);
 
                 else if (!File.Exists(mod.OriginPath))
                 {
@@ -375,7 +377,10 @@ namespace PoroCYon.MCT.Tools.Internal
 
             for (int i = 0; i < compilers.Count; i++)
                 if (Array.IndexOf(compilers[i].LanguageNames, lang) != -1)
+                {
                     compiler = compilers[i];
+                    break;
+                }
 
             if (compiler == null)
                 errors.Add(new CompilerError()
@@ -388,19 +393,8 @@ namespace PoroCYon.MCT.Tools.Internal
             else
                 try
                 {
-                    if (!mod.Info.includeSource)
-                    {
-                        List<string> toRemove = new List<string>();
-
-                        foreach (string key in mod.Files.Keys)
-                            for (int i = 0; i < compiler.FileExtensions.Length; i++)
-                                if (key.EndsWith(compiler.FileExtensions[i]))
-                                    toRemove.Add(key);
-                        foreach (string r in toRemove)
-                            mod.files.Remove(r);
-                    }
-
                     var result = compiler.Compile(mod);
+                    errors.AddRange(result.Item2);
 
                     asm = result.Item1;
 
@@ -416,6 +410,18 @@ namespace PoroCYon.MCT.Tools.Internal
                                 IsWarning = false,
                                 Message = "Could not find the .pdb file."
                             });
+                    }
+
+                    if (!mod.Info.includeSource)
+                    {
+                        List<string> toRemove = new List<string>();
+
+                        foreach (string key in mod.Files.Keys)
+                            for (int i = 0; i < compiler.FileExtensions.Length; i++)
+                                if (key.EndsWith(compiler.FileExtensions[i]))
+                                    toRemove.Add(key);
+                        foreach (string r in toRemove)
+                            mod.files.Remove(r);
                     }
                 }
                 catch (Exception e)

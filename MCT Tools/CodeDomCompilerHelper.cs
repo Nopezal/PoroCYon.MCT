@@ -4,9 +4,8 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Xna.Framework;
 using Ionic.Zip;
-using PoroCYon.MCT.Internal;
-using PoroCYon.MCT.Tools.Internal;
 using PoroCYon.XnaExtensions.IO;
 
 namespace PoroCYon.MCT.Tools.Compiler
@@ -69,7 +68,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             cp.GenerateExecutable = false;
             cp.GenerateInMemory = false;
             cp.IncludeDebugInformation = mod.Info.includePDB;
-            cp.OutputAssembly = Path.GetTempPath() + "\\MCT\\" + mod.Info.internalName + ".dll";
+            cp.OutputAssembly = Path.GetTempPath() + "MCT\\" + mod.Info.internalName + ".dll";
             cp.WarningLevel = mod.Info.warningLevel;
 
             cp.ReferencedAssemblies.Add("mscorlib.dll");
@@ -103,7 +102,7 @@ namespace PoroCYon.MCT.Tools.Compiler
                     errors.Add(new CompilerError()
                     {
                         Cause = e,
-                        FilePath = Path.GetTempPath() + "\\MCT\\" + mod.Info.modReferences[i] + ".dll",
+                        FilePath = Path.GetTempPath() + "MCT\\" + mod.Info.modReferences[i] + ".dll",
                         IsWarning = false,
                         Message = "Something went wrong when extracting the mod's assembly. See the exception for more details."
                     });
@@ -111,7 +110,12 @@ namespace PoroCYon.MCT.Tools.Compiler
 
             ModifyCompilerParameters(cp);
 
-            CompilerResults cr = cdp.CompileAssemblyFromFile(cp, GetFiles());
+            var files = GetFiles();
+
+            for (int i = 0; i < files.Length; i++)
+                files[i] = mod.OriginPath + "\\" + files[i];
+
+            CompilerResults cr = cdp.CompileAssemblyFromFile(cp, files);
 
             foreach (CodeDomError ce in cr.Errors)
                 errors.Add(new CompilerError()
@@ -119,7 +123,7 @@ namespace PoroCYon.MCT.Tools.Compiler
                     Cause = new CompilerException(ce.ErrorNumber),
                     FilePath = ce.FileName,
                     IsWarning = ce.IsWarning,
-                    LocationInFile = new Microsoft.Xna.Framework.Point(ce.Column, ce.Line),
+                    LocationInFile = new Point(ce.Column, ce.Line),
                     Message = (ce.IsWarning ? "Warning" : "Error") + " " + ce.ErrorNumber + ": " + ce.ErrorText,
                 });
 

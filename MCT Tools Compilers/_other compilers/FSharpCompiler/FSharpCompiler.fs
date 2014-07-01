@@ -4,8 +4,8 @@ open System
 open System.CodeDom.Compiler
 open System.Collections.Generic
 open System.Linq
-open PoroCYon.MCT.Tools.Compiler
 open Microsoft.FSharp.Compiler.CodeDom
+open PoroCYon.MCT.Tools.Compiler
 
 /// <summary>
 /// The MCT Tools F# compiler

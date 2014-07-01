@@ -27,7 +27,8 @@ namespace PoroCYon.MCT.Tools.Validation.Options
 
             AddIfNotNull(SetJsonValue(json, "default", ref def), errors);
 
-            if (Enum.TryParse(def, true, out Keys key))
+            Keys key = 0;
+            if (Enum.TryParse(def, true, out key))
                 defaultValue = key;
             else
                 errors.Add(new CompilerError()
