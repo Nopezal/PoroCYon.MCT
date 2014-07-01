@@ -79,8 +79,7 @@ namespace PoroCYon.MCT.Tools.Validation.Entities
                 {
                     if (j.IsString)
                     {
-                        PrefixType pType = 0;
-                        if (Enum.TryParse((string)j, true, out pType))
+                        if (Enum.TryParse((string)j, true, out PrefixType pType))
                             type |= pType;
                     }
                     else if (j.IsInt)

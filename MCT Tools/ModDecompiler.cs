@@ -26,7 +26,7 @@ namespace PoroCYon.MCT.Tools
 
             string
                 modName = Path.GetFileNameWithoutExtension(modFile),
-                decompPath = ModDecompiler.decompDir + "\\" + modName;
+                decompPath = decompDir + "\\" + modName;
 
             byte[]
                 tapimod = new byte[0],
@@ -39,8 +39,8 @@ namespace PoroCYon.MCT.Tools
 
             uint versionAssembly = 0u;
 
-            if (Directory.Exists(decompDir))
-                Directory.Delete(decompDir, true);
+            if (Directory.Exists(decompPath))
+                Directory.Delete(decompPath, true);
             Directory.CreateDirectory(decompPath);
 
             #region load data from zip
@@ -75,7 +75,7 @@ namespace PoroCYon.MCT.Tools
                 }
             #endregion
             else if (modFile.EndsWith(".tapimod"))
-                tapimod = File.ReadAllBytes(modFile);
+                tapimod = File.ReadAllBytes(Mods.pathDirMods + "\\" + modFile);
             else
                 throw new FileLoadException("File is not a .tapi or .tapimod file!");
 

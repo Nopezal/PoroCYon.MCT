@@ -84,6 +84,11 @@ namespace PoroCYon.MCT.Tools
                         if (!path.Contains('/') && !path.Contains('\\'))
                             path = Mods.pathDirMods + "\\" + path;
 
+                        //if (File.Exists(path + ".tapi"))
+                        //    path += ".tapi";
+                        //if (File.Exists(path + ".tapimod"))
+                        //    path += ".tapimod";
+
                         ModDecompiler.Decompile(path);
                         Console.WriteLine("Finished decompilation.");
                     }
