@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.11" String="1.1.0.11" />
+  <CurrentVersion Number="2" Version="1.1.0.12" String="1.1.0.12" />
   
   <Changelog>
+    <Release Version="1.1.0.12">
+      <Change>Fixed a few bugs in the MCT Tools and the installer.</Change>
+    </Release>
     <Release Version="1.1.0.11">
       <Change>Fixed a few bugs in the MCT Tools and the installer.</Change>
     </Release>

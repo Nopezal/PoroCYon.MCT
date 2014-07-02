@@ -1,10 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using TAPI;
 using PoroCYon.MCT.Internal;
-using System.Diagnostics;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -106,6 +107,8 @@ namespace PoroCYon.MCT.Tools
         [STAThread]
         static void Main(string[] args)
         {
+            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+
             CommonToolUtilities.Init();
 
             for (int i = 0; i < args.Length; i++)

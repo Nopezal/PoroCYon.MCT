@@ -113,7 +113,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             var files = GetFiles();
 
             for (int i = 0; i < files.Length; i++)
-                files[i] = mod.OriginPath + "\\" + files[i];
+                files[i] = mod.OriginPath + "\\" + files[i].Replace('/', '\\');
 
             CompilerResults cr = cdp.CompileAssemblyFromFile(cp, files);
 
