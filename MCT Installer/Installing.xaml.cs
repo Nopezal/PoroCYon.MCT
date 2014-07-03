@@ -32,7 +32,7 @@ namespace PoroCYon.MCT.Installer
             finishedDownloading = false;
 
             AquireProgress.ValueChanged += (s, e) => AquireProgressPercent.Text = (int)AquireProgress.Value + "%";
-            ApplyProgress.ValueChanged  += (s, e) => ApplyProgressPercent.Text  = (int)ApplyProgress.Value  + "%";
+            ApplyProgress .ValueChanged += (s, e) => ApplyProgressPercent.Text  = (int)ApplyProgress.Value  + "%";
 
             #region aquire
             Thread aquire = new Thread(() =>
@@ -165,8 +165,8 @@ namespace PoroCYon.MCT.Installer
                     mctk.SetValue("Path", steamDir);
 
                     string
-                    path = Environment.GetEnvironmentVariable("path"),
-                    mcttPath = steamDir + "MCTT_EXEC"; // second t intentional
+                        path = Environment.GetEnvironmentVariable("path"),
+                        mcttPath = steamDir + "MCTT_EXEC"; // second t intentional
 
                     if (!Directory.Exists(mcttPath))
                         Directory.CreateDirectory(mcttPath);
@@ -261,8 +261,12 @@ namespace PoroCYon.MCT.Installer
                             //if (!Directory.Exists(steamDir + "Temp"))
                             //    Directory.CreateDirectory(steamDir + "Temp");
                             //File.WriteAllBytes(steamDir + "Temp\\PoroCYon.MCT.dll", t.Item2);
-                            File.WriteAllBytes(Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                            + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\" + Path.GetFileName(t.Item1), t.Item2);
+                            string dir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\";
+
+                            if (!Directory.Exists(dir))
+                                Directory.CreateDirectory(dir);
+
+                            File.WriteAllBytes(dir + Path.GetFileName(t.Item1), t.Item2);
                         }
                         else
                             File.WriteAllBytes(steamDir + t.Item1, t.Item2);
