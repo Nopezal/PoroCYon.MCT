@@ -317,7 +317,7 @@ namespace PoroCYon.MCT.Installer
             if (!File.Exists(baseFolder + "\\tAPI.exe"))
                 return "You do not have tAPI installed";
 
-            Assembly a = Assembly.LoadFrom(baseFolder + "tAPI.exe"); // no try/catch needed, already checked at previous if-statement
+            Assembly a = Assembly.LoadFrom(baseFolder + "\\tAPI.exe"); // no try/catch needed, already checked at previous if-statement
             if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 6u) // not r6
                 return "You do not have tAPI r6 installed";
 
