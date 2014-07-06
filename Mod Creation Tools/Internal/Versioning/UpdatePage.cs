@@ -55,7 +55,7 @@ namespace PoroCYon.MCT.Internal.Versioning
 
             foreach (XmlNode xn in version.ChildNodes[1])
             {
-                if (xn.NodeType != XmlNodeType.Element)
+                if (xn.NodeType != XmlNodeType.Element || new Version(xn.Attributes["Version"].Value) < MctConstants.VERSION)
                     continue;
 
                 text += "v" + xn.Attributes["Version"].Value + "\n";

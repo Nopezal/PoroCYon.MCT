@@ -1,12 +1,14 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="2" Version="1.1.0.12" String="1.1.0.12" />
+  <CurrentVersion Number="2" Version="1.1.0.13" String="1.1.0.13" />
   
   <Changelog>
-    <Release Version="1.1.0.12">
-      <Change>Fixed a few bugs in the MCT Tools and the installer.</Change>
+    <Release Version="1.1.0.13">
+      <Change>Updated PoroCYon.XnaExtensions.</Change>
+      <Change>Added property World.NumPlayers.</Change>
+      <Change>The Changelog view now only shows the changes of the newer versions.</Change>
     </Release>
-    <Release Version="1.1.0.11">
+    <Release Version="1.1.0.12">
       <Change>Fixed a few bugs in the MCT Tools and the installer.</Change>
     </Release>
     <Release Version="1.1.0.9">
@@ -44,7 +46,7 @@
       <Change>Rewritten the MCT Tools Compiler. It's awesome now.</Change>
     </Release>
     
-    <Release Version="1.0.3.0">
+    <!--<Release Version="1.0.3.0">
       <Change>Fixed a bug that made the MCT throw exceptions when trying to play a sound in the UI.</Change>
       <Change>Updated to r6.</Change>
     </Release>
@@ -97,6 +99,6 @@
     </Release>
     <Release Version="1.0.0.4">
       <Change>Fixed +/- button positioning</Change>
-    </Release>
+    </Release>-->
   </Changelog>
 </Version>
