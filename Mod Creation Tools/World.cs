@@ -81,10 +81,10 @@ namespace PoroCYon.MCT
 
                 int
                     hour = (int)time,
-                    minute = (int)((time - hour) * 60d),
+                    minute = (int)( (time - hour) * 60d),
                     second = (int)(((time - hour) * 60d - minute) * 60d);
 
-                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, (Main.moonPhase + 1) * 4, hour % 24, minute % 60, second % 60);
+                return new DateTime(DateTime.Now.Year, DateTime.Now.Month, Main.moonPhase * 4 + 1, hour % 24, minute % 60, second % 60);
             }
         }
         /// <summary>
@@ -173,10 +173,7 @@ namespace PoroCYon.MCT
         /// </param>
         public static void StartInvasion(InvasionType invasion)
         {
-            StopInvasions();
-
-            if (CurrentInvasion != InvasionType.None)
-                StartInvasion(VanillaInvasion(invasion));
+            StartInvasion(VanillaInvasion(invasion));
         }
         /// <summary>
         /// Starts an invasion.
@@ -196,8 +193,12 @@ namespace PoroCYon.MCT
         public static void StopInvasions()
         {
             Main.invasionSize = 0;
-            InvasionWarning(Invasion.FromID(Main.invasionType));
+
+            if (Main.invasionType != 0)
+                InvasionWarning(Invasion.FromID(Main.invasionType));
+
             Main.invasionType = Main.invasionDelay = 0;
+
             foreach (Invasion i in Invasion.invasions.Values)
                 i.IsActive = false;
         }

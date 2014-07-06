@@ -13,6 +13,7 @@ using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
+using PoroCYon.MCT.Content;
 
 namespace PoroCYon.MCT
 {
@@ -104,11 +105,18 @@ namespace PoroCYon.MCT
             SyncedRandom.Reset();
 
             ModableObject.Reset();
+
+            ObjectLoader.AddInvasion(modBase, "Goblin Army" , new GoblinArmyInv ());
+            ObjectLoader.AddInvasion(modBase, "Frost Legion", new FrostLegionInv());
+            ObjectLoader.AddInvasion(modBase, "Pirates"     , new PiratesInv    ());
         }
 
         internal static void Uninit()
         {
             MctUI.Uninit();
+
+            Invasion.invasions.Clear();
+            Invasion.invasionTypes.Clear();
 
             Mod.instance = null;
 
