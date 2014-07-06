@@ -9,6 +9,8 @@ using PoroCYon.MCT.ObjectModel;
 
 namespace PoroCYon.MCT.UI.MenuItems
 {
+    using ImageUnion = Union<Texture2D, AnimatedGif>;
+
     /// <summary>
     /// An image. Uses MenuButton.size as scale
     /// </summary>
@@ -33,7 +35,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         /// <summary>
         /// The picture of the IImageObject
         /// </summary>
-        public Union<Texture2D, AnimatedGif> Picture
+        public ImageUnion Picture
         {
             get;
             set;
@@ -57,7 +59,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         public Image(Texture2D image)
             : base()
         {
-            Picture = new Union<Texture2D, AnimatedGif>(image, null);
+            Picture = new ImageUnion(image, null);
         }
         /// <summary>
         /// Creates a new instance of the Image class
@@ -66,7 +68,7 @@ namespace PoroCYon.MCT.UI.MenuItems
         public Image(AnimatedGif image)
             : base()
         {
-            Picture = new Union<Texture2D, AnimatedGif>(null, image);
+            Picture = new ImageUnion(null, image);
         }
 
         /// <summary>

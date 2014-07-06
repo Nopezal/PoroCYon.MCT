@@ -7,6 +7,8 @@ using PoroCYon.XnaExtensions.Graphics;
 
 namespace PoroCYon.MCT.ObjectModel
 {
+    using ImageUnion = Union<Texture2D, AnimatedGif>;
+
     /// <summary>
     /// An object that holds an image
     /// </summary>
@@ -15,7 +17,7 @@ namespace PoroCYon.MCT.ObjectModel
         /// <summary>
         /// The image of the IImageObject
         /// </summary>
-        Union<Texture2D, AnimatedGif> Picture
+        ImageUnion Picture
         {
             get;
             set;

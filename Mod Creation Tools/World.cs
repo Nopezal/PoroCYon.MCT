@@ -49,6 +49,18 @@ namespace PoroCYon.MCT
         }
 
         /// <summary>
+        /// Gets the maximum amount of players in this session.
+        /// </summary>
+        /// <remarks>Use this instead of Main.player.Length. It will speed up stuff by a lot.</remarks>
+        public static int NumPlayers
+        {
+            get
+            {
+                return NetHelper.CurrentMode == NetMode.Singleplayer ? 1 : Main.numPlayers;
+            }
+        }
+
+        /// <summary>
         /// Gets Main.time as a <see cref="System.DateTime"/>
         /// </summary>
         public static DateTime TimeAsDateTime

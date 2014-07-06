@@ -10,6 +10,8 @@ using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
+    using ImageUnion = Union<Texture2D, AnimatedGif>;
+
     /// <summary>
     /// An image that serves as a button
     /// </summary>
@@ -40,7 +42,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// <summary>
         /// The picture of the ImageButton
         /// </summary>
-        public Union<Texture2D, AnimatedGif> Picture
+        public ImageUnion Picture
         {
             get;
             set;
@@ -88,7 +90,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public ImageButton(Texture2D tex)
             : base()
         {
-            Picture = new Union<Texture2D, AnimatedGif>(tex, null);
+            Picture = new ImageUnion(tex, null);
         }
         /// <summary>
         /// Creates a new instance of the ImageButton class
@@ -97,7 +99,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         public ImageButton(AnimatedGif gif)
             : base()
         {
-            Picture = new Union<Texture2D, AnimatedGif>(null, gif);
+            Picture = new ImageUnion(null, gif);
         }
 
         /// <summary>

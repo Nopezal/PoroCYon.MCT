@@ -908,6 +908,20 @@
             <param name="viewport">The Viewport to cast</param>
             <returns>The Viewport casted to a Rectangle</returns>
         </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Centre(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the centre of the Viewport, relative to its position.
+            </summary>
+            <param name="viewport"></param>
+            <returns>The centre of the Viewport.</returns>
+        </member>
+        <member name="M:PoroCYon.XnaExtensions.Graphics.Extensions.Begun(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Gets wether the SpriteBatch begun or not.
+            </summary>
+            <param name="sb">The SpriteBatch.</param>
+            <returns>true if the SpriteBatch begun, false otherwise.</returns>
+        </member>
         <member name="M:PoroCYon.XnaExtensions.IO.BinBufferResource.Close">
             <summary>
             Closes sockets/file handles/..., if any
