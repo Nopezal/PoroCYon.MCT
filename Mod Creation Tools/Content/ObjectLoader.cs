@@ -48,55 +48,60 @@ namespace PoroCYon.MCT.Content
             i.name = param.ModBase.modName + ":" + param.Name;
             i.displayName = param.Name;
 
-            if (Aparam.HeadTexture != null)
+            #region Aparam
+            if (Aparam != null)
             {
-                i.headSlot = Defs.headSlotNextType++;
-
-                if (Item.headType.ContainsKey(i.headSlot))
-                    Item.headType[i.headSlot] = i.type;
-                else
-                    Item.headType.Add(i.headSlot, i.type);
-
-                if (!Main.dedServ)
-                    Main.armorHeadTexture.Add(i.headSlot, Aparam.HeadTexture);
-
-                ret.HeadID = i.headSlot;
-            }
-
-            if (Aparam.BodyTexture != null)
-            {
-                i.bodySlot = Defs.bodySlotNextType++;
-
-                if (Item.bodyType.ContainsKey(i.bodySlot))
-                    Item.bodyType[i.bodySlot] = i.type;
-                else
-                    Item.bodyType.Add(i.bodySlot, i.type);
-
-                if (!Main.dedServ)
+                if (Aparam.HeadTexture != null)
                 {
-                    Main.armorHeadTexture.Add(i.bodySlot, Aparam.BodyTexture);
+                    i.headSlot = Defs.headSlotNextType++;
 
-                    if (Aparam.FemaleBodyTexture != null)
-                        Main.femaleBodyTexture.Add(i.bodySlot, Aparam.FemaleBodyTexture);
+                    if (Item.headType.ContainsKey(i.headSlot))
+                        Item.headType[i.headSlot] = i.type;
+                    else
+                        Item.headType.Add(i.headSlot, i.type);
+
+                    if (!Main.dedServ)
+                        Main.armorHeadTexture.Add(i.headSlot, Aparam.HeadTexture);
+
+                    ret.HeadID = i.headSlot;
                 }
 
-                ret.BodyID = i.bodySlot;
+                if (Aparam.BodyTexture != null)
+                {
+                    i.bodySlot = Defs.bodySlotNextType++;
+
+                    if (Item.bodyType.ContainsKey(i.bodySlot))
+                        Item.bodyType[i.bodySlot] = i.type;
+                    else
+                        Item.bodyType.Add(i.bodySlot, i.type);
+
+                    if (!Main.dedServ)
+                    {
+                        Main.armorHeadTexture.Add(i.bodySlot, Aparam.BodyTexture);
+
+                        if (Aparam.FemaleBodyTexture != null)
+                            Main.femaleBodyTexture.Add(i.bodySlot, Aparam.FemaleBodyTexture);
+                    }
+
+                    ret.BodyID = i.bodySlot;
+                }
+
+                if (Aparam.LegsTexture != null)
+                {
+                    i.legSlot = Defs.legSlotNextType++;
+
+                    if (Item.legType.ContainsKey(i.legSlot))
+                        Item.legType[i.legSlot] = i.type;
+                    else
+                        Item.legType.Add(i.legSlot, i.type);
+
+                    if (!Main.dedServ)
+                        Main.armorLegTexture.Add(i.legSlot, Aparam.LegsTexture);
+
+                    ret.LegsID = i.legSlot;
+                }
             }
-
-            if (Aparam.LegsTexture != null)
-            {
-                i.legSlot = Defs.legSlotNextType++;
-
-                if (Item.legType.ContainsKey(i.legSlot))
-                    Item.legType[i.legSlot] = i.type;
-                else
-                    Item.legType.Add(i.legSlot, i.type);
-
-                if (!Main.dedServ)
-                    Main.armorLegTexture.Add(i.legSlot, Aparam.LegsTexture);
-
-                ret.LegsID = i.legSlot;
-            }
+            #endregion
 
             if (param.SubClassTypeName != null)
             {
