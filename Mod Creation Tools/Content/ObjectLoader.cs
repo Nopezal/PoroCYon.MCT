@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.Content
             i.netID = i.type = Defs.itemNextType++;
             i.stack = 1;
             i.name = param.ModBase.modName + ":" + param.Name;
-            i.displayName = param.Name;
+            //i.displayName = param.Name;
 
             #region Aparam
             if (Aparam != null)

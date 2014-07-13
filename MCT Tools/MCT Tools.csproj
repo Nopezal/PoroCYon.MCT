@@ -25,7 +25,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
     <DocumentationFile>bin\Debug\MCT Tools.xml</DocumentationFile>
-    <LangVersion>default</LangVersion>
+    <LangVersion>experimental</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -37,7 +37,7 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <PlatformTarget>x86</PlatformTarget>
     <DocumentationFile>bin\Release\MCT Tools.xml</DocumentationFile>
-    <LangVersion>default</LangVersion>
+    <LangVersion>experimental</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <StartupObject>PoroCYon.MCT.Tools.Program</StartupObject>
