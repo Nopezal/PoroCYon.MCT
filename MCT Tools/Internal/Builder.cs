@@ -278,15 +278,15 @@ namespace PoroCYon.MCT.Tools.Internal
                 string ext = Path.GetExtension(mod.Info.msBuildFile);
                 string[] probableFileExt = new[] { ext.Remove(ext.IndexOf("proj")) };
 
-            if (probableFileExt[0] == "vcx")
+            if (probableFileExt[0] == ".vcx")
                 probableFileExt = new[] { "cpp", "cxx", "c", "c++", "hpp", "hxx", "h", "h++" };
-            if (probableFileExt[0] == "cs")
+            if (probableFileExt[0] == ".cs")
                 probableFileExt = new[] { "cs", "csx" };
-            if (probableFileExt[0] == "vb")
+            if (probableFileExt[0] == ".vb")
                 probableFileExt = new[] { "vb", "vba", "vbs" };
-            if (probableFileExt[0] == "js")
+            if (probableFileExt[0] == ".js")
                 probableFileExt = new[] { "js", "ts" };
-            if (probableFileExt[0] == "fs")
+            if (probableFileExt[0] == ".fs")
                 probableFileExt = new[] { "fs", "fsx" };
 
                 foreach (string key in mod.Files.Keys)

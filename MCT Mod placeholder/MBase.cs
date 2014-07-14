@@ -13,10 +13,12 @@ namespace PoroCYon.MCT
 
         }
 
-        [CallPriority(Single.NegativeInfinity)]
+        [CallPriority(Single.PositiveInfinity)]
         public override void OnAllModsLoaded()
         {
             base.OnAllModsLoaded();
+
+            Mct.Init();
 
             // hacky stuff #2
 

@@ -98,6 +98,12 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.OnAllModsLoaded();
 
+            // remove temporary modbase instances
+            for (int i = 0; i < MctDebugger.tempBases.Count; i++)
+                Mods.modBases.Remove(MctDebugger.tempBases[i]);
+
+            MctDebugger.tempBases.Clear();
+
             // insert settings menu button in the Options menu
             Menu.menuPages.Add("MCT:Settings", new SettingsPage());
 

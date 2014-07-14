@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
@@ -31,8 +32,8 @@ namespace PoroCYon.MCT.Tools
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
 
-            // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
-            if (!Path.IsPathRooted(folder))
+            if (folder[1] != ':') // <drive>:\path
+                // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
                 if (!Directory.Exists(folder))
                     folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
                 else
@@ -267,7 +268,7 @@ namespace PoroCYon.MCT.Tools
         }
         static bool BeginCompile(string path)
         {
-            if (AppendBuilding(path))
+            if (!Debugger.IsAttached && AppendBuilding(path))
                 return false;
 
             current = new ModData();

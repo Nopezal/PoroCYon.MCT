@@ -48,16 +48,8 @@ namespace PoroCYon.MCT
             }
         }
 
-        /// <summary>
-        /// Initializes the MCT.
-        /// Call this in OnLoad.
-        /// If you do not call this, the MCT will not work (partially).
-        /// </summary>
-        public static void Init()
+        static void InsertMctMod()
         {
-            if (Inited)
-                return;
-
             // hacky stuff #1
             // add mod etc to list...
 
@@ -99,16 +91,35 @@ namespace PoroCYon.MCT
             modBase.OnLoad();
 
             modBase.modPrefixes[0].Init(null);
-
-            Inited = true;
-
+        }
+        static void LoadData()
+        {
             SyncedRandom.Reset();
 
             ModableObject.Reset();
 
-            ObjectLoader.AddInvasion(modBase, "Goblin Army" , new GoblinArmyInv ());
-            ObjectLoader.AddInvasion(modBase, "Frost Legion", new FrostLegionInv());
-            ObjectLoader.AddInvasion(modBase, "Pirates"     , new PiratesInv    ());
+            ObjectLoader.AddInvasion(Mod.instance, "Goblin Army", new GoblinArmyInv());
+            ObjectLoader.AddInvasion(Mod.instance, "Frost Legion", new FrostLegionInv());
+            ObjectLoader.AddInvasion(Mod.instance, "Pirates", new PiratesInv());
+        }
+
+        /// <summary>
+        /// Initializes the MCT.
+        /// Call this in OnLoad.
+        /// If you do not call this, the MCT will not work (partially).
+        /// </summary>
+        public static void Init()
+        {
+            if (Inited)
+                return;
+
+            InsertMctMod();
+
+            LoadData();
+
+            Inited = true; // prevent stack overflow (onload -> init -> loaddebugmod -> onload -> ...)
+
+            MctDebugger.LoadDebugMods();
         }
 
         internal static void Uninit()
