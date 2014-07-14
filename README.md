@@ -7,12 +7,12 @@ http://www.terrariaonline.com/threads/132361/
 ---
 
 ## Table of Contents
-1. [Initialize MCT](#init)
-1. [Enable Edit & Continue in Visual Studio](#enc)
-1. [Invoke MCT Tools.exe](#mcttools)
-1. [Automate building & debugging in Visual Studio](#vsautomation)
+1. [Initialize MCT](#initialize-mct-)
+1. [Enable Edit & Continue in Visual Studio](#enable-edit--continue-in-visual-studio-)
+1. [Invoke MCT Tools.exe](#invoke-mct-toolsexe-)
+1. [Automate building & debugging in Visual Studio](#automate-building--debugging-in-visual-studio-)
 
-## Initialize MCT <a id="init"></a>
+## Initialize MCT
 
 ```csharp
 // in ModBase.OnLoad:
@@ -23,7 +23,7 @@ This is needed to enable most features of the MCT.
 
 Use IntelliSense/Look around in the repo to discover other features.
 
-## Enable Edit & Continue in Visual Studio <a id="enc"></a>
+## Enable Edit & Continue in Visual Studio
 
 Use these command-line arguments when launching tAPI:
     
@@ -33,7 +33,7 @@ Use these command-line arguments when launching tAPI:
 
 Edit &amp; Continue does not always work in constructors of 'global types' (ModBase, ModWorld, ModInterface, ...) and the ModBase.OnLoad method.
 
-## Invoke MCT Tools.exe <a id="mcttools"></a>
+## Invoke MCT Tools.exe
 
 The MCT Tools is a command-line program that has a custom built compiler and a mod decompiler.
 It can be invoked through CMD using the 'mct' command.
@@ -53,7 +53,7 @@ or a folder in the %tapimodsrcdir% folder. You can also use an absolute path.
 
 (either the prefix -, --, / or no prefix can be used for the arguments (excepth paths/names))
 
-## Automate building & debugging in Visual Studio <a id="vsautomation"></a>
+## Automate building & debugging in Visual Studio
 
 Make sure the Target framework is 4.0(.30319) (NOT the client profile), and the Platform target is x86 (for all build configurations).
 
