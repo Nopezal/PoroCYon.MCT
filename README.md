@@ -7,10 +7,10 @@ http://www.terrariaonline.com/threads/132361/
 ---
 
 ## Table of Contents
-1. [Initialize MCT](#initialize-mct-)
-1. [Enable Edit & Continue in Visual Studio](#enable-edit--continue-in-visual-studio-)
-1. [Invoke MCT Tools.exe](#invoke-mct-toolsexe-)
-1. [Automate building & debugging in Visual Studio](#automate-building--debugging-in-visual-studio-)
+1. [Initialize MCT](#initialize-mct)
+1. [Enable Edit & Continue in Visual Studio](#enable-edit--continue-in-visual-studio)
+1. [Invoke MCT Tools.exe](#invoke-mct-toolsexe)
+1. [Automate building & debugging in Visual Studio](#automate-building--debugging-in-visual-studio)
 
 ## Initialize MCT
 
