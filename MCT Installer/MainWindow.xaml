@@ -1,7 +1,7 @@
 ﻿<Window x:Class="PoroCYon.MCT.Installer.MainWindow" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
-        Title="Mod Creation Tools Installer" Height="350" Width="525" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" MinHeight="350" MinWidth="525" Background="#D8FFFFFF" Icon="Logo.ico">
+        Title="Mod Creation Tools Installer" Height="350" Width="525" AllowsTransparency="True" WindowStyle="None" ResizeMode="CanResizeWithGrip" MinHeight="350" MinWidth="525" Background="#D8FFFFFF" Icon="Logo.ico" FontFamily="./#Xolonium">
     <Grid>
-        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Mod Creation Tools Installer" VerticalAlignment="Top" Height="26" Width="409" FontSize="25" FontFamily="Xolonium">
+        <TextBlock HorizontalAlignment="Left" Margin="10,10,0,0" TextWrapping="Wrap" Text="Mod Creation Tools Installer" VerticalAlignment="Top" Height="26" Width="409" FontSize="25">
             <TextBlock.Effect>
                 <DropShadowEffect BlurRadius="3" ShadowDepth="2" Direction="50" Opacity="0.7"/>
             </TextBlock.Effect>
@@ -25,10 +25,10 @@
         </TextBlock>
 
         <Border Name="NextBorder" BorderBrush="Lime" BorderThickness="2" HorizontalAlignment="Right" Height="20" Margin="0,0,10,10" VerticalAlignment="Bottom" Width="90" />
-        <TextBlock Name="Next" HorizontalAlignment="Right" Margin="0,0,11,10" TextWrapping="Wrap" Text="Next" VerticalAlignment="Bottom" Foreground="Lime" FontSize="16" FontFamily="Xolonium" Height="20" Width="90" TextAlignment="Center" Cursor="Hand" />
+        <TextBlock Name="Next" HorizontalAlignment="Right" Margin="0,0,11,10" TextWrapping="Wrap" Text="Next" VerticalAlignment="Bottom" Foreground="Lime" FontSize="16" Height="20" Width="90" TextAlignment="Center" Cursor="Hand" />
 
         <Border Name="PreviousBorder" BorderBrush="Lime" BorderThickness="2" HorizontalAlignment="Right" Height="20" Margin="0,0,106,10" VerticalAlignment="Bottom" Width="90" />
-        <TextBlock Name="Previous" HorizontalAlignment="Right" Margin="0,0,106,10" TextWrapping="Wrap" Text="Previous" VerticalAlignment="Bottom" Foreground="Lime" FontSize="16" FontFamily="Xolonium" Height="20" Width="90" TextAlignment="Center" Cursor="Hand" />
+        <TextBlock Name="Previous" HorizontalAlignment="Right" Margin="0,0,106,10" TextWrapping="Wrap" Text="Previous" VerticalAlignment="Bottom" Foreground="Lime" FontSize="16" Height="20" Width="90" TextAlignment="Center" Cursor="Hand" />
 
         <Grid Name="Contents" Margin="10,60,10,35" />
 

@@ -143,6 +143,7 @@
     <None Include="App.config">
       <SubType>Designer</SubType>
     </None>
+    <Resource Include="Xolonium.otf" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="LICENSE.txt" />

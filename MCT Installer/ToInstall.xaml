@@ -1,7 +1,7 @@
 ﻿<UserControl x:Class="PoroCYon.MCT.Installer.ToInstall" xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml" xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
-             mc:Ignorable="d" d:DesignHeight="255" d:DesignWidth="505">
+             mc:Ignorable="d" d:DesignHeight="255" d:DesignWidth="505" FontFamily="./#Xolonium">
     <Grid>
-        <CheckBox Name="PDBs"   Content="Install .pdb files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontFamily="Xolonium" FontSize="18" VerticalContentAlignment="Center" ToolTip=".pdb files give more information when errors occur so they are easier to fix." />
-        <CheckBox Name="FSharp" Content="Deploy F# Compiler" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontFamily="Xolonium" FontSize="18" VerticalContentAlignment="Center" ToolTip="This will enable you to make mods in the F# language." />
+        <CheckBox Name="PDBs"   Content="Install .pdb files" HorizontalAlignment="Left" Margin="10,10,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontSize="18" VerticalContentAlignment="Center" ToolTip=".pdb files give more information when errors occur so they are easier to fix." />
+        <CheckBox Name="FSharp" Content="Deploy F# Compiler" HorizontalAlignment="Left" Margin="10,37,0,0" VerticalAlignment="Top" IsChecked="True" Background="{x:Null}" Foreground="Black" FontSize="18" VerticalContentAlignment="Center" ToolTip="This will enable you to make mods in the F# language." />
     </Grid>
 </UserControl>
