@@ -7,6 +7,11 @@
             <Run Text="This will install the Mod Creation Tools on your computer." />
             <LineBreak />
             <LineBreak />
+            <Run Text="If you prefer to install the MCT from a .zip, follow " />
+            <Run Name="RedistLink" Text="this" Foreground="#FF2C7DF3" TextDecorations="Underline" ToolTip="MCT-redist.zip" Cursor="Hand" />
+            <Run Text=" link. This archieve only contains the .dlls, it is reccomended for modders to use this installer." />
+            <LineBreak />
+            <LineBreak />
             <Run Text="Press 'Next' to continue, or 'X' to cancel the installation." />
         </TextBlock>
 
