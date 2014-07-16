@@ -7,14 +7,15 @@
             <Run Text="You can also install the MCT without installing templates for Microsoft Visual Studio." />
         </TextBlock>
 
-        <CheckBox Name="VCs10" Content="Microsoft Visual C# 2010 Express" HorizontalAlignment="Left" Margin="10,0,0,118" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
-        <CheckBox Name="Vs10" Content="Microsoft Visual Studio 2010" HorizontalAlignment="Left" Margin="10,0,0,97" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="VCs10" Content="Microsoft Visual C# 2010 Express" HorizontalAlignment="Left" Margin="10,0,0,134" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="Vs10" Content="Microsoft Visual Studio 2010" HorizontalAlignment="Left" Margin="10,0,0,113" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
 
-        <CheckBox Name="WdE11" Content="Microsoft Visual Studio 2012 Express for Windows Desktop" HorizontalAlignment="Left" Margin="10,0,0,76" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
-        <CheckBox Name="Vs11" Content="Microsoft Visual Studio 2012" HorizontalAlignment="Left" Margin="10,0,0,55" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="WdE11" Content="Microsoft Visual Studio 2012 Express for Windows Desktop" HorizontalAlignment="Left" Margin="10,0,0,92" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="Vs11" Content="Microsoft Visual Studio 2012" HorizontalAlignment="Left" Margin="10,0,0,71" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
 
-        <CheckBox Name="WdE12" Content="Microsoft Visual Studio 2013 Express for Windows Desktop" HorizontalAlignment="Left" Margin="10,0,0,34" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
-        <CheckBox Name="Vs12" Content="Microsoft Visual Studio 2013" HorizontalAlignment="Left" Margin="10,0,0,13" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="WdE12" Content="Microsoft Visual Studio 2013 Express for Windows Desktop" HorizontalAlignment="Left" Margin="10,0,0,50" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
+        <CheckBox Name="Vs12" Content="Microsoft Visual Studio 2013" HorizontalAlignment="Left" Margin="10,0,0,29" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
 
+        <CheckBox Name="Vs14CTP" Content="Microsoft Visual Studio 14 CTP" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Background="{x:Null}" FontFamily="Xolonium" />
     </Grid>
 </UserControl>

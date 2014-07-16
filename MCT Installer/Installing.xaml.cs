@@ -218,7 +218,7 @@ namespace PoroCYon.MCT.Installer
 
                         UpdateProgress(-1d, t.Item1);
                         if (t.Item1.StartsWith("Templates\\"))
-                            for (VSVersion v = VSVersion.VCSExpress; v <= VSVersion.VisualStudio12; v = (VSVersion)((int)v * 2))
+                            for (VsVersion v = VsVersion.VCSExpress; v <= VsVersion.VisualStudio12; v = (VsVersion)((int)v * 2))
                             {
                                 if ((VsVersions.ChosenVersions & v) == 0)
                                     continue;
@@ -226,16 +226,16 @@ namespace PoroCYon.MCT.Installer
                                 string version = "";
                                 switch (v)
                                 {
-                                    case VSVersion.VCSExpress:
-                                    case VSVersion.VisualStudio10:
+                                    case VsVersion.VCSExpress:
+                                    case VsVersion.VisualStudio10:
                                         version = "10";
                                         break;
-                                    case VSVersion.WDExpress11:
-                                    case VSVersion.VisualStudio11:
+                                    case VsVersion.WDExpress11:
+                                    case VsVersion.VisualStudio11:
                                         version = "12";
                                         break;
-                                    case VSVersion.WDExpress12:
-                                    case VSVersion.VisualStudio12:
+                                    case VsVersion.WDExpress12:
+                                    case VsVersion.VisualStudio12:
                                         version = "13";
                                         break;
                                 }

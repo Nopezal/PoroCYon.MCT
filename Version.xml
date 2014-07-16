@@ -1,13 +1,18 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="3" Version="1.2.0.0" String="1.2.0.0" />
+  <CurrentVersion Number="3" Version="1.2.0.1" String="1.2.0.1" />
   
   <Changelog>
+    <Release Version="1.2.0.1">
+      <Change>
+        CodableEntity.AttachModEntity(ModEntity, [AttachMode = AttachMode.New])
+      </Change>
+    </Release>
     <Release Version="1.2.0.0">
       <Change>
         Enabled Edit &amp; Continue in Visual Studio.
         Use the DEBUG &lt;internal name&gt; &lt;path to assembly&gt; command-line arguments.
-    </Change>
+      </Change>
     </Release>
     
     <Release Version="1.1.0.15">

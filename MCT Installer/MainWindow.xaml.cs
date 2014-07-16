@@ -321,43 +321,47 @@ namespace PoroCYon.MCT.Installer
             if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 6u) // not r6
                 return "You do not have tAPI r6 installed";
 
-            #region Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
-            Dictionary<VSVersion, string> asString = new Dictionary<VSVersion, string>()
+            #region Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()
+            Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()
             {
                 {
-                    VSVersion.VCSExpress,
+                    VsVersion.VCSExpress,
                     "VCSExpress\\10.0"
                 },
                 {
-                    VSVersion.VisualStudio10,
+                    VsVersion.VisualStudio10,
                     "VisualStudio\\10.0"
                 },
                 {
-                    VSVersion.WDExpress11,
+                    VsVersion.WDExpress11,
                     "WDExpress\\11.0"
                 },
                 {
-                    VSVersion.VisualStudio11,
+                    VsVersion.VisualStudio11,
                     "VisualStudio\\11.0"
                 },
                 {
-                    VSVersion.WDExpress12,
+                    VsVersion.WDExpress12,
                     "WDExpress\\12.0"
                 },
                 {
-                    VSVersion.VisualStudio12,
+                    VsVersion.VisualStudio12,
                     "VisualStudio\\12.0"
                 },
+                {
+                    VsVersion.VisualStudio14CTP,
+                    "VisualStudio\\14.0"
+                }
             };
             #endregion
 
-            for (int i = 1; i <= 32; i *= 2)
+            for (int i = 1; i <= (int)VsVersion.VisualStudio14CTP; i *= 2)
             {
                 try
                 {
-                    RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VSVersion)i]);
+                    RegistryKey key = Registry.CurrentUser.OpenSubKey("Software\\Microsoft\\" + asString[(VsVersion)i]);
                     if (key != null && key.GetValue("FullScreen") != null) // random key
-                        VsVersions.PossibleVersions |= (VSVersion)i;
+                        VsVersions.PossibleVersions |= (VsVersion)i;
                 }
                 catch (NullReferenceException) { } // VS key does not exist, do not return false this time
             }

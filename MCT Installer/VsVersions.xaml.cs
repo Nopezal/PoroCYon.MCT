@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Installer
     /// Enumeration is marked as Flags
     /// </summary>
     [Flags]
-    public enum VSVersion : byte
+    public enum VsVersion : byte
     {
         VCSExpress = 1,
         VisualStudio10 = 2,
@@ -17,12 +17,14 @@ namespace PoroCYon.MCT.Installer
         VisualStudio11 = 8,
 
         WDExpress12 = 16,
-        VisualStudio12 = 32
+        VisualStudio12 = 32,
+
+        VisualStudio14CTP = 64
     }
 
     public partial class VsVersions : UserControl
     {
-        internal static VSVersion
+        internal static VsVersion
             ChosenVersions = 0,
             PossibleVersions = 0;
 
@@ -32,55 +34,60 @@ namespace PoroCYon.MCT.Installer
 
             ChosenVersions = 0;
 
-            VSVersion latest = 0, latestExpress = 0;
-            for (VSVersion ver = VSVersion.VCSExpress; ver <= VSVersion.VisualStudio12; ver = (VSVersion)((byte)ver * 2))
-                if (FromVSVersion(ver).IsEnabled = ((PossibleVersions & ver) != 0))
+            VsVersion latest = 0, latestExpress = 0;
+            for (VsVersion ver = VsVersion.VCSExpress; ver <= VsVersion.VisualStudio14CTP; ver = (VsVersion)((byte)ver * 2))
+                if (FromVsVersion(ver).IsEnabled = ((PossibleVersions & ver) != 0))
                 {
                     latest = ver;
-                    if (ver == VSVersion.VCSExpress || ver == VSVersion.WDExpress11 || ver == VSVersion.WDExpress12)
+                    if (ver == VsVersion.VCSExpress || ver == VsVersion.WDExpress11 || ver == VsVersion.WDExpress12)
                         latestExpress = ver;
                 }
 
-            VCs10.Checked += (s, e) => ChosenVersions |= VSVersion.VCSExpress;
-            VCs10.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VCSExpress;
+            VCs10.Checked += (s, e) => ChosenVersions |= VsVersion.VCSExpress;
+            VCs10.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VCSExpress;
 
-            Vs10.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio10;
-            Vs10.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio10;
+            Vs10.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio10;
+            Vs10.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio10;
 
-            WdE11.Checked += (s, e) => ChosenVersions |= VSVersion.WDExpress11;
-            WdE11.Unchecked += (s, e) => ChosenVersions ^= VSVersion.WDExpress11;
+            WdE11.Checked += (s, e) => ChosenVersions |= VsVersion.WDExpress11;
+            WdE11.Unchecked += (s, e) => ChosenVersions ^= VsVersion.WDExpress11;
 
-            Vs11.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio11;
-            Vs11.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio11;
+            Vs11.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio11;
+            Vs11.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio11;
 
-            WdE12.Checked += (s, e) => ChosenVersions |= VSVersion.WDExpress12;
-            WdE12.Unchecked += (s, e) => ChosenVersions ^= VSVersion.WDExpress12;
+            WdE12.Checked += (s, e) => ChosenVersions |= VsVersion.WDExpress12;
+            WdE12.Unchecked += (s, e) => ChosenVersions ^= VsVersion.WDExpress12;
 
-            Vs12.Checked += (s, e) => ChosenVersions |= VSVersion.VisualStudio12;
-            Vs12.Unchecked += (s, e) => ChosenVersions ^= VSVersion.VisualStudio12;
+            Vs12.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio12;
+            Vs12.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio12;
+
+            Vs14CTP.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio14CTP;
+            Vs14CTP.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio14CTP;
 
             if (latest != 0)
-                FromVSVersion(latest).IsChecked = true;
+                FromVsVersion(latest).IsChecked = true;
             if (latestExpress != 0)
-                FromVSVersion(latestExpress).IsChecked = true;
+                FromVsVersion(latestExpress).IsChecked = true;
         }
 
-        CheckBox FromVSVersion(VSVersion version)
+        CheckBox FromVsVersion(VsVersion version)
         {
             switch (version)
             {
-                case VSVersion.VCSExpress:
+                case VsVersion.VCSExpress:
                     return VCs10;
-                case VSVersion.VisualStudio10:
+                case VsVersion.VisualStudio10:
                     return Vs10;
-                case VSVersion.WDExpress11:
+                case VsVersion.WDExpress11:
                     return WdE11;
-                case VSVersion.VisualStudio11:
+                case VsVersion.VisualStudio11:
                     return Vs11;
-                case VSVersion.WDExpress12:
+                case VsVersion.WDExpress12:
                     return WdE12;
-                case VSVersion.VisualStudio12:
+                case VsVersion.VisualStudio12:
                     return Vs12;
+                case VsVersion.VisualStudio14CTP:
+                    return Vs14CTP;
             }
 
             throw new ArgumentOutOfRangeException("version");
