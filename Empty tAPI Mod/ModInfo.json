@@ -1,0 +1,13 @@
+﻿{
+    "displayName": "$projectname$",
+    "author": "$registeredorganization$",
+    "version": "0.0.0.0",
+    "info": "$projectname$ by $registeredorganization$ v0.0.0.0",
+    
+    "internalName": "$safeprojectname$",
+
+    "MSBuild": true,
+    "msBuildFile": "$(ProjectPath)",
+
+    "includePDB": true
+}

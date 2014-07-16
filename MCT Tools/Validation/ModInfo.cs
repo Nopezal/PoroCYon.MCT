@@ -128,25 +128,42 @@ namespace PoroCYon.MCT.Tools.Validation
                         {
                             Cause = new InvalidCastException(),
                             FilePath = json.Path,
-                            IsWarning = false,
+                            IsWarning = true,
                             Message = "'version' is a " + json.Json.GetJsonType() + ", not a string or an int[]."
                         });
+                    else
+                    {
+                        int[] values = new int[4] { 1, 0, 0, 0 };
 
-                    int[] values = new int[4] { 1, 0, 0, 0 };
-
-                    for (int i = 0; i < Math.Min(ver.Count, 4); i++)
-                        if (!ver[i].IsInt)
-                            errors.Add(new CompilerError()
+                        for (int i = 0; i < Math.Min(ver.Count, 4); i++)
+                            if (!ver[i].IsInt)
+                                errors.Add(new CompilerError()
+                                {
+                                    Cause = new InvalidCastException(),
+                                    FilePath = json.Path,
+                                    IsWarning = true,
+                                    Message = "'version[" + i + "]' is a " + json.Json.GetJsonType() + ", not an int."
+                                });
+                            else
                             {
-                                Cause = new InvalidCastException(),
-                                FilePath = json.Path,
-                                IsWarning = false,
-                                Message = "'version[" + i + "]' is a " + json.Json.GetJsonType() + ", not an int."
-                            });
-                        else
-                            values[i] = (int)ver[i];
+                                values[i] = (int)ver[i];
 
-                    version = new Version(values[0], values[1], values[2], values[3]);
+                                try
+                                {
+                                    version = new Version(values[0], values[1], values[2], values[3]);
+                                }
+                                catch (Exception e)
+                                {
+                                    errors.Add(new CompilerError()
+                                    {
+                                        Cause = e,
+                                        FilePath = json.Path,
+                                        IsWarning = true,
+                                        Message = "Invalid version format. Consider changing it to the general format '<major>.<minor>.<build>.<revision>'."
+                                    });
+                                }
+                            }
+                    }
                 }
                 else
                 {

@@ -88,37 +88,7 @@ namespace PoroCYon.MCT.Installer
                         }
                     }
                     if (VsVersions.ChosenVersions != 0)
-                    {
-                        const string T = "Templates\\tAPI ", Z = ".zip";
-
-                        ToDownload.Add(T + "global ModItem class" + Z);
-                        ToDownload.Add(T + "global ModNPC class" + Z);
-                        ToDownload.Add(T + "global ModPrefix class" + Z);
-                        ToDownload.Add(T + "global ModProjectile class" + Z);
-                        ToDownload.Add(T + "global ModTile class" + Z);
-
-                        ToDownload.Add(T + "Item JSON file" + Z);
-
-                        ToDownload.Add(T + "ModBase class" + Z);
-                        ToDownload.Add(T + "ModBuff class" + Z);
-                        ToDownload.Add(T + "ModInfo.json file" + Z);
-                        ToDownload.Add(T + "ModInterface class" + Z);
-                        ToDownload.Add(T + "ModItem class" + Z);
-                        ToDownload.Add(T + "ModNPC class" + Z);
-                        ToDownload.Add(T + "ModPlayer class" + Z);
-                        ToDownload.Add(T + "ModPrefix class" + Z);
-                        ToDownload.Add(T + "ModProjectile class" + Z);
-                        ToDownload.Add(T + "ModTile class" + Z);
-                        ToDownload.Add(T + "ModWorld class" + Z);
-
-                        ToDownload.Add(T + "NPC JSON file" + Z);
-                        ToDownload.Add(T + "Prefix JSON file" + Z);
-                        ToDownload.Add(T + "Projectile JSON file" + Z);
-                        ToDownload.Add(T + "Tile JSON file" + Z);
-                        ToDownload.Add(T + "Wall JSON file" + Z);
-
-                        ToDownload.Add(T + "Mod" + Z);
-                    }
+                        ToDownload.Add("Templates\\Empty tAPI Mod.zip");
 
                     applied = total = ToDownload.Count;
 
@@ -151,13 +121,13 @@ namespace PoroCYon.MCT.Installer
                 {
                     Environment.SetEnvironmentVariable("TAPIBINDIR", steamDir.Remove(steamDir.Length - 1), EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("TAPIMODDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                    + "\\My Games\\Terraria\\tAPI\\Mods", EnvironmentVariableTarget.Machine);
+                        + "\\My Games\\Terraria\\tAPI\\Mods", EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("TAPIMODSRCDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                    + "\\My Games\\Terraria\\tAPI\\Mods\\Sources", EnvironmentVariableTarget.Machine);
+                        + "\\My Games\\Terraria\\tAPI\\Mods\\Sources", EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("TAPIMODOUTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                    + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted", EnvironmentVariableTarget.Machine);
+                        + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted", EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("MCTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                    + "\\My Games\\Terraria\\tAPI\\MCT", EnvironmentVariableTarget.Machine);
+                        + "\\My Games\\Terraria\\tAPI\\MCT", EnvironmentVariableTarget.Machine);
 
                     RegistryKey hklm = Registry.LocalMachine;
                     RegistryKey mctk = hklm.CreateSubKey("SOFTWARE\\Microsoft\\Windows\\CurrentVersion\\App Paths\\mct.exe", RegistryKeyPermissionCheck.ReadWriteSubTree);
@@ -228,20 +198,23 @@ namespace PoroCYon.MCT.Installer
                                 {
                                     case VsVersion.VCSExpress:
                                     case VsVersion.VisualStudio10:
-                                        version = "10";
+                                        version = "2010";
                                         break;
                                     case VsVersion.WDExpress11:
                                     case VsVersion.VisualStudio11:
-                                        version = "12";
+                                        version = "2012";
                                         break;
                                     case VsVersion.WDExpress12:
                                     case VsVersion.VisualStudio12:
-                                        version = "13";
+                                        version = "2013";
+                                        break;
+                                    case VsVersion.VisualStudio14CTP:
+                                        version = "14";
                                         break;
                                 }
 
-                                string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Visual Studio 20" + version +
-                                "\\Templates\\" + (t.Item1 == "Templates\\tAPI Mod.zip" ? "ProjectTemplates" : "ItemTemplates") + "\\Visual C#\\tAPI\\";
+                                string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Visual Studio " + version +
+                                    "\\Templates\\ProjectTemplates\\Visual C#\\tAPI\\";
                                 if (!Directory.Exists(folder))
                                     Directory.CreateDirectory(folder);
 

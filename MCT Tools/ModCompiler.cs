@@ -32,7 +32,7 @@ namespace PoroCYon.MCT.Tools
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
 
-            if (folder[1] != ':') // <drive>:\path
+            if (folder[1] != ':' && !folder.StartsWith("\\")) // <drive>:\path or \\ServerName\path
                 // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
                 if (!Directory.Exists(folder))
                     folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
