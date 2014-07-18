@@ -214,7 +214,7 @@ namespace PoroCYon.MCT.Tools
                         }
                         catch (Exception e)
                         {
-                            Console.Error.WriteLine("Error: " + e); // logged to std::cerr
+                            Console.Error.WriteLine("Error: " + e);
                         }
                         goto NEXT; // those velociraptors aren't real
                     }
@@ -232,7 +232,7 @@ namespace PoroCYon.MCT.Tools
                         }
                         catch (Exception e)
                         {
-                            Console.Error.WriteLine("Error: " + e); // logged to std::cerr
+                            Console.Error.WriteLine("Error: " + e);
                         }
                         break;
                     }

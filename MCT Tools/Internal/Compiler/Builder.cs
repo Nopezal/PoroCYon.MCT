@@ -288,16 +288,16 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 string ext = Path.GetExtension(mod.Info.msBuildFile);
                 string[] probableFileExt = new[] { ext.Remove(ext.IndexOf("proj")) };
 
-            if (probableFileExt[0] == ".vcx")
-                probableFileExt = new[] { "cpp", "cxx", "c", "c++", "hpp", "hxx", "h", "h++" };
-            if (probableFileExt[0] == ".cs")
-                probableFileExt = new[] { "cs", "csx" };
-            if (probableFileExt[0] == ".vb")
-                probableFileExt = new[] { "vb", "vba", "vbs" };
-            if (probableFileExt[0] == ".js")
-                probableFileExt = new[] { "js", "ts" };
-            if (probableFileExt[0] == ".fs")
-                probableFileExt = new[] { "fs", "fsx" };
+                if (probableFileExt[0] == ".vcx")
+                    probableFileExt = new[] { "cpp", "cxx", "c", "c++", "hpp", "hxx", "h", "h++" };
+                if (probableFileExt[0] == ".cs")
+                    probableFileExt = new[] { "cs", "csx" };
+                if (probableFileExt[0] == ".vb")
+                    probableFileExt = new[] { "vb", "vba", "vbs" };
+                if (probableFileExt[0] == ".js")
+                    probableFileExt = new[] { "js", "ts" };
+                if (probableFileExt[0] == ".fs")
+                    probableFileExt = new[] { "fs", "fsx" };
 
                 foreach (string key in mod.Files.Keys)
                     for (int i = 0; i < probableFileExt.Length; i++)
@@ -351,8 +351,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
             }
 
-            if (Directory.Exists(MSBOutputPath))
-                Directory.Delete(MSBOutputPath, true);
+            //if (Directory.Exists(MSBOutputPath))
+            //    Directory.Delete(MSBOutputPath, true);
 
             return new Tuple<Assembly, string, List<CompilerError>>(asm, pdb, errors);
         }
