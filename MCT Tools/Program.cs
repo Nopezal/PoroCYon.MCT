@@ -12,6 +12,9 @@ namespace PoroCYon.MCT.Tools
 {
     static class Program
     {
+        [Serializable]
+        class CloseConsoleException : Exception { }
+
         static bool suppressBanner = false;
 
         static Dictionary<string, Action> Commands;
@@ -21,6 +24,7 @@ namespace PoroCYon.MCT.Tools
         {
             Commands = new Dictionary<string, Action>()
             {
+                #region help
                 {
                     "help", () =>
                     {
@@ -31,57 +35,47 @@ namespace PoroCYon.MCT.Tools
                         Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP.");
                     }
                 },
-                { "nobanner", () => suppressBanner = !suppressBanner }
+                #endregion
+
+                { "banner"  , () => suppressBanner = !suppressBanner }
             };
-            Commands.Add("?",     Commands["help" ]);
+
+            Commands.Add("?"       , Commands["help"  ]);
+            Commands.Add("h"       , Commands["help"  ]);
+            Commands.Add("nobanner", Commands["banner"]);
 
             ToolCommands = new Dictionary<string, Action<string>>()
             {
+                #region build
                 {
                     "build", (path) =>
                     {
-                        if (!suppressBanner)
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("MCT Tools mod compiler");
-                            Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
-                            Console.WriteLine("MCT Copyright © PoroCYon 2014");
-                            Console.WriteLine();
-                        }
+                        WriteBanner("mod compiler");
 
-                        string couldBeHelp = TrimCommand(path).ToLowerInvariant();
-                        if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
-                        {
-                            Console.WriteLine("BUILD <mod folder/dll file>");
+                        if (WriteHelp(path, "BUILD <mod folder/dll file>"))
                             return;
-                        }
-                        CompilerOutput ret = File.Exists(path) ? ModCompiler.CompileFromAssembly(path) :  ModCompiler.CompileFromSource(path);
+
+                        CompilerOutput ret = File.Exists(path)
+                            ? ModCompiler.CompileFromAssembly(path)
+                            : ModCompiler.CompileFromSource  (path);
 
                         if (Debugger.IsAttached)
                             Debug.WriteLine(ret);
 
                         Console.WriteLine(ret);
-                        Console.WriteLine();
                     }
                 },
+                #endregion
+
+                #region decompile
                 {
                     "decompile", (path) =>
                     {
-                        if (!suppressBanner)
-                        {
-                            Console.WriteLine();
-                            Console.WriteLine("MCT Tools mod decompiler");
-                            Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
-                            Console.WriteLine("MCT Copyright © PoroCYon 2014");
-                            Console.WriteLine();
-                        }
+                        WriteBanner("mod decompiler");
 
-                        string couldBeHelp = TrimCommand(path).ToLowerInvariant();
-                        if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
-                        {
-                            Console.WriteLine("DECOMPILE <.tapi or .tapimod file> \t\t '.tapi or .tapimod file' should be in Documents\\My Games\\Terraria\\tAPI\\Mods, eg. 'DECOMPILE Unsorted\\YourMod.tapi'");
+                        if (WriteHelp(path,
+    "DECOMPILE <.tapi or .tapimod file> \t\t '.tapi or .tapimod file' should be in Documents\\My Games\\Terraria\\tAPI\\Mods, eg. 'DECOMPILE Unsorted\\YourMod.tapi'"))
                             return;
-                        }
 
                         if (!path.Contains('/') && !path.Contains('\\'))
                             path = Mods.pathDirMods + "\\" + path;
@@ -95,15 +89,103 @@ namespace PoroCYon.MCT.Tools
                         Console.WriteLine("Finished decompilation.");
                     }
                 },
+                #endregion
+
+                #region port
+                {
+                    "port",
+                    (file) =>
+                    {
+                        WriteBanner("file porter");
+
+                        if (WriteHelp(file, "PORT <toPort>. \t\t toPort should be the full file name (name + extension) of the file to port. Folder not required."))
+                            return;
+
+                        string
+                            terrariaDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\",
+                            ext = Path.GetExtension(file),
+                            path;
+
+                        switch (ext)
+                        {
+                            case ".plr":
+                                path = terrariaDir + "Players\\" + file;
+
+                                if (!File.Exists(path))
+                                {
+                                    Console.Error.WriteLine("The file \"" + path + "\" does not exist.");
+
+                                    return;
+                                }
+
+                                try
+                                {
+                                    FilePorter.PortPlayer(path);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.Error.WriteLine("Could not port the Player file:" + Environment.NewLine + e);
+                                }
+                                break;
+                            case ".wld":
+                                path = terrariaDir + "Worlds\\" + file;
+
+                                if (!File.Exists(path))
+                                {
+                                    Console.Error.WriteLine("The file \"" + path + "\" does not exist.");
+
+                                    return;
+                                }
+
+                                try
+                                {
+                                    FilePorter.PortWorld(path);
+                                }
+                                catch (Exception e)
+                                {
+                                    Console.Error.WriteLine("Could not port the world file:" + Environment.NewLine + e);
+                                }
+                                break;
+                            default:
+                                Console.Error.WriteLine("Invalid file extension (" + ext ?? "none" + ").");
+                                break;
+                        }
+                    }
+                },
+                #endregion
+
                 { "skip", (nothing) => { } }
             };
+
             ToolCommands.Add("compile", ToolCommands["build"]);
-            ToolCommands.Add("ignore", ToolCommands["skip"]);
-            ToolCommands.Add("nothing", ToolCommands["skip"]);
+            ToolCommands.Add("ignore" , ToolCommands["skip"] );
+            ToolCommands.Add("nothing", ToolCommands["skip"] );
         }
 
-        [Serializable]
-        class CloseConsoleException : Exception { }
+        static bool WriteHelp(string arg, string help)
+        {
+            string couldBeHelp = arg.TrimStart('-', '/').ToLowerInvariant();
+
+            if (couldBeHelp == "help" || couldBeHelp == "h" || couldBeHelp == "?")
+            {
+                Console.WriteLine(help);
+
+                return true;
+            }
+
+            return false;
+        }
+        static void WriteBanner(string tool)
+        {
+            if (!suppressBanner)
+            {
+                Console.WriteLine();
+                Console.WriteLine("MCT Tools " + tool);
+                Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
+                Console.WriteLine("MCT Copyright © PoroCYon 2014");
+                Console.WriteLine();
+            }
+        }
 
         [STAThread]
         static void Main(string[] args)
@@ -114,17 +196,17 @@ namespace PoroCYon.MCT.Tools
 
             for (int i = 0; i < args.Length; i++)
             {
-                string s = TrimCommand(args[i]);
+                string cmd = args[i].TrimStart('-', '/');
 
                 for (int j = 0; j < Commands.Count; j++)
                 {
-                    string c = Commands.Keys.ElementAt(j);
+                    string name = Commands.Keys.ElementAt(j);
 
-                    if (s.ToLowerInvariant() == c.ToLowerInvariant() || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
+                    if (cmd.ToLowerInvariant() == name.ToLowerInvariant() || (Char.ToLowerInvariant(name[0]) == Char.ToLowerInvariant(name[0]) && cmd.Length == 0))
                     {
                         try
                         {
-                            Commands[c]();
+                            Commands[name]();
                         }
                         catch (CloseConsoleException)
                         {
@@ -140,13 +222,13 @@ namespace PoroCYon.MCT.Tools
 
                 for (int j = 0; j < ToolCommands.Count; j++)
                 {
-                    string c = ToolCommands.Keys.ElementAt(j);
+                    string name = ToolCommands.Keys.ElementAt(j);
 
-                    if (s.ToLowerInvariant() == c.ToLowerInvariant() || (Char.ToLowerInvariant(c[0]) == Char.ToLowerInvariant(c[0]) && s.Length == 0))
+                    if (cmd.ToLowerInvariant() == name.ToLowerInvariant() || (Char.ToLowerInvariant(name[0]) == Char.ToLowerInvariant(name[0]) && cmd.Length == 0))
                     {
                         try
                         {
-                            ToolCommands[c](args[++i]);
+                            ToolCommands[name](args[++i]);
                         }
                         catch (Exception e)
                         {
@@ -159,19 +241,6 @@ namespace PoroCYon.MCT.Tools
             NEXT:
                 ;
             }
-        }
-        static string TrimCommand(string command)
-        {
-            string s = (string)command.Clone();
-
-            if (s.StartsWith("--"))
-                s = s.Substring(2);
-            if (s.StartsWith("-"))
-                s = s.Substring(1);
-            if (s.StartsWith("/"))
-                s = s.Substring(1);
-
-            return s;
         }
     }
 }

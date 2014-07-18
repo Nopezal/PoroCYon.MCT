@@ -88,6 +88,9 @@ namespace PoroCYon.MCT.Internal
 
             string internalName = (string)modInfo["internalName"];
 
+            //if (!modInfo.Has("includePDB") || !(bool)modInfo["includePDB"])
+            //    throw new InvalidOperationException("The .pdb file must be included in order to debug the mod!");
+
             List<Tuple<string, byte[]>> fileData = new List<Tuple<string, byte[]>>();
             List<Tuple<string, int>> fileHeader = new List<Tuple<string, int>>();
             int fileCount = bb.ReadInt();
