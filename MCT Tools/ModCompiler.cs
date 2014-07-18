@@ -7,7 +7,8 @@ using System.Reflection;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
-using PoroCYon.MCT.Tools.Internal;
+using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.MCT.Tools.Internal.Compiler;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -119,16 +120,6 @@ namespace PoroCYon.MCT.Tools
                         Message = "An unexpected error occured while compiling."
                     }
                 });
-                //try
-                //{
-                //    EndCompile(folder);
-                //}
-                //catch (Exception ex)
-                //{
-                //    throw new AggregateException(e, ex);
-                //}
-
-                //throw new CompilerException(e.Message, e);
             }
         }
         /// <summary>
