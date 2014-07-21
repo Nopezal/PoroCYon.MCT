@@ -123,7 +123,9 @@
     <Compile Include="Compiler\Validation\TileCraftGroup.cs" />
     <Compile Include="Compiler\Validation\ValidatorObject.cs" />
     <Compile Include="Internal\Porting\PlayerFile.cs" />
+    <Compile Include="Internal\Porting\PlayerPorter.cs" />
     <Compile Include="Internal\Porting\WorldFile.cs" />
+    <Compile Include="Internal\Porting\WorldPorter.cs" />
     <Compile Include="ModCompiler.cs" />
     <Compile Include="Internal\Compiler\Validator.cs" />
     <Compile Include="Internal\Compiler\Writer.cs" />
