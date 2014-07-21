@@ -35,7 +35,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
     {
         public ushort type;
         public byte wall, liquid;
-        BitsByte bb1, bb2, bb3, bb4, bb5;
+        internal BitsByte bb1, bb2, bb3, bb4, bb5;
         public short frameX, frameY;
 
         short Word
@@ -377,6 +377,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
     }
     class TownNPC
     {
+        public int type;
         public string occupation;
         public string name;
         public Vector2 position;

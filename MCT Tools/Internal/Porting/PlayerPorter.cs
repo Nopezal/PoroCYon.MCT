@@ -32,9 +32,9 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             return data;
         }
 
-        static void WriteItem(BinBuffer bb, Item toWrite)
+        internal static void WriteItem(BinBuffer bb, Item toWrite)
         {
-            if (toWrite.stack < 0)
+            if (toWrite.stack < 0 || toWrite.netID > Main.maxItemTypes || toWrite.netID < -48)
                 toWrite.stack = 0;
 
             bb.Write(toWrite.stack);
@@ -42,7 +42,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             if (toWrite.stack <= 0)
                 return;
 
-            bb.Write(toWrite.netID > Main.maxItemTypes || toWrite.netID < -48 ? 0 : toWrite.netID);
+            bb.Write(toWrite.netID);
 
             bb.Write((int)toWrite.prefix);
 

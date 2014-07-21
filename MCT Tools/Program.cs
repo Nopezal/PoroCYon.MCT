@@ -147,7 +147,7 @@ namespace PoroCYon.MCT.Tools
                                 }
                                 break;
                             default:
-                                Console.Error.WriteLine("Invalid file extension (" + ext ?? "none" + ").");
+                                Console.Error.WriteLine("Invalid file extension (" + ext ?? "no extension" + ").");
                                 break;
                         }
                     }
