@@ -741,7 +741,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                         case "demolitionist":
                             n.name = demolitionistName;
                             break;
-                        case "goblin":
+                        case "goblin tinkerer":
                             n.name = goblinName;
                             break;
                         case "wizard":

@@ -130,7 +130,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             return LoadError.Success;
         }
-        static LoadError ReadTiles(ref WorldFile ret, BinBuffer bb)
+        static LoadError ReadTiles (ref WorldFile ret, BinBuffer bb)
         {
             for (int x = 0; x < ret.size.X; x++)
                 for (int y = 0; y < ret.size.Y; y++)
@@ -239,15 +239,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             else
                 garbageDataAmt = rItemAmt - (itemAmt = Terraria.Chest.maxItems);
 
-            for (int i = 0; i < ret.chests.Length; i++)
+            for (int i = 0; i < amt; i++)
             {
-                if (i >= amt)
-                {
-                    ret.chests[i] = null;
-
-                    continue;
-                }
-
                 ret.chests[i] = new Chest()
                 {
                     position = new Point(bb.ReadInt(), bb.ReadInt()),
@@ -279,21 +272,115 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             return LoadError.Success;
         }
-        static LoadError ReadSigns(ref WorldFile ret, BinBuffer bb)
+        static LoadError ReadSigns (ref WorldFile ret, BinBuffer bb)
         {
+            short amt = bb.ReadShort();
 
+            for (int i = 0; i < amt; i++)
+            {
+                string text = bb.ReadString();
+                int
+                    x = bb.ReadInt(),
+                    y = bb.ReadInt();
+
+                if (ret.tiles[x, y].Active && (ret.tiles[x, y].type == 55 || ret.tiles[x, y].type == 85))
+                    ret.signs[i] = new Sign()
+                    {
+                        text = text,
+                        position = new Point(x, y)
+                    };
+            }
 
             return LoadError.Success;
         }
-        static LoadError ReadNPCs(ref WorldFile ret, BinBuffer bb)
+        static LoadError ReadNPCs  (ref WorldFile ret, BinBuffer bb)
         {
+            while (bb.ReadBool())
+                ret.townNPCs.Add(new TownNPC()
+                {
+                    occupation = bb.ReadString(),
+                    name = bb.ReadString(),
+                    position = new Vector2(bb.ReadFloat(), bb.ReadFloat()),
+                    homeless = bb.ReadBool(),
+                    homeTile = new Point(bb.ReadInt(), bb.ReadInt())
+                });
 
+            for (int i = 0; i < ret.townNPCs.Count; i++)
+            {
+                TownNPC n = ret.townNPCs[i];
+
+                switch (n.occupation.ToLowerInvariant()) // can't remember if it's First second or First Second...
+                {
+                    case "merchant":
+                        n.type = 17;
+                        break;
+                    case "nurse":
+                        n.type = 18;
+                        break;
+                    case "arms dealer":
+                        n.type = 19;
+                        break;
+                    case "dryad":
+                        n.type = 20;
+                        break;
+                    case "guide":
+                        n.type = 22;
+                        break;
+                    case "clothier":
+                        n.type = 54;
+                        break;
+                    case "demolitionist":
+                        n.type = 38;
+                        break;
+                    case "goblin tinkerer":
+                        n.type = 107;
+                        break;
+                    case "wizard":
+                        n.type = 108;
+                        break;
+                    case "mechanic":
+                        n.type = 124;
+                        break;
+                    case "truffle":
+                        n.type = 160;
+                        break;
+                    case "steampunker":
+                        n.type = 178;
+                        break;
+                    case "dye trader":
+                        n.type = 207;
+                        break;
+                    case "party girl":
+                        n.type = 208;
+                        break;
+                    case "cyborg":
+                        n.type = 209;
+                        break;
+                    case "painter":
+                        n.type = 227;
+                        break;
+                    case "witch doctor":
+                        n.type = 228;
+                        break;
+                    case "pirate":
+                        n.type = 229;
+                        break;
+                    case "angler":
+                        n.type = 358;
+                        break;
+                }
+            }
 
             return LoadError.Success;
         }
         static LoadError ReadFooter(ref WorldFile ret, BinBuffer bb)
         {
-
+            if (!bb.ReadBool())
+                return LoadError.InvalidBufferChecksum;
+            if (bb.ReadString() != ret.name)
+                return LoadError.InvalidBufferChecksum;
+            if (bb.ReadInt() != ret.ID)
+                return LoadError.InvalidBufferChecksum;
 
             return LoadError.Success;
         }

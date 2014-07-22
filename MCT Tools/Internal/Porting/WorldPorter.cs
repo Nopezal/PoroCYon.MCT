@@ -13,9 +13,12 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
     enum LoadError
     {
         Success,
+
         InvalidVersion,
         InvalidChecksum,
-        InvalidBufferLength = 5
+
+        InvalidBufferLength = 5,
+        InvalidBufferChecksum
     }
 
     static partial class WorldPorter
@@ -34,6 +37,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                     return "Invalid checksum";
                 case LoadError.InvalidBufferLength:
                     return "Invalid buffer length";
+                case LoadError.InvalidBufferChecksum:
+                    return "Invalid buffer checksum";
             }
 
             throw new ArgumentOutOfRangeException("err");

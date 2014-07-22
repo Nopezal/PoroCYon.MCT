@@ -32,7 +32,7 @@ namespace PoroCYon.MCT.Installer
             finishedDownloading = false;
 
             AquireProgress.ValueChanged += (s, e) => AquireProgressPercent.Text = (int)AquireProgress.Value + "%";
-            ApplyProgress .ValueChanged += (s, e) => ApplyProgressPercent.Text  = (int)ApplyProgress.Value  + "%";
+            ApplyProgress .ValueChanged += (s, e) => ApplyProgressPercent .Text = (int)ApplyProgress .Value + "%";
 
             #region aquire
             Thread aquire = new Thread(() =>
@@ -188,7 +188,7 @@ namespace PoroCYon.MCT.Installer
 
                         UpdateProgress(-1d, t.Item1);
                         if (t.Item1.StartsWith("Templates\\"))
-                            for (VsVersion v = VsVersion.VCSExpress; v <= VsVersion.VisualStudio12; v = (VsVersion)((int)v * 2))
+                            for (VsVersion v = VsVersion.VCSExpress; v <= VsVersion.VisualStudio14CTP; v = (VsVersion)((int)v * 2))
                             {
                                 if ((VsVersions.ChosenVersions & v) == 0)
                                     continue;
