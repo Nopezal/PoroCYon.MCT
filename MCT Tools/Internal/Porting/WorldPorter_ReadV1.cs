@@ -280,7 +280,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 return LoadError.InvalidVersion;
 
             #region global stuff
-            ret.name = bb.ReadString();
+            ret.name = PlayerPorter.ReadString(bb);
             ret.ID = bb.ReadInt();
             ret.bounds = new Vector4(bb.ReadInt(), bb.ReadInt(), bb.ReadInt(), bb.ReadInt());
             ret.size = new Point(bb.ReadInt(), bb.ReadInt());
@@ -606,7 +606,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 };
 
                 if (ver >= 85)
-                    ret.chests[i].name = bb.ReadString();
+                    ret.chests[i].name = PlayerPorter.ReadString(bb);
 
                 for (int j = 0; j < ret.chests[i].items.Length; j++)
                 {
@@ -642,7 +642,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 ret.signs[i] = new Sign()
                 {
-                    text = bb.ReadString(),
+                    text = PlayerPorter.ReadString(bb),
                     position = new Point(bb.ReadInt(), bb.ReadInt())
                 };
             }
@@ -653,11 +653,11 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             {
                 TownNPC n = new TownNPC()
                 {
-                    occupation = bb.ReadString()
+                    occupation = PlayerPorter.ReadString(bb)
                 };
 
                 if (ver >= 83)
-                    n.name = bb.ReadString();
+                    n.name = PlayerPorter.ReadString(bb);
 
                 n.position = new Vector2(bb.ReadFloat(), bb.ReadFloat());
                 n.homeless = bb.ReadBool();
@@ -673,15 +673,15 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             if (ver >= 31 && ver <= 83)
             {
                 string
-                    merchantName = bb.ReadString(),
-                    nurseName = bb.ReadString(),
-                    armsDealerName = bb.ReadString(),
-                    dryadName = bb.ReadString(),
-                    guideName = bb.ReadString(),
-                    clothierName = bb.ReadString(),
-                    demolitionistName = bb.ReadString(),
-                    goblinName = bb.ReadString(),
-                    wizardName = bb.ReadString(),
+                    merchantName = PlayerPorter.ReadString(bb),
+                    nurseName = PlayerPorter.ReadString(bb),
+                    armsDealerName = PlayerPorter.ReadString(bb),
+                    dryadName = PlayerPorter.ReadString(bb),
+                    guideName = PlayerPorter.ReadString(bb),
+                    clothierName = PlayerPorter.ReadString(bb),
+                    demolitionistName = PlayerPorter.ReadString(bb),
+                    goblinName = PlayerPorter.ReadString(bb),
+                    wizardName = PlayerPorter.ReadString(bb),
 
                     mechanicName = String.Empty,
                     truffleName = String.Empty,
@@ -696,21 +696,21 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 if (ver >= 35)
                 {
-                    mechanicName = bb.ReadString();
+                    mechanicName = PlayerPorter.ReadString(bb);
 
                     if (ver >= 65)
                     {
-                        truffleName = bb.ReadString();
-                        steampunkerName = bb.ReadString();
-                        dyeTraderName = bb.ReadString();
-                        partyGirlName = bb.ReadString();
-                        cyborgName = bb.ReadString();
-                        painterName = bb.ReadString();
-                        witchDoctorName = bb.ReadString();
-                        pirateName = bb.ReadString();
+                        truffleName = PlayerPorter.ReadString(bb);
+                        steampunkerName = PlayerPorter.ReadString(bb);
+                        dyeTraderName = PlayerPorter.ReadString(bb);
+                        partyGirlName = PlayerPorter.ReadString(bb);
+                        cyborgName = PlayerPorter.ReadString(bb);
+                        painterName = PlayerPorter.ReadString(bb);
+                        witchDoctorName = PlayerPorter.ReadString(bb);
+                        pirateName = PlayerPorter.ReadString(bb);
 
                         if (ver >= 79)
-                            anglerName = bb.ReadString();
+                            anglerName = PlayerPorter.ReadString(bb);
                     }
                 }
 
@@ -779,7 +779,6 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                             break;
                     }
                 }
-                // apply names..........................................
             }
             #endregion
 
@@ -787,7 +786,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 return LoadError.Success;
 
             // this is not a checksum, red.
-            return bb.ReadBool() && (bb.ReadString() == ret.name || bb.ReadInt() == ret.ID)
+            return bb.ReadBool() && (PlayerPorter.ReadString(bb) == ret.name || bb.ReadInt() == ret.ID)
                 ? LoadError.Success
                 : LoadError.InvalidChecksum;
         }

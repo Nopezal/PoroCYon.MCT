@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Text;
 using Microsoft.Xna.Framework;
+using PoroCYon.XnaExtensions.IO;
 using Ionic.Zip;
 using LitJson;
 using Terraria;
@@ -11,6 +13,8 @@ using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Porting
 {
+    using BinBuffer = TAPI.BinBuffer;
+
     static class PlayerPorter
     {
         // not a very good key...
@@ -25,9 +29,9 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         }
         static JsonData AddColour(JsonData data, Color c)
         {
-            data.Add(c.R);
-            data.Add(c.G);
-            data.Add(c.B);
+            data.Add((int)c.R);
+            data.Add((int)c.G);
+            data.Add((int)c.B);
 
             return data;
         }
@@ -42,11 +46,38 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             if (toWrite.stack <= 0)
                 return;
 
-            bb.Write(toWrite.netID);
+            bb.Write((short)toWrite.netID);
 
             bb.Write((int)toWrite.prefix);
 
             bb.Write((byte)0); // mod data (none ofc)
+        }
+
+        internal unsafe static string ReadString(BinBuffer bb)
+        {
+            int pos = bb.Pos;
+            MemoryStream ms = new MemoryStream(bb.ReadBytes());
+            bb.Pos = pos;
+
+            byte[] data = IOHelper.Read7BitContinuous(ms);
+            ms.Close();
+
+            bb.Pos += data.Length; // this is read from the stream, not the binbuffer
+
+            Array.Resize(ref data, sizeof(int));
+
+            int length;
+
+            fixed (byte* ptr = &data[0])
+            {
+                length = *(int*)ptr;
+            }
+
+            byte[] chars = bb.ReadBytes(length);
+
+            string s = Encoding.UTF8.GetString(chars);
+
+            return s;
         }
 
         internal static PlayerFile ReadPlayer(string path)
@@ -73,7 +104,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             int ver = ret.version = bb.ReadInt();
 
-            ret.name = bb.ReadString();
+
+            ret.name = ReadString(bb);
 
             if (ver >= 10)
             {
@@ -145,6 +177,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                     prefix = bb.ReadByte()
                 };
 
+            ret.inventory[58] = new Item(); // mouse item in tapi
+
             for (int i = 0; i < (ver >= 58 ? 40 : 20); i++)
                 ret.piggyBank[i] = new Item()
                 {
@@ -164,7 +198,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             // buffs
             if (ver >= 11)
-                for (int i = 0; i < (ver < 74 ? 22 : 10); i++)
+                for (int i = 0; i < (ver >= 74 ? 22 : 10); i++)
                 {
                     ret.buffType[i] = bb.ReadInt();
                     ret.buffTime[i] = bb.ReadInt();
@@ -181,7 +215,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 ret.spX[i] = spX;
                 ret.spY[i] = bb.ReadInt();
                 ret.spI[i] = bb.ReadInt();
-                ret.spN[i] = bb.ReadString();
+                ret.spN[i] = ReadString(bb);
             }
 
             if (ver >= 16)
@@ -193,8 +227,13 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         }
         internal static void WritePlayer(PlayerFile player)
         {
-            using (ZipFile zf = new ZipFile(Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                + "\\My Games\\Terraria\\tAPI\\Players\\" + player.name + ".plr"))
+            string path = Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                + "\\My Games\\Terraria\\tAPI\\Players\\" + player.name + ".plr";
+
+            if (File.Exists(path))
+                File.Delete(path);
+
+            using (ZipFile zf = new ZipFile(path))
             {
                 #region info.json
                 JsonData info = JsonMapper.ToObject("{}");
@@ -222,6 +261,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 mana.Add(player.mana);
                 mana.Add(player.manaMax);
 
+                info["mana"] = mana;
+
                 JsonData appearance = JsonMapper.ToObject("{}");
 
                 appearance["male"] = player.gender == Gender.Male;
@@ -239,7 +280,10 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 appearance["colors"] = colours;
 
-                zf.AddEntry("Info.json", JsonMapper.ToJson(info));
+                info["appearance"] = appearance;
+
+                string json = JsonMapper.ToJson(info);
+                zf.AddEntry("Info.json", json);
                 #endregion
 
                 BinBuffer bb = new BinBuffer();
@@ -260,13 +304,14 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 for (int i = 0; i < player.buffType.Length; i++)
                 {
-                    bb.Write((ushort)player.buffType[i]);
+                    bb.Write((ushort)(player.buffType[i] >= Main.maxBuffs ? 0 : player.buffType[i]));
 
-                    if (player.buffType[i] != 0)
+                    if (player.buffType[i] != 0 && player.buffType[i] < Main.maxBuffs)
                     {
                         bb.Write(player.buffTime[i]);
 
-                        bb.Write(0); // mod data (none ofc)
+                        if (player.buffTime[i] != 0)
+                            bb.Write((ushort)0); // mod data (none ofc)
                     }
                 }
 

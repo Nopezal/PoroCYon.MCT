@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         }
         static LoadError ReadHeader(ref WorldFile ret, BinBuffer bb)
         {
-            ret.name = bb.ReadString();
+            ret.name = PlayerPorter.ReadString(bb);
             ret.ID = bb.ReadInt();
             ret.bounds = new Vector4(bb.ReadInt(), bb.ReadInt(), bb.ReadInt(), bb.ReadInt());
             ret.size = new Point(bb.ReadInt(), bb.ReadInt());
@@ -117,7 +117,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             {
                 int amt = bb.ReadInt();
                 for (int i = 0; i < amt; i++)
-                    ret.finishedAnglerToday.Add(bb.ReadString());
+                    ret.finishedAnglerToday.Add(PlayerPorter.ReadString(bb));
 
                 if (ver >= 99)
                 {
@@ -244,7 +244,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 ret.chests[i] = new Chest()
                 {
                     position = new Point(bb.ReadInt(), bb.ReadInt()),
-                    name = bb.ReadString()
+                    name = PlayerPorter.ReadString(bb)
                 };
 
                 for (int j = 0; j < itemAmt; j++)
@@ -278,7 +278,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             for (int i = 0; i < amt; i++)
             {
-                string text = bb.ReadString();
+                string text = PlayerPorter.ReadString(bb);
                 int
                     x = bb.ReadInt(),
                     y = bb.ReadInt();
@@ -298,8 +298,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             while (bb.ReadBool())
                 ret.townNPCs.Add(new TownNPC()
                 {
-                    occupation = bb.ReadString(),
-                    name = bb.ReadString(),
+                    occupation = PlayerPorter.ReadString(bb),
+                    name = PlayerPorter.ReadString(bb),
                     position = new Vector2(bb.ReadFloat(), bb.ReadFloat()),
                     homeless = bb.ReadBool(),
                     homeTile = new Point(bb.ReadInt(), bb.ReadInt())
@@ -377,7 +377,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         {
             if (!bb.ReadBool())
                 return LoadError.InvalidBufferChecksum;
-            if (bb.ReadString() != ret.name)
+            if (PlayerPorter.ReadString(bb) != ret.name)
                 return LoadError.InvalidBufferChecksum;
             if (bb.ReadInt() != ret.ID)
                 return LoadError.InvalidBufferChecksum;

@@ -45,7 +45,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             shoeColour;
 
         public Item[]
-            inventory = new Item[58],
+            inventory = new Item[59],
             armour    = new Item[16],
             dye       = new Item[3 ],
             piggyBank = new Item[40],
@@ -72,7 +72,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 if (i < 16)
                     armour[i] = new Item();
-                if (i < 8)
+                if (i < 3)
                     dye[i] = new Item();
                 if (i < 40)
                 {
