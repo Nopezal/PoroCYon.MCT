@@ -186,9 +186,7 @@
     <PostBuildEvent>if "%25username%25"=="Pieter" (
     mct compile "$(SolutionDir)MCT Mod placeholder"
 
-    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi" /y
-    copy "%25tapimodoutdir%25\MCT Mod placeholder.tapi" "PoroCYon.MCT.tapi" /y
-    del "%25tapimodoutdir%25\MCT Mod placeholder.tapi"
+    copy "%25tapimodoutdir%25\PoroCYon.MCT.tapi" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.MCT.tapi" /y
 
     if "$(ConfigurationName)"=="Release" (
         copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)" /y

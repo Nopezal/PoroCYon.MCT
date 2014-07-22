@@ -39,6 +39,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public bool check = true;
         public int warningLevel = 4;
         public string[] ignore = EmptyStringArr;
+        public string outputName;
 #pragma warning restore 1591
 
         /// <summary>
@@ -204,6 +205,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     IsWarning = false,
                     Message = "'warningLevel': value must be an element of [0;4]."
                 });
+            AddIfNotNull(SetJsonValue(json, "outputName", ref outputName, ModCompiler.current.OriginName), errors);
 
             return errors;
         }

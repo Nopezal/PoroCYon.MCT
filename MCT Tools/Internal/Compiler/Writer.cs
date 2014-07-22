@@ -50,7 +50,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             bb.Write(File.ReadAllBytes(mod.Assembly.Location));
             bb.Pos = 0;
 
-            string outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.OriginName + (mod.Info.compress ? ".tapi" : ".tapimod");
+            string outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.outputName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
             if (File.Exists(outputFile))
                 File.Delete(outputFile);
