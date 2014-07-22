@@ -14,7 +14,8 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
     {
         Success,
         InvalidVersion,
-        InvalidChecksum
+        InvalidChecksum,
+        InvalidBufferLength = 5
     }
 
     static partial class WorldPorter
@@ -31,14 +32,11 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                     return "Invalid version";
                 case LoadError.InvalidChecksum:
                     return "Invalid checksum";
+                case LoadError.InvalidBufferLength:
+                    return "Invalid buffer length";
             }
 
             throw new ArgumentOutOfRangeException("err");
-        }
-
-        static LoadError ReadV2(ref WorldFile ret, BinBuffer bb)
-        {
-            return LoadError.Success;
         }
 
         internal static WorldFile ReadWorld(string path)

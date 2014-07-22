@@ -430,6 +430,9 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         public Sign [] signs  = new Sign [1000];
         public List<TownNPC> townNPCs = new List<TownNPC>();
 
+        public List<string> finishedAnglerToday = new List<string>();
+        public int anglerQuest;
+
         public bool DefeatedEoC
         {
             get
@@ -616,6 +619,17 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             set
             {
                 savedNPCs[3] = value;
+            }
+        }
+        public bool SavedAngler
+        {
+            get
+            {
+                return savedNPCs[4];
+            }
+            set
+            {
+                savedNPCs[4] = value;
             }
         }
 

@@ -127,6 +127,7 @@
     <Compile Include="Internal\Porting\WorldFile.cs" />
     <Compile Include="Internal\Porting\WorldPorter.cs" />
     <Compile Include="Internal\Porting\WorldPorter_ReadV1.cs" />
+    <Compile Include="Internal\Porting\WorldPorter_ReadV2.cs" />
     <Compile Include="Internal\Porting\WorldPorter_WriteWorld.cs" />
     <Compile Include="ModCompiler.cs" />
     <Compile Include="Internal\Compiler\Validator.cs" />
