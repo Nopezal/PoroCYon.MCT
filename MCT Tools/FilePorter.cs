@@ -1,13 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Security.Cryptography;
-using Ionic.Zip;
-using LitJson;
-using TAPI;
 using PoroCYon.MCT.Tools.Internal.Porting;
-using Microsoft.Xna.Framework;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -23,6 +17,9 @@ namespace PoroCYon.MCT.Tools
         public static void PortPlayer(string path)
         {
             PlayerPorter.WritePlayer(PlayerPorter.ReadPlayer(path));
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
 
         /// <summary>
@@ -32,6 +29,9 @@ namespace PoroCYon.MCT.Tools
         public static void PortWorld(string path)
         {
             WorldPorter.WriteWorld(WorldPorter.ReadWorld(path));
+
+            GC.Collect();
+            GC.WaitForPendingFinalizers();
         }
     }
 }

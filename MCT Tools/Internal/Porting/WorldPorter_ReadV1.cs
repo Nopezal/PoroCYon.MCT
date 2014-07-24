@@ -11,6 +11,33 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
     {
         static void InitFrameImportant()
         {
+            TileDef.frameImportant = new bool[340];
+
+            TileDef.frameImportant[334] = true;
+            TileDef.frameImportant[300] = true;
+            TileDef.frameImportant[301] = true;
+            TileDef.frameImportant[302] = true;
+            TileDef.frameImportant[303] = true;
+            TileDef.frameImportant[304] = true;
+            TileDef.frameImportant[305] = true;
+            TileDef.frameImportant[306] = true;
+            TileDef.frameImportant[307] = true;
+            TileDef.frameImportant[308] = true;
+            TileDef.frameImportant[324] = true;
+            TileDef.frameImportant[283] = true;
+            TileDef.frameImportant[288] = true;
+            TileDef.frameImportant[289] = true;
+            TileDef.frameImportant[290] = true;
+            TileDef.frameImportant[291] = true;
+            TileDef.frameImportant[292] = true;
+            TileDef.frameImportant[293] = true;
+            TileDef.frameImportant[294] = true;
+            TileDef.frameImportant[295] = true;
+            TileDef.frameImportant[296] = true;
+            TileDef.frameImportant[297] = true;
+            TileDef.frameImportant[316] = true;
+            TileDef.frameImportant[317] = true;
+            TileDef.frameImportant[318] = true;
             TileDef.frameImportant[36] = true;
             TileDef.frameImportant[171] = true;
             TileDef.frameImportant[247] = true;
@@ -134,6 +161,23 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
         }
         static void InitSolid()
         {
+            TileDef.solid = new bool[340];
+
+            TileDef.solid[325] = true;
+            TileDef.solid[326] = true;
+            TileDef.solid[328] = true;
+            TileDef.solid[329] = true;
+            TileDef.solid[284] = true;
+            TileDef.solid[232] = true;
+            TileDef.solid[311] = true;
+            TileDef.solid[312] = true;
+            TileDef.solid[313] = true;
+            TileDef.solid[315] = true;
+            TileDef.solid[321] = true;
+            TileDef.solid[322] = true;
+            TileDef.solid[321] = true;
+            TileDef.solid[322] = true;
+            TileDef.solid[239] = true;
             TileDef.solid[232] = true;
             TileDef.solid[239] = true;
             TileDef.solid[170] = true;
@@ -481,8 +525,9 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             {
                 ret.cloudAmt = (short)backupRand.Next(10, Main.cloudLimit);
 
-                while (ret.windSpeed == 0f)
+                do
                     ret.windSpeed = WorldGen.genRand.Next(-100, 101) / 100f;
+                while (ret.windSpeed == 0f);
             }
             #endregion
 
@@ -785,8 +830,11 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             if (ver < 7)
                 return LoadError.Success;
 
+            bool cBool = bb.ReadBool();
+            string cStr = PlayerPorter.ReadString(bb);
+            int bInt = bb.ReadInt();
             // this is not a checksum, red.
-            return bb.ReadBool() && (PlayerPorter.ReadString(bb) == ret.name || bb.ReadInt() == ret.ID)
+            return cBool && (cStr == ret.name || bInt == ret.ID)
                 ? LoadError.Success
                 : LoadError.InvalidChecksum;
         }

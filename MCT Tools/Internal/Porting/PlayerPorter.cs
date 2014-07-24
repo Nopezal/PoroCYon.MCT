@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Numerics;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Xna.Framework;
-using PoroCYon.XnaExtensions.IO;
 using Ionic.Zip;
 using LitJson;
 using Terraria;
@@ -13,8 +13,6 @@ using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Porting
 {
-    using BinBuffer = TAPI.BinBuffer;
-
     static class PlayerPorter
     {
         // not a very good key...
@@ -53,18 +51,31 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
             bb.Write((byte)0); // mod data (none ofc)
         }
 
+        internal static byte[] Read7BitContinuous(BinBuffer bb)
+        {
+            BigInteger ret = 0;
+
+            // temporary store data
+            byte data = 0;
+            do
+            {
+                // read 1 byte from the stream
+                int r = bb.ReadByte();
+                if (r == -1)
+                    break;
+                data = (byte)r;
+
+                ret <<= 7; // push data 7 bits to the left
+                ret |= (uint)(data & 0x7f); // set 7 rightmost bits (01111111, 0x7f, or 127)
+            }
+            while ((data & 0x80) == 0x80); // while the 8th bit is 1 (10000000, or 0x80)
+
+            // obvious enough
+            return ret.ToByteArray();
+        }
         internal unsafe static string ReadString(BinBuffer bb)
         {
-            int pos = bb.Pos;
-            MemoryStream ms = new MemoryStream(bb.ReadBytes());
-            bb.Pos = pos;
-
-            byte[] data = IOHelper.Read7BitContinuous(ms);
-            ms.Close();
-
-            bb.Pos += data.Length; // this is read from the stream, not the binbuffer
-
-            Array.Resize(ref data, sizeof(int));
+            byte[] data = Read7BitContinuous(bb);
 
             int length;
 
@@ -75,9 +86,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
             byte[] chars = bb.ReadBytes(length);
 
-            string s = Encoding.UTF8.GetString(chars);
-
-            return s;
+            return Encoding.UTF8.GetString(chars);
         }
 
         internal static PlayerFile ReadPlayer(string path)
