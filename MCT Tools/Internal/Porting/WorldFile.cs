@@ -2,9 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using PoroCYon.XnaExtensions;
-using Terraria;
-using TAPI;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Internal.Porting
 {

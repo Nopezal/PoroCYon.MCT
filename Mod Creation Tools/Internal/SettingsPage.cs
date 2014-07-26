@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using TAPI;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.Internal.Versioning;
@@ -23,10 +23,7 @@ namespace PoroCYon.MCT.Internal
         public SettingsPage()
             : base()
         {
-            OnEntry += () =>
-            {
-                checkUpdates.IsChecked = UpdateChecker.CheckForUpdates;
-            };
+            OnEntry += () => checkUpdates.IsChecked = UpdateChecker.CheckForUpdates;
         }
 
         /// <summary>

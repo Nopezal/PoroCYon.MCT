@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Graphics;
+using PoroCYon.Extensions;
+using PoroCYon.Extensions.Xna.Graphics;
 using PoroCYon.MCT.ObjectModel;
 
 namespace PoroCYon.MCT.UI.Interface.Controls

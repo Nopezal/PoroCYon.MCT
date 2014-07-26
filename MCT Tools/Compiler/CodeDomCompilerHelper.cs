@@ -6,7 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Xna.Framework;
 using Ionic.Zip;
-using PoroCYon.XnaExtensions.IO;
+using PoroCYon.Extensions.IO;
 
 namespace PoroCYon.MCT.Tools.Compiler
 {

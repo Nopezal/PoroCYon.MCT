@@ -56,7 +56,10 @@ namespace PoroCYon.MCT.Installer
 
                     List<string> ToDownload = new List<string>()
                     {
-                        "PoroCYon.XnaExtensions.dll",  "PoroCYon.XnaExtensions.xml",
+                        "PoroCYon.Extensions.IL.dll" ,  "PoroCYon.Extensions.IL.xml" ,
+                        "PoroCYon.Extensions.dll"    ,  "PoroCYon.Extensions.xml"    ,
+                        "PoroCYon.Extensions.Xna.dll",  "PoroCYon.Extensions.Xna.xml",
+
                         "PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
                         "MCT Tools.exe",               "MCT Tools.xml",
 
@@ -74,7 +77,9 @@ namespace PoroCYon.MCT.Installer
                     }
                     if (ToInstall.InstallPdb)
                     {
-                        ToDownload.Add("PoroCYon.XnaExtensions.pdb");
+                        ToDownload.Add("PoroCYon.Extensions.IL.pdb" );
+                        ToDownload.Add("PoroCYon.Extensions.pdb"    );
+                        ToDownload.Add("PoroCYon.Extensions.Xna.pdb");
 
                         ToDownload.Add("PoroCYon.MCT.pdb");
 

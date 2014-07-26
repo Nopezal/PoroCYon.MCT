@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.UI.MenuItems
 {

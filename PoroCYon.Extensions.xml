@@ -1,0 +1,859 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PoroCYon.Extensions</name>
+    </assembly>
+    <members>
+        <member name="T:PoroCYon.Extensions.BitsByte">
+            <summary>
+            Stores 8 <see cref="T:System.Boolean"/>s in 1 byte
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.BitsByte.value">
+            <summary>
+            Gets or sets the byte value associated with the <see cref="T:PoroCYon.Extensions.BitsByte"/> structure
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.BitsByte.Item(System.Int32)">
+            <summary>
+            Gets or sets the <see cref="T:System.Boolean"/> value at the speicifed <paramref name="index"/>
+            </summary>
+            <param name="index">The index of the <see cref="T:System.Boolean"/> to get/set (from 0 to 7)</param>
+            <returns>The <see cref="T:System.Boolean"/> value at the specified <paramref name="index"/></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.#ctor(System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean,System.Boolean)">
+            <summary>
+            Creates an instance of the <see cref="T:PoroCYon.Extensions.BitsByte"/> structure
+            </summary>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 0; default is false</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 1; default is false</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 2; default is false</param>
+            <param name="b4">The <see cref="T:System.Boolean"/> at index 3; default is false</param>
+            <param name="b5">The <see cref="T:System.Boolean"/> at index 4; default is false</param>
+            <param name="b6">The <see cref="T:System.Boolean"/> at index 5; default is false</param>
+            <param name="b7">The <see cref="T:System.Boolean"/> at index 6; default is false</param>
+            <param name="b8">The <see cref="T:System.Boolean"/> at index 7; default is false</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@)">
+            <summary>
+            Puts the current state into a <see cref="T:System.Boolean"/>
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 3</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 3</param>
+            <param name="b4">The <see cref="T:System.Boolean"/> at index 4</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 3</param>
+            <param name="b4">The <see cref="T:System.Boolean"/> at index 4</param>
+            <param name="b5">The <see cref="T:System.Boolean"/> at index 5</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 3</param>
+            <param name="b4">The <see cref="T:System.Boolean"/> at index 4</param>
+            <param name="b5">The <see cref="T:System.Boolean"/> at index 5</param>
+            <param name="b6">The <see cref="T:System.Boolean"/> at index 6</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.Retrieve(System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@,System.Boolean@)">
+            <summary>
+            Puts the current state into <see cref="T:System.Boolean"/>s
+            </summary>
+            <param name="b0">The <see cref="T:System.Boolean"/> at index 0</param>
+            <param name="b1">The <see cref="T:System.Boolean"/> at index 1</param>
+            <param name="b2">The <see cref="T:System.Boolean"/> at index 2</param>
+            <param name="b3">The <see cref="T:System.Boolean"/> at index 3</param>
+            <param name="b4">The <see cref="T:System.Boolean"/> at index 4</param>
+            <param name="b5">The <see cref="T:System.Boolean"/> at index 5</param>
+            <param name="b6">The <see cref="T:System.Boolean"/> at index 6</param>
+            <param name="b7">The <see cref="T:System.Boolean"/> at index 7</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.op_Implicit(PoroCYon.Extensions.BitsByte)~System.Byte">
+            <summary>
+            Casts a <see cref="T:System.Byte"/> to a <see cref="T:PoroCYon.Extensions.BitsByte"/> implicitely
+            </summary>
+            <param name="bb">The <see cref="T:PoroCYon.Extensions.BitsByte"/> to cast</param>
+            <returns>The specified <paramref name="bb"/> as a <see cref="T:System.Byte"/></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsByte.op_Implicit(System.Byte)~PoroCYon.Extensions.BitsByte">
+            <summary>
+            Casts a <see cref="T:System.Byte"/> to a <see cref="T:PoroCYon.Extensions.BitsByte"/> implicitely
+            </summary>
+            <param name="b">The <see cref="T:System.Byte"/> to cast</param>
+            <returns>The specified <paramref name="b"/> as a <see cref="T:PoroCYon.Extensions.BitsByte"/></returns>
+        </member>
+        <member name="T:PoroCYon.Extensions.BitsBytes">
+            <summary>
+            A collection of <see cref="T:PoroCYon.Extensions.BitsByte"/>s.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsBytes.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:PoroCYon.Extensions.BitsBytes"/> structure with the specified size in bytes.
+            </summary>
+            <param name="bytes">The size of the <see cref="T:PoroCYon.Extensions.BitsBytes"/> instance in bytes; default is 4.</param>
+        </member>
+        <member name="P:PoroCYon.Extensions.BitsBytes.Item(System.Int32)">
+            <summary>
+            Gets the <see cref="T:System.Boolean"/> at the specified index.
+            </summary>
+            <param name="index">The index of the <see cref="T:System.Boolean"/>.</param>
+            <returns>The <see cref="T:System.Boolean"/> at the specified index.</returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.BitsBytes.Item(System.Int32,System.Int32)">
+            <summary>
+            Gets the <see cref="T:System.Boolean"/> at the specified extended index.
+            </summary>
+            <param name="index">The first index of the <see cref="T:System.Boolean"/>.</param>
+            <param name="indexExt">The second index of the <see cref="T:System.Boolean"/>.</param>
+            <returns>The <see cref="T:System.Boolean"/> at the specified index.</returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.BitsBytes.Size">
+            <summary>
+            Gets the size of the BitsByte.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsBytes.AsBytes(System.Int32,System.Int32)">
+            <summary>
+            Gets the current instance as an array of bytes.
+            </summary>
+            <param name="length">The amount of bytes to copy.</param>
+            <param name="startIndex">Where to start copying; default is 0.</param>
+            <returns>The current instance as an array of bytes.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsBytes.AsByte(System.Int32,System.Int32)">
+            <summary>
+            Gets the current instance as a <see cref="T:System.Byte"/>.
+            </summary>
+            <param name="length">The amount of bytes to copy.</param>
+            <param name="startIndex">Where to start copying; default is 0.</param>
+            <returns>The current instance as a <see cref="T:System.Byte"/>.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsBytes.FromBytes(System.Byte[],System.Int32)">
+            <summary>
+            Sets the current state from an array of bytes.
+            </summary>
+            <param name="b">The array of bytes to copy from.</param>
+            <param name="startIndex">Where to start copying.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.BitsBytes.FromBytes(System.Byte[],System.Int32,System.Int32)">
+            <summary>
+            Sets the current state from an array of bytes.
+            </summary>
+            <param name="b">The array of bytes to copy from.</param>
+            <param name="length">The amount of bytes to copy.</param>
+            <param name="startIndex">Where to start copying.</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.BiDictionary`2">
+            <summary>
+            A <see cref="T:System.Collections.Generic.Dictionary`2"/> that works in forward and reverse ways.
+            </summary>
+            <typeparam name="TForward">The forward type, TKey for the forward dictionary and TValue for the reversed dictionary.</typeparam>
+            <typeparam name="TReverse">The reverse type, TValue for the forward dictionary and TKey for the reversed dictionary.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.BiDictionary`2.Indexer`2">
+            <summary>
+            Index helper for a <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/>.
+            </summary>
+            <typeparam name="TKey">The key type</typeparam>
+            <typeparam name="TValue">The value type</typeparam>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Indexer`2.Item(`2)">
+            <summary>
+            Gets or sets the value of a <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/> with a specified key
+            </summary>
+            <param name="key">The key of the Key/Value pair</param>
+            <returns>The value of the Key/Value pair</returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Forward">
+            <summary>
+            The forward accessor
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Reverse">
+            <summary>
+            The reverse accossor
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Keys">
+            <summary>
+            All keys of the current instance
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Values">
+            <summary>
+            All values of the current instance
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Item(`0)">
+            <summary>
+            Gets the <typeparamref name="TReverse"/> with the specified <typeparamref name="TForward"/>
+            </summary>
+            <param name="tfw">The <typeparamref name="TForward"/> used to retrieve the <typeparamref name="TReverse"/></param>
+            <returns>The <typeparamref name="TReverse"/> associated with the specified <typeparamref name="TForward"/></returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Item(System.Int32)">
+            <summary>
+            Gets the Key/Value pair at the specified index
+            </summary>
+            <param name="index">The index of the Key/Value pair</param>
+            <returns>The Key/Value pair at the specified index</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.TryGetValue(`0,`1@)">
+            <summary>
+            Tries to get a <typeparamref name="TReverse"/> value from the specified <typeparamref name="TForward"/> value
+            </summary>
+            <param name="tfw">The specified forward key</param>
+            <param name="trev">If the key exists, this will be the matching <typeparamref name="TReverse"/></param>
+            <returns>True whether the key exist (and the value is return by trev parameter) or not.</returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Count">
+            <summary>
+            The amount of Key/Value pairs in the <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/>
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.IsReadOnly">
+            <summary>
+            whether the <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/> is read-only or not. This will always return false.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/> class.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Add(`0,`1)">
+            <summary>
+            Adds a Key/Value pair to the collection
+            </summary>
+            <param name="tfw">The forward key to add</param>
+            <param name="trev">The forward value (reverse key) to add</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Add(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Adds a Key/Value pair to the collection as a <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            </summary>
+            <param name="kvp">The Key/Value pair to add</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Clear">
+            <summary>
+            Clears the collection of Key/Value pairs
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.ContainsKey(`0)">
+            <summary>
+            whether the Key/Value pair collection contains a specified <typeparamref name="TForward"/> as forward key
+            </summary>
+            <param name="tfw">The forward key to check</param>
+            <returns>whether the forward key exists in the collection or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.ContainsValue(`1)">
+            <summary>
+            whether the Key/Value pair collection contains a specified <typeparamref name="TReverse"/> as forward value
+            </summary>
+            <param name="trev">The forward value to check</param>
+            <returns>whether the forward value exists in the collection or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.ForwardContainsKey(`0)">
+            <summary>
+            whether the forward collection contains a specified <typeparamref name="TForward"/> as key
+            </summary>
+            <param name="tfw">The forward key to check</param>
+            <returns>whether the forward collection contains the specified <typeparamref name="TForward"/> or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.ReverseContainsKey(`1)">
+            <summary>
+            whether the reverse collection contains a specified <typeparamref name="TReverse"/> as key
+            </summary>
+            <param name="trev">The reverse key to check</param>
+            <returns>whether the reverse collection contains the specified <typeparamref name="TReverse"/> or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Contains(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Checks whether the Key/Value pair collection contains the specified <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            </summary>
+            <param name="kvp">The Key/Value pair to check</param>
+            <returns>whether the collection contains the specified Key/Value pair or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Remove(`0)">
+            <summary>
+            Removes the Key/Value pair specified with the given <typeparamref name="TForward"/> as forward key
+            </summary>
+            <param name="tfw">The <typeparamref name="TForward"/> used as forward key</param>
+            <returns>whether the items have been removed or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Remove(`1)">
+            <summary>
+            Removes the Key/Value pair specified with the given <typeparamref name="TReverse"/> as reverse key
+            </summary>
+            <param name="trev">The <typeparamref name="TReverse"/> used as reverse key</param>
+            <returns>whether the items have been removed or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.Remove(System.Collections.Generic.KeyValuePair{`0,`1})">
+            <summary>
+            Removes the Key/Value pair specified with the given <see cref="T:System.Collections.Generic.KeyValuePair`2"/>
+            </summary>
+            <param name="kvp">The Key/Value pair to remove</param>
+            <returns>whether the Key/Value pair has been removed or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.CopyTo(System.Collections.Generic.KeyValuePair{`0,`1}[],System.Int32)">
+            <summary>
+            Copies the colleciton data to an array of Key/Value pairs
+            </summary>
+            <param name="array">The array to copy the data to</param>
+            <param name="startIndex">The starting index of the copying; default is 0</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.System#Collections#Generic#IEnumerable{System#Collections#Generic#KeyValuePair{TForward,TReverse}}#GetEnumerator">
+            <summary>
+            Gets the generic Enumerator of the Key/Value pair collection
+            </summary>
+            <returns>The generic Enumerator of the Key/Value pair collection</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.GetForwardEnumerator">
+            <summary>
+            Gets the forward Enumerator of the Key/Value pair collection
+            </summary>
+            <returns>The forward Enumerator of the Key/Value pair collection</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.GeReversetEnumerator">
+            <summary>
+            Gets the reverse Enumerator of the Key/Value pair collection
+            </summary>
+            <returns>The reverse Enumerator of the Key/Value pair collection</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.BiDictionary`2.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets the Enumerator of the Key/Value pair collection
+            </summary>
+            <returns>The Enumerator of the Key/Value pair collection</returns>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.BiDictionary`2.Reversed">
+            <summary>
+            Gets the current <see cref="T:PoroCYon.Extensions.Collections.BiDictionary`2"/> in its reversed state
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.CommonJoinValues">
+            <summary>
+            Commonly-used values for the joinWith parameter in <see cref="T:PoroCYon.Extensions.Collections.CollectionExtensions"/>.Join.
+            </summary>
+            <remarks>See <see cref="T:PoroCYon.Extensions.Collections.CollectionExtensions"/>.Join for more information.</remarks>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.And">
+            <summary>
+            " and "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Comma">
+            <summary>
+            ", "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Plus">
+            <summary>
+            " + "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Semicolon">
+            <summary>
+            "; "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Space">
+            <summary>
+            " "
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.CollectionExtensions">
+            <summary>
+            Contains a collection of extension methods for collections.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.CollectionExtensions.Fields``2(System.Collections.Generic.IEnumerable{``0},System.Func{``0,``1})">
+            <summary>
+            Extracts a field (or property) from a class instance of each element of <paramref name="collection"/>.
+            </summary>
+            <typeparam name="TObject">The element type of <paramref name="collection"/>.</typeparam>
+            <typeparam name="TField">The type of the elements' field (or property).</typeparam>
+            <param name="collection">The collection of <typeparamref name="TObject"/>s.</param>
+            <param name="getField">A function with a <typeparamref name="TObject"/> as parameter and returns a <typeparamref name="TField"/>.</param>
+            <returns>A collection of <typeparamref name="TField"/>s.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.CollectionExtensions.CastAll``2(System.Collections.Generic.IEnumerable{``0},System.Converter{``0,``1})">
+            <summary>
+            Casts all elements of <paramref name="collection"/> to <typeparamref name="TNew"/>.
+            </summary>
+            <typeparam name="TOld">The type of the elements of <paramref name="collection"/>.</typeparam>.
+            <typeparam name="TNew">The type of the elements of <paramref name="collection"/> after casting.</typeparam>
+            <param name="collection">The collection of elements to cast.</param>
+            <param name="converter">A converter used to cast a <typeparamref name="TOld"/> to a <typeparamref name="TNew"/>.</param>
+            <returns>A collection of <typeparamref name="TNew"/>s.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.CollectionExtensions.Join(System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Joins a collection of string with a string.
+            </summary>
+            <param name="collection">The collection to join.</param>
+            <param name="joinWith">The string to join the collection with.</param>
+            <remarks>If you're using a commonly-used value for <paramref name="joinWith"/>, use a field from <see cref="T:PoroCYon.Extensions.Collections.CommonJoinValues"/>.</remarks>
+            <returns></returns>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.Node`1">
+            <summary>
+            A node of a linked list.
+            </summary>
+            <typeparam name="TElement">The element type of the linked list.</typeparam>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.Node`1.Value">
+            <summary>
+            The value of the node.
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.Node`1.Next">
+            <summary>
+            The next node.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.Node`1.#ctor(`0,PoroCYon.Extensions.Collections.Node{`0})">
+            <summary>
+            Creates a new instance of the Node class.
+            </summary>
+            <param name="value">The value of the node.</param>
+            <param name="next">The next node.</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.DoubleNode`1">
+            <summary>
+            A node of a doubly linked list.
+            </summary>
+            <typeparam name="TElement">The element type of the doubly linked list.</typeparam>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.DoubleNode`1.Previous">
+            <summary>
+            The previous node.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.DoubleNode`1.#ctor(`0,PoroCYon.Extensions.Collections.DoubleNode{`0},PoroCYon.Extensions.Collections.DoubleNode{`0})">
+            <summary>
+            Creates a new instance of the DoubleNode class.
+            </summary>
+            <param name="value">The value of the node.</param>
+            <param name="next">The next node.</param>
+            <param name="previous">The previous node.</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.LinkedListEnumerator`1">
+            <summary>
+            A linked list enumerator.
+            </summary>
+            <typeparam name="TElement">The element type of the linked list.</typeparam>
+            <remarks>Watch out for circular linked lists. These result in an infinite loop.</remarks>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.List">
+            <summary>
+            Gets the list being enumerated.
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.Current">
+            <summary>
+            The current node.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.#ctor(PoroCYon.Extensions.Collections.LinkedList{`0})">
+            <summary>
+            Creates a new instance of the LinkedListEnumerator class.
+            </summary>
+            <param name="list">The list to enumerate.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.Dispose">
+            <summary>
+            Disposes the IEnumerator.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.MoveNext">
+            <summary>
+            Moves to the next element in the collection.
+            </summary>
+            <returns>Whether there's a next element in the collection or not.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.LinkedListEnumerator`1.Reset">
+            <summary>
+            Resets the enumerator.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.ReverseEnumerator`1">
+            <summary>
+            A reversed doubly linked list enumerator.
+            </summary>
+            <typeparam name="TElement">The element type of the doubly linked list.</typeparam>
+            <remarks>Watch out for circular doubly linked lists. These result in an infinite loop.</remarks>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.ReverseEnumerator`1.List">
+            <summary>
+            Gets the list being enumerated.
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.ReverseEnumerator`1.Current">
+            <summary>
+            The current node.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.ReverseEnumerator`1.#ctor(PoroCYon.Extensions.Collections.DoublyLinkedList{`0})">
+            <summary>
+            Creates a new instance of the ReverseEnumerator class.
+            </summary>
+            <param name="list">The list to enumerate.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.ReverseEnumerator`1.MoveNext">
+            <summary>
+            Moves to the next element in the collection.
+            </summary>
+            <returns>Whether there's a next element in the collection or not.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.ReverseEnumerator`1.Reset">
+            <summary>
+            Resets the enumerator.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.LinkedList`1">
+            <summary>
+            A linked list.
+            </summary>
+            <typeparam name="T">The element type of the linked list.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.DoublyLinkedList`1">
+            <summary>
+            A doubly linked list.
+            </summary>
+            <typeparam name="T">The element type of the doubly linked list.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.CircularLinkedList`1">
+            <summary>
+            A circular doubly linked list.
+            </summary>
+            <typeparam name="T">The element type of the linked list.</typeparam>
+            <remarks>Don't use a foreach-loop on this.</remarks>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.CircularDoublyLinkedList`1">
+            <summary>
+            A circular doubly linked list.
+            </summary>
+            <typeparam name="T">The element type of the doubly linked list.</typeparam>
+            <remarks>Don't use a foreach-loop on this.</remarks>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.MultiMap`3">
+            <summary>
+            A <see cref="T:System.Collections.Generic.Dictionary`2"/> with multiple keys.
+            </summary>
+            <typeparam name="TKey1">The first key.</typeparam>
+            <typeparam name="TKey2">The second key.</typeparam>
+            <typeparam name="TValue">The value.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Collections.QueueStack`1">
+            <summary>
+            A mixed Queue/Stack collection (FIFO/FILO)
+            </summary>
+            <typeparam name="T">The type of elements in the queue/stack.</typeparam>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.QueueStack`1.Count">
+            <summary>
+            The amount of elements in the queue/stack
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.QueueStack`1.IsSynchronized">
+            <summary>
+            whether the collection is synchronized
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Collections.QueueStack`1.SyncRoot">
+            <summary>
+            
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.#ctor">
+            <summary>
+            Creates a new instance of the <see cref="T:PoroCYon.Extensions.Collections.QueueStack`1"/> class
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the <see cref="T:PoroCYon.Extensions.Collections.QueueStack`1"/> class with the specified capacity
+            </summary>
+            <param name="capacity">The capacity of the queue/stack</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.#ctor(System.Collections.Generic.IEnumerable{`0})">
+            <summary>
+            Creates a new instance of the <see cref="T:PoroCYon.Extensions.Collections.QueueStack`1"/> class with the specified elements
+            </summary>
+            <param name="collection">The elements the queue/stack contains</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.Enqueue(`0)">
+            <summary>
+            Adds a value to the queue
+            </summary>
+            <param name="value">The value to add</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.Dequeue">
+            <summary>
+            Gets and removes the first item from the queue
+            </summary>
+            <returns>The first item in the queue</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.Push(`0)">
+            <summary>
+            Puts a value at the top of the stack
+            </summary>
+            <param name="value">The value to add</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.Pop">
+            <summary>
+            Gets and removes the topmost item from the stack
+            </summary>
+            <returns>The topmost item in the stack</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.QPeek">
+            <summary>
+            Gets the next value from the queue without removing it
+            </summary>
+            <returns>The next value in the queue</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.SPeek">
+            <summary>
+            Gets the next value from the stack without removing it
+            </summary>
+            <returns>The next value in the stack</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.System#Collections#Generic#IEnumerable{T}#GetEnumerator">
+            <summary>
+            Gets the enumerator of the collection
+            </summary>
+            <returns>The enumerator of the collection</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.System#Collections#IEnumerable#GetEnumerator">
+            <summary>
+            Gets the enumerator of the collection
+            </summary>
+            <returns>The enumerator of the collection</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Collections.QueueStack`1.CopyTo(System.Array,System.Int32)">
+            <summary>
+            Copies all values to an array
+            </summary>
+            <param name="array">The array to copy data to</param>
+            <param name="startIndex">Where to start copying to</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.Disposable">
+            <summary>
+            Defines a method to release allocated resources.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Disposable.Dispose">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Disposable.Dispose(System.Boolean)">
+            <summary>
+            Performs application-defined tasks associated with freeing, releasing, or resetting unmanaged resources.
+            </summary>
+            <param name="forced">Wether the method is called by <see cref="T:System.IDisposable"/>.Dispose.</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.ICloneable`1">
+            <summary>
+            A generic variant of the <see cref="T:System.ICloneable"/> interface.
+            </summary>
+            <typeparam name="T">The type of the cloned object.</typeparam>
+        </member>
+        <member name="M:PoroCYon.Extensions.ICloneable`1.Copy">
+            <summary>
+            Creates a new object that is a copy of the current instance.
+            </summary>
+            <returns>A new object that is a copy of this instance.</returns>
+        </member>
+        <member name="T:PoroCYon.Extensions.IFormattable">
+            <summary>
+            Provides extended format options for a <see cref="T:System.IFormattable"/>.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Interop.Shell.ExecuteCommand(System.String)">
+            <summary>
+            Executes cmd with the specified command
+            </summary>
+            <param name="command"></param>
+        </member>
+        <member name="M:PoroCYon.Extensions.IO.BinBufferResource.Close">
+            <summary>
+            Closes sockets/file handles/..., if any
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.NonNullable`1">
+            <summary>
+            An object that cannot be null.
+            </summary>
+            <typeparam name="T">The type of the wrapped object.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Union">
+            <summary>
+            A combination of multiple values.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Union`2">
+            <summary>
+            A combination of two values.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Union`3">
+            <summary>
+            A combination of three values.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Union`4">
+            <summary>
+            A combination of four values.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Union`5">
+            <summary>
+            A combination of five values.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.WeakReference`1">
+            <summary>
+            Represents a weak reference, which references an object while still allowing
+            that object to be reclaimed by garbage collection.
+            </summary>
+            <typeparam name="T">The type of the referenced object</typeparam>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeakReference`1.#ctor(`0)">
+            <summary>
+            Initializes a new instance of the TAPI.SDK.WeakReference class, referencing
+            the specified object.
+            </summary>
+            <param name="target">The object to track or null.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeakReference`1.#ctor(`0,System.Boolean)">
+            <summary>
+            Initializes a new instance of the TAPI.SDK.WeakReference class, referencing
+            the specified object and using the specified resurrection tracking.
+            </summary>
+            <param name="target">An object to track.</param>
+            <param name="trackResurrection">Indicates when to stop tracking the object. If true, the object is tracked after finalization; if false, the object is only tracked until finalization.</param>
+        </member>
+        <member name="P:PoroCYon.Extensions.WeakReference`1.Target">
+            <summary>
+            Gets or sets the object (the target) referenced by the current TAPI.SDK.WeakReference object.
+            
+            Returns:
+                null if the object referenced by the current TAPI.SDK.WeakReference object
+                has been garbage collected; otherwise, a reference to the object referenced
+                by the current TAPI.SDK.WeakReference object.
+                
+            Exceptions:
+                The reference to the target object is invalid. This exception can be thrown while setting this property if the value is a null reference
+                or if the object has been finalized during the set operation.
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.WeightedRandom`1">
+            <summary>
+            A weighted pseudo-random number generator.
+            </summary>
+            <typeparam name="T">The type of the entries.</typeparam>
+        </member>
+        <member name="P:PoroCYon.Extensions.WeightedRandom`1.Entries">
+            <summary>
+            Gets a collection of all entries.
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.WeightedRandom`1.TotalWeight">
+            <summary>
+            Gets the total weight (the sum of the weight of all entries).
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.WeightedRandom`1.Count">
+            <summary>
+            Gets the amount of entries.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.#ctor">
+            <summary>
+            Creates a new instance of the WeightedRandom class.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.#ctor(System.Int32)">
+            <summary>
+            Creates a new instance of the WeightedRandom class.
+            </summary>
+            <param name="seed">The seed value for the <see cref="T:System.Random"/> instance.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.#ctor(System.Random)">
+            <summary>
+            Creates a new instance of the WeightedRandom class.
+            </summary>
+            <param name="r">The <see cref="T:System.Random"/> used to generate random numbers.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.Add(`0,System.Double)">
+            <summary>
+            Adds an element.
+            </summary>
+            <param name="element">The element to add.</param>
+            <param name="weight">The weight of the element to add.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.Remove(`0)">
+            <summary>
+            Removes an element.
+            </summary>
+            <param name="element">The element to remove.</param>
+            <returns>The element's weight.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.Clear">
+            <summary>
+            Clears the list of elements.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.WeightedRandom`1.Next">
+            <summary>
+            Gets a random element from the entries.
+            </summary>
+            <returns>A random element from the entries.</returns>
+        </member>
+    </members>
+</doc>

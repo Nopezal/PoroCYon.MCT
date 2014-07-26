@@ -96,7 +96,7 @@ namespace PoroCYon.MCT
         {
             SyncedRandom.Reset();
 
-            ModableObject.Reset();
+            ModdableObject.Reset();
 
             ObjectLoader.AddInvasion(Mod.instance, "Goblin Army", new GoblinArmyInv());
             ObjectLoader.AddInvasion(Mod.instance, "Frost Legion", new FrostLegionInv());

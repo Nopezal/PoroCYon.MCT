@@ -4,7 +4,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls;
 
@@ -37,7 +37,7 @@ namespace PoroCYon.MCT.UI.Interface
     /// <summary>
     /// The base class for all custom UIs
     /// </summary>
-    public abstract class CustomUI : ModableObject, IControlParent, ICloneable<CustomUI>
+    public abstract class CustomUI : ModdableObject, IControlParent, ICloneable<CustomUI>
     {
         bool inited = false;
         List<Control> controls;

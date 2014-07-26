@@ -1,0 +1,441 @@
+<?xml version="1.0"?>
+<doc>
+    <assembly>
+        <name>PoroCYon.Extensions.Xna</name>
+    </assembly>
+    <members>
+        <member name="T:PoroCYon.Extensions.Xna.Geometry.Circle">
+            <summary>
+            Repersents a 2D circle
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Xna.Geometry.Circle.None">
+            <summary>
+            Represents a circle with centre (0;0) and radius 0
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Geometry.Circle.Centre">
+            <summary>
+            The centre of the circle
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Geometry.Circle.Radius">
+            <summary>
+            The radius of the circle
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.#ctor(Microsoft.Xna.Framework.Vector2,System.Single)">
+            <summary>
+            Creates a circle with the given centre and radius
+            </summary>
+            <param name="Centre">The centre of the circle</param>
+            <param name="Radius">The radius of the circle</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.#ctor(Microsoft.Xna.Framework.Vector3)">
+            <summary>
+            Creates a circle with the given centre and radius as a <see cref="T:Microsoft.Xna.Framework.Vector3"/>
+            </summary>
+            <param name="data">The centre and radius of the circle, the Z field is the radius of the circle</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.#ctor(System.Single,System.Single,System.Single)">
+            <summary>
+            Creates a circle with the given coordinates and the given radius
+            </summary>
+            <param name="X">The X position of the circle</param>
+            <param name="Y">The Y position of the circle</param>
+            <param name="Radius">The radius of the circle</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Intersects(PoroCYon.Extensions.Xna.Geometry.IShape2D)">
+            <summary>
+            Checks whether the circle intersects with a 2D shape
+            </summary>
+            <param name="other">The other 2D shape</param>
+            <returns>whether the circle intersects with the <paramref name="other"/> or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Intersects(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            Checks whether the circle intersects with a rectangle
+            </summary>
+            <param name="other">The other rectangle</param>
+            <returns>whether the circle intersects with the <paramref name="other"/> or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Intersects(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Checks whether the circle intersects with a vector
+            </summary>
+            <param name="other">The other vector</param>
+            <returns>whether the circle intersects with the <paramref name="other"/> or not</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Contains(PoroCYon.Extensions.Xna.Geometry.IShape2D)">
+            <summary>
+            whether the circle contains a 2D shape or not
+            </summary>
+            <param name="other">The other 2D shape</param>
+            <returns>true if the circle contains the <paramref name="other"/>, false otherwise</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Contains(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            whether the circle contains a rectangle or not
+            </summary>
+            <param name="other">The other rectangle</param>
+            <returns>true if the circle contains the <paramref name="other"/>, false otherwise</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Contains(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            whether the circle contains a vector or not
+            </summary>
+            <param name="other">The other vector</param>
+            <returns>true if the circle contains the <paramref name="other"/>, false otherwise</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Equals(System.Object)">
+            <summary>
+            whether the object's value is equal to the other one
+            </summary>
+            <param name="obj">The object to compare this instance with</param>
+            <returns>true if the objects have the same value, false otherwise.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Equals(PoroCYon.Extensions.Xna.Geometry.Circle)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Equals(PoroCYon.Extensions.Xna.Geometry.IShape2D)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Equals(Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Equals(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            
+            </summary>
+            <param name="other"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Clone">
+            <summary>
+            /
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.Copy">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.GetHashCode">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.ToString">
+            <summary>
+            
+            </summary>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.ToString(System.String)">
+            <summary>
+            
+            </summary>
+            <param name="format"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.ToString(System.IFormatProvider)">
+            <summary>
+            
+            </summary>
+            <param name="provider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.ToString(System.String,System.IFormatProvider)">
+            <summary>
+            
+            </summary>
+            <param name="format"></param>
+            <param name="provider"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Equality(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.IShape2D)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Inequality(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.IShape2D)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Equality(PoroCYon.Extensions.Xna.Geometry.Circle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Inequality(PoroCYon.Extensions.Xna.Geometry.Circle,Microsoft.Xna.Framework.Rectangle)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Equality(PoroCYon.Extensions.Xna.Geometry.Circle,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Inequality(PoroCYon.Extensions.Xna.Geometry.Circle,Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_GreaterThan(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.Circle)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_LessThan(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.Circle)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_GreaterThanOrEqual(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.Circle)">
+            <summary>
+            /
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_LessThanOrEqual(PoroCYon.Extensions.Xna.Geometry.Circle,PoroCYon.Extensions.Xna.Geometry.Circle)">
+            <summary>
+            
+            </summary>
+            <param name="value1"></param>
+            <param name="value2"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Explicit(PoroCYon.Extensions.Xna.Geometry.Line)~PoroCYon.Extensions.Xna.Geometry.Circle">
+            <summary>
+            
+            </summary>
+            <param name="l"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Geometry.Circle.op_Explicit(Microsoft.Xna.Framework.Rectangle)~PoroCYon.Extensions.Xna.Geometry.Circle">
+            <summary>
+            
+            </summary>
+            <param name="r"></param>
+            <returns></returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Rectangle,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Rectangle,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Vector2,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+            <param name="rotation">The rotation of the image to draw</param>
+            <param name="origin">The origin of the image to draw</param>
+            <param name="scale">The scale of the image to draw</param>
+            <param name="effects">The sprite effects of the image to draw</param>
+            <param name="layerDepth">The layer depth of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Draw(Microsoft.Xna.Framework.Graphics.SpriteBatch,PoroCYon.Extensions.Union{Microsoft.Xna.Framework.Graphics.Texture2D,PoroCYon.Extensions.Xna.Graphics.AnimatedGif},Microsoft.Xna.Framework.Vector2,System.Nullable{Microsoft.Xna.Framework.Rectangle},Microsoft.Xna.Framework.Color,System.Single,Microsoft.Xna.Framework.Vector2,System.Single,Microsoft.Xna.Framework.Graphics.SpriteEffects,System.Single)">
+            <summary>
+            Adds a sprite to a batch of sprites for rendering.
+            </summary>
+            <param name="spriteBatch">The SpriteBatch used for drawing</param>
+            <param name="image">The image to draw</param>
+            <param name="position">The position of the image to draw</param>
+            <param name="frame">The frame of the image to draw</param>
+            <param name="colour">The colour of the image to draw</param>
+            <param name="rotation">The rotation of the image to draw</param>
+            <param name="origin">The origin of the image to draw</param>
+            <param name="scale">The scale of the image to draw</param>
+            <param name="effects">The sprite effects of the image to draw</param>
+            <param name="layerDepth">The layer depth of the image to draw</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Size(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the size of the Viewport
+            </summary>
+            <param name="viewport">The Viewport where to get the size from</param>
+            <returns>The size of the Viewport</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Position(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the position of the Viewport
+            </summary>
+            <param name="viewport">The Viewport where to get the position from</param>
+            <returns>The position of the Viewport</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.ToRectangle(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Casts the Viewport to a Rectangle
+            </summary>
+            <param name="viewport">The Viewport to cast</param>
+            <returns>The Viewport casted to a Rectangle</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Centre(Microsoft.Xna.Framework.Graphics.Viewport)">
+            <summary>
+            Gets the centre of the Viewport, relative to its position.
+            </summary>
+            <param name="viewport"></param>
+            <returns>The centre of the Viewport.</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Graphics.Extensions.Begun(Microsoft.Xna.Framework.Graphics.SpriteBatch)">
+            <summary>
+            Gets whether the SpriteBatch begun or not.
+            </summary>
+            <param name="sb">The SpriteBatch.</param>
+            <returns>true if the SpriteBatch begun, false otherwise.</returns>
+        </member>
+        <member name="T:PoroCYon.Extensions.Xna.Input.MouseHandler">
+            <summary>
+            Custom structure to make calculations with the Mouse easier
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.Left">
+            <summary>
+            whether the left mouse button is pressed or not (returns false when Main.blockMouse or Player.mouseInterface is true)
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.Right">
+            <summary>
+            whether the right mouse button is pressed or not
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.Middle">
+            <summary>
+            whether the middle button (scroll wheel) is pressed or not
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.XButton1">
+            <summary>
+            whether the first X button is pressed or not
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.XButton2">
+            <summary>
+            whether the second X button is pressed or not
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.Position">
+            <summary>
+            Gets the position of the mouse, relative to the Terraria window
+            </summary>
+        </member>
+        <member name="P:PoroCYon.Extensions.Xna.Input.MouseHandler.ScrollWheel">
+            <summary>
+            Gets the current scroll wheel value
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Input.MouseHandler.GetState">
+            <summary>
+            Retrieves the current mouse state
+            </summary>
+            <returns>The current mouse state</returns>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.Input.MouseHandler.SetPosition(Microsoft.Xna.Framework.Vector2)">
+            <summary>
+            Sets the position of the mouse
+            </summary>
+            <param name="position">The new position of the mouse</param>
+        </member>
+        <member name="T:PoroCYon.Extensions.Xna.WPF.GameControl">
+            <summary>
+            GameControl
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.WPF.GameControl.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+        <member name="T:PoroCYon.Extensions.Xna.WPF.GameWindow">
+            <summary>
+            GameWindow
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Xna.WPF.GameWindow.InitializeComponent">
+            <summary>
+            InitializeComponent
+            </summary>
+        </member>
+    </members>
+</doc>

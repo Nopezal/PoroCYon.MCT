@@ -4,7 +4,7 @@ using System.Diagnostics;
 using System.Linq;
 using System.Xml;
 using Microsoft.Xna.Framework;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using TAPI;
 using PoroCYon.MCT.UI.MenuItems;
 using Terraria;

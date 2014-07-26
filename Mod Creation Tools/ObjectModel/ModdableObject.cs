@@ -1,14 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.XnaExtensions;
 
 namespace PoroCYon.MCT.ObjectModel
 {
     /// <summary>
     /// Represents an object where fields and hooks can be added and removed (and hooks can be invoked)
     /// </summary>
-    public abstract class ModableObject
+    public abstract class ModdableObject
     {
         /// <summary>
         /// The added fields the ModableObject has. Do not add or remove fields by calling Fields.Add/Remove
@@ -23,20 +22,20 @@ namespace PoroCYon.MCT.ObjectModel
         /// <summary>
         /// When a field is added
         /// </summary>
-        public Action<ModableObject, string, object> OnFieldAdded;
+        public Action<ModdableObject, string, object> OnFieldAdded;
         /// <summary>
         /// When a field is added
         /// </summary>
-        public static Action<ModableObject, string, object> GlobalFieldAdded;
+        public static Action<ModdableObject, string, object> GlobalFieldAdded;
 
         /// <summary>
         /// When a field is removed
         /// </summary>
-        public Action<ModableObject, string> OnFieldRemoved;
+        public Action<ModdableObject, string> OnFieldRemoved;
         /// <summary>
         /// When a field is removed
         /// </summary>
-        public static Action<ModableObject, string> GlobalFieldRemoved;
+        public static Action<ModdableObject, string> GlobalFieldRemoved;
 
         /// <summary>
         /// Adds a field
@@ -70,29 +69,29 @@ namespace PoroCYon.MCT.ObjectModel
         /// <summary>
         /// When a hook is invoked
         /// </summary>
-        public Action<ModableObject, string, object[]> OnInvoke;
+        public Action<ModdableObject, string, object[]> OnInvoke;
         /// <summary>
         /// When a hook is invoked
         /// </summary>
-        public static Action<ModableObject, string, object[]> GlobalInvoke;
+        public static Action<ModdableObject, string, object[]> GlobalInvoke;
 
         /// <summary>
         /// When a hook is added
         /// </summary>
-        public Action<ModableObject, string, Delegate> OnHookAdded;
+        public Action<ModdableObject, string, Delegate> OnHookAdded;
         /// <summary>
         /// When a hook is added
         /// </summary>
-        public static Action<ModableObject, string, Delegate> GlobalHookAdded;
+        public static Action<ModdableObject, string, Delegate> GlobalHookAdded;
 
         /// <summary>
         /// When a hook is removed
         /// </summary>
-        public Action<ModableObject, string> OnHookRemoved;
+        public Action<ModdableObject, string> OnHookRemoved;
         /// <summary>
         /// When a hook is removed
         /// </summary>
-        public static Action<ModableObject, string> GlobalHookRemoved;
+        public static Action<ModdableObject, string> GlobalHookRemoved;
 
         /// <summary>
         /// Invokes a hook

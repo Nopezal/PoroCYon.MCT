@@ -11,7 +11,7 @@ namespace PoroCYon.MCT.ObjectModel
     /// <summary>
     /// A base for an entity. Provides position, velocity, and drawing properties, as well as initializing/updating/drawing events.
     /// </summary>
-    public abstract class Entity : ModableObject, IDisposable
+    public abstract class Entity : ModdableObject, IDisposable
     {
         Vector2? origin = null;
 

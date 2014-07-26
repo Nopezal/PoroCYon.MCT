@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
-using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using TAPI;
-using PoroCYon.MCT.ObjectModel;
-using PoroCYon.MCT.UI.Interface.Controls;
 
 namespace PoroCYon.MCT.UI.Interface
 {

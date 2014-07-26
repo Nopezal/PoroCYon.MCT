@@ -2,8 +2,8 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Graphics;
+using PoroCYon.Extensions;
+using PoroCYon.Extensions.Xna.Graphics;
 
 namespace PoroCYon.MCT.ObjectModel
 {

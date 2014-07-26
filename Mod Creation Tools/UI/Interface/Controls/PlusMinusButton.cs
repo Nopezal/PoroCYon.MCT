@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Geometry;
+using PoroCYon.Extensions;
+using PoroCYon.Extensions.Xna.Geometry;
 using Terraria;
 using PoroCYon.MCT.Input;
 

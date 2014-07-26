@@ -4,12 +4,11 @@ using System.IO;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.Internal.Versioning;
-using PoroCYon.MCT.Interop;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
 

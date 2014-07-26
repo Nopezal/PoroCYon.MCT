@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.XnaExtensions;
-using PoroCYon.XnaExtensions.Input;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
 using Terraria;
-using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;

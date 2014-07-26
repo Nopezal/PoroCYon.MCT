@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
@@ -22,7 +22,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             WeakReference<ItemContainer> parent;
 
             internal ItemSlotWrapper(ItemContainer container, ModBase @base, string type, int index)
-                : base(@base, type, index, (s, it) => { container.ContainedItem = it; }, (s) => { return container.ContainedItem; })
+                : base(@base, type, index, (s, it) => container.ContainedItem = it, s => container.ContainedItem)
             {
                 parent = new WeakReference<ItemContainer>(container);
             }
