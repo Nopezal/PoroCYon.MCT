@@ -173,9 +173,17 @@
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
     <PreBuildEvent>if "%25username%25"=="Pieter" ( if "$(ConfigurationName)"=="Release" (
-    copy "$(SolutionDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.dll" /y
-    copy "$(SolutionDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.xml" /y
-    copy "$(SolutionDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.pdb" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.IL.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.IL.dll" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.IL.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.IL.xml" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.IL.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.IL.pdb" /y
+
+    copy "$(SolutionDir)PoroCYon.Extensions.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.dll" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.xml" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.pdb" /y
+
+    copy "$(SolutionDir)PoroCYon.Extensions.Xna.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.Xna.dll" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.Xna.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.Xna.xml" /y
+    copy "$(SolutionDir)PoroCYon.Extensions.Xna.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.Extensions.Xna.pdb" /y
 
    rem mkdir "%25userprofile%25\Dropbox\Public\MCT\Templates\"
     rem xcopy "$(SolutionDir)Templates\" "%25userprofile%25\Dropbox\Public\MCT\Templates\" /s /i /y /j /h

@@ -1,0 +1,104 @@
+<Release Version="1.1.0.15">
+    <Change>Fixed ObjectLoader.AddToGame(Item, Texture2D, LoadParameters, [ArmorParameters]) not working.</Change>
+</Release>
+<Release Version="1.1.0.14">
+    <Change>Fixed a bug in World.TimeAsDateTime.</Change>
+    <Change>Fixed a bug when starting a vanilla invasion through the MCT.</Change>
+</Release>
+<Release Version="1.1.0.13">
+    <Change>Updated PoroCYon.XnaExtensions.</Change>
+    <Change>Added property World.NumPlayers.</Change>
+    <Change>The Changelog view now only shows the changes of the newer versions.</Change>
+</Release>
+<Release Version="1.1.0.12">
+    <Change>Fixed a few bugs in the MCT Tools and the installer.</Change>
+</Release>
+<Release Version="1.1.0.9">
+    <Change>Added an invasion API.</Change>
+</Release>
+<Release Version="1.1.0.8">
+    <Change>Fixed UI updating not running when autopause is turned on.</Change>
+    <Change>Fixed updater chrashing when a comment is in the XML changelog file.</Change>
+</Release>
+<Release Version="1.1.0.7">
+    <Change>Fixed MenuItems.Control.DrawBackground box colour.</Change>
+    <Change>Fixed MCT Tools output file (printed path didn't match the actual path).</Change>
+</Release>
+<Release Version="1.1.0.6">
+    <Change>MCT Tools' output file now has the same name as the mod directory, instead of its internal name.</Change>
+</Release>
+<Release Version="1.1.0.5">
+    <Change>Fixed MCT placeholder mod not installing correctly.</Change>
+</Release>
+<Release Version="1.1.0.4">
+    <Change>Fixed MCT Tools not changing \ into /.</Change>
+</Release>
+<Release Version="1.1.0.3">
+    <Change>MCT Tools bugfixing.</Change>
+</Release>
+<Release Version="1.1.0.2">
+    <Change>MCT.Net optimization.</Change>
+    <Change>A mod cannot be built twice at the same time using the MCT Tools.</Change>
+</Release>
+<Release Version="1.1.0.1">
+    <Change>Added Prefix validation to the MCT compiler.</Change>
+    <Change>Updated Visual Studio project/item templates.</Change>
+</Release>
+<Release Version="1.1.0.0">
+    <Change>Rewritten the MCT Tools Compiler. It's awesome now.</Change>
+</Release>
+    
+<Release Version="1.0.3.0">
+    <Change>Fixed a bug that made the MCT throw exceptions when trying to play a sound in the UI.</Change>
+    <Change>Updated to r6.</Change>
+</Release>
+    
+<Release Version="1.0.2.4">
+    <Change>Updated XnaExt.</Change>
+</Release>
+<Release Version="1.0.2.3">
+    <Change>Added Mct.EnsureMct (will be inlined at compile-time), fixed ScrollBar scroll cursor thingy positioning.</Change>
+</Release>
+<Release Version="1.0.2.2">
+    <Change>Added PoroCYon.MCT.Util class, contains tick&lt;-&gt;TimeSpan conversions.</Change>
+</Release>
+<Release Version="1.0.2.1">
+    <Change>Added a ScrollBar control</Change>
+    <Change>Fixed update box messing up because multithreading.</Change>
+</Release>
+<Release Version="1.0.2.0">
+    <Change>Updated the code to the r4 release.</Change>
+</Release>
+    
+<Release Version="1.0.1.0">
+    <Change>Fixed lots of bugs which were caused by refactoring etc. in tAPI.</Change>
+</Release>
+    
+<Release Version="1.0.0.12">
+    <Change>Updated data to newer tAPI r4 version</Change>
+    <Change>Added projectile AI 0 and 1 to VanillaData.ProjData.AICode</Change>
+</Release>
+<Release Version="1.0.0.11">
+    <Change>Updated PoroCYon.XnaExtensions.dll (includes a new, powerful XInput wrapper)</Change>
+</Release>
+<Release Version="1.0.0.10">
+    <Change>Added an options menu.</Change>
+</Release>
+<Release Version="1.0.0.9">
+    <Change>Fixed World.TimeAsDateTime throwing an ArgumentOutOfRangeException when it is midnight.</Change>
+</Release>
+<Release Version="1.0.0.8">
+    <Change>Conversion from Main.time to a DateTime/TimeSpan/string</Change>
+</Release>
+<Release Version="1.0.0.7">
+    <Change>Able to force christmas/halloween state (World.ForceChristmas/Halloween = true;)</Change>
+</Release>
+<Release Version="1.0.0.6">
+    <Change>Updated PoroCYon.XnaExtensions.dll (includes geometric transformations)</Change>
+</Release>
+<Release Version="1.0.0.5">
+    <Change>Added changelog in update screen</Change>
+</Release>
+<Release Version="1.0.0.4">
+    <Change>Fixed +/- button positioning</Change>
+</Release>
