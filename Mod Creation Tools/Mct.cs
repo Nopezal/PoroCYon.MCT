@@ -9,6 +9,7 @@ using System.Windows.Forms;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
+using PoroCYon.MCT.Internal.Diagnostics;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
@@ -119,7 +120,7 @@ namespace PoroCYon.MCT
 
             Inited = true; // prevent stack overflow (onload -> init -> loaddebugmod -> onload -> ...)
 
-            MctDebugger.LoadDebugMods();
+            ModDebugger.LoadDebugMods();
         }
 
         internal static void Uninit()
@@ -128,6 +129,8 @@ namespace PoroCYon.MCT
 
             Invasion.invasions.Clear();
             Invasion.invasionTypes.Clear();
+
+            ModDebugger.tempBases.Clear();
 
             Mod.instance = null;
 

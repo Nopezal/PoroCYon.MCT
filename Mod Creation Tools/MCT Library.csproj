@@ -101,7 +101,7 @@
     <Compile Include="Input\MouseHandler.cs" />
     <Compile Include="Internal\CommonToolUtilities.cs" />
     <Compile Include="Internal\InternalConsts.cs" />
-    <Compile Include="Internal\MctDebugger.cs" />
+    <Compile Include="Internal\Diagnostics\ModDebugger.cs" />
     <Compile Include="Internal\ModClasses\MBuff.cs" />
     <Compile Include="Internal\ModClasses\MNPC.cs" />
     <Compile Include="Internal\ModClasses\MPrefix.cs" />
