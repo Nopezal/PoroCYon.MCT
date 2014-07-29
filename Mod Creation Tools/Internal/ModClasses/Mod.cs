@@ -8,6 +8,7 @@ using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.Input;
+using PoroCYon.MCT.Internal.Diagnostics;
 using PoroCYon.MCT.Internal.Versioning;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
@@ -98,10 +99,10 @@ namespace PoroCYon.MCT.Internal.ModClasses
             base.OnAllModsLoaded();
 
             // remove temporary modbase instances
-            for (int i = 0; i < MctDebugger.tempBases.Count; i++)
-                Mods.modBases.Remove(MctDebugger.tempBases[i]);
+            for (int i = 0; i < ModDebugger.tempBases.Count; i++)
+                Mods.modBases.Remove(ModDebugger.tempBases[i]);
 
-            MctDebugger.tempBases.Clear();
+            ModDebugger.tempBases.Clear();
 
             // insert settings menu button in the Options menu
             Menu.menuPages.Add("MCT:Settings", new SettingsPage());

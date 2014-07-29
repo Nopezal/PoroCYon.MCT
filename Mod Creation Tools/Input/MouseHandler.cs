@@ -160,7 +160,7 @@ namespace PoroCYon.MCT.Input
 
             MouseHandler ret = new MouseHandler()
             {
-                Left = xm.LeftButton == ButtonState.Pressed && !UpdateChecker.LastUpdateAvailable,
+                Left = xm.LeftButton == ButtonState.Pressed,
                 Right = xm.RightButton == ButtonState.Pressed,
                 Middle = xm.MiddleButton == ButtonState.Pressed,
                 XButton1 = xm.XButton1 == ButtonState.Pressed,

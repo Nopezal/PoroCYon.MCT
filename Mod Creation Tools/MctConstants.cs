@@ -20,6 +20,6 @@ namespace PoroCYon.MCT
         /// <summary>
         /// The version number of the MCT
         /// </summary>
-        public const uint VERSION_NUM = 3u;
+        public const uint VERSION_NUM = 4u;
     }
 }
