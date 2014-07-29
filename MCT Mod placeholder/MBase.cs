@@ -18,8 +18,6 @@ namespace PoroCYon.MCT
         {
             base.OnAllModsLoaded();
 
-            Mct.Init();
-
             // hacky stuff #2
 
             // remove from list, but the file still exists
