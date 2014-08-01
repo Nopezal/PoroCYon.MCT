@@ -3,7 +3,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Ionic.Zip;
 using LitJson;
+using TAPI;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation
 {
@@ -13,6 +15,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     public class ModInfo : ValidatorObject
     {
         internal readonly static string[] EmptyStringArr = new string[0];
+
+        static List<string> circularPath = new List<string>();
+
+        internal bool checkCircularRefs = true;
 
 #pragma warning disable 1591
         // internal
@@ -42,6 +48,107 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string outputName;
 #pragma warning restore 1591
 
+        static ModInfo GetModInfoFromTapiMod(byte[] data)
+        {
+            BinBuffer bb = new BinBuffer(new BinBufferByte(data));
+
+            uint ver = bb.ReadUInt();
+
+            ModInfo mi = new ModInfo() { checkCircularRefs = false };
+
+            var err = mi.CreateAndValidate(new JsonFile(String.Empty, JsonMapper.ToObject(bb.ReadString())));
+
+            if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+                return null;
+
+            return mi;
+        }
+        static ModInfo GetModInfoFromTapiZip(ZipFile zf)
+        {
+            if (zf.ContainsEntry("ModInfo.json"))
+            {
+                ZipEntry ze = zf["ModInfo.json"];
+
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    ze.Extract(ms);
+
+                    StreamReader r = new StreamReader(ms);
+
+                    ModInfo mi = new ModInfo() { checkCircularRefs = false };
+
+                    var err = mi.CreateAndValidate(new JsonFile(zf.Name, JsonMapper.ToObject(r.ReadToEnd())));
+
+                    if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+                        return null;
+
+                    return mi;
+                }
+            }
+
+            if (zf.ContainsEntry("Mod.tapimod"))
+                using (MemoryStream ms = new MemoryStream())
+                {
+                    return GetModInfoFromTapiMod(ms.ToArray());
+                }
+
+            return null;
+        }
+        static ModInfo GetModInfoFromTapi   (string file)
+        {
+            if (file.ToLowerInvariant().EndsWith(".tapi"))
+                using (ZipFile zf = new ZipFile(file))
+                {
+                    return GetModInfoFromTapiZip(zf);
+                }
+
+            if (file.ToLowerInvariant().EndsWith(".tapimod"))
+                return GetModInfoFromTapiMod(File.ReadAllBytes(file));
+
+            return null;
+        }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="ref">.tapi or .tapimod file.</param>
+        /// <returns></returns>
+        /// <remarks>Recursive.</remarks>
+        static bool CheckCircularModRefRec(string @ref)
+        {
+            ModInfo mi = GetModInfoFromTapi(@ref);
+
+            if (mi == null)
+                return false;
+
+            if (circularPath.Contains(mi.internalName))
+                return true;
+
+            circularPath.Add(mi.internalName);
+
+            return CheckCircularModRef(mi);
+        }
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="info"></param>
+        /// <returns></returns>
+        /// <remarks>Recursive.</remarks>
+        static bool CheckCircularModRef(ModInfo info)
+        {
+            for (int i = 0; i < info.modReferences.Length; i++)
+            {
+                List<string> temp = new List<string>(circularPath);
+
+                if (CheckCircularModRefRec(info.modReferences[i]))
+                    return true;
+
+                circularPath = temp; // reset; no circular things were found there
+            }
+
+            return false;
+        }
+
         /// <summary>
         /// Create &amp; validate a JSON file.
         /// </summary>
@@ -58,14 +165,63 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             AddIfNotNull(SetJsonValue(json, "modReferences", ref modReferences, EmptyStringArr), errors);
             for (int i = 0; i < modReferences.Length; i++)
+            {
                 if (!ModCompiler.modDict.ContainsKey(modReferences[i]))
+                {
+                    string d = ModCompiler.FindSourceFolderFromInternalName(modReferences[i]);
+
+                    // check circular references (and other things) first......
+                    ModInfo mi = new ModInfo();
+                    var err = mi.CreateAndValidate(new JsonFile(d + "\\ModInfo.json", JsonMapper.ToObject(File.ReadAllText(d + "\\ModInfo.json"))));
+
+                    if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+                    {
+                        foreach (CompilerError ce in err)
+                        {
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = ce.Cause,
+                                FilePath = ce.FilePath,
+                                IsWarning = ce.IsWarning,
+                                LocationInFile = ce.LocationInFile,
+                                Message = "Error when parsing an uncompiled referenced mod's ModInfo file: " + ce.Message
+                            });
+                        }
+                    }
+                    else
+                    {
+                        if (d == null || !Directory.Exists(d))
+                        {
+                            errors.Add(new CompilerError()
+                            {
+                                FilePath = json.Path,
+                                Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i] + "', either as a binary or in a source directory."
+                            });
+                        }
+                        else
+                        {
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = new CompilerWarning(),
+                                FilePath = json.Path,
+                                IsWarning = true,
+                                Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i]
+                                    + "', building it first (matching directory: '" + Path.GetDirectoryName(d) + "')."
+                            });
+
+                            ModCompiler.CompileFromSource(d);
+                        }
+                    }
+                }
+
+                if (checkCircularRefs && CheckCircularModRef(this))
                     errors.Add(new CompilerError()
                     {
-                        Cause = new FileNotFoundException(),
+                        Cause = new CircularReferenceException(circularPath),
                         FilePath = json.Path,
-                        IsWarning = false,
-                        Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i] + "'."
+                        Message = "The mod or one of its references contains a circular reference. See the exception for more details."
                     });
+            }
 
             AddIfNotNull(SetJsonValue(json, "dllReferences", ref dllReferences, EmptyStringArr), errors);
             for (int i = 0; i < dllReferences.Length; i++)

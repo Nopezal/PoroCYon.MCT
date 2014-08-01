@@ -7,6 +7,7 @@ using System.Reflection;
 using Microsoft.Xna.Framework;
 using Ionic.Zip;
 using PoroCYon.Extensions.IO;
+using PoroCYon.MCT.Tools.Compiler.Validation;
 
 namespace PoroCYon.MCT.Tools.Compiler
 {
@@ -95,6 +96,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             for (int i = 0; i < mod.Info.modReferences.Length; i++)
                 try
                 {
+                    // presence of the mod is checked in ModInfo validation
                     WriteAssembly(ModCompiler.modDict[mod.Info.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mod.Info.modReferences[i] + ".dll");
                 }
                 catch (Exception e)

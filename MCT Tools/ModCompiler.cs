@@ -238,14 +238,14 @@ namespace PoroCYon.MCT.Tools
             }
         }
 
-        static CompilerOutput CreateOutput(List<CompilerError> errors)
+        internal static CompilerOutput CreateOutput(List<CompilerError> errors)
         {
             bool err = false;
 
             CompilerOutput outp = new CompilerOutput();
 
             for (int i = 0; i < errors.Count; i++)
-                if (!errors[i].IsWarning)
+                if (!errors[i].IsWarning || !(errors[i].Cause is CompilerWarning))
                     err = true; // houston, we have a problem
 
             outp.Succeeded = !err;
@@ -253,10 +253,28 @@ namespace PoroCYon.MCT.Tools
 
             return outp;
         }
+
         static CompilerOutput Validate(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
             return CreateOutput(Validator.ValidateJsons(jsons, files, validateModInfo));
         }
+
+        internal static string FindSourceFolderFromInternalName(string internalName)
+        {
+            foreach (string d in Directory.EnumerateFiles(Mods.pathDirModsSources))
+            {
+                if (File.Exists(d + "\\ModInfo.json"))
+                {
+                    JsonData j = JsonMapper.ToObject(File.ReadAllText(d + "\\ModInfo.json"));
+
+                    if (j.Has("internalName") && (string)j["internalName"] == internalName)
+                        return d;
+                }
+            }
+
+            return null;
+        }
+
         static bool BeginCompile(string path)
         {
             if (!Debugger.IsAttached && AppendBuilding(path))

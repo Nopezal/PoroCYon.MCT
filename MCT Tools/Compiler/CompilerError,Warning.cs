@@ -17,7 +17,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
+        } = CompilerException.DefaultMessage;
         /// <summary>
         /// Gets the absolute path to the file causing the error. The value is null if the file is not known.
         /// </summary>
@@ -41,7 +41,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
+        } = new Point(-1, -1);
         /// <summary>
         /// Gets the cause of the error. It is highly possible that it is an instance of the
         /// <see cref="PoroCYon.MCT.Tools.Compiler.CompilerException" />, <see cref="PoroCYon.MCT.Tools.Compiler.CompilerWarning" />
@@ -51,15 +51,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
-
-        internal CompilerError()
-        {
-            Message = CompilerException.DEFAULT_MESSAGE;
-            FilePath = null;
-            LocationInFile = new Point();
-            Cause = new CompilerException();
-        }
+        } = new CompilerException();
 
         /// <summary>
         /// Returns the string representation of the current instance.
@@ -67,8 +59,13 @@ namespace PoroCYon.MCT.Tools.Compiler
         /// <returns>The string representation of the current instance.</returns>
         public override string ToString()
         {
-            return (IsWarning ? "Warning: " : "Error: ") + Message + Environment.NewLine +
-                FilePath + " (" + LocationInFile.X + ";" + LocationInFile.Y + ")" + Environment.NewLine + Environment.NewLine +
+            return (IsWarning ? "Warning: " : "Error: ") +
+                Message + Environment.NewLine +
+                FilePath +
+                (LocationInFile.X >= 0 && LocationInFile.Y >= 0
+                    ? " (" + LocationInFile.X + ";" + LocationInFile.Y + ")"
+                    : String.Empty) +
+                Environment.NewLine + Environment.NewLine +
                 Cause;
         }
     }
