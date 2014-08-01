@@ -94,7 +94,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             return null;
         }
-        static ModInfo GetModInfoFromTapi   (string file)
+        internal static ModInfo GetModInfoFromTapi   (string file)
         {
             if (file.ToLowerInvariant().EndsWith(".tapi"))
                 using (ZipFile zf = new ZipFile(file))

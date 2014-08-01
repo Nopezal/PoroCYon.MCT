@@ -49,6 +49,26 @@ namespace PoroCYon.MCT.Tools.Compiler
             get;
         }
 
+        static List<string> WriteRefAssembliesRec(ModInfo mi)
+        {
+            List<string> ret = new List<string>();
+
+            for (int i = 0; i < mi.modReferences.Length; i++)
+            {
+                // presence of the mod is checked in ModInfo validation
+                WriteAssembly(ModCompiler.modDict[mi.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mi.modReferences[i] + ".dll");
+
+                ret.Add(Path.GetTempPath() + "\\MCT\\" + mi.modReferences[i] + ".dll");
+
+                ModInfo mi2 = ModInfo.GetModInfoFromTapi(ModCompiler.modDict[mi.modReferences[i]]);
+
+                if (mi2 != null)
+                    ret.AddRange(WriteRefAssembliesRec(mi2));
+            }
+
+            return ret;
+        }
+
         /// <summary>
         /// Compiles all source files of the mod into a managed assembly.
         /// </summary>
@@ -96,8 +116,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             for (int i = 0; i < mod.Info.modReferences.Length; i++)
                 try
                 {
-                    // presence of the mod is checked in ModInfo validation
-                    WriteAssembly(ModCompiler.modDict[mod.Info.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mod.Info.modReferences[i] + ".dll");
+                    cp.ReferencedAssemblies.AddRange(WriteRefAssembliesRec(mod.Info).ToArray());
                 }
                 catch (Exception e)
                 {
