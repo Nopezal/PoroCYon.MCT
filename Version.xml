@@ -1,31 +1,25 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.0.1" String="1.3.0.1" />
+  <CurrentVersion Number="4" Version="1.3.0.2" String="1.3.0.2" />
   
   <Changelog>
+    <Release Version="1.3.0.2">
+      <Change>Fixed a tiny bug in the MCT Tools.</Change>
+      <Change>The mouse is also blocked when the Terraria window is inactive.</Change>
+    </Release>
     <Release Version="1.3.0.1">
-      <Change>
-        Fixed left mouse button input.
-      </Change>
+      <Change>Fixed left mouse button input.</Change>
     </Release>
     <Release Version="1.3.0.0">
-      <Change>
-        Added vanilla player/world file porter.
-      </Change>
-      <Change>
-        Updated to newer version of PoroCYon.XnaExtensions. All mods that reference the PoroCYon.XnaExtensions must be recompiled.
-      </Change>
+      <Change>Added vanilla player/world file porter.</Change>
+      <Change>Updated to newer version of PoroCYon.XnaExtensions. All mods that reference the PoroCYon.XnaExtensions must be recompiled.</Change>
     </Release>
       
     <Release Version="1.2.0.2">
-      <Change>
-        Modified how the MCT Tools handles invalid Version formatting.
-      </Change>
+      <Change>Modified how the MCT Tools handles invalid Version formatting.</Change>
     </Release>
     <Release Version="1.2.0.1">
-      <Change>
-        CodableEntity.AttachModEntity(ModEntity, [AttachMode = AttachMode.New])
-      </Change>
+      <Change>CodableEntity.AttachModEntity(ModEntity, [AttachMode = AttachMode.New])</Change>
     </Release>
     <Release Version="1.2.0.0">
       <Change>

@@ -18,7 +18,7 @@ namespace PoroCYon.MCT.Input
         {
             get
             {
-                return API.main.blockMouse || Main.localPlayer.mouseInterface;
+                return API.main.blockMouse || Main.localPlayer.mouseInterface || !Main.hasFocus;
             }
             set
             {
