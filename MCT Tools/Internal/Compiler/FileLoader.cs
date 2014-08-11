@@ -29,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             foreach (string s in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
             {
-                if (s.ToLowerInvariant().EndsWith(".sln.ide")) // roslyn temp directory, probably has open file handles
+                if (Path.GetDirectoryName(s).ToLowerInvariant().EndsWith(".sln.ide")) // roslyn temp directory, probably has open file handles
                     continue;
 
                 byte[] fileBin = null;
