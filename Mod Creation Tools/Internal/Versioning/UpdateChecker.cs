@@ -13,7 +13,9 @@ namespace PoroCYon.MCT.Internal.Versioning
             CheckForUpdates = true,
             LastUpdateAvailable = false;
 
-        internal static bool IsUpdateAvailable()
+        static WebClient client = new WebClient();
+
+        internal static bool GetIsUpdateAvailable()
         {
             if (!CheckForUpdates)
                 return LastUpdateAvailable = false;
@@ -41,7 +43,7 @@ namespace PoroCYon.MCT.Internal.Versioning
         {
             XmlDocument xd = new XmlDocument();
 
-            xd.LoadXml(new WebClient().DownloadString("https://dl.dropboxusercontent.com/u/151130168/MCT/Version.xml"));
+            xd.LoadXml(client.DownloadString("https://dl.dropboxusercontent.com/u/151130168/MCT/Version.xml"));
 
             return xd;
         }

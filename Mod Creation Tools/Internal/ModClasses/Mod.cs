@@ -109,19 +109,19 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             MenuAnchor aOptions = new MenuAnchor()
             {
-                anchor = new Vector2(0.5f, 0f),
-                offset = new Vector2(315f, 200f),
-                offset_button = new Vector2(0f, 50f)
+                anchor        = new Vector2(0.5f, 0f  ),
+                offset        = new Vector2(315f, 200f),
+                offset_button = new Vector2(0f  , 50f )
             };
 
             Menu.menuPages["Options"].anchors.Add(aOptions);
             Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
 
-            if (UpdateChecker.IsUpdateAvailable())
+            if (UpdateChecker.GetIsUpdateAvailable())
                 UpdateBoxInjector.Inject();
         }
 
-        internal static void ReadSettings(Stream s)
+        internal static void  ReadSettings(Stream s)
         {
             BinBuffer bb = new BinBuffer(new BinBufferStream(s));
 

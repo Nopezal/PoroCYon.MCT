@@ -86,7 +86,7 @@ namespace PoroCYon.MCT.Internal
 
                 mb.Click = () =>
                 {
-                    if (UpdateChecker.IsUpdateAvailable())
+                    if (UpdateChecker.GetIsUpdateAvailable())
                         UpdateBoxInjector.Inject();
                     else
                         mb.description = "No update availables";

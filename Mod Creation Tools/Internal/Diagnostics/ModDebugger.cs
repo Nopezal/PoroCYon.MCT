@@ -1,18 +1,23 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using Ionic.Zip;
 using LitJson;
-using TAPI;
 using Terraria;
+using TAPI;
 
 namespace PoroCYon.MCT.Internal.Diagnostics
 {
+    // Hacky stuff #ilostthecount
+    // remove a mod (.tapi(mod)) from the mod list, and insert the mod from the .dll, so it can be debugged using VS.
+
     static class ModDebugger
     {
-        internal static List<APIModBase> tempBases = new List<APIModBase>();
+        internal static List<APIModBase           > tempBases = new List<APIModBase           >();
+        internal static List<Tuple<string, string>> toDebug   = new List<Tuple<string, string>>();
 
         static string TrimArg(string arg)
         {
@@ -78,8 +83,8 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 
             string internalName = (string)modInfo["internalName"];
 
-            //if (!modInfo.Has("includePDB") || !(bool)modInfo["includePDB"])
-            //    throw new InvalidOperationException("The .pdb file must be included in order to debug the mod!");
+            if (!modInfo.Has("includePDB") || !(bool)modInfo["includePDB"])
+                throw new Mods.LoadException("The .pdb file must be included in order to debug the mod!");
 
             List<Tuple<string, byte[]>> fileData = new List<Tuple<string, byte[]>>();
             List<Tuple<string, int>> fileHeader = new List<Tuple<string, int>>();
@@ -252,11 +257,8 @@ namespace PoroCYon.MCT.Internal.Diagnostics
             LoadDebugMod(amb, pathToAsm);
         }
 
-        internal static void LoadDebugMods()
+        internal static void GetModsToDebug()
         {
-            // Hacky stuff #ilostthecount
-            // remove a mod (.tapi(mod)) from the mod list, and insert the mod from the .dll, so it can be debugged using VS.
-
             string[] args = Environment.GetCommandLineArgs();
 
             for (int i = 1; i < args.Length; i++)
@@ -272,10 +274,21 @@ namespace PoroCYon.MCT.Internal.Diagnostics
                         if (!File.Exists(args[i + 2]))
                             throw new FileNotFoundException("The assembly to debug (" + args[i + 2] + ") was not found.");
 
-                        DebugMod(args[i + 1], args[i + 2]);
-
+                        toDebug.Add(new Tuple<string, string>(args[i + 1], args[i + 2]));
                         break;
                 }
+        }
+        internal static void TryDebugMod(Assembly asm)
+        {
+            ModBase @base = Mods.modBases.FirstOrDefault(mb => mb.GetType().Assembly == asm);
+
+            if (@base == null)
+                throw new InvalidOperationException("This mod isn't loaded. Mct.Init() must be called from the mod itself.");
+
+            if (!toDebug.Any(t => t.Item1 == @base.modName))
+                return; // don't debug this one.
+
+            Trace.WriteLine("Debugging " + @base, "MCT Debugger");
         }
     }
 }

@@ -20,6 +20,7 @@ namespace PoroCYon.MCT.Tools
         internal readonly static string BuildingList = Consts.MctDirectory + ".building.json";
         internal static ModData current;
         internal static Dictionary<string, string> modDict;
+
         static JsonData list;
 
         /// <summary>
@@ -28,7 +29,7 @@ namespace PoroCYon.MCT.Tools
         /// <param name="folder">The mod's folder. Either an absolute path,
         /// relative to the working directory or the name of a folder in the Mods\Sources folder</param>
         /// <returns>The output of the compiler.</returns>
-        public static CompilerOutput CompileFromSource(string folder)
+        public static CompilerOutput CompileFromSource  (string folder)
         {
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
@@ -129,17 +130,6 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
-            if (!BeginCompile(assemblyPath))
-                return CreateOutput(new List<CompilerError>()
-                {
-                    new CompilerError()
-                    {
-                        Cause = new CompilerException("Mod already building!"),
-                        FilePath = assemblyPath,
-                        IsWarning = true,
-                        Message = "The mod is already being built."
-                    }
-                });
             current.OriginPath = assemblyPath;
             current.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
 
@@ -151,13 +141,13 @@ namespace PoroCYon.MCT.Tools
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
-                    {
-                        new CompilerError()
                         {
-                            Cause = new FileNotFoundException("File '" + assemblyPath + "' not found."),
-                            Message = "The assembly to build the mod from (" + assemblyPath + ") was not found."
+                            new CompilerError()
+                            {
+                                Cause = new FileNotFoundException("File '" + assemblyPath + "' not found."),
+                                Message = "The assembly '" + assemblyPath + "' was not found."
+                            }
                         }
-                    }
                     };
                 #endregion
 
@@ -174,14 +164,14 @@ namespace PoroCYon.MCT.Tools
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
-                    {
-                        new CompilerError()
                         {
-                            Cause = e,
-                            Message = "The assembly is not a manged assembly -or- is not compiled with the x86 architecture.",
-                            FilePath = assemblyPath
+                            new CompilerError()
+                            {
+                                Cause = e,
+                                Message = "The assembly is not a manged assembly -or- is not compiled with the x86 architecture.",
+                                FilePath = assemblyPath
+                            }
                         }
-                    }
                     };
                 }
                 catch (Exception e)
@@ -190,36 +180,19 @@ namespace PoroCYon.MCT.Tools
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
-                    {
-                        new CompilerError()
                         {
-                            Cause = e,
-                            Message = "The assembly could not be loaded.",
-                            FilePath = assemblyPath
+                            new CompilerError()
+                            {
+                                Cause = e,
+                                Message = "The assembly could not be loaded.",
+                                FilePath = assemblyPath
+                            }
                         }
-                    }
                     };
                 }
                 #endregion
 
-                CompilerOutput outp;
-
-                var extracted = Extractor.ExtractData(asm);
-                outp = CreateOutput(extracted.Item3);
-                if (!outp.Succeeded)
-                {
-                    EndCompile(assemblyPath);
-                    return outp;
-                }
-
-                outp = Validate(extracted.Item1, extracted.Item2, true);
-                if (!outp.Succeeded)
-                {
-                    EndCompile(assemblyPath);
-                    return outp;
-                }
-
-                return MainCompileStuff(current, asm);
+                return CompileFromAssembly(asm);
             }
             catch (Exception e)
             {
@@ -231,6 +204,62 @@ namespace PoroCYon.MCT.Tools
                     {
                         Cause = e,
                         FilePath = assemblyPath,
+                        IsWarning = false,
+                        Message = "An unexpected error occured while compiling."
+                    }
+                });
+            }
+        }
+        /// <summary>
+        /// Compiles a mod from a managed assembly.
+        /// </summary>
+        /// <param name="asm">The assembly to compile.</param>
+        /// <returns>The output of the compiler.</returns>
+        public static CompilerOutput CompileFromAssembly(Assembly asm)
+        {
+            if (!BeginCompile(asm.Location))
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = new CompilerException("Mod already building!"),
+                        FilePath = asm.Location,
+                        IsWarning = true,
+                        Message = "The mod is already being built."
+                    }
+                });
+
+            try
+            {
+                CompilerOutput outp;
+
+                var extracted = Extractor.ExtractData(asm);
+                outp = CreateOutput(extracted.Item3);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(asm.Location);
+                    return outp;
+                }
+
+                outp = Validate(extracted.Item1, extracted.Item2, true);
+                if (!outp.Succeeded)
+                {
+                    EndCompile(asm.Location);
+                    return outp;
+                }
+
+                return MainCompileStuff(current, asm);
+            }
+            catch (Exception e)
+            {
+                EndCompile(asm.Location);
+
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = e,
+                        FilePath = asm.Location,
                         IsWarning = false,
                         Message = "An unexpected error occured while compiling."
                     }
@@ -289,11 +318,12 @@ namespace PoroCYon.MCT.Tools
 
             return true;
         }
-        static void EndCompile(string path)
+        static void   EndCompile(string path)
         {
             RemoveBuilding(path);
             //Directory.Delete(Path.GetTempPath() + "\\MCT", true);
         }
+
         static CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
         {
             if (asm == null)
@@ -314,6 +344,7 @@ namespace PoroCYon.MCT.Tools
 
             return outp;
         }
+
         static bool AppendBuilding(string path)
         {
             string json = "[]";

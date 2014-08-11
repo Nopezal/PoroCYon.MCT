@@ -46,6 +46,9 @@
   <PropertyGroup>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <RunPostBuildEvent>OnBuildSuccess</RunPostBuildEvent>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Accessibility" />
     <Reference Include="CustomMarshalers" />
@@ -114,6 +117,7 @@
     <Compile Include="Internal\Versioning\UpdatePage.cs" />
     <Compile Include="Interop\ModMessages.cs" />
     <Compile Include="Invasion.cs" />
+    <Compile Include="ModControlling\ModController.cs" />
     <Compile Include="ObjectModel\Entity.cs" />
     <Compile Include="ObjectModel\ICaretObject.cs" />
     <Compile Include="ObjectModel\IControlParent.cs" />
@@ -190,22 +194,18 @@
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>
-    <PostBuildEvent>if "%25username%25"=="Pieter" (
-        copy "$(TargetPath)" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetFileName)" /y
-        copy "$(TargetDir)$(TargetName).pdb" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).pdb" /y
+    <PostBuildEvent>
+copy "$(TargetPath)" "%25tapibindir%25\$(TargetFileName)" /y
+copy "$(TargetDir)$(TargetName).pdb" "%25tapibindir%25\$(TargetName).pdb" /y
+copy "$(TargetDir)$(TargetName).xml" "%25tapibindir%25\$(TargetName).xml" /y
 
+if "%25username%25"=="Pieter" (
     if "$(ConfigurationName)"=="Release" (
         copy "$(SolutionDir)Version.xml" "%25userprofile%25\Dropbox\Public\MCT\Version.xml"
-
-        copy "$(TargetDir)$(TargetName).xml" "%25programfiles(x86)%25\Steam\steamapps\Common\Terraria\$(TargetName).xml" /y
 
         copy "$(TargetPath)" "%25userprofile%25\Dropbox\Public\MCT\$(TargetFileName)" /y
         copy "$(TargetDir)$(TargetName).pdb" "%25userprofile%25\Dropbox\Public\MCT\$(TargetName).pdb" /y
         copy "$(TargetDir)$(TargetName).xml" "%25userprofile%25\Dropbox\Public\MCT\$(TargetName).xml" /y
-
-        copy "$(TargetDir)PoroCYon.XnaExtensions.dll" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.dll" /y
-        copy "$(TargetDir)PoroCYon.XnaExtensions.pdb" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.pdb" /y
-        copy "$(TargetDir)PoroCYon.XnaExtensions.xml" "%25userprofile%25\Dropbox\Public\MCT\PoroCYon.XnaExtensions.xml" /y
 
         copy "$(ProjectDir)Schemas\ModInfoSchema.json" "%25userprofile%25\Dropbox\Public\MCT\Schemas\ModInfoSchema.json" /y
         copy "$(ProjectDir)Schemas\ItemSchema.json" "%25userprofile%25\Dropbox\Public\MCT\Schemas\ItemSchema.json" /y

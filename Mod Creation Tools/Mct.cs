@@ -8,13 +8,14 @@ using System.Text;
 using System.Windows.Forms;
 using LitJson;
 using TAPI;
+using PoroCYon.MCT.Content;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Internal.Diagnostics;
 using PoroCYon.MCT.Internal.ModClasses;
+using PoroCYon.MCT.ModControlling;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
-using PoroCYon.MCT.Content;
 
 namespace PoroCYon.MCT
 {
@@ -24,6 +25,13 @@ namespace PoroCYon.MCT
     /// </summary>
     public static class Mct
     {
+#pragma warning disable 414
+        readonly static string
+            fileName     = "PoroCYon.MCT.tapi",
+            internalName = "PoroCYon.MCT"     ,
+            displayName  = "PoroCYon.MCT"     ;
+#pragma warning restore 414
+
         /// <summary>
         /// Wether the MCT is initalized or not
         /// </summary>
@@ -53,45 +61,48 @@ namespace PoroCYon.MCT
         {
             // hacky stuff #1
             // add mod etc to list...
+            ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), typeof(Mod), 0, displayName);
 
+            // the old way is redundant now, but keeping it here
+            /*
             Assembly code = Assembly.GetExecutingAssembly();
 
             JsonData modInfo = JsonMapper.ToObject(ReadResource("ModInfo.json"));
 
-            const string
-                MODFILE = "PoroCYon.MCT.tapi",
-                INTERNALNAME = "PoroCYon.MCT",
-                DISPLAYNAME = "Mod Creation Tools";
+            Mod mod = new Mod();
 
-            ModBase modBase = new Mod();
+            mod.code     = code;
+            mod.fileName = fileName;
+            mod.modName  = internalName;
+            mod.modInfo  = new ModInfo(modInfo);
 
-            modBase.code = Assembly.GetExecutingAssembly();
-            modBase.fileName = MODFILE;
-            modBase.modName = DISPLAYNAME;
-            modBase.modInfo = new ModInfo(modInfo);
+            mod.modIndex = 0;
 
-            modBase.modIndex = 0;
+            mod.dlls = new List<Assembly>();
+            mod.files = new Dictionary<string, byte[]>();
 
             foreach (ModBase @base in Mods.modBases)
                 @base.modIndex++;
 
-            Mods.loadOrder.Insert(0, INTERNALNAME);
-            Mods.modBases.Insert(0, modBase);
+            Mods.loadOrder.Insert(0, internalName);
+            Mods.modBases .Insert(0, mod     );
 
             #region instantiate mod[...]
-            modBase.modPlayers.Add(new MPlayer(modBase, null));
-            modBase.modWorlds.Add(new MWorld(modBase));
-            //modBase.modItems.Add(new MItem(modBase, null));
-            //modBase.modNPCs.Add(new MNPC(modBase, null));
-            modBase.modPrefixes.Add(new MPrefix(modBase));
-            modBase.modProjectiles.Add(new MProj(modBase, null));
-            modBase.modInterfaces.Add(new MUI(modBase));
+            mod.modPlayers    .Add(new MPlayer(mod, null));
+            mod.modWorlds     .Add(new MWorld (mod      ));
+            mod.modItems      .Add(new MItem  (mod, null));
+            mod.modNPCs       .Add(new MNPC   (mod, null));
+            mod.modPrefixes   .Add(new MPrefix(mod      ));
+            mod.modProjectiles.Add(new MProj  (mod, null));
+            mod.modInterfaces .Add(new MUI    (mod      ));
+            mod.modTileTypes  .Add(new MTile  (mod      ));
             #endregion
 
-            ModsLoadContent.Load(Assembly.GetExecutingAssembly(), modBase);
-            modBase.OnLoad();
+            ModsLoadContent.Load(code, mod);
+            mod.OnLoad();
 
-            modBase.modPrefixes[0].Init(null);
+            mod.modPrefixes[0].Init(null);
+            */
         }
         static void LoadData()
         {
@@ -111,16 +122,19 @@ namespace PoroCYon.MCT
         /// </summary>
         public static void Init()
         {
+            if (!Inited)
+                ModDebugger.GetModsToDebug();
+
+            ModDebugger.TryDebugMod(Assembly.GetCallingAssembly());
+
             if (Inited)
                 return;
+
+            Inited = true; // prevent stack overflow (onload -> init -> loaddebugmod -> onload -> ...) or things getting messed up by being loaded twice.
 
             InsertMctMod();
 
             LoadData();
-
-            Inited = true; // prevent stack overflow (onload -> init -> loaddebugmod -> onload -> ...)
-
-            ModDebugger.LoadDebugMods();
         }
 
         internal static void Uninit()
@@ -131,6 +145,7 @@ namespace PoroCYon.MCT
             Invasion.invasionTypes.Clear();
 
             ModDebugger.tempBases.Clear();
+            ModDebugger.toDebug.Clear();
 
             Mod.instance = null;
 

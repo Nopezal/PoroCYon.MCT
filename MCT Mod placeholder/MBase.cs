@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using PoroCYon.MCT.ModControlling;
 using TAPI;
 
 namespace PoroCYon.MCT
@@ -25,6 +26,10 @@ namespace PoroCYon.MCT
             // this is so it's using the .dll (shared objects) instead from some byte array (not so shared objects),
             // but that would make the modinfo display chrash. Adding this .tapi file and removing it from the list by code fixes it.
 
+            ModController.UnloadMod(this);
+
+            // idem here (see Mct.cs)
+            /*
             modInfo = new ModInfo();
             modInterfaces = new List<ModInterface>();
             modItems = new List<ModItem>();
@@ -40,7 +45,7 @@ namespace PoroCYon.MCT
             Mods.loadOrderBackup.RemoveAt(tempIndex);
 
             Mods.dlls.Remove(GetType().Assembly);
-            Mods.modJsons.Remove(modName);
+            Mods.modJsons  .Remove(modName);
             Mods.modOptions.Remove(modName);
 
             modIndex = -1;
@@ -51,6 +56,7 @@ namespace PoroCYon.MCT
             code = null;
 
             Mods.modBases.Remove(this);
+            */
         }
     }
 }

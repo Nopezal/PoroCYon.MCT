@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.0.2" String="1.3.0.2" />
+  <CurrentVersion Number="4" Version="1.3.0.3" String="1.3.0.3" />
   
   <Changelog>
+    <Release Version="1.3.0.3">
+      <Change>Made the hacky core of the MCT public (the methods, that is).</Change>
+    </Release>
     <Release Version="1.3.0.2">
       <Change>Fixed a tiny bug in the MCT Tools.</Change>
       <Change>The mouse is also blocked when the Terraria window is inactive.</Change>

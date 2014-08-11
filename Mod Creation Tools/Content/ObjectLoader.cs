@@ -14,25 +14,6 @@ using TAPI;
 namespace PoroCYon.MCT.Content
 {
     /// <summary>
-    /// How to handle ModEntity attachments when there is already a ModEntity attached.
-    /// </summary>
-    public enum AttachMode
-    {
-        /// <summary>
-        /// Set the ModEntity if there is no ModEntity attached. Otherwise, throw an exception.
-        /// </summary>
-        New,
-        /// <summary>
-        /// Overwrite the ModEntity if there is already one attached.
-        /// </summary>
-        Overwrite,
-        /// <summary>
-        /// Append the ModEntity to the array if there is already one attached.
-        /// </summary>
-        Append
-    }
-
-    /// <summary>
     /// Provides helper functions to add content by code
     /// </summary>
     public static class ObjectLoader
@@ -522,48 +503,6 @@ namespace PoroCYon.MCT.Content
             Invasion.invasionTypes.Add(invasion.ID, @base.modName + ":" + name);
 
             return invasion.ID;
-        }
-
-        /// <summary>
-        /// Attaches a ModEntity to a CodableEntity.
-        /// </summary>
-        /// <param name="entity">The CodableEntity where the ModEntity will be attached to.</param>
-        /// <param name="toAttach">The ModEntity to attach to the CodableEntity.</param>
-        /// <param name="mode">How to handle attached ModEntities.</param>
-        public static void AttachModEntity(this CodableEntity entity, ModEntity toAttach, AttachMode mode = AttachMode.New)
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-            if (toAttach == null)
-                throw new ArgumentNullException("toAttach");
-
-            if (entity.subClass != null)
-                switch (mode)
-                {
-                    case AttachMode.Append:
-                        if (entity.subClass != null)
-                        {
-                            Array.Resize(ref entity.allSubClasses, entity.allSubClasses.Length + 1);
-                            entity.allSubClasses[entity.allSubClasses.Length - 1] = toAttach;
-                        }
-                        else
-                        {
-                            entity.subClass = toAttach;
-                            entity.modBase = toAttach.modBase;
-                        }
-                        break;
-                    case AttachMode.New:
-                        throw new InvalidOperationException("There is already a ModEntity attached!");
-                    case AttachMode.Overwrite:
-                        entity.subClass = toAttach;
-                        entity.modBase = toAttach.modBase;
-                        break;
-                }
-            else
-            {
-                entity.subClass = toAttach;
-                entity.modBase = toAttach.modBase;
-            }
         }
     }
 }
