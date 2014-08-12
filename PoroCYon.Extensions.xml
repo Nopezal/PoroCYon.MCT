@@ -385,9 +385,29 @@
             " and "
             </summary>
         </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Arrow">
+            <summary>
+            "->"
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Backslash">
+            <summary>
+            "\"
+            </summary>
+        </member>
         <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Comma">
             <summary>
             ", "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Dot">
+            <summary>
+            "."
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.DoubleColon">
+            <summary>
+            "::"
             </summary>
         </member>
         <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Plus">
@@ -398,6 +418,11 @@
         <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Semicolon">
             <summary>
             "; "
+            </summary>
+        </member>
+        <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Slash">
+            <summary>
+            "/"
             </summary>
         </member>
         <member name="F:PoroCYon.Extensions.Collections.CommonJoinValues.Space">
@@ -730,6 +755,53 @@
             An object that cannot be null.
             </summary>
             <typeparam name="T">The type of the wrapped object.</typeparam>
+        </member>
+        <member name="T:PoroCYon.Extensions.Threading.ThreadingHelper">
+            <summary>
+            Contains (multi)threading-related helper methods.
+            </summary>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.Wait(System.Func{System.Boolean},System.Int32)">
+            <summary>
+            Suspends the thread while a certain predicate returns true.
+            </summary>
+            <param name="predicate">The predicate used to determine wether to suspend the thread or not.</param>
+            <param name="millis">The amount of milliseconds to suspend the thread after each predicate call.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.Wait(System.Func{System.Boolean},System.TimeSpan)">
+            <summary>
+            Suspends the thread while a certain predicate returns true.
+            </summary>
+            <param name="predicate">The predicate used to determine wether to suspend the thread or not.</param>
+            <param name="span">The amount of time to suspend the thread after each predicate call.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.WaitUntilInvoked(System.EventHandler,System.Int32)">
+            <summary>
+            Suspends the thread until an event is invoked.
+            </summary>
+            <param name="handler">The event to wait for.</param>
+            <param name="millis">The amount of milliseconds to suspend the thread after each predicate call.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.WaitUntilInvoked(System.EventHandler,System.TimeSpan)">
+            <summary>
+            Suspends the thread until an event is invoked.
+            </summary>
+            <param name="handler">The event to wait for.</param>
+            <param name="span">The amount of time to suspend the thread after each predicate call.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.WaitUntilInvoked``1(System.EventHandler{``0},System.Int32)">
+            <summary>
+            Suspends the thread until an event is invoked.
+            </summary>
+            <param name="handler">The event to wait for.</param>
+            <param name="millis">The amount of milliseconds to suspend the thread after each predicate call.</param>
+        </member>
+        <member name="M:PoroCYon.Extensions.Threading.ThreadingHelper.WaitUntilInvoked``1(System.EventHandler{``0},System.TimeSpan)">
+            <summary>
+            Suspends the thread until an event is invoked.
+            </summary>
+            <param name="handler">The event to wait for.</param>
+            <param name="span">The amount of time to suspend the thread after each predicate call.</param>
         </member>
         <member name="T:PoroCYon.Extensions.Union">
             <summary>
