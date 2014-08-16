@@ -218,7 +218,7 @@ namespace PoroCYon.MCT.Tools.Compiler
                     while (num2-- > 0)
                         bb.ReadByte();
 
-                    File.WriteAllBytes(assemblyFileName, bb.ReadBytes(bb.Left));
+                    File.WriteAllBytes(assemblyFileName, bb.ReadBytes((int)bb.Left));
                 }
             }
         }

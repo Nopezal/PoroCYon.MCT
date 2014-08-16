@@ -84,9 +84,7 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
                 length = *(int*)ptr;
             }
 
-            byte[] chars = bb.ReadBytes(length);
-
-            return Encoding.UTF8.GetString(chars);
+            return Encoding.UTF8.GetString(bb.ReadBytes(length));
         }
 
         internal static PlayerFile ReadPlayer(string path)
