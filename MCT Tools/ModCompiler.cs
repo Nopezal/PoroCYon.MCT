@@ -130,6 +130,18 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public static CompilerOutput CompileFromAssembly(string assemblyPath)
         {
+            if (!BeginCompile(assemblyPath))
+                return CreateOutput(new List<CompilerError>()
+                {
+                    new CompilerError()
+                    {
+                        Cause = new CompilerException("Mod already building!"),
+                        FilePath = assemblyPath,
+                        IsWarning = true,
+                        Message = "The mod is already being built."
+                    }
+                });
+
             current.OriginPath = assemblyPath;
             current.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
 
