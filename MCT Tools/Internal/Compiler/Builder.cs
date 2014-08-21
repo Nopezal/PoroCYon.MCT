@@ -29,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         {
             get;
             set;
-        }
+        } = LoggerVerbosity.Normal;
 
         public void Initialize(IEventSource eventSource)
         {
@@ -50,8 +50,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             };
             eventSource.WarningRaised += (s, e) =>
             {
-                //if (Verbosity >= LoggerVerbosity.Minimal)
-                //{
+                if (Verbosity >= LoggerVerbosity.Minimal)
+                {
                     CompilerError ce = new CompilerError()
                     {
                         Cause = new CompilerWarning(e.Message),
@@ -64,7 +64,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                     errors.Add(ce);
                     log.Add(ce);
-                //}
+                }
             };
             #region commented event hooking (except checking if succeeded)
             eventSource.BuildFinished += (s, e) =>
@@ -111,18 +111,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             //    if (Verbosity >= LoggerVerbosity.Diagnostic)
             //        log.Add("Task " + e.TaskFile + " (" + e.TaskName + ") started.");
             //};
-            //eventSource.MessageRaised += (s, e) =>
-            //{
-            //    if (e.Importance == MessageImportance.Low    && Verbosity >= LoggerVerbosity.Diagnostic ||
-            //        e.Importance == MessageImportance.Normal && Verbosity >= LoggerVerbosity.Detailed   ||
-            //        e.Importance == MessageImportance.High   && Verbosity >= LoggerVerbosity.Normal       )
-            //        log.Add(e.Message);
-            //};    
-            //eventSource.StatusEventRaised += (s, e) =>
-            //{
-            //    if (Verbosity >= LoggerVerbosity.Detailed)
-            //        log.Add(e.Message);
-            //};
+            eventSource.MessageRaised += (s, e) =>
+            {
+                if (e.Importance == MessageImportance.Low && Verbosity >= LoggerVerbosity.Diagnostic ||
+                    e.Importance == MessageImportance.Normal && Verbosity >= LoggerVerbosity.Detailed ||
+                    e.Importance == MessageImportance.High && Verbosity >= LoggerVerbosity.Normal)
+                    log.Add(e.Message);
+            };
+            eventSource.StatusEventRaised += (s, e) =>
+            {
+                if (Verbosity >= LoggerVerbosity.Detailed)
+                    log.Add(e.Message);
+            };
             #endregion
         }
         public void Shutdown() { }

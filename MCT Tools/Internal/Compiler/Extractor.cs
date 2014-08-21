@@ -71,14 +71,13 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         else
                             jsons.Add(current);
                     }
-                    else
+
+                    using (MemoryStream ms = new MemoryStream())
                     {
-                        MemoryStream ms = new MemoryStream();
                         s.CopyTo(ms);
 
-                        ms.Seek(0L, SeekOrigin.Begin);
-
-                        files.Add(name, ms.ToArray());
+                        if (name != "ModInfo.json")
+                            files.Add(Path.ChangeExtension(name, Path.GetExtension(name).ToLowerInvariant()), ms.ToArray());
                     }
                 }
 

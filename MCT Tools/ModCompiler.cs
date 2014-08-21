@@ -55,7 +55,7 @@ namespace PoroCYon.MCT.Tools
                         }
                     });
                 current.OriginPath = folder;
-                current.OriginName = new DirectoryInfo(folder).Name;
+                current.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
 
                 #region check if folder exists
                 if (!Directory.Exists(folder))

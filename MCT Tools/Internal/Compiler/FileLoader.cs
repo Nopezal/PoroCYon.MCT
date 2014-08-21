@@ -85,8 +85,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     else
                         jsons.Add(current);
                 }
-                else
-                    files.Add(relativeFileName, fileBin);
+
+                if (relativeFileName != "ModInfo.json")
+                    files.Add(Path.ChangeExtension(relativeFileName, Path.GetExtension(relativeFileName).ToLowerInvariant()), fileBin);
             }
 
             if (modInfo == null)

@@ -7,6 +7,7 @@ using Ionic.Zip;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using LitJson;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
@@ -36,6 +37,27 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 bb.Write("DebugInformation.pdb");
                 bb.Write(pdb.Length);
             }
+            //Uri baseUri = new Uri(File.Exists(mod.OriginPath) ? Path.GetDirectoryName(mod.OriginPath) : mod.OriginPath);
+
+            //List<Tuple<string, byte[]>> jsons = new List<Tuple<string, byte[]>>();
+            //for (int i = 1; i < mod.JSONs.Count; i++)
+            //{
+            //    if (mod.JSONs[i] == null)
+            //        continue;
+
+            //    Uri relative =  baseUri.MakeRelativeUri(new Uri(mod.JSONs[i].Path));
+            //    jsons.Add
+            //    (
+            //        var t = new Tuple<string, byte[]>
+            //        (
+            //            relative.OriginalString,
+            //            Encoding.UTF8.GetBytes(JsonMapper.ToJson(mod.JSONs[i].Json))
+            //        )
+            //    );
+
+            //    bb.Write(jsons[jsons.Count - 1].Item1       );
+            //    bb.Write(jsons[jsons.Count - 1].Item2.Length);
+            //}
             foreach (KeyValuePair<string, byte[]> current in mod.Files)
             {
                 bb.Write(current.Key);
@@ -44,6 +66,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (pdb != null)
                 bb.Write(pdb);
+            //for (int i = 0; i < jsons.Count; i++)
+            //    bb.Write(jsons[i].Item2);
             foreach (KeyValuePair<string, byte[]> current in mod.Files)
                 bb.Write(current.Value);
 
