@@ -135,6 +135,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
         static void LoadCompilers()
         {
+            if (!Directory.Exists(Consts.MctDirectory + "\\Compilers"))
+                Directory.CreateDirectory(Consts.MctDirectory + "\\Compilers");
+
             compilers.Clear();
 
             compilers.Add(new CSharpCompiler());

@@ -321,6 +321,12 @@ namespace PoroCYon.MCT.Tools
             if (!Debugger.IsAttached && AppendBuilding(path))
                 return false;
 
+            if (!Directory.Exists(Consts.MctDirectory))
+                Directory.CreateDirectory(Consts.MctDirectory);
+
+            if (!File.Exists(Consts.MctDirectory + "\\.building.json"))
+                File.WriteAllText(Consts.MctDirectory + "\\.building.json", "[]");
+
             current = new ModData();
 
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
