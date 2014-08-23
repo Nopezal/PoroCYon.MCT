@@ -195,7 +195,8 @@ namespace PoroCYon.MCT.ModControlling
             foreach (var m in mod.modProjectiles)
                 Defs.FillCallPriorities(m.GetType());
 
-            TileDef.FillCodeHandlers();
+            // seems to chrash?
+            //TileDef.FillCodeHandlers();
             #endregion
 
             ModsLoadContent.Load(asm, mod);
