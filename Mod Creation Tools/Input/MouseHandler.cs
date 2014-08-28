@@ -45,6 +45,16 @@ namespace PoroCYon.MCT.Input
             private set;
         }
         /// <summary>
+        /// Wether the right mouse button is pressed or not (returns false when Main.blockMouse or Player.mouseInterface is true)
+        /// </summary>
+        public bool SafeRight
+        {
+            get
+            {
+                return Right && !GInput.BlockMouse;
+            }
+        }
+        /// <summary>
         /// Wether the middle button (scroll wheel) is pressed or not
         /// </summary>
         public bool Middle

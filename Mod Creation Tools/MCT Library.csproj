@@ -118,6 +118,7 @@
     <Compile Include="Interop\ModMessages.cs" />
     <Compile Include="Invasion.cs" />
     <Compile Include="ModControlling\ModController.cs" />
+    <Compile Include="NativeMethods.cs" />
     <Compile Include="ObjectModel\Entity.cs" />
     <Compile Include="ObjectModel\ICaretObject.cs" />
     <Compile Include="ObjectModel\IControlParent.cs" />

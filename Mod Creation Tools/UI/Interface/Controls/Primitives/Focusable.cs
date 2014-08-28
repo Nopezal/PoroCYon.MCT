@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
+using Terraria;
 using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.ObjectModel;
@@ -255,7 +256,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls.Primitives
                 IsHovered = false;
             }
 
-            if ((GInput.Mouse.Left && IsHovered) || ForceFocus)
+            if ((GInput.Mouse.Left && Main.hasFocus && IsHovered) || ForceFocus)
             {
                 if (!IsFocused)
                     FocusGot();
