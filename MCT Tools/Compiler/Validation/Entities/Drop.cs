@@ -25,21 +25,13 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             List<CompilerError> errors = new List<CompilerError>();
 
             AddIfNotNull(SetJsonValue(json, "stack", ref stack, 1), errors);
-            if (stack < 0)
+            if (stack <= 0)
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
                     IsWarning = false,
-                    Message = "'stack' is below 0. Please remove the Drop object from the array."
-                });
-            else if (stack == 1)
-                errors.Add(new CompilerError()
-                {
-                    Cause = new CompilerWarning(),
-                    FilePath = json.Path,
-                    IsWarning = true,
-                    Message = "'stack' is equal to 0. It is a good idea to remove the Drop object from the array."
+                    Message = "'stack' is equal to or below 0. Please remove the Drop object from the array, or change the stack."
                 });
             AddIfNotNull(SetJsonValue(json, "item",  ref item), errors);
             AddIfNotNull(SetJsonValue(json, "chance", ref chance, 0f), errors);
@@ -49,23 +41,15 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
                     IsWarning = true,
-                    Message = "'chance' is above 1. Change it to 1."
+                    Message = "'chance' is above 1. Set it to 1."
                 });
-            if (chance < 0f)
+            if (chance <= 0f)
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
                     IsWarning = true,
-                    Message = "'chance' is below 0. Please remove the Drop object from the array."
-                });
-            else if (chance == 0f)
-                errors.Add(new CompilerError()
-                {
-                    Cause = new CompilerWarning(),
-                    FilePath = json.Path,
-                    IsWarning = true,
-                    Message = "'chance' is equal to 0. It is a good idea to remove the Drop object from the array."
+                    Message = "'chance' is equal to or below 0. Please remove the Drop object from the array, or change it."
                 });
 
             return errors;

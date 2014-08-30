@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using LitJson;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 {
@@ -17,7 +18,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public bool netAlways = false;
 
         // informative
-        public string displayName;
         public string occupation = "The Town NPC";
         public int value = 0;
 
@@ -53,9 +53,9 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public bool lavaImmune = false;
         public bool noGravity = false;
         public bool noTileCollide = false;
-        public object[] buffImmune;
-        public object soundHit = 0;
-        public object soundKilled = 0;
+        public List<Union<string, int>> buffImmune = new List<Union<string, int>>();
+        public Union<string, int> soundHit = 0;
+        public Union<string, int> soundKilled = 0;
         public string music = String.Empty;
         public List<Drop> drops = new List<Drop>();
 #pragma warning restore 1591
@@ -75,7 +75,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "netAlways", ref netAlways, false), errors);
 
             // informative
-            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, Path.GetFileNameWithoutExtension(json.Path)), errors);
             AddIfNotNull(SetJsonValue(json, "occupation",  ref occupation,  Path.GetFileNameWithoutExtension(json.Path)), errors);
             #region value
             if (json.Json.Has("value"))
@@ -169,34 +168,37 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "lavaImmune", ref lavaImmune, false), errors);
             AddIfNotNull(SetJsonValue(json, "noGravity", ref noGravity, false), errors);
             AddIfNotNull(SetJsonValue(json, "noTileCollide", ref noTileCollide, false), errors);
-            AddIfNotNull(SetJsonValue(json, "buffImmune", ref buffImmune, new object[0]), errors);
-            for (int i = 0; i < buffImmune.Length; i++)
-                if (!(buffImmune[i] is int) && !(buffImmune[i] is string))
+
+            if (json.Json.Has("buffImmune"))
+            {
+                JsonData j = json.Json["buffImmune"];
+
+                if (!j.IsArray)
                     errors.Add(new CompilerError()
                     {
                         Cause = new ArrayTypeMismatchException(),
                         FilePath = json.Path,
                         IsWarning = false,
-                        Message = "'buffImmune['" + i + "]' must be an int or a string, but is a " + buffImmune[i].GetType()
+                        Message = "'buffImmune must be an array, but is a " + j.GetType()
                     });
-            AddIfNotNull(SetJsonValue(json, "soundHit", ref soundHit, 0), errors);
-            if (!(soundHit is int) && !(soundHit is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new ArrayTypeMismatchException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'soundHit' must be an int or a string, but is a " + soundHit.GetType()
-                });
-            AddIfNotNull(SetJsonValue(json, "soundKilled", ref soundKilled, 0), errors);
-            if (!(soundKilled is int) && !(soundKilled is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new ArrayTypeMismatchException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'soundKilled' must be an int or a string, but is a " + soundKilled.GetType()
-                });
+                else
+                    for (int i = 0; i < j.Count; i++)
+                        if (j[i].IsString)
+                            buffImmune.Add((string)j[i]);
+                        else if (j[i].IsInt)
+                            buffImmune.Add((int   )j[i]);
+                        else
+                            errors.Add(new CompilerError()
+                            {
+                                Cause = new ArrayTypeMismatchException(),
+                                FilePath = json.Path,
+                                IsWarning = false,
+                                Message = "'buffImmune['" + i + "]' must be an int or a string, but is a " + buffImmune[i].GetType()
+                            });
+            }
+
+            AddIfNotNull(SetJsonValue(json, "soundHit", ref soundHit, soundHit), errors);
+            AddIfNotNull(SetJsonValue(json, "soundKilled", ref soundKilled, soundKilled), errors);
             AddIfNotNull(SetJsonValue(json, "music", ref music, String.Empty), errors);
 
             #region drops

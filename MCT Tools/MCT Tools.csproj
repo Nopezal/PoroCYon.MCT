@@ -93,6 +93,8 @@
     <Compile Include="Compiler\CodeDomCompilerHelper.cs" />
     <Compile Include="Compiler\CompilerError,Warning.cs" />
     <Compile Include="Compiler\ICompiler.cs" />
+    <Compile Include="Compiler\ObjectNotFoundException.cs" />
+    <Compile Include="Compiler\Validation\Entities\Wall.cs" />
     <Compile Include="FilePorter.cs" />
     <Compile Include="Internal\Compiler\Builder.cs" />
     <Compile Include="Internal\Compiler\Checker.cs" />

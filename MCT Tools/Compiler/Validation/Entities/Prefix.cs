@@ -13,7 +13,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     public class Prefix : ValidatorObject
     {
 #pragma warning disable 1591
-        public string displayName;
+        public string internalName;
         public int tier;
         public float value, damage;
         public int crit;
@@ -33,7 +33,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, Path.GetFileNameWithoutExtension(json.Path)), errors);
+            internalName = ModCompiler.current.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
 
             AddIfNotNull(SetJsonValue(json, "tier", ref tier, 0), errors);
 

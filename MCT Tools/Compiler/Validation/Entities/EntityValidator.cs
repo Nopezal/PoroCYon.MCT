@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using TAPI;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 {
@@ -12,6 +13,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     {
 #pragma warning disable 1591
         public string code;
+        public string displayName;
+        public string internalName;
 
         // appearance
         public string texture = String.Empty;
@@ -31,9 +34,17 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(SetJsonValue(json, "code", ref code, ModCompiler.current.Info.internalName + "." + baseType + "." + Path.GetFileNameWithoutExtension(json.Path)), errors);
+            internalName = ModCompiler.current.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
 
-            AddIfNotNull(SetJsonValue(json, "texture", ref texture, "Item/" + Path.GetFileNameWithoutExtension(json.Path)), errors);
+            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
+
+            AddIfNotNull(SetJsonValue(json, "code", ref code, baseType + "." + Defs.ParseName(internalName)), errors);
+            if (code.Contains(':'))
+                code = code.Replace(':', '.');
+            else
+                code = ModCompiler.current.Info.internalName + "." + code;
+
+            AddIfNotNull(SetJsonValue(json, "texture", ref texture, baseFolder + "/" + json.Path), errors);
             if (!ModCompiler.current.files.ContainsKey(texture + ".png"))
                 errors.Add(new CompilerError()
                 {
@@ -56,9 +67,9 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                 size = new int[2] { 16, 16 };
             }
-            AddIfNotNull(SetJsonValue(json, "width", ref size[0], size[0]), errors);
+            AddIfNotNull(SetJsonValue(json, "width" , ref size[0], size[0]), errors);
             AddIfNotNull(SetJsonValue(json, "height", ref size[1], size[1]), errors);
-            if (size[0] < 0 || size[1] < 0)
+            if (size[0] <= 0 || size[1] <= 0)
                 errors.Add(new CompilerError()
                 {
                     Cause = new ArgumentOutOfRangeException(),

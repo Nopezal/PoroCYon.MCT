@@ -159,6 +159,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             List<CompilerError> errors = new List<CompilerError>();
 
             AddIfNotNull(SetJsonValue(json, "internalName", ref internalName), errors);
+
+            if (internalName == "g")
+                errors.Add(new CompilerError()
+                {
+                    Cause = new ArgumentException("This internal name is not allowed."),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "The internal name 'g' cannot be used, as it is used as the prefix for crafting groups."
+                });
+
             AddIfNotNull(SetJsonValue(json, "includePDB", ref includePDB, false), errors);
             AddIfNotNull(SetJsonValue(json, "warnOnReload", ref warnOnReload, false), errors);
             AddIfNotNull(SetJsonValue(json, "extractDLL", ref extractDLL, false), errors);

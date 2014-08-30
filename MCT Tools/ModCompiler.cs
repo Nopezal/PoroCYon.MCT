@@ -351,7 +351,7 @@ namespace PoroCYon.MCT.Tools
 
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(Checker.Check(asm));
+            errors.AddRange(Checker.Check());
             errors.AddRange(Writer.Write(mod));
 
             CompilerOutput outp = CreateOutput(errors);

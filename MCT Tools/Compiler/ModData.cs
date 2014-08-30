@@ -31,7 +31,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
+        } = new ModInfo();
         /// <summary>
         /// Gets the mod options of the mod.
         /// </summary>
@@ -39,7 +39,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
+        } = new ModOptions();
         /// <summary>
         /// Gets the craft groups of the mod.
         /// </summary>
@@ -47,7 +47,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        }
+        } = new CraftGroups();
 
         /// <summary>
         /// Gets all buffs in the mod.

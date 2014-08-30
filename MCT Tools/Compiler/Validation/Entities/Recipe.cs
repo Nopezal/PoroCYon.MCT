@@ -36,7 +36,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
                         IsWarning = false,
-                        Message = "Key 'items' is a " + json.Json["items"] + ", not an object."
+                        Message = "'items' is a " + json.Json["items"].GetJsonType() + ", not an object."
                     });
                 else
                 {
@@ -44,32 +44,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                     foreach (DictionaryEntry kvp in its)
                     {
-                        if (kvp.Key.ToString().StartsWith("g:"))
-                        {
-                            string icgName = kvp.Key.ToString().Substring(2);
-                            bool found = false;
-
-                            for (int i = 0; i < ModCompiler.current.CraftGroups.itemGroups.Count; i++)
-                                if (ModCompiler.current.CraftGroups.itemGroups[i].name == icgName)
-                                {
-                                    found = true;
-                                    break;
-                                }
-
-                            if (!found)
-                            {
-                                errors.Add(new CompilerError()
-                                {
-                                    Cause = new KeyNotFoundException(),
-                                    FilePath = json.Path,
-                                    IsWarning = false,
-                                    Message = "CraftGroup " + kvp.Key + " not found."
-                                });
-
-                                continue;
-                            }
-                        }
-
                         if (items.ContainsKey(kvp.Key.ToString()))
                         {
                             errors.Add(new CompilerError()
@@ -114,6 +88,15 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     IsWarning = false,
                     Message = "Required key 'items' not found."
                 });
+
+            if (items.Count == 0)
+                errors.Add(new CompilerError()
+                {
+                    Cause = new InvalidCastException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "The Recipe does not contain any items."
+                });
             #endregion
             #region tiles
             if (json.Json.Has("tiles"))
@@ -124,7 +107,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
                         IsWarning = false,
-                        Message = "Key 'tiles' is a " + json.Json["tiles"] + ", not an array of string."
+                        Message = "Key 'tiles' is a " + json.Json["tiles"] + ", not an array of strings."
                     });
                 else
                 {
@@ -139,38 +122,11 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                                 Cause = new InvalidCastException(),
                                 FilePath = json.Path,
                                 IsWarning = false,
-                                Message = "'tiles[" + i + "]' is a " + tis[i] + ", not a string."
+                                Message = "'tiles[" + i + "]' is a " + tis[i].GetJsonType() + ", not a string."
                             });
 
                             continue;
                         }
-
-                        if (tis[i].ToString().StartsWith("g:"))
-                        {
-                            string icgName = tis[i].ToString().Substring(2);
-                            bool found = false;
-
-                            for (int j = 0; j < ModCompiler.current.CraftGroups.tileGroups.Count; j++)
-                                if (ModCompiler.current.CraftGroups.tileGroups[j].name == icgName)
-                                {
-                                    found = true;
-                                    break;
-                                }
-
-                            if (!found)
-                            {
-                                errors.Add(new CompilerError()
-                                {
-                                    Cause = new KeyNotFoundException(),
-                                    FilePath = json.Path,
-                                    IsWarning = false,
-                                    Message = "CraftGroup " + tis[i] + " not found."
-                                });
-
-                                continue;
-                            }
-                        }
-
 
                         if (!tiles.Contains((string)tis[i]))
                             tiles.Add((string)tis[i]);
@@ -185,9 +141,26 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     IsWarning = false,
                     Message = "Required key 'tiles' not found."
                 });
+
+            if (tiles.Count == 0)
+                errors.Add(new CompilerError()
+                {
+                    Cause = new KeyNotFoundException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "The Recipe does not contain any tiles."
+                });
             #endregion
 
             AddIfNotNull(SetJsonValue(json, "creates", ref creates, 1), errors);
+            if (creates <= 0)
+                errors.Add(new CompilerError()
+                {
+                    Cause = new ArgumentOutOfRangeException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "'creates' is equal to or below 0. Please remove the Recipe object from the array, or change it."
+                });
 
             return errors;
         }

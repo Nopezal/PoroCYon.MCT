@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     public class Buff : EntityValidator
     {
 #pragma warning disable 1591
-        public string displayName, tip;
+        public string tip;
         public bool debuff, vanityPet, lightPet, enchantment, noTimer;
 #pragma warning restore 1591
 
@@ -25,7 +25,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             errors.AddRange(CreateAndValidateBase(json, "Buff", "Buffs"));
 
-            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName), errors);
             AddIfNotNull(SetJsonValue(json, "tip",         ref tip        ), errors);
 
             AddIfNotNull(SetJsonValue(json, "debuff",      ref debuff,      false), errors);

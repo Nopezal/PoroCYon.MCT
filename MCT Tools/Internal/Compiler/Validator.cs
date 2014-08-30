@@ -86,19 +86,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                         // I'm too lazy to type casts today
                         if (obj is Buff)
-                            ModCompiler.current.buffs.Add(obj as Buff);
+                            ModCompiler.current.buffs.Add (obj as Buff);
                         if (obj is Item)
-                            ModCompiler.current.items.Add(obj as Item);
+                            ModCompiler.current.items.Add (obj as Item);
                         if (obj is NPC)
-                            ModCompiler.current.npcs.Add(obj as NPC);
+                            ModCompiler.current.npcs.Add  (obj as NPC);
                         if (obj is Prefix)
                             ModCompiler.current.pfixes.Add(obj as Prefix);
                         if (obj is Projectile)
-                            ModCompiler.current.projs.Add(obj as Projectile);
+                            ModCompiler.current.projs.Add (obj as Projectile);
                         if (obj is Tile)
-                            ModCompiler.current.tiles.Add(obj as Tile);
+                            ModCompiler.current.tiles.Add (obj as Tile);
                         if (obj is Wall)
-                            ModCompiler.current.walls.Add(obj as Wall);
+                            ModCompiler.current.walls.Add (obj as Wall);
                     }
                 }
             }

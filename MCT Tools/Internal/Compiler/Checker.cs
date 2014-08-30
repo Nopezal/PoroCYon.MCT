@@ -4,20 +4,24 @@ using System.Linq;
 using System.Reflection;
 using System.Runtime;
 using Microsoft.Xna.Framework;
+using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.MCT.Tools.ModCompiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    using Item   = Tools.Compiler.Validation.Entities.Item  ;
-    using NPC    = Tools.Compiler.Validation.Entities.NPC   ;
+    using Item = Tools.Compiler.Validation.Entities.Item;
+    using NPC = Tools.Compiler.Validation.Entities.NPC;
     using Recipe = Tools.Compiler.Validation.Entities.Recipe;
 
     static class Checker
     {
-        //static Game main;
+        // static Game main;
+
+        static bool loaded = false;
 
         [Obsolete]
         static void CreateMainAndLoadContent()
@@ -62,21 +66,32 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             mType.GetMethod("LoadContent", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase).Invoke(main, null);
             Environment.CurrentDirectory = dir;*/
         }
-        static void LoadDefs()
+
+        internal static void LoadDefs()
         {
+            if (loaded)
+                return;
+
+            Main.dedServ = true;
+            Main.rand = new Random();
+            Main.player[Main.myPlayer] = new Player();
+            Defs.itemNextType = Main.maxItemTypes;
+
+            PropertyInfo pi = typeof(API).GetProperty("SoundAvailable", BindingFlags.Static | BindingFlags.Public);
+            pi.SetValue(null, false, BindingFlags.NonPublic | BindingFlags.Static, null, null, null);
+
             // CreateMainAndLoadContent();
 
             Defs.FillVanillaBuffNames();
-            //Defs.FillVanillaBuffs();
-            Defs.FillVanillaGores();
+            Defs.FillVanillaBuffs();
             Defs.FillVanillaItems();
             Defs.FillVanillaNPCs();
             Defs.FillVanillaPrefixes();
             Defs.FillVanillaProjectiles();
-            Defs.FillVanillaAudio();
             Defs.FillVanillaSounds();
-            Defs.FillVanillaNPCShops();
             Defs.FillVanillaCraftingGroups();
+
+            loaded = true;
         }
 
         [TargetedPatchingOptOut(Consts.TPOOReason)]
@@ -88,260 +103,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         [TargetedPatchingOptOut(Consts.TPOOReason)]
         static void AddIfNotNull(IEnumerable<CompilerError> coll, List<CompilerError> list)
         {
-            if (coll != null && coll.Count() != 0)
+            if (coll != null)
                 foreach (CompilerError e in coll)
                     AddIfNotNull(e, list);
-        }
-
-        static CompilerError CheckBuffExists(int buff, string file)
-        {
-            if (buff < 0 || buff >= Main.maxBuffs)
-                return new CompilerError()
-                {
-                    Cause = new ArgumentOutOfRangeException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Buff ID " + buff + " is not a valid vanilla buff ID. This will cause unwanted behaviour (wrong buff or an exception)."
-                };
-
-            return null;
-        }
-        static CompilerError CheckBuffExists(string buff, string file)
-        {
-            if (buff.StartsWith("Vanilla:"))
-            {
-                if (!Defs.buffType.ContainsKey(buff))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Buff '" + buff + "' not found."
-                    };
-            }
-            else if (buff.Contains(':'))
-            {
-                string modName = buff.Substring(buff.IndexOf(':'));
-
-                if (!ModCompiler.current.Info.modReferences.Contains(modName))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Buff '" + buff + "' not found because mod '" + modName + "' isn't referenced."
-                    };
-            }
-            else
-                return new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Buff '" + buff + "' has an invalid name. Use '<modInternalName>:<buffName>'."
-                };
-
-            return null;
-        }
-        static CompilerError CheckItemExists(int item, string file)
-        {
-            if (item < 0 || item >= Main.maxItemTypes)
-                return new CompilerError()
-                {
-                    Cause = new ArgumentOutOfRangeException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Item ID " + item + " is not a valid vanilla item ID. This will cause unwanted behaviour (wrong item or an exception)."
-                };
-
-            return null;
-        }
-        static CompilerError CheckItemExists(string item, string file)
-        {
-            if (item.StartsWith("Vanilla:"))
-            {
-                if (!Defs.items.ContainsKey(item))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Item '" + item + "' not found."
-                    };
-            }
-            else if (item.Contains(':'))
-            {
-                string modName = item.Substring(item.IndexOf(':'));
-
-                if (!ModCompiler.current.Info.modReferences.Contains(modName))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Item '" + item + "' not found because mod '" + modName + "' isn't referenced."
-                    };
-            }
-            else
-                return new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Item '" + item + "' has an invalid name. Use '<modInternalName>:<itemName>'."
-                };
-
-            return null;
-        }
-        static CompilerError CheckProjExists(int proj, string file)
-        {
-            if (proj < 0 || proj >= Main.maxProjectileTypes)
-                return new CompilerError()
-                {
-                    Cause = new ArgumentOutOfRangeException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Projectile ID " + proj + " is not a valid vanilla projectile ID. This will cause unwanted behaviour (wrong projectile or an exception)."
-                };
-
-            return null;
-        }
-        static CompilerError CheckProjExists(string proj, string file)
-        {
-            if (proj.StartsWith("Vanilla:"))
-            {
-                if (!Defs.projectiles.ContainsKey(proj))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Projectile '" + proj + "' not found."
-                    };
-            }
-            else if (proj.Contains(':'))
-            {
-                string modName = proj.Substring(proj.IndexOf(':'));
-
-                if (!ModCompiler.current.Info.modReferences.Contains(modName))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Projectile '" + proj + "' not found because mod '" + modName + "' isn't referenced."
-                    };
-            }
-            else
-                return new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Projectile '" + proj + "' has an invalid name. Use '<modInternalName>:<projName>'."
-                };
-
-            return null;
-        }
-        static CompilerError CheckTileExists(int tile, string file)
-        {
-            if (tile < 0 || tile >= Main.maxTileSets)
-                return new CompilerError()
-                {
-                    Cause = new ArgumentOutOfRangeException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Tile ID " + tile + " is not a valid vanilla tile ID. This will cause unwanted behaviour (wrong tile or an exception)."
-                };
-
-            return null;
-        }
-        static CompilerError CheckTileExists(string tile, string file)
-        {
-            if (tile.StartsWith("Vanilla:"))
-            {
-                if (!Defs.createTile.ContainsKey(tile))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Tile '" + tile + "' not found."
-                    };
-            }
-            else if (tile.Contains(':'))
-            {
-                string modName = tile.Substring(tile.IndexOf(':'));
-
-                if (!ModCompiler.current.Info.modReferences.Contains(modName))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Tile '" + tile + "' not found because mod '" + modName + "' isn't referenced."
-                    };
-            }
-            else
-                return new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Tile '" + tile + "' has an invalid name. Use '<modInternalName>:<tileName>'."
-                };
-
-            return null;
-        }
-        static CompilerError CheckWallExists(int wall, string file)
-        {
-            if (wall < 0 || wall >= Main.maxWallTypes)
-                return new CompilerError()
-                {
-                    Cause = new ArgumentOutOfRangeException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Wall ID " + wall + " is not a valid vanilla wall ID. This will cause unwanted behaviour (wrong wall or an exception)."
-                };
-
-            return null;
-        }
-        static CompilerError CheckWallExists(string wall, string file)
-        {
-            if (wall.StartsWith("Vanilla:"))
-            {
-                if (!Defs.projectiles.ContainsKey(wall))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Wall '" + wall + "' not found."
-                    };
-            }
-            else if (wall.Contains(':'))
-            {
-                string modName = wall.Substring(wall.IndexOf(':'));
-
-                if (!ModCompiler.current.Info.modReferences.Contains(modName))
-                    return new CompilerError()
-                    {
-                        Cause = new KeyNotFoundException(),
-                        FilePath = file,
-                        IsWarning = true,
-                        Message = "Wall '" + wall + "' not found because mod '" + modName + "' isn't referenced."
-                    };
-            }
-            else
-                return new CompilerError()
-                {
-                    Cause = new KeyNotFoundException(),
-                    FilePath = file,
-                    IsWarning = true,
-                    Message = "Wall '" + wall + "' has an invalid name. Use '<modInternalName>:<wallName>'."
-                };
-
-            return null;
         }
 
         static CompilerError CheckForModBase(Assembly asm)
@@ -364,153 +128,479 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return null;
         }
 
-        static List<CompilerError> CheckBuffsExist()
+        static CompilerError CheckBuffExists(Union<string, int> id, string source, string file)
         {
-            List<CompilerError> errors = new List<CompilerError>();
-
-            // potion (item), buff immunities (npc)
-
-            for (int i = 0; i < ModCompiler.current.items.Count; i++)
+            if (id.UsedObjectNum == 1)
             {
-                Item it = ModCompiler.current.items[i];
+                int i = (int)id;
 
-                if (it.buff is int)
-                    AddIfNotNull(CheckItemExists((int)it.buff, it.code), errors);
-                if (it.buff is string)
-                    AddIfNotNull(CheckItemExists(it.buff.ToString(), it.code), errors);
+                if (i == 0) // not defined
+                    return null;
+
+                if (i <= 0 || i >= Main.maxBuffs)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Buff " + i + " in " + source + "."
+                    };
             }
-
-            for (int i = 0; i < ModCompiler.current.npcs.Count; i++)
+            else
             {
-                NPC n = ModCompiler.current.npcs[i];
+                string name = (string)id;
 
-                for (int j = 0; j < n.buffImmune.Length; j++)
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (!name.Contains(':'))
+                    name = "Vanilla:" + name;
+
+                if (!Defs.buffNames.Any(kvp => kvp.Value == name) && !current.buffs.Any(b => b.internalName == name))
                 {
-                    if (n.buffImmune[j] is int)
-                        AddIfNotNull(CheckItemExists((int)n.buffImmune[j], n.code + " (" + n.displayName + ")"), errors);
-                    if (n.buffImmune[j] is string)
-                        AddIfNotNull(CheckItemExists(n.buffImmune[j].ToString(), n.code + " (" + n.displayName + ")"), errors);
+                    string internalName = name.Split(':')[0];
+
+                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                        return new CompilerError()
+                        {
+                            Cause = new ObjectNotFoundException(name),
+                            FilePath = file,
+                            IsWarning = false,
+                            Message = "Could not find Buff " + name + " in " + source + ": mod '" + internalName + "' not found."
+                        };
+
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Buff " + name + " in " + source + "."
+                    };
                 }
             }
 
-            return errors;
+            return null;
         }
-        static List<CompilerError> CheckItemsExist()
+        static CompilerError CheckItemExists(Union<string, int> id, string source, string file)
         {
-            List<CompilerError> errors = new List<CompilerError>();
+            // this method also checks for craft groups
 
-            // recipes (item), drops (npc)
-
-            for (int i = 0; i < ModCompiler.current.items.Count; i++)
-                for (int j = 0; j < ModCompiler.current.items[i].recipes.Count; j++)
-                    foreach (string key in ModCompiler.current.items[i].recipes[j].items.Keys)
-                        AddIfNotNull(CheckItemExists(key, ModCompiler.current.items[i].code), errors);
-
-            for (int i = 0; i < ModCompiler.current.npcs.Count; i++)
-                for (int j = 0; j < ModCompiler.current.npcs[i].drops.Count; j++)
-                    AddIfNotNull(CheckItemExists(ModCompiler.current.npcs[i].drops[j].item,
-                        ModCompiler.current.npcs[i].code + " (" + ModCompiler.current.npcs[i].displayName + ")"), errors);
-
-            return errors;
-        }
-        static List<CompilerError> CheckNPCsExist()
-        {
-            List<CompilerError> errors = new List<CompilerError>();
-
-            // hmmm...
-
-            return errors;
-        }
-        static List<CompilerError> CheckProjsExist()
-        {
-            List<CompilerError> errors = new List<CompilerError>();
-
-            // ammo, useAmmo (both item)
-
-            for (int i = 0; i < ModCompiler.current.items.Count; i++)
+            if (id.UsedObjectNum == 1)
             {
-                Item it = ModCompiler.current.items[i];
+                int i = (int)id;
 
-                if (it.ammo is int)
-                    AddIfNotNull(CheckProjExists((int)it.ammo, it.code), errors);
-                if (it.ammo is string)
-                    AddIfNotNull(CheckProjExists(it.ammo.ToString(), it.code), errors);
+                if (i == 0) // not defined
+                    return null;
 
-                if (it.useAmmo is int)
-                    AddIfNotNull(CheckProjExists((int)it.useAmmo, it.code), errors);
-                if (it.useAmmo is string)
-                    AddIfNotNull(CheckProjExists(it.useAmmo.ToString(), it.code), errors);
+                if (i == 0 || i < -48 || i >= Main.maxItemTypes)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Item " + i + " in " + source + "."
+                    };
+            }
+            else
+            {
+                string name = (string)id;
+
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (!name.Contains(':'))
+                    name = "Vanilla:" + name;
+                else if (name.StartsWith("g:") && !Defs.itemGroups.Any(kvp => kvp.Key == name)
+                        && !current.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find craft group " + name + " in " + source + "."
+                    };
+
+                if (!Defs.items.ContainsKey(name) && !current.items.Any(i => i.internalName == name))
+                {
+
+                    string internalName = name.Split(':')[0];
+
+                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                        return new CompilerError()
+                        {
+                            Cause = new ObjectNotFoundException(name),
+                            FilePath = file,
+                            IsWarning = false,
+                            Message = "Could not find Item " + name + " in " + source + ": mod '" + internalName + "' not found."
+                        };
+
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Item " + name + " in " + source + "."
+                    };
+                }
+            }
+
+            return null;
+        }
+        static CompilerError CheckNPCExists (Union<string, int> id, string source, string file)
+        {
+            if (id.UsedObjectNum == 1)
+            {
+                int i = (int)id;
+
+                if (i == 0) // not defined
+                    return null;
+
+                if (i == 0 || i < -65 || i >= Main.maxNPCTypes)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find NPC " + i + " in " + source + "."
+                    };
+            }
+            else
+            {
+                string name = (string)id;
+
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (!name.Contains(':'))
+                    name = "Vanilla:" + name;
+
+                if (!Defs.npcs.ContainsKey(name) && !current.npcs.Any(n => n.internalName == name))
+                {
+                    string internalName = name.Split(':')[0];
+
+                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                        return new CompilerError()
+                        {
+                            Cause = new ObjectNotFoundException(name),
+                            FilePath = file,
+                            IsWarning = false,
+                            Message = "Could not find NPC " + name + " in " + source + ": mod '" + internalName + "' not found."
+                        };
+
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find NPC " + name + " in " + source + "."
+                    };
+                }
+            }
+
+            return null;
+        }
+        static CompilerError CheckProjExists(Union<string, int> id, string source, string file)
+        {
+            if (id.UsedObjectNum == 1)
+            {
+                int i = (int)id;
+
+                if (i == 0) // not defined
+                    return null;
+
+                if (i <= 0 || i >= Main.maxProjectileTypes)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Projectile " + i + " in " + source + "."
+                    };
+            }
+            else
+            {
+                string name = (string)id;
+
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (!name.Contains(':'))
+                    name = "Vanilla:" + name;
+
+                if (!Defs.projectiles.ContainsKey(name) && !current.projs.Any(p => p.internalName == name))
+                {
+                    string internalName = name.Split(':')[0];
+
+                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                        return new CompilerError()
+                        {
+                            Cause = new ObjectNotFoundException(name),
+                            FilePath = file,
+                            IsWarning = false,
+                            Message = "Could not find Projectile " + name + " in " + source + ": mod '" + internalName + "' not found."
+                        };
+
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Projectile " + name + " in " + source + "."
+                    };
+                }
+            }
+
+            return null;
+        }
+        static CompilerError CheckPfixExists(      string       id, string source, string file)
+        {
+            if (String.IsNullOrEmpty(id)) // not defined
+                return null;
+
+            if (!Defs.prefixes.ContainsKey(id) && !current.pfixes.Any(p => p.internalName == id))
+            {
+                string internalName = id.Split(':')[0];
+
+                if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(id),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Prefix " + id + " in " + source + ": mod '" + internalName + "' not found."
+                    };
+
+                return new CompilerError()
+                {
+                    Cause = new ObjectNotFoundException(id),
+                    FilePath = file,
+                    IsWarning = false,
+                    Message = "Could not find Prefix " + id + " in " + source + "."
+                };
+            }
+
+            return null;
+        }
+        static CompilerError CheckTileExists(Union<string, int> id, string source, string file)
+        {
+            // tile craft groups aren't implemented yet
+
+            if (id.UsedObjectNum == 1)
+            {
+                int i = (int)id;
+
+                if (i == 0) // not defined
+                    return null;
+
+                if (i <= 0 || i >= Main.maxTileSets)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Tile " + i + " in " + source + "."
+                    };
+            }
+            else
+            {
+                string name = (string)id;
+
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (name == "Iron Anvil" || name == "Lead Anvil" || name == "Iron or Lead Anvil")
+                    name = "Anvil";
+                if (name == "Mythril Anvil" || name == "Orichalcum Anvil")
+                    name = "Mythril or Orichalcum Anvil";
+                if (name == "Adamantite Forge" || name == "Titanium Forge")
+                    name = "Adamantite or Titanium Forge";
+
+                if (!TileDef.type.Any(kvp => kvp.Key == name) && !current.tiles.Any(t => t.internalName == name))
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Tile " + name + " in " + source + "."
+                    };
+            }
+
+            return null;
+        }
+        static CompilerError CheckWallExists(Union<string, int> id, string source, string file)
+        {
+            if (id.UsedObjectNum == 1)
+            {
+                int i = (int)id;
+
+                if (i == 0) // not defined
+                    return null;
+
+                if (i <= 0 || i >= Main.maxWallTypes)
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(i.ToString()),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Wall " + i + " in " + source + "."
+                    };
+            }
+            else
+            {
+                string name = (string)id;
+
+                if (String.IsNullOrEmpty(name)) // not defined
+                    return null;
+
+                if (!TileDef.wall.Any(kvp => kvp.Key == name) && !current.walls.Any(w => w.internalName == name))
+                    return new CompilerError()
+                    {
+                        Cause = new ObjectNotFoundException(name),
+                        FilePath = file,
+                        IsWarning = false,
+                        Message = "Could not find Wall " + name + " in " + source + "."
+                    };
+            }
+
+            return null;
+        }
+
+        static List<CompilerError> CheckBuffs ()
+        {
+            // buff references:
+            // * item.buff
+            // * npc.buffImmunity
+
+            List<CompilerError> errors = new List<CompilerError>();
+
+            // item.buff
+            for (int i = 0; i < current.items.Count; i++)
+                AddIfNotNull(CheckBuffExists(current.items[i].buff, "Key 'buff' in " + current.items[i].internalName, current.items[i].internalName), errors);
+
+            // npc.buffImmunity
+            for (int i = 0; i < current.npcs.Count; i++)
+                for (int j = 0; j < current.npcs[i].buffImmune.Count; j++)
+                    AddIfNotNull(CheckBuffExists(current.npcs[i].buffImmune[j], "Buff " + (j + 1) + " in " + current.npcs[i].internalName, current.npcs[i].internalName), errors);
+
+            return errors;
+        }
+        static List<CompilerError> CheckItems ()
+        {
+            // item references:
+            // * item.recipes.items
+            // * npc.drops.item
+            // * tile.drop
+            // * wall.drop
+
+            List<CompilerError> errors = new List<CompilerError>();
+
+            // item.recipes.items
+            for (int i = 0; i < current.items.Count; i++)
+                for (int j = 0; j < current.items[i].recipes.Count; j++)
+                    foreach (var kvp in current.items[i].recipes[j].items)
+                        AddIfNotNull(CheckItemExists(kvp.Key, "Recipe " + (j + 1) + " of Item " + current.items[i].internalName, current.items[i].internalName), errors);
+
+            // npc.drops.item
+            for (int i = 0; i < current.npcs.Count; i++)
+                for (int j = 0; j < current.npcs[i].drops.Count; j++)
+                    AddIfNotNull(CheckItemExists(current.npcs[i].drops[j].item, "Drop " + (j + 1) + " of NPC " + current.npcs[i].internalName, current.npcs[i].internalName), errors);
+
+            // tile.drop
+            for (int i = 0; i < current.tiles.Count; i++)
+                AddIfNotNull(CheckItemExists(current.tiles[i].drop, "Key 'drop' of Tile " + current.tiles[i].internalName, current.tiles[i].internalName), errors);
+
+            // wall.drop
+            for (int i = 0; i < current.walls.Count; i++)
+                AddIfNotNull(CheckItemExists(current.walls[i].drop, "Key 'drop' of Wall " + current.walls[i].internalName, current.walls[i].internalName), errors);
+
+            return errors;
+        }
+        static List<CompilerError> CheckNPCs  ()
+        {
+            // npc references:
+            // * ...
+
+            return null;
+
+            //List<CompilerError> errors = new List<CompilerError>();
+
+
+
+            //return errors;
+        }
+        static List<CompilerError> CheckProjs ()
+        {
+            // proj references:
+            // * item.shoot
+
+            List<CompilerError> errors = new List<CompilerError>();
+
+            // item.shoot
+            for (int i = 0; i < current.items.Count; i++)
+                AddIfNotNull(CheckProjExists(current.items[i].shoot, "Key 'shoot' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
+
+            return errors;
+        }
+        static List<CompilerError> CheckPfixes()
+        {
+            // prefix references:
+            // * ...
+
+            return null;
+
+            //List<CompilerError> errors = new List<CompilerError>();
+
+
+
+            //return errors;
+        }
+        static List<CompilerError> CheckTiles ()
+        {
+            // tile references:
+            // * item.createTile
+            // * item.tileWand
+
+            List<CompilerError> errors = new List<CompilerError>();
+
+            for (int i = 0; i < current.items.Count; i++)
+            {
+                AddIfNotNull(CheckTileExists(current.items[i].createTile, "Key 'createTile' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
+
+                AddIfNotNull(CheckTileExists(current.items[i].tileWand  , "Key 'tileWand' in Item "   + current.items[i].internalName, current.items[i].internalName), errors);
             }
 
             return errors;
         }
-        static List<CompilerError> CheckPrefixesExist()
+        static List<CompilerError> CheckWalls ()
         {
-            List<CompilerError> errors = new List<CompilerError>();
-            
-            // hmmm...
+            // wall references:
+            // * item.createWall
 
-            return errors;
-        }
-        static List<CompilerError> CheckTilesExist()
-        {
             List<CompilerError> errors = new List<CompilerError>();
 
-            // createTile, tileWand (both item)
-
-            for (int i = 0; i < ModCompiler.current.items.Count; i++)
-            {
-                Item it = ModCompiler.current.items[i];
-
-                if (it.createTile is int)
-                    AddIfNotNull(CheckTileExists((int)it.createTile, it.code), errors);
-                if (it.createTile is string)
-                    AddIfNotNull(CheckTileExists(it.createTile.ToString(), it.code), errors);
-
-                if (it.tileWand is int)
-                    AddIfNotNull(CheckTileExists((int)it.tileWand, it.code), errors);
-                if (it.tileWand is string)
-                    AddIfNotNull(CheckTileExists(it.tileWand.ToString(), it.code), errors);
-            }
-
-            return errors;
-        }
-        static List<CompilerError> CheckWallsExist()
-        {
-            List<CompilerError> errors = new List<CompilerError>();
-
-            // createWall (item)
-
-            for (int i = 0; i < ModCompiler.current.items.Count; i++)
-            {
-                Item it = ModCompiler.current.items[i];
-
-                if (it.createWall is int)
-                    AddIfNotNull(CheckWallExists((int)it.createWall, it.code), errors);
-                if (it.createWall is string)
-                    AddIfNotNull(CheckWallExists(it.createWall.ToString(), it.code), errors);
-            }
+            for (int i = 0; i < current.items.Count; i++)
+                AddIfNotNull(CheckTileExists(current.items[i].createWall, "Key 'createWall' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
 
             return errors;
         }
 
-        // only returns warnings, except for modbase not found.
-        internal static IEnumerable<CompilerError> Check(Assembly asm)
+        internal static IEnumerable<CompilerError> Check()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(CheckForModBase(asm), errors);
+            AddIfNotNull(CheckForModBase(current.Assembly), errors);
 
-            //LoadDefs();
+            LoadDefs();
 
-            //AddIfNotNull(CheckItemsExist(),    errors);
-            //AddIfNotNull(CheckNPCsExist(),     errors);
-            //AddIfNotNull(CheckProjsExist(),    errors);
-            //AddIfNotNull(CheckPrefixesExist(), errors);
-            //AddIfNotNull(CheckTilesExist(),    errors);
-            //AddIfNotNull(CheckWallsExist(),    errors);
+            AddIfNotNull(CheckItems (), errors);
+            AddIfNotNull(CheckBuffs (), errors);
+            AddIfNotNull(CheckNPCs  (), errors);
+            AddIfNotNull(CheckProjs (), errors);
+            AddIfNotNull(CheckPfixes(), errors);
+            AddIfNotNull(CheckTiles (), errors);
+            AddIfNotNull(CheckWalls (), errors);
 
-            //main.Dispose();
+            // main.Dispose();
 
             return errors;
         }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using PoroCYon.MCT;
 using PoroCYon.MCT.Internal;
@@ -16,3 +17,4 @@ using PoroCYon.MCT.Internal;
 [assembly: Guid(Consts.GUID)]
 [assembly: AssemblyVersion(MctConstants.VERSION_STRING)]
 [assembly: AssemblyFileVersion(MctConstants.VERSION_STRING)]
+[assembly: InternalsVisibleTo("PoroCYon.MCT.Tools.Tests")]

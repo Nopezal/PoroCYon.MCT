@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using LitJson;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 {
@@ -15,7 +15,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 #pragma warning disable 1591
         // informative
         public int rare = 0;
-        public string tooltip = String.Empty;
+        public List<string> tooltip = new List<string>();
         public int value = 0;
         public int maxStack = 1;
         public bool notMaterial = false;
@@ -49,7 +49,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public int pick = 0, axe = 0, hammer = 0;
         public bool autoReuse = false;
         public bool useTurn = false;
-        public object useSound = 0;
+        public Union<string, int> useSound = 0;
         public int mana = 0;
         public bool consumable = false;
 
@@ -59,22 +59,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public int damage = 0;
         public int crit = 4;
         public float knockback = 0f;
-        public object shoot = 0;
+        public Union<string, int> shoot = 0;
         public float shootSpeed = 0f;
-        public object useAmmo = 0;
-        public object ammo = 0;
+        public Union<string, int> useAmmo = 0;
+        public Union<string, int> ammo = 0;
         public bool notAmmo = false;
 
         // potion
         public bool potion = false;
         public int healLife = 0, healMana = 0;
-        public object buff = 0;
+        public Union<string, int> buff = 0;
         public int buffTime = 0;
 
         // tile
-        public object createTile = -1;
-        public object tileWand = 0;
-        public object createWall = 0;
+        public Union<string, int> createTile = -1;
+        public Union<string, int> tileWand   =  0;
+        public Union<string, int> createWall =  0;
         public int placeStyle = 0;
 #pragma warning restore 1591
         #endregion
@@ -98,7 +98,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 JsonData tt = json.Json["tooltip"];
 
                 if (tt.IsString)
-                    tooltip = (string)tt;
+                    tooltip.Add((string)tt);
                 else if (tt.IsArray)
                 {
                     List<string> tips = new List<string>();
@@ -120,12 +120,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     }
 
                     for (int i = 0; i < tips.Count; i++)
-                    {
-                        tooltip += tips[i];
-
-                        if (i < tips.Count - 1)
-                            tooltip += Environment.NewLine;
-                    }
+                        tooltip.Add(tips[i]);
                 }
                 else
                     errors.Add(new CompilerError()
@@ -321,15 +316,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "hammer", ref hammer, 0), errors);
             AddIfNotNull(SetJsonValue(json, "autoReuse", ref autoReuse, false), errors);
             AddIfNotNull(SetJsonValue(json, "useTurn", ref useTurn, false), errors);
-            AddIfNotNull(SetJsonValue(json, "useSound", ref useSound, 0), errors);
-            if (!(useSound is int) && !(useSound is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'useSound' is a " + useSound.GetType() + ", not an int or a string."
-                });
+            AddIfNotNull(SetJsonValue(json, "useSound", ref useSound, useSound), errors);
             AddIfNotNull(SetJsonValue(json, "mana", ref mana, 0), errors);
             AddIfNotNull(SetJsonValue(json, "consumable", ref consumable, false), errors);
             #endregion
@@ -343,34 +330,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "damage", ref damage, 0), errors);
             AddIfNotNull(SetJsonValue(json, "crit", ref crit, 4), errors);
             AddIfNotNull(SetJsonValue(json, "knockback", ref knockback, 0), errors);
-            AddIfNotNull(SetJsonValue(json, "shoot", ref shoot, 0), errors);
-            if (!(shoot is int) && !(shoot is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'shoot' must be an int or a string, but is a " + shoot.GetType()
-                });
+            AddIfNotNull(SetJsonValue(json, "shoot", ref shoot, shoot), errors);
             AddIfNotNull(SetJsonValue(json, "shootSpeed", ref shootSpeed, 1f), errors);
-            AddIfNotNull(SetJsonValue(json, "useAmmo", ref useAmmo, 0), errors);
-            if (!(useAmmo is int) && !(useAmmo is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'useAmmo' must be an int or a string, but is a " + shoot.GetType()
-                });
-            AddIfNotNull(SetJsonValue(json, "ammo", ref ammo, 0), errors);
-            if (!(ammo is int) && !(ammo is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'ammo' must be an int or a string, but is a " + shoot.GetType()
-                });
+            AddIfNotNull(SetJsonValue(json, "useAmmo", ref useAmmo, useAmmo), errors);
+            AddIfNotNull(SetJsonValue(json, "ammo", ref ammo, ammo), errors);
             AddIfNotNull(SetJsonValue(json, "notAmmo", ref notAmmo, false), errors);
             #endregion
 
@@ -378,46 +341,17 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "potion",   ref potion,   false), errors);
             AddIfNotNull(SetJsonValue(json, "healLife", ref healLife, 0    ), errors);
             AddIfNotNull(SetJsonValue(json, "healMana", ref healMana, 0    ), errors);
-            AddIfNotNull(SetJsonValue(json, "buff",     ref buff,     0    ), errors);
-            if (!(buff is int) && !(buff is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'buff' must be an int or a string, but is a " + buff.GetType()
-                });
+
+            AddIfNotNull(SetJsonValue(json, "buff", ref buff, buff), errors);
+
             AddIfNotNull(SetJsonValue(json, "buffTime", ref buffTime, 0    ), errors);
             #endregion
 
             #region tile
-            AddIfNotNull(SetJsonValue(json, "createTile", ref createTile, 0), errors);
-            if (!(createTile is int) && !(createTile is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'createTile' must be an int or a string, but is a " + createTile.GetType()
-                });
-            AddIfNotNull(SetJsonValue(json, "tileWand", ref tileWand, 0), errors);
-            if (!(tileWand is int) && !(tileWand is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'tileWand' must be an int or a string, but is a " + tileWand.GetType()
-                });
-            AddIfNotNull(SetJsonValue(json, "createWall", ref createWall, 0), errors);
-            if (!(createWall is int) && !(createWall is string))
-                errors.Add(new CompilerError()
-                {
-                    Cause = new InvalidCastException(),
-                    FilePath = json.Path,
-                    IsWarning = false,
-                    Message = "'tileWand' must be an int or a string, but is a " + createWall.GetType()
-                });
+            AddIfNotNull(SetJsonValue(json, "createTile", ref createTile, createTile), errors);
+            AddIfNotNull(SetJsonValue(json, "tileWand"  , ref tileWand  , tileWand  ), errors);
+            AddIfNotNull(SetJsonValue(json, "createWall", ref createWall, createWall), errors);
+
             AddIfNotNull(SetJsonValue(json, "placeStyle", ref placeStyle, 0), errors);
             #endregion
 

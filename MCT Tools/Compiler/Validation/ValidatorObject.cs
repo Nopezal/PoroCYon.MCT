@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime;
 using LitJson;
+using PoroCYon.Extensions;
 using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation
 {
+    // this is where the ACTUAL checking occurs
+
     /// <summary>
     /// An object that helps with the validation of a JSON file.
     /// </summary>
@@ -76,6 +79,97 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             }
 
             return SetJsonValueInternal(json, key, ref value);
+        }
+        /// <summary>
+        /// Sets a JSON value. If the key isn't specified, a CompilerError is returned.
+        /// </summary>
+        /// <typeparam name="T1">The first type of the union.</typeparam>
+        /// <typeparam name="T2">The second type of the union.</typeparam>
+        /// <param name="json">The JSON file which contains the key/value pair to check.</param>
+        /// <param name="key">The key to check.</param>
+        /// <param name="value">The object to put the JSON value in.</param>
+        /// <returns>null if no errors are found, not null otherwise.</returns>
+        protected static CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value)
+        {
+            if (!json.Json.Has(key))
+                return new CompilerError()
+                {
+                    Cause = new KeyNotFoundException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Required key '" + key + "' not found."
+                };
+
+            JsonData j = json.Json[key];
+
+            if (typeof(T1) == typeof(object))
+            {
+                if (typeof(T2) == typeof(object))
+                    return new CompilerError()
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = json.Path,
+                        IsWarning = false,
+                        Message = "Cannot cast to a union of two blank System.Objects."
+                    };
+
+                if (j.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(T2)))
+                {
+                    value = (T1)(dynamic)j;
+
+                    return null;
+                }
+            }
+            if (typeof(T2) == typeof(object) && j.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(T1)))
+            {
+                value = (T1)(dynamic)j;
+
+                return null;
+            }
+
+            // praise dynamic
+            if (j.GetJsonType() == CommonToolUtilities.JsonTypeFromType(typeof(T1)))
+            {
+                value = (T1)(dynamic)j;
+
+                return null;
+            }
+            if (j.GetJsonType() == CommonToolUtilities.JsonTypeFromType(typeof(T2)))
+            {
+                value = (T2)(dynamic)j;
+
+                return null;
+            }
+
+            return new CompilerError()
+            {
+                Cause = new InvalidCastException(),
+                FilePath = json.Path,
+                IsWarning = false,
+                Message = "'" + key + "': Expected a " + CommonToolUtilities.JsonTypeFromType(typeof(T1)) + " or "
+                    + CommonToolUtilities.JsonTypeFromType(typeof(T2)) + ", but got a " + j.GetJsonType() + "."
+            };
+        }
+        /// <summary>
+        /// Sets a JSON value. If the key isn't specified, <paramref name="defaultValue" /> is used.
+        /// </summary>
+        /// <typeparam name="T1">The first type of the union.</typeparam>
+        /// <typeparam name="T2">The second type of the union.</typeparam>
+        /// <param name="json">The JSON file which contains the key/value pair to check.</param>
+        /// <param name="key">The key to check.</param>
+        /// <param name="value">The object to put the JSON value in.</param>
+        /// <param name="defaultValue">The default value of the key/value pair.</param>
+        /// <returns>null if no errors are found, not null otherwise.</returns>
+        protected static CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value, Union<T1, T2> defaultValue)
+        {
+            if (!json.Json.Has(key))
+            {
+                value = defaultValue;
+
+                return null;
+            }
+
+            return SetJsonValue(json, key, ref value);
         }
 
         static CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
