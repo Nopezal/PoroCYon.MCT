@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.1.2" String="1.3.1.2" />
+  <CurrentVersion Number="4" Version="1.3.2.0" String="1.3.2.0" />
   
   <Changelog>
+    <Release Version="1.3.2.0">
+      <Change>Updated PoroCYon.Extensions.dll</Change>
+      <Change>Enhanced JSON validation/checking for the MCT compiler. (this will reduce the amount of 'Key not found' errors you see when your mod is loading.)</Change>
+    </Release>
     <Release Version="1.3.1.2">
       <Change>Fixed mouse intput sometimes not properly blocking when the tAPI window is inactive.</Change>
     </Release>
