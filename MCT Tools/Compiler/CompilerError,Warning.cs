@@ -17,7 +17,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        } = CompilerException.DefaultMessage;
+        } = CompilerException.DEFAULT_MSG;
         /// <summary>
         /// Gets the absolute path to the file causing the error. The value is null if the file is not known.
         /// </summary>

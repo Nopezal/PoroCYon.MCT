@@ -163,7 +163,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             if (internalName == "g")
                 errors.Add(new CompilerError()
                 {
-                    Cause = new ArgumentException("This internal name is not allowed."),
+                    Cause = new ValueNotAllowedException("internalName", internalName),
                     FilePath = json.Path,
                     IsWarning = false,
                     Message = "The internal name 'g' cannot be used, as it is used as the prefix for crafting groups."
