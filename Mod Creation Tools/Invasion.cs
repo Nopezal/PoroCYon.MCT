@@ -10,6 +10,8 @@ namespace PoroCYon.MCT
     /// </summary>
     public abstract class Invasion
     {
+        readonly static string[] backup = new string[4];
+
         internal static Dictionary<string, Invasion> invasions = new Dictionary<string, Invasion>();
         internal static Dictionary<int, string> invasionTypes = new Dictionary<int, string>();
 
@@ -100,12 +102,28 @@ namespace PoroCYon.MCT
         public virtual void Start()
         {
             Main.StartInvasion(ID);
+
+            if (backup[0] == null)
+                for (int i = 0; i < 4; i++)
+                    backup[i] = Lang.misc[i];
+
+            if (ID > 3)
+            {
+                Lang.misc[0] = DefeatedText;
+                Lang.misc[1] = StartText("west");
+                Lang.misc[2] = StartText("east");
+                Lang.misc[2] = ArrivedText;
+            }
         }
         /// <summary>
         /// Stops the invasion. (all of them, actually)
         /// </summary>
         public virtual void Stop()
         {
+            if (ID > 3)
+                for (int i = 0; i < 4; i++)
+                    Lang.misc[i] = backup[i];
+
             World.StopInvasions();
         }
     }
