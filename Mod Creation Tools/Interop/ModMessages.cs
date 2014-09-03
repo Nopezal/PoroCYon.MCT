@@ -5,7 +5,7 @@ using System.Linq;
 namespace PoroCYon.MCT.Interop
 {
     /// <summary>
-    /// A collection of messages to send to the tAPI SDK, or that are sent by the tAPI SDK.
+    /// A collection of messages to send to the MCT, or that are sent by the MCT.
     /// </summary>
     public enum ModMessages : int
     {
