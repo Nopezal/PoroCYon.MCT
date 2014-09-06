@@ -9,6 +9,7 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
@@ -461,6 +462,20 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return null;
         }
 
+        CompilerError CheckTypeExists(EntityValidator entity)
+        {
+            if (Building.Assembly.GetType(entity.code, false, false) == null)
+                return new CompilerError(Building)
+                {
+                    Cause = new TypeLoadException("Type " + entity.code + " not found."),
+                    FilePath = entity.internalName,
+                    IsWarning = false,
+                    Message = "Could not load type " + entity.code + "."
+                };
+
+            return null;
+        }
+
         List<CompilerError> CheckBuffs ()
         {
             // buff references:
@@ -584,7 +599,25 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         {
             List<CompilerError> errors = new List<CompilerError>();
 
+            // buffs
+            for (int i = 0; i < Building.buffs.Count; i++)
+                errors.Add(CheckTypeExists(Building.buffs[i]));
 
+            // items
+            for (int i = 0; i < Building.items.Count; i++)
+                errors.Add(CheckTypeExists(Building.items[i]));
+
+            // npcs
+            for (int i = 0; i < Building.npcs.Count; i++)
+                errors.Add(CheckTypeExists(Building.npcs[i]));
+
+            // projs
+            for (int i = 0; i < Building.projs.Count; i++)
+                errors.Add(CheckTypeExists(Building.projs[i]));
+
+            // tiles
+            for (int i = 0; i < Building.tiles.Count; i++)
+                errors.Add(CheckTypeExists(Building.tiles[i]));
 
             return errors;
         }
