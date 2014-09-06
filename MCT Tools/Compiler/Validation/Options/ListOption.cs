@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A list option.
     /// </summary>
-    public class ListOption : Option
+    public class ListOption(ModCompiler mc) : Option(mc)
     {
 #pragma warning disable 1591
         public List<object> values = new List<object>();

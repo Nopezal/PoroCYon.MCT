@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An object that helps with the validation of an entity.
     /// </summary>
-    public abstract class EntityValidator : ValidatorObject
+    public abstract class EntityValidator(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public string code;
@@ -34,7 +34,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            internalName = ModCompiler.current.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
+            internalName = Building.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
 
             AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
 
@@ -42,10 +42,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             if (code.Contains(':'))
                 code = code.Replace(':', '.');
             else
-                code = ModCompiler.current.Info.internalName + "." + code;
+                code = Building.Info.internalName + "." + code;
 
             AddIfNotNull(SetJsonValue(json, "texture", ref texture, baseFolder + "/" + json.Path), errors);
-            if (!ModCompiler.current.files.ContainsKey(texture + ".png"))
+            if (!Building.files.ContainsKey(texture + ".png"))
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),

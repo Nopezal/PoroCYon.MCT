@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A projectile.
     /// </summary>
-    public class Projectile : EntityValidator
+    public class Projectile(ModCompiler mc) : EntityValidator(mc)
     {
 #pragma warning disable 1591
         // bools

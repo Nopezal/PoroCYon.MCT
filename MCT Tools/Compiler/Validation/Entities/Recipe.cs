@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item recipe.
     /// </summary>
-    public class Recipe : ValidatorObject
+    public class Recipe(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public Dictionary<string, int> items = new Dictionary<string, int>();

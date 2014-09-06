@@ -12,7 +12,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A ModInfo JSON file (ModInfo.json)
     /// </summary>
-    public class ModInfo : ValidatorObject
+    public class ModInfo(ModCompiler mc) : ValidatorObject(mc)
     {
         internal readonly static string[] EmptyStringArr = new string[0];
 
@@ -48,22 +48,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string outputName;
 #pragma warning restore 1591
 
-        static ModInfo GetModInfoFromTapiMod(byte[] data)
+        ModInfo GetModInfoFromTapiMod(byte[] data)
         {
             BinBuffer bb = new BinBuffer(new BinBufferByte(data));
 
             uint ver = bb.ReadUInt();
 
-            ModInfo mi = new ModInfo() { checkCircularRefs = false };
+            ModInfo mi = new ModInfo(Compiler) { checkCircularRefs = false };
 
             var err = mi.CreateAndValidate(new JsonFile(String.Empty, JsonMapper.ToObject(bb.ReadString())));
 
-            if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+            if (!Compiler.CreateOutput(err.ToList()).Succeeded)
                 return null;
 
             return mi;
         }
-        static ModInfo GetModInfoFromTapiZip(ZipFile zf)
+        ModInfo GetModInfoFromTapiZip(ZipFile zf)
         {
             if (zf.ContainsEntry("ModInfo.json"))
             {
@@ -75,11 +75,11 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
                     StreamReader r = new StreamReader(ms);
 
-                    ModInfo mi = new ModInfo() { checkCircularRefs = false };
+                    ModInfo mi = new ModInfo(Compiler) { checkCircularRefs = false };
 
                     var err = mi.CreateAndValidate(new JsonFile(zf.Name, JsonMapper.ToObject(r.ReadToEnd())));
 
-                    if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+                    if (!Compiler.CreateOutput(err.ToList()).Succeeded)
                         return null;
 
                     return mi;
@@ -94,7 +94,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             return null;
         }
-        internal static ModInfo GetModInfoFromTapi   (string file)
+        internal ModInfo GetModInfoFromTapi(string file)
         {
             if (file.ToLowerInvariant().EndsWith(".tapi"))
                 using (ZipFile zf = new ZipFile(file))
@@ -114,7 +114,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="ref">.tapi or .tapimod file.</param>
         /// <returns></returns>
         /// <remarks>Recursive.</remarks>
-        static bool CheckCircularModRefRec(string @ref)
+        bool CheckCircularModRefRec(string @ref)
         {
             ModInfo mi = GetModInfoFromTapi(@ref);
 
@@ -134,7 +134,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="info"></param>
         /// <returns></returns>
         /// <remarks>Recursive.</remarks>
-        static bool CheckCircularModRef(ModInfo info)
+        bool CheckCircularModRef(ModInfo info)
         {
             for (int i = 0; i < info.modReferences.Length; i++)
             {
@@ -176,15 +176,15 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             AddIfNotNull(SetJsonValue(json, "modReferences", ref modReferences, EmptyStringArr), errors);
             for (int i = 0; i < modReferences.Length; i++)
             {
-                if (!ModCompiler.modDict.ContainsKey(modReferences[i]))
+                if (!Compiler.modDict.ContainsKey(modReferences[i]))
                 {
-                    string d = ModCompiler.FindSourceFolderFromInternalName(modReferences[i]);
+                    string d = Compiler.FindSourceFolderFromInternalName(modReferences[i]);
 
                     // check circular references (and other things) first......
-                    ModInfo mi = new ModInfo();
+                    ModInfo mi = new ModInfo(Compiler);
                     var err = mi.CreateAndValidate(new JsonFile(d + "\\ModInfo.json", JsonMapper.ToObject(File.ReadAllText(d + "\\ModInfo.json"))));
 
-                    if (!ModCompiler.CreateOutput(err.ToList()).Succeeded)
+                    if (!Compiler.CreateOutput(err.ToList()).Succeeded)
                     {
                         foreach (CompilerError ce in err)
                         {
@@ -219,7 +219,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                                     + "', building it first (matching directory: '" + Path.GetDirectoryName(d) + "')."
                             });
 
-                            ModCompiler.CompileFromSource(d);
+                            Compiler.CompileFromSource(d);
                         }
                     }
                 }
@@ -266,8 +266,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     + "\\" + new DirectoryInfo(Path.GetDirectoryName(json.Path)).Name + ".csproj"), errors);
 
                 if (!File.Exists(msBuildFile))
-                    if (File.Exists(ModCompiler.current.OriginPath + "\\" + msBuildFile))
-                        msBuildFile = ModCompiler.current.OriginPath + "\\" + msBuildFile;
+                    if (File.Exists(Building.OriginPath + "\\" + msBuildFile))
+                        msBuildFile = Building.OriginPath + "\\" + msBuildFile;
                     else
                         errors.Add(new CompilerError()
                         {
@@ -371,7 +371,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     IsWarning = false,
                     Message = "'warningLevel': value must be an element of [0;4]."
                 });
-            AddIfNotNull(SetJsonValue(json, "outputName", ref outputName, ModCompiler.current.OriginName), errors);
+            AddIfNotNull(SetJsonValue(json, "outputName", ref outputName, Building.OriginName), errors);
 
             return errors;
         }

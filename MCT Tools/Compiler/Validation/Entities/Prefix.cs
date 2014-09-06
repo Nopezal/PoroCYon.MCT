@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item prefix.
     /// </summary>
-    public class Prefix : ValidatorObject
+    public class Prefix(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public string internalName;
@@ -33,7 +33,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            internalName = ModCompiler.current.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
+            internalName = Building.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
 
             AddIfNotNull(SetJsonValue(json, "tier", ref tier, 0), errors);
 

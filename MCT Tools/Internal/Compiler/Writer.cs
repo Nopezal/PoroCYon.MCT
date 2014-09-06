@@ -11,24 +11,24 @@ using LitJson;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    static class Writer
+    class Writer(ModCompiler mc) : CompilerPhase(mc)
     {
-        internal static IEnumerable<CompilerError> Write(ModData mod)
+        internal IEnumerable<CompilerError> Write()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
             BinBuffer bb = new BinBuffer();
 
             bb.Write(API.versionAssembly);
-            bb.Write(mod.JSONs[0].Json.ToJson());
-            bb.Write(mod.Files.Count + (mod.Info.includePDB ? 1 : 0));
+            bb.Write(Building.JSONs[0].Json.ToJson());
+            bb.Write(Building.Files.Count + (Building.Info.includePDB ? 1 : 0));
 
             byte[] pdb = null;
 
-            if (mod.Info.includePDB)
+            if (Building.Info.includePDB)
                 try
                 {
-                    pdb = File.ReadAllBytes(Path.ChangeExtension(mod.Assembly.Location, ".pdb"));
+                    pdb = File.ReadAllBytes(Path.ChangeExtension(Building.Assembly.Location, ".pdb"));
                 }
                 catch { }
 
@@ -58,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             //    bb.Write(jsons[jsons.Count - 1].Item1       );
             //    bb.Write(jsons[jsons.Count - 1].Item2.Length);
             //}
-            foreach (KeyValuePair<string, byte[]> current in mod.Files)
+            foreach (KeyValuePair<string, byte[]> current in Building.Files)
             {
                 bb.Write(current.Key);
                 bb.Write(current.Value.Length);
@@ -68,29 +68,29 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 bb.Write(pdb);
             //for (int i = 0; i < jsons.Count; i++)
             //    bb.Write(jsons[i].Item2);
-            foreach (KeyValuePair<string, byte[]> current in mod.Files)
+            foreach (KeyValuePair<string, byte[]> current in Building.Files)
                 bb.Write(current.Value);
 
-            bb.Write(File.ReadAllBytes(mod.Assembly.Location));
+            bb.Write(File.ReadAllBytes(Building.Assembly.Location));
             bb.Pos = 0;
 
-            string outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.Info.outputName + (mod.Info.compress ? ".tapi" : ".tapimod");
+            string outputFile = CommonToolUtilities.modsBinDir + "\\" + Building.Info.outputName + (Building.Info.compress ? ".tapi" : ".tapimod");
 
             if (File.Exists(outputFile))
                 File.Delete(outputFile);
 
-            if (mod.Info.compress)
+            if (Building.Info.compress)
                 using (ZipFile zf = new ZipFile())
                 {
                     if (!Directory.Exists(CommonToolUtilities.modsBinDir))
                         Directory.CreateDirectory(CommonToolUtilities.modsBinDir);
 
                     zf.AddEntry("Mod.tapimod", bb.ReadBytes(bb.GetSize()));
-                    zf.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(mod.JSONs[0].Json.ToJson()));
+                    zf.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(Building.JSONs[0].Json.ToJson()));
                     if (pdb != null)
                         zf.AddEntry("DebugInformation.pdb", pdb);
 
-                    foreach (KeyValuePair<string, byte[]> current in mod.Files)
+                    foreach (KeyValuePair<string, byte[]> current in Building.Files)
                         zf.AddEntry(current.Key, current.Value);
 
                     zf.Save(outputFile);
@@ -98,14 +98,14 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             else
                 File.WriteAllBytes(outputFile, bb.ReadBytes(bb.GetSize()));
 
-            if (mod.Info.extractDLL)
+            if (Building.Info.extractDLL)
             {
                 string dll = Path.ChangeExtension(outputFile, ".dll");
 
                 if (File.Exists(dll))
                     File.Delete(dll);
 
-                File.Copy(mod.Assembly.Location, dll);
+                File.Copy(Building.Assembly.Location, dll);
 
                 File.WriteAllBytes(Path.ChangeExtension(outputFile, ".pdb"), pdb);
             }

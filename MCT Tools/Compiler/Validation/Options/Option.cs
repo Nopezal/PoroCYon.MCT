@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// The base class for all mod options
     /// </summary>
-    public abstract class Option : ValidatorObject
+    public abstract class Option(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public bool notify = true;
@@ -23,20 +23,21 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
         /// <summary>
         /// Creates a new option object.
         /// </summary>
+        /// <param name="mc">The <see cref="ModCompiler" /> that is compiling the <see cref="Option" />.</param>
         /// <param name="json">The JSON useto create the objects. (ModOptions.json)</param>
         /// <returns>A tuple containing the option, and a collection of errors.</returns>
-        public static Tuple<Option, IEnumerable<CompilerError>> NewOption(JsonFile json)
+        public static Tuple<Option, IEnumerable<CompilerError>> NewOption(ModCompiler mc, JsonFile json)
         {
             if (Options.Count == 0)
             {
                 // only lower-case
-                Options.Add("string",     () => { return new StringOption    (); });
-                Options.Add("integer",    () => { return new IntegerOption   (); });
-                Options.Add("float",      () => { return new FloatOption     (); });
-                Options.Add("keybinding", () => { return new KeybindingOption(); });
-                Options.Add("list",       () => { return new ListOption      (); });
-                Options.Add("boolean",    () => { return new BoolOption      (); });
-                Options.Add("dynamic",    () => { return new DynamicOption   (); });
+                Options.Add("string",     () => new StringOption    (mc));
+                Options.Add("integer",    () => new IntegerOption   (mc));
+                Options.Add("float",      () => new FloatOption     (mc));
+                Options.Add("keybinding", () => new KeybindingOption(mc));
+                Options.Add("list",       () => new ListOption      (mc));
+                Options.Add("boolean",    () => new BoolOption      (mc));
+                Options.Add("dynamic",    () => new DynamicOption   (mc));
             }
 
             Option ret = null;

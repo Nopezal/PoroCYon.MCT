@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A floating-point option
     /// </summary>
-    public class FloatOption : Option
+    public class FloatOption(ModCompiler mc) : Option(mc)
     {
 #pragma warning disable 1591
         public float minimum;

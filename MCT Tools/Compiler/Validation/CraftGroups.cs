@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A CraftGroup JSON file (CraftGroups.json)
     /// </summary>
-    public class CraftGroups : ValidatorObject
+    public class CraftGroups(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public List<ItemCraftGroup> itemGroups = new List<ItemCraftGroup>();
@@ -45,7 +45,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                             continue;
                         }
 
-                        ItemCraftGroup icg = new ItemCraftGroup();
+                        ItemCraftGroup icg = new ItemCraftGroup(Compiler);
 
                         errors.AddRange(icg.CreateAndValidate(new JsonFile(json.Path, iGroups[i])));
                         itemGroups.Add(icg);
@@ -82,7 +82,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                             continue;
                         }
 
-                        TileCraftGroup tcg = new TileCraftGroup();
+                        TileCraftGroup tcg = new TileCraftGroup(Compiler);
 
                         errors.AddRange(tcg.CreateAndValidate(new JsonFile(json.Path, tGroups[i])));
                         tileGroups.Add(tcg);

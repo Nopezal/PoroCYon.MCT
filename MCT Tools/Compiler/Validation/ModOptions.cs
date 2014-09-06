@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A ModOptions JSON file (ModOptions.json)
     /// </summary>
-    public class ModOptions : ValidatorObject
+    public class ModOptions(ModCompiler mc) : ValidatorObject(mc)
     {
         List<Option> options = new List<Option>();
 
@@ -54,10 +54,12 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             for (int i = 0; i < optionsArr.Count; i++)
             {
-                var result = Option.NewOption(new JsonFile(json.Path, optionsArr[i])); // actual stuff happens here
+                var result = Option.NewOption(Compiler, new JsonFile(json.Path, optionsArr[i])); // actual stuff happens here
 
                 options.Add(result.Item1);
                 errors.AddRange(result.Item2);
+
+                Option.Options.Clear(); // might mess up with modcompiler refs, thus clearing the dictionary.
             }
 
             return errors;

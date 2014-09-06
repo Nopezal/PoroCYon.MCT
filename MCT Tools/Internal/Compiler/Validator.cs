@@ -8,12 +8,12 @@ using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    static class Validator
+    class Validator(ModCompiler mc) : CompilerPhase(mc)
     {
-        internal static List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
+        internal List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
-            ModCompiler.current.jsons = jsons;
-            ModCompiler.current.files = files;
+            Building.jsons = jsons;
+            Building.files = files;
 
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -22,19 +22,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 modOptionsJson  = jsons[1],
                 craftGroupsJson = jsons[2];
 
-            ModCompiler.current.Info = new ModInfo();
-            errors.AddRange(ModCompiler.current.Info.CreateAndValidate(modInfoJson));
+            Building.Info = new ModInfo(Compiler);
+            errors.AddRange(Building.Info.CreateAndValidate(modInfoJson));
 
-            if (!ModCompiler.current.Info.validate) // HELLO, HERE AM I, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT, KTHXBAI.
+            if (!Building.Info.validate) // HELLO, HERE AM I, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT, KTHXBAI.
                 return errors;
 
-            ModCompiler.current.Options = new ModOptions();
+            Building.Options = new ModOptions(Compiler);
             if (modOptionsJson != null)
-                errors.AddRange(ModCompiler.current.Options.CreateAndValidate(modOptionsJson));
+                errors.AddRange(Building.Options.CreateAndValidate(modOptionsJson));
 
-            ModCompiler.current.CraftGroups = new CraftGroups();
+            Building.CraftGroups = new CraftGroups(Compiler);
             if (craftGroupsJson != null)
-                errors.AddRange(ModCompiler.current.CraftGroups.CreateAndValidate(modOptionsJson));
+                errors.AddRange(Building.CraftGroups.CreateAndValidate(modOptionsJson));
 
             for (int i = 3; i < errors.Count; i++)
             {
@@ -48,25 +48,25 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     switch (path.Remove(index).ToLowerInvariant())
                     {
                         case "buff":
-                            obj = new Buff();
+                            obj = new Buff      (Compiler);
                             break;
                         case "item":
-                            obj = new Item();
+                            obj = new Item      (Compiler);
                             break;
                         case "npc":
-                            obj = new NPC();
+                            obj = new NPC       (Compiler);
                             break;
                         case "prefix":
-                            obj = new Prefix();
+                            obj = new Prefix    (Compiler);
                             break;
                         case "projectile":
-                            obj = new Projectile();
+                            obj = new Projectile(Compiler);
                             break;
                         case "tile":
-                            obj = new Tile();
+                            obj = new Tile      (Compiler);
                             break;
                         case "wall":
-                            obj = new Wall();
+                            obj = new Wall      (Compiler);
                             break;
 
                         default:
@@ -86,19 +86,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                         // I'm too lazy to type casts today
                         if (obj is Buff)
-                            ModCompiler.current.buffs.Add (obj as Buff);
+                            Building.buffs.Add (obj as Buff);
                         if (obj is Item)
-                            ModCompiler.current.items.Add (obj as Item);
+                            Building.items.Add (obj as Item);
                         if (obj is NPC)
-                            ModCompiler.current.npcs.Add  (obj as NPC);
+                            Building.npcs.Add  (obj as NPC);
                         if (obj is Prefix)
-                            ModCompiler.current.pfixes.Add(obj as Prefix);
+                            Building.pfixes.Add(obj as Prefix);
                         if (obj is Projectile)
-                            ModCompiler.current.projs.Add (obj as Projectile);
+                            Building.projs.Add (obj as Projectile);
                         if (obj is Tile)
-                            ModCompiler.current.tiles.Add (obj as Tile);
+                            Building.tiles.Add (obj as Tile);
                         if (obj is Wall)
-                            ModCompiler.current.walls.Add (obj as Wall);
+                            Building.walls.Add (obj as Wall);
                     }
                 }
             }

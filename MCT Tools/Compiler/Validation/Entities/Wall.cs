@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A wall.
     /// </summary>
-    public class Wall : EntityValidator
+    public class Wall(ModCompiler mc) : EntityValidator(mc)
     {
 #pragma warning disable 1591
         public bool house = true;

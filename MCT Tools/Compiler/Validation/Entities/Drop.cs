@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An NPC drop.
     /// </summary>
-    public class Drop : ValidatorObject
+    public class Drop(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public string item = String.Empty;

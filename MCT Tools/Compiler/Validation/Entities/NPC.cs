@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An NPC.
     /// </summary>
-    public class NPC : EntityValidator
+    public class NPC(ModCompiler mc) : EntityValidator(mc)
     {
         #region fields
 #pragma warning disable 1591
@@ -144,7 +144,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             // interface
             AddIfNotNull(SetJsonValue(json, "textureHead", ref textureHead, texture + "._Head"), errors);
-            if (!ModCompiler.current.files.ContainsKey(textureHead))
+            if (!Building.files.ContainsKey(textureHead))
                 errors.Add(new CompilerError()
                 {
                     Cause = new FileNotFoundException(),
@@ -216,7 +216,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                         if (drs.IsObject)
                         {
-                            Drop d = new Drop();
+                            Drop d = new Drop(Compiler);
 
                             errors.AddRange(d.CreateAndValidate(new JsonFile(json.Path, drop)));
                             drops.Add(d);

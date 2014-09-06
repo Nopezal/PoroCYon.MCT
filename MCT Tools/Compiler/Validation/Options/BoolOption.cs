@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A boolean mod option
     /// </summary>
-    public class BoolOption : ListOption
+    public class BoolOption(ModCompiler mc) : ListOption(mc)
     {
         /// <summary>
         /// Create &amp; validate subclass-only fields.

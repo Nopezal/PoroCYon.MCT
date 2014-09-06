@@ -99,6 +99,7 @@
     <Compile Include="Internal\Compiler\Checker.cs" />
     <Compile Include="Compiler\CompilerException.cs" />
     <Compile Include="Compiler\CompilerOutput.cs" />
+    <Compile Include="Compiler\CompilerPhase.cs" />
     <Compile Include="Internal\Compiler\Compilers\CSharpCompiler.cs" />
     <Compile Include="Internal\Compiler\Compilers\JScriptCompiler.cs" />
     <Compile Include="Internal\Compiler\Compilers\VBCompiler.cs" />

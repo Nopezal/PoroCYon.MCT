@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A keybinding option.
     /// </summary>
-    public class KeybindingOption : Option
+    public class KeybindingOption(ModCompiler mc) : Option(mc)
     {
 #pragma warning disable 1591
         public Keys defaultValue;

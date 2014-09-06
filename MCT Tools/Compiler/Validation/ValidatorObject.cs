@@ -13,7 +13,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// An object that helps with the validation of a JSON file.
     /// </summary>
-    public abstract class ValidatorObject
+    public abstract class ValidatorObject(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Adds a CompilerError to a List of CompilerErrors if the value is not null.

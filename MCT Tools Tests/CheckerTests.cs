@@ -6,10 +6,8 @@ using System.Reflection;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using TAPI;
 using PoroCYon.MCT.Tools.Compiler;
-using PoroCYon.MCT.Tools.Compiler.Validation;
 using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 using PoroCYon.MCT.Tools.Internal.Compiler;
-using PoroCYon.MCT.Tools.ModCompiler;
 
 namespace PoroCYon.MCT.Tools.Tests
 {
@@ -20,12 +18,14 @@ namespace PoroCYon.MCT.Tools.Tests
     [TestClass]
     public class CheckerTests
     {
-        static ModData CreateMod()
+        static ModCompiler CreateMod()
         {
-            ModData md = new ModData();
+            ModCompiler mc = new ModCompiler();
+
+            ModData md = new ModData(mc);
 
             md.Assembly = Assembly.GetExecutingAssembly();
-            md.Info = new ModInfo();
+            md.Info = new ModInfo(mc);
             md.Info.author = "PoroCYon";
             md.Info.displayName = "Test Mod";
             md.Info.includePDB = true;
@@ -34,7 +34,7 @@ namespace PoroCYon.MCT.Tools.Tests
             md.OriginName = "TestMod";
             md.OriginPath = Directory.GetCurrentDirectory() + "\\TestMod";
 
-            md.items.Add(new Item()
+            md.items.Add(new Item(mc)
             {
                 internalName = "TestMod:TestItem",
                 displayName = "Test Item",
@@ -42,7 +42,7 @@ namespace PoroCYon.MCT.Tools.Tests
                 rare = 2,
                 recipes = new List<Recipe>()
                 {
-                    new Recipe()
+                    new Recipe(mc)
                     {
                         creates = 3,
                         items = new Dictionary<string, int>()
@@ -59,7 +59,7 @@ namespace PoroCYon.MCT.Tools.Tests
                 value = 50
             });
 
-            return md;
+            return mc;
         }
 
         [TestMethod]
@@ -71,9 +71,9 @@ namespace PoroCYon.MCT.Tools.Tests
         [TestMethod]
         public void TestCheckItem()
         {
-            current = CreateMod();
+            var mc = CreateMod();
 
-            Assert.IsTrue(CreateOutput(Checker.Check().ToList()).Succeeded);
+            Assert.IsTrue(mc.CreateOutput(new Checker(mc).Check().ToList()).Succeeded);
         }
     }
 }

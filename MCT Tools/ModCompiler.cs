@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Build.Framework;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
@@ -15,13 +16,49 @@ namespace PoroCYon.MCT.Tools
     /// <summary>
     /// The MCT mod compiler
     /// </summary>
-    public static class ModCompiler
+    public class ModCompiler
     {
         internal readonly static string BuildingList = Consts.MctDirectory + ".building.json";
-        internal static ModData current;
-        internal static Dictionary<string, string> modDict;
+
+        internal ModData building;
+        internal Dictionary<string, string> modDict;
 
         static JsonData list;
+
+        /// <summary>
+        /// Gets the collection of loggers attached to the <see cref="ModCompiler" />.
+        /// </summary>
+        public List<ILogger> Loggers
+        {
+            get;
+            private set;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModCompiler" /> class.
+        /// </summary>
+        public ModCompiler()
+            : this(new List<ILogger>())
+        {
+
+        }
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModCompiler" /> class.
+        /// </summary>
+        /// <param name="loggers">A collection of loggers to fill the <see cref="Loggers" /> collection with.</param>
+        public ModCompiler(IEnumerable<ILogger> loggers)
+        {
+            Loggers = new List<ILogger>(loggers);
+        }
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModCompiler" /> class.
+        /// </summary>
+        /// <param name="loggers">A collection of loggers to fill the <see cref="Loggers" /> collection with.</param>
+        public ModCompiler(params ILogger[] loggers)
+            : this((IEnumerable<ILogger>)loggers)
+        {
+
+        }
 
         /// <summary>
         /// Compiles a mod from its source folder.
@@ -29,7 +66,7 @@ namespace PoroCYon.MCT.Tools
         /// <param name="folder">The mod's folder. Either an absolute path,
         /// relative to the working directory or the name of a folder in the Mods\Sources folder</param>
         /// <returns>The output of the compiler.</returns>
-        public static CompilerOutput CompileFromSource  (string folder)
+        public CompilerOutput CompileFromSource  (string folder)
         {
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
@@ -54,8 +91,8 @@ namespace PoroCYon.MCT.Tools
                             Message = "The mod is already being built."
                         }
                     });
-                current.OriginPath = folder;
-                current.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
+                building.OriginPath = folder;
+                building.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
 
                 #region check if folder exists
                 if (!Directory.Exists(folder))
@@ -81,7 +118,7 @@ namespace PoroCYon.MCT.Tools
 
                 CompilerOutput outp;
 
-                var readFiles = FileLoader.LoadFiles(folder);
+                var readFiles = new FileLoader(this).LoadFiles(folder);
                 outp = CreateOutput(readFiles.Item3);
                 if (!outp.Succeeded)
                 {
@@ -96,7 +133,7 @@ namespace PoroCYon.MCT.Tools
                     return outp;
                 }
 
-                var compiled = Builder.Build(current);
+                var compiled = new Builder(this).Build();
                 outp = CreateOutput(compiled.Item3);
                 outp.Succeeded &= compiled.Item1 != null;
                 if (!outp.Succeeded)
@@ -105,7 +142,7 @@ namespace PoroCYon.MCT.Tools
                     return outp;
                 }
 
-                return MainCompileStuff(current, compiled.Item1);
+                return MainCompileStuff(building, compiled.Item1);
             }
             catch (Exception e)
             {
@@ -128,7 +165,7 @@ namespace PoroCYon.MCT.Tools
         /// </summary>
         /// <param name="assemblyPath">The path to the assembly file, either relative to the working directory or an absolute path.</param>
         /// <returns>The output of the compiler.</returns>
-        public static CompilerOutput CompileFromAssembly(string assemblyPath)
+        public CompilerOutput CompileFromAssembly(string assemblyPath)
         {
             if (!BeginCompile(assemblyPath))
                 return CreateOutput(new List<CompilerError>()
@@ -142,8 +179,8 @@ namespace PoroCYon.MCT.Tools
                     }
                 });
 
-            current.OriginPath = assemblyPath;
-            current.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
+            building.OriginPath = assemblyPath;
+            building.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
 
             try
             {
@@ -227,7 +264,7 @@ namespace PoroCYon.MCT.Tools
         /// </summary>
         /// <param name="asm">The assembly to compile.</param>
         /// <returns>The output of the compiler.</returns>
-        public static CompilerOutput CompileFromAssembly(Assembly asm)
+        public CompilerOutput CompileFromAssembly(Assembly asm)
         {
             if (!BeginCompile(asm.Location))
                 return CreateOutput(new List<CompilerError>()
@@ -245,7 +282,7 @@ namespace PoroCYon.MCT.Tools
             {
                 CompilerOutput outp;
 
-                var extracted = Extractor.ExtractData(asm);
+                var extracted = new Extractor(this).ExtractData(asm);
                 outp = CreateOutput(extracted.Item3);
                 if (!outp.Succeeded)
                 {
@@ -260,7 +297,7 @@ namespace PoroCYon.MCT.Tools
                     return outp;
                 }
 
-                return MainCompileStuff(current, asm);
+                return MainCompileStuff(building, asm);
             }
             catch (Exception e)
             {
@@ -279,7 +316,7 @@ namespace PoroCYon.MCT.Tools
             }
         }
 
-        internal static CompilerOutput CreateOutput(List<CompilerError> errors)
+        internal CompilerOutput CreateOutput(List<CompilerError> errors)
         {
             bool err = false;
 
@@ -295,12 +332,12 @@ namespace PoroCYon.MCT.Tools
             return outp;
         }
 
-        static CompilerOutput Validate(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
+        CompilerOutput Validate(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {
-            return CreateOutput(Validator.ValidateJsons(jsons, files, validateModInfo));
+            return CreateOutput(new Validator(this).ValidateJsons(jsons, files, validateModInfo));
         }
 
-        internal static string FindSourceFolderFromInternalName(string internalName)
+        internal string FindSourceFolderFromInternalName(string internalName)
         {
             foreach (string d in Directory.EnumerateFiles(Mods.pathDirModsSources))
             {
@@ -316,7 +353,7 @@ namespace PoroCYon.MCT.Tools
             return null;
         }
 
-        static bool BeginCompile(string path)
+        bool BeginCompile(string path)
         {
             if (!Debugger.IsAttached && AppendBuilding(path))
                 return false;
@@ -327,7 +364,7 @@ namespace PoroCYon.MCT.Tools
             if (!File.Exists(Consts.MctDirectory + "\\.building.json"))
                 File.WriteAllText(Consts.MctDirectory + "\\.building.json", "[]");
 
-            current = new ModData();
+            building = new ModData(this);
 
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
 
@@ -336,13 +373,13 @@ namespace PoroCYon.MCT.Tools
 
             return true;
         }
-        static void   EndCompile(string path)
+        void   EndCompile(string path)
         {
             RemoveBuilding(path);
             //Directory.Delete(Path.GetTempPath() + "\\MCT", true);
         }
 
-        static CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
+        CompilerOutput MainCompileStuff(ModData mod, Assembly asm)
         {
             if (asm == null)
                 return null;
@@ -351,8 +388,8 @@ namespace PoroCYon.MCT.Tools
 
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(Checker.Check());
-            errors.AddRange(Writer.Write(mod));
+            errors.AddRange(new Checker(this).Check());
+            errors.AddRange(new Writer (this).Write());
 
             CompilerOutput outp = CreateOutput(errors);
             if (outp.Succeeded)
@@ -363,7 +400,7 @@ namespace PoroCYon.MCT.Tools
             return outp;
         }
 
-        static bool AppendBuilding(string path)
+        bool AppendBuilding(string path)
         {
             string json = "[]";
             if (File.Exists(BuildingList))
@@ -386,7 +423,7 @@ namespace PoroCYon.MCT.Tools
             File.WriteAllText(BuildingList, json);
             return false;
         }
-        static void RemoveBuilding(string path)
+        void RemoveBuilding(string path)
         {
             string json = String.Empty;
             if (File.Exists(BuildingList))

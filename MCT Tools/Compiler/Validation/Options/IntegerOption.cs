@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// An integer option.
     /// </summary>
-    public class IntegerOption : Option
+    public class IntegerOption(ModCompiler mc) : Option(mc)
     {
 #pragma warning disable 1591
         public int minimum;

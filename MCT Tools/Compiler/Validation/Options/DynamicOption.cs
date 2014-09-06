@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A dynamic option. Not actually validated.
     /// </summary>
-    public class DynamicOption : Option
+    public class DynamicOption(ModCompiler mc) : Option(mc)
     {
         readonly static IEnumerable<CompilerError> errors = new List<CompilerError>(); // only alloc once
 

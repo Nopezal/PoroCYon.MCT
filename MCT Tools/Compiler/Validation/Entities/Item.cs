@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item.
     /// </summary>
-    public class Item : EntityValidator
+    public class Item(ModCompiler mc) : EntityValidator(mc)
     {
         #region fields
 #pragma warning disable 1591
@@ -206,7 +206,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                             continue;
                         }
 
-                        Recipe r = new Recipe();
+                        Recipe r = new Recipe(Compiler);
                         
                         errors.AddRange(r.CreateAndValidate(new JsonFile(json.Path, recs[i])));
                         recipes.Add(r);

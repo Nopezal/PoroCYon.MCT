@@ -8,14 +8,14 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    static class FileLoader
+    class FileLoader(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Loads JSON and other files from a mod's source folder.
         /// </summary>
         /// <param name="directory">The mod's source folder.</param>
         /// <returns>A tuple containing the list of the JSON files an a list of the other files, together with all errors.</returns>
-        internal static Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>> LoadFiles(string directory)
+        internal Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>> LoadFiles(string directory)
         {
             List<CompilerError> errors = new List<CompilerError>();
 

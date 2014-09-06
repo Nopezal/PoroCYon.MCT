@@ -1,9 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using Microsoft.Build.Framework;
+using Microsoft.Build.Logging;
+using PoroCYon.Extensions.Collections;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
@@ -18,7 +22,7 @@ namespace PoroCYon.MCT.Tools
         static bool suppressBanner = false;
 
         static Dictionary<string, Action> Commands;
-        static Dictionary<string, Action<string>> ToolCommands;
+        static Dictionary<string, Action<string[]>> ToolCommands;
 
         static Program()
         {
@@ -44,20 +48,42 @@ namespace PoroCYon.MCT.Tools
             Commands.Add("h"       , Commands["help"  ]);
             Commands.Add("nobanner", Commands["banner"]);
 
-            ToolCommands = new Dictionary<string, Action<string>>()
+            ToolCommands = new Dictionary<string, Action<string[]>>()
             {
                 #region build
                 {
-                    "build", (path) =>
+                    "build", (args) =>
                     {
                         WriteBanner("mod compiler");
 
-                        if (WriteHelp(path, "BUILD <mod folder/dll file>"))
+                        int argNum = 0;
+
+                        if (WriteHelp(args[argNum], "BUILD <verbosity?> <mod folder/dll file>"))
                             return;
 
-                        CompilerOutput ret = File.Exists(path)
-                            ? ModCompiler.CompileFromAssembly(path)
-                            : ModCompiler.CompileFromSource  (path);
+                        LoggerVerbosity verbosity = LoggerVerbosity.Normal;
+
+                        if ((string vArg = args[argNum].TrimStart('-', '/').ToLowerInvariant()) == "v" || vArg == "verbose" || vArg == "verbosity")
+                        {
+                            if (Int32.TryParse(vArg, NumberStyles.Integer, CultureInfo.InvariantCulture, out int i))
+                            {
+                                verbosity = (LoggerVerbosity)i;
+                                argNum++;
+                            }
+                            else if (Enum.TryParse(vArg, true, out LoggerVerbosity v))
+                            {
+                                verbosity = v;
+                                argNum++;
+                            }
+                        }
+
+                        ModCompiler compiler = new ModCompiler(new ConsoleLogger(verbosity));
+
+                        string path = args.Skip(argNum).Join(CommonJoinValues.Space);
+
+                        CompilerOutput ret = File.Exists  (path)
+                            ? compiler.CompileFromAssembly(path)
+                            : compiler.CompileFromSource  (path);
 
                         if (Debugger.IsAttached)
                             Debug.WriteLine(ret);
@@ -69,8 +95,10 @@ namespace PoroCYon.MCT.Tools
 
                 #region decompile
                 {
-                    "decompile", (path) =>
+                    "decompile", (args) =>
                     {
+                        string path = args[0];
+
                         WriteBanner("mod decompiler");
 
                         if (WriteHelp(path,
@@ -93,9 +121,10 @@ namespace PoroCYon.MCT.Tools
 
                 #region port
                 {
-                    "port",
-                    (file) =>
+                    "port", (args) =>
                     {
+                        string file = args[0];
+
                         WriteBanner("file porter");
 
                         if (WriteHelp(file, "PORT <toPort>. \t\t toPort should be the full file name (name + extension) of the file to port. Folder not required."))
@@ -154,12 +183,12 @@ namespace PoroCYon.MCT.Tools
                 },
                 #endregion
 
-                { "skip", (nothing) => { } }
+                { "skip", /* fun _ -> () */ delegate { } }
             };
 
             ToolCommands.Add("compile", ToolCommands["build"]);
-            ToolCommands.Add("ignore" , ToolCommands["skip"] );
-            ToolCommands.Add("nothing", ToolCommands["skip"] );
+            ToolCommands.Add("ignore" , ToolCommands["skip" ]);
+            ToolCommands.Add("nothing", ToolCommands["skip" ]);
         }
 
         static bool WriteHelp(string arg, string help)
@@ -228,7 +257,7 @@ namespace PoroCYon.MCT.Tools
                     {
                         try
                         {
-                            ToolCommands[name](args[++i]);
+                            ToolCommands[name](args.Skip(++i).ToArray());
                         }
                         catch (Exception e)
                         {

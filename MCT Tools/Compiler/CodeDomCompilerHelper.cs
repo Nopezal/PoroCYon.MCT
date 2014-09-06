@@ -16,7 +16,7 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// An object that helps with the compilation of <see cref="System.CodeDom.Compiler.CodeDomProvider" /> compilers.
     /// </summary>
-    public abstract class CodeDomCompilerHelper : ICompiler
+    public abstract class CodeDomCompilerHelper(ModCompiler mc) : CompilerPhase(mc), ICompiler
     {
         /// <summary>
         /// Gets the mod which is being compiled.
@@ -49,18 +49,18 @@ namespace PoroCYon.MCT.Tools.Compiler
             get;
         }
 
-        static List<string> WriteRefAssembliesRec(ModInfo mi)
+        List<string> WriteRefAssembliesRec(ModInfo mi)
         {
             List<string> ret = new List<string>();
 
             for (int i = 0; i < mi.modReferences.Length; i++)
             {
                 // presence of the mod is checked in ModInfo validation
-                WriteAssembly(ModCompiler.modDict[mi.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mi.modReferences[i] + ".dll");
+                WriteAssembly(Compiler.modDict[mi.modReferences[i]], Path.GetTempPath() + "\\MCT\\" + mi.modReferences[i] + ".dll");
 
                 ret.Add(Path.GetTempPath() + "\\MCT\\" + mi.modReferences[i] + ".dll");
 
-                ModInfo mi2 = ModInfo.GetModInfoFromTapi(ModCompiler.modDict[mi.modReferences[i]]);
+                ModInfo mi2 = mi.GetModInfoFromTapi(Compiler.modDict[mi.modReferences[i]]);
 
                 if (mi2 != null)
                     ret.AddRange(WriteRefAssembliesRec(mi2));

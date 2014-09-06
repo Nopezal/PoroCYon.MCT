@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// An item craft group.
     /// </summary>
-    public class ItemCraftGroup : ValidatorObject
+    public class ItemCraftGroup(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public string name;

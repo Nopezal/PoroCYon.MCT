@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A tile craft group.
     /// </summary>
-    public class TileCraftGroup : ValidatorObject
+    public class TileCraftGroup(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
         public string name;

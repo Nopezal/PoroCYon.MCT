@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A tile.
     /// </summary>
-    public class Tile : EntityValidator
+    public class Tile(ModCompiler mc) : EntityValidator(mc)
     {
 #pragma warning disable 1591
         public int frameWidth = 16;

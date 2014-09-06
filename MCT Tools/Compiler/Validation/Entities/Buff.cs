@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A buff (positive, negative, weapon or pet).
     /// </summary>
-    public class Buff : EntityValidator
+    public class Buff(ModCompiler mc) : EntityValidator(mc)
     {
 #pragma warning disable 1591
         public string tip;

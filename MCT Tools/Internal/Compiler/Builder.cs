@@ -128,21 +128,23 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         public void Shutdown() { }
     }
 
-    static class Builder
+    class Builder(ModCompiler mc) : CompilerPhase(mc)
     {
-        internal static List<ICompiler> compilers = new List<ICompiler>();
-        internal static string MSBOutputPath = Path.GetTempPath() + "MCT\\MSBuild";
+        internal List<ICompiler> compilers = new List<ICompiler>();
+        internal string MSBOutputPath = Path.GetTempPath() + "MCT\\MSBuild";
 
-        static void LoadCompilers()
+        readonly static Type[] ctorTypes = { typeof(ModCompiler) };
+
+        void LoadCompilers()
         {
             if (!Directory.Exists(Consts.MctDirectory + "\\Compilers"))
                 Directory.CreateDirectory(Consts.MctDirectory + "\\Compilers");
 
             compilers.Clear();
 
-            compilers.Add(new CSharpCompiler());
-            compilers.Add(new JScriptCompiler());
-            compilers.Add(new VBCompiler());
+            compilers.Add(new CSharpCompiler (Compiler));
+            compilers.Add(new JScriptCompiler(Compiler));
+            compilers.Add(new VBCompiler     (Compiler));
 
             if (!Directory.Exists(Consts.MctDirectory))
                 Directory.CreateDirectory(Consts.MctDirectory);
@@ -167,7 +169,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                     try
                     {
-                        ICompiler c = t.GetConstructor(Type.EmptyTypes).Invoke(null) as ICompiler;
+                        ICompiler c = t.GetConstructor(ctorTypes).Invoke(new[] { Compiler }) as ICompiler;
 
                         if (c != null)
                             compilers.Add(c);
@@ -180,7 +182,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             }
         }
 
-        static IEnumerable<CompilerError> ClearFolders(ModData mod)
+        IEnumerable<CompilerError> ClearFolders(ModData mod)
         {
             List<CompilerError> errors = new List<CompilerError>();
 
@@ -264,31 +266,31 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return errors;
         }
 
-        internal static Tuple<Assembly, string, List<CompilerError>> Build(ModData mod)
+        internal Tuple<Assembly, string, List<CompilerError>> Build()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(ClearFolders(mod));
+            errors.AddRange(ClearFolders(Building));
 
             LoadCompilers();
 
-            var ret = mod.Info.MSBuild ? BuildMSBuild(mod) : BuildICompiler(mod);
+            var ret = Building.Info.MSBuild ? BuildMSBuild() : BuildICompiler();
 
             errors.AddRange(ret.Item3);
 
             return new Tuple<Assembly, string, List<CompilerError>>(ret.Item1, ret.Item2, errors);
         }
 
-        static Tuple<Assembly, string, List<CompilerError>> BuildMSBuild(ModData mod)
+        Tuple<Assembly, string, List<CompilerError>> BuildMSBuild()
         {
             List<CompilerError> errors = new List<CompilerError>();
             Assembly asm = null;
             string pdb = null;
 
-            if (!mod.Info.includeSource)
+            if (!Building.Info.includeSource)
             {
                 List<string> toRemove = new List<string>();
-                string ext = Path.GetExtension(mod.Info.msBuildFile);
+                string ext = Path.GetExtension(Building.Info.msBuildFile);
                 string[] probableFileExt = new[] { ext.Remove(ext.IndexOf("proj")) };
 
                 if (probableFileExt[0] == ".vcx")
@@ -302,20 +304,20 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (probableFileExt[0] == ".fs")
                     probableFileExt = new[] { "fs", "fsx" };
 
-                foreach (string key in mod.Files.Keys)
+                foreach (string key in Building.Files.Keys)
                     for (int i = 0; i < probableFileExt.Length; i++)
                         if (key.EndsWith(probableFileExt[i]))
                             toRemove.Add(key);
                 foreach (string r in toRemove)
-                    mod.files.Remove(r);
+                    Building.files.Remove(r);
             }
 
             BuildLogger logger = new BuildLogger();
             BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection())
-                { Loggers = new List<ILogger>() { logger } },
-                new BuildRequestData(mod.Info.msBuildFile, new Dictionary<string, string>
+                { Loggers = new List<ILogger>() { logger }.Union(Compiler.Loggers) /* P: */ },
+                new BuildRequestData(Building.Info.msBuildFile, new Dictionary<string, string>
                 {
-                    { "Configuration", mod.Info.includePDB ? "Debug" : "Release" },
+                    { "Configuration", Building.Info.includePDB ? "Debug" : "Release" },
                     { "Platform",      "x86"                                     },
                     { "OutputPath",    MSBOutputPath                             }
                 }, "4.0", new string[] { "Build" }, null));
@@ -326,28 +328,28 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             {
                 try
                 {
-                    asm = Assembly.LoadFile(MSBOutputPath + "\\" + ModsCompile.GetOutputFileName(mod.Info.msBuildFile));
+                    asm = Assembly.LoadFile(MSBOutputPath + "\\" + ModsCompile.GetOutputFileName(Building.Info.msBuildFile));
                 }
                 catch (Exception e)
                 {
                     errors.Add(new CompilerError()
                     {
                         Cause = e,
-                        FilePath = mod.Info.msBuildFile,
+                        FilePath = Building.Info.msBuildFile,
                         IsWarning = false,
                         Message = "Could not load built assembly. Check the exception for more information."
                     });
                 }
 
-                if (mod.Info.includePDB)
+                if (Building.Info.includePDB)
                 {
-                    pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(mod.Info.msBuildFile);
+                    pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(Building.Info.msBuildFile);
 
                     if (!File.Exists(pdb))
                         errors.Add(new CompilerError()
                         {
                             Cause = new FileNotFoundException(),
-                            FilePath = mod.Info.msBuildFile,
+                            FilePath = Building.Info.msBuildFile,
                             IsWarning = false,
                             Message = "Could not find the .pdb file."
                         });
@@ -359,14 +361,14 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return new Tuple<Assembly, string, List<CompilerError>>(asm, pdb, errors);
         }
-        static Tuple<Assembly, string, List<CompilerError>> BuildICompiler(ModData mod)
+        Tuple<Assembly, string, List<CompilerError>> BuildICompiler()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
             Assembly asm = null;
             string pdb = null;
 
-            string lang = mod.Info.language.ToString().ToLowerInvariant();
+            string lang = Building.Info.language.ToString().ToLowerInvariant();
             ICompiler compiler = null;
 
             for (int i = 0; i < compilers.Count; i++)
@@ -380,19 +382,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 errors.Add(new CompilerError()
                 {
                     Cause = new KeyNotFoundException(),
-                    FilePath = mod.jsons[0].Path,
+                    FilePath = Building.jsons[0].Path,
                     IsWarning = false,
-                    Message = "Could not find the specified programming language '" + mod.Info.language + "'."
+                    Message = "Could not find the specified programming language '" + Building.Info.language + "'."
                 });
             else
                 try
                 {
-                    var result = compiler.Compile(mod);
+                    var result = compiler.Compile(Building);
                     errors.AddRange(result.Item2);
 
                     asm = result.Item1;
 
-                    if (asm != null && mod.Info.includePDB)
+                    if (asm != null && Building.Info.includePDB)
                     {
                         pdb = Path.ChangeExtension(asm.Location, ".pdb");
 
@@ -400,22 +402,22 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             errors.Add(new CompilerError()
                             {
                                 Cause = new FileNotFoundException(),
-                                FilePath = mod.Info.msBuildFile,
+                                FilePath = Building.Info.msBuildFile,
                                 IsWarning = false,
                                 Message = "Could not find the .pdb file."
                             });
                     }
 
-                    if (!mod.Info.includeSource)
+                    if (!Building.Info.includeSource)
                     {
                         List<string> toRemove = new List<string>();
 
-                        foreach (string key in mod.Files.Keys)
+                        foreach (string key in Building.Files.Keys)
                             for (int i = 0; i < compiler.FileExtensions.Length; i++)
                                 if (key.EndsWith(compiler.FileExtensions[i]))
                                     toRemove.Add(key);
                         foreach (string r in toRemove)
-                            mod.files.Remove(r);
+                            Building.files.Remove(r);
                     }
                 }
                 catch (Exception e)
@@ -423,7 +425,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     errors.Add(new CompilerError()
                     {
                         Cause = e,
-                        FilePath = mod.jsons[0].Path,
+                        FilePath = Building.jsons[0].Path,
                         IsWarning = false,
                         Message = "Something went wrong when building the mod. Check the Exception for more info."
                     });

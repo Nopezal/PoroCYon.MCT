@@ -8,7 +8,7 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
 {
-    class VBCompiler : CodeDomCompilerHelper
+    class VBCompiler(ModCompiler mc) : CodeDomCompilerHelper(mc)
     {
         readonly static string[]
             ext  = new string[] { ".vb", ".vbs" },

@@ -9,14 +9,14 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    static class Extractor
+    class Extractor(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Extracts JSON and other files from a managed assembly's embedded resources.
         /// </summary>
         /// <param name="asm">The assembly to extract the files from.</param>
         /// <returns>A tuple containing the list of the JSON files an a list of the other files, together with all errors.</returns>
-        internal static Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>> ExtractData(Assembly asm)
+        internal Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>> ExtractData(Assembly asm)
         {
             List<CompilerError> errors = new List<CompilerError>();
 

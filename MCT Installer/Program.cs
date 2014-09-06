@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Linq;
 using System.Windows;
 
 namespace PoroCYon.MCT.Installer
@@ -12,7 +15,7 @@ namespace PoroCYon.MCT.Installer
             {
                 App.Main();
             }
-            catch (Exception e)
+            catch (Exception e) if (!Debugger.IsAttached)
             {
                 DisplayError(e);
             }

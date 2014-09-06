@@ -7,7 +7,7 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
 {
-    class CSharpCompiler : CodeDomCompilerHelper
+    class CSharpCompiler(ModCompiler mc) : CodeDomCompilerHelper(mc)
     {
         readonly static string[]
             ext  = new string[] { ".cs", ".csx" },

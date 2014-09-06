@@ -10,8 +10,8 @@ open PoroCYon.MCT.Tools.Compiler
 /// <summary>
 /// The MCT Tools F# compiler
 /// </summary>
-type FSharpCompiler() = 
-    inherit CodeDomCompilerHelper()
+type FSharpCompiler(mc) = 
+    inherit CodeDomCompilerHelper(mc)
 
     static let ext  = [| ".fs"; ".fsx"        |]
     static let asm  = [| "FSharp.Core.dll"    |]

@@ -9,7 +9,6 @@ using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
-using PoroCYon.MCT.Tools.ModCompiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
@@ -17,7 +16,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
     using NPC = Tools.Compiler.Validation.Entities.NPC;
     using Recipe = Tools.Compiler.Validation.Entities.Recipe;
 
-    static class Checker
+    class Checker(ModCompiler mc) : CompilerPhase(mc)
     {
         // static Game main;
 
@@ -108,7 +107,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     AddIfNotNull(e, list);
         }
 
-        static CompilerError CheckForModBase(Assembly asm)
+        CompilerError CheckForModBase(Assembly asm)
         {
             bool foundModBase = false;
 
@@ -128,7 +127,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return null;
         }
 
-        static CompilerError CheckBuffExists(Union<string, int> id, string source, string file)
+        CompilerError CheckBuffExists(Union<string, int> id, string source, string file)
         {
             if (id.UsedObjectNum == 1)
             {
@@ -156,11 +155,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.buffNames.Any(kvp => kvp.Value == name) && !current.buffs.Any(b => b.internalName == name))
+                if (!Defs.buffNames.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
-                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                    if (internalName != "Vanilla" && internalName != Building.Info.internalName)
                         return new CompilerError()
                         {
                             Cause = new ObjectNotFoundException(name),
@@ -181,7 +180,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckItemExists(Union<string, int> id, string source, string file)
+        CompilerError CheckItemExists(Union<string, int> id, string source, string file)
         {
             // this method also checks for craft groups
 
@@ -211,7 +210,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
                 else if (name.StartsWith("g:") && !Defs.itemGroups.Any(kvp => kvp.Key == name)
-                        && !current.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
+                        && !Building.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
                     return new CompilerError()
                     {
                         Cause = new ObjectNotFoundException(name),
@@ -220,12 +219,12 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         Message = "Could not find craft group " + name + " in " + source + "."
                     };
 
-                if (!Defs.items.ContainsKey(name) && !current.items.Any(i => i.internalName == name))
+                if (!Defs.items.ContainsKey(name) && !Building.items.Any(i => i.internalName == name))
                 {
 
                     string internalName = name.Split(':')[0];
 
-                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                    if (internalName != "Vanilla" && internalName != Building.Info.internalName)
                         return new CompilerError()
                         {
                             Cause = new ObjectNotFoundException(name),
@@ -246,7 +245,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckNPCExists (Union<string, int> id, string source, string file)
+        CompilerError CheckNPCExists (Union<string, int> id, string source, string file)
         {
             if (id.UsedObjectNum == 1)
             {
@@ -274,11 +273,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.npcs.ContainsKey(name) && !current.npcs.Any(n => n.internalName == name))
+                if (!Defs.npcs.ContainsKey(name) && !Building.npcs.Any(n => n.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
-                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                    if (internalName != "Vanilla" && internalName != Building.Info.internalName)
                         return new CompilerError()
                         {
                             Cause = new ObjectNotFoundException(name),
@@ -299,7 +298,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckProjExists(Union<string, int> id, string source, string file)
+        CompilerError CheckProjExists(Union<string, int> id, string source, string file)
         {
             if (id.UsedObjectNum == 1)
             {
@@ -327,11 +326,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.projectiles.ContainsKey(name) && !current.projs.Any(p => p.internalName == name))
+                if (!Defs.projectiles.ContainsKey(name) && !Building.projs.Any(p => p.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
-                    if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                    if (internalName != "Vanilla" && internalName != Building.Info.internalName)
                         return new CompilerError()
                         {
                             Cause = new ObjectNotFoundException(name),
@@ -352,16 +351,16 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckPfixExists(      string       id, string source, string file)
+        CompilerError CheckPfixExists(      string       id, string source, string file)
         {
             if (String.IsNullOrEmpty(id)) // not defined
                 return null;
 
-            if (!Defs.prefixes.ContainsKey(id) && !current.pfixes.Any(p => p.internalName == id))
+            if (!Defs.prefixes.ContainsKey(id) && !Building.pfixes.Any(p => p.internalName == id))
             {
                 string internalName = id.Split(':')[0];
 
-                if (internalName != "Vanilla" && internalName != current.Info.internalName)
+                if (internalName != "Vanilla" && internalName != Building.Info.internalName)
                     return new CompilerError()
                     {
                         Cause = new ObjectNotFoundException(id),
@@ -381,7 +380,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckTileExists(Union<string, int> id, string source, string file)
+        CompilerError CheckTileExists(Union<string, int> id, string source, string file)
         {
             // tile craft groups aren't implemented yet
 
@@ -415,7 +414,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (name == "Adamantite Forge" || name == "Titanium Forge")
                     name = "Adamantite or Titanium Forge";
 
-                if (!TileDef.type.Any(kvp => kvp.Key == name) && !current.tiles.Any(t => t.internalName == name))
+                if (!TileDef.type.Any(kvp => kvp.Key == name) && !Building.tiles.Any(t => t.internalName == name))
                     return new CompilerError()
                     {
                         Cause = new ObjectNotFoundException(name),
@@ -427,7 +426,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
-        static CompilerError CheckWallExists(Union<string, int> id, string source, string file)
+        CompilerError CheckWallExists(Union<string, int> id, string source, string file)
         {
             if (id.UsedObjectNum == 1)
             {
@@ -452,7 +451,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (String.IsNullOrEmpty(name)) // not defined
                     return null;
 
-                if (!TileDef.wall.Any(kvp => kvp.Key == name) && !current.walls.Any(w => w.internalName == name))
+                if (!TileDef.wall.Any(kvp => kvp.Key == name) && !Building.walls.Any(w => w.internalName == name))
                     return new CompilerError()
                     {
                         Cause = new ObjectNotFoundException(name),
@@ -465,7 +464,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return null;
         }
 
-        static List<CompilerError> CheckBuffs ()
+        List<CompilerError> CheckBuffs ()
         {
             // buff references:
             // * item.buff
@@ -474,17 +473,17 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             List<CompilerError> errors = new List<CompilerError>();
 
             // item.buff
-            for (int i = 0; i < current.items.Count; i++)
-                AddIfNotNull(CheckBuffExists(current.items[i].buff, "Key 'buff' in " + current.items[i].internalName, current.items[i].internalName), errors);
+            for (int i = 0; i < Building.items.Count; i++)
+                AddIfNotNull(CheckBuffExists(Building.items[i].buff, "Key 'buff' in " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
             // npc.buffImmunity
-            for (int i = 0; i < current.npcs.Count; i++)
-                for (int j = 0; j < current.npcs[i].buffImmune.Count; j++)
-                    AddIfNotNull(CheckBuffExists(current.npcs[i].buffImmune[j], "Buff " + (j + 1) + " in " + current.npcs[i].internalName, current.npcs[i].internalName), errors);
+            for (int i = 0; i < Building.npcs.Count; i++)
+                for (int j = 0; j < Building.npcs[i].buffImmune.Count; j++)
+                    AddIfNotNull(CheckBuffExists(Building.npcs[i].buffImmune[j], "Buff " + (j + 1) + " in " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
 
             return errors;
         }
-        static List<CompilerError> CheckItems ()
+        List<CompilerError> CheckItems ()
         {
             // item references:
             // * item.recipes.items
@@ -495,27 +494,27 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             List<CompilerError> errors = new List<CompilerError>();
 
             // item.recipes.items
-            for (int i = 0; i < current.items.Count; i++)
-                for (int j = 0; j < current.items[i].recipes.Count; j++)
-                    foreach (var kvp in current.items[i].recipes[j].items)
-                        AddIfNotNull(CheckItemExists(kvp.Key, "Recipe " + (j + 1) + " of Item " + current.items[i].internalName, current.items[i].internalName), errors);
+            for (int i = 0; i < Building.items.Count; i++)
+                for (int j = 0; j < Building.items[i].recipes.Count; j++)
+                    foreach (var kvp in Building.items[i].recipes[j].items)
+                        AddIfNotNull(CheckItemExists(kvp.Key, "Recipe " + (j + 1) + " of Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
             // npc.drops.item
-            for (int i = 0; i < current.npcs.Count; i++)
-                for (int j = 0; j < current.npcs[i].drops.Count; j++)
-                    AddIfNotNull(CheckItemExists(current.npcs[i].drops[j].item, "Drop " + (j + 1) + " of NPC " + current.npcs[i].internalName, current.npcs[i].internalName), errors);
+            for (int i = 0; i < Building.npcs.Count; i++)
+                for (int j = 0; j < Building.npcs[i].drops.Count; j++)
+                    AddIfNotNull(CheckItemExists(Building.npcs[i].drops[j].item, "Drop " + (j + 1) + " of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
 
             // tile.drop
-            for (int i = 0; i < current.tiles.Count; i++)
-                AddIfNotNull(CheckItemExists(current.tiles[i].drop, "Key 'drop' of Tile " + current.tiles[i].internalName, current.tiles[i].internalName), errors);
+            for (int i = 0; i < Building.tiles.Count; i++)
+                AddIfNotNull(CheckItemExists(Building.tiles[i].drop, "Key 'drop' of Tile " + Building.tiles[i].internalName, Building.tiles[i].internalName), errors);
 
             // wall.drop
-            for (int i = 0; i < current.walls.Count; i++)
-                AddIfNotNull(CheckItemExists(current.walls[i].drop, "Key 'drop' of Wall " + current.walls[i].internalName, current.walls[i].internalName), errors);
+            for (int i = 0; i < Building.walls.Count; i++)
+                AddIfNotNull(CheckItemExists(Building.walls[i].drop, "Key 'drop' of Wall " + Building.walls[i].internalName, Building.walls[i].internalName), errors);
 
             return errors;
         }
-        static List<CompilerError> CheckNPCs  ()
+        List<CompilerError> CheckNPCs  ()
         {
             // npc references:
             // * ...
@@ -528,7 +527,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             //return errors;
         }
-        static List<CompilerError> CheckProjs ()
+        List<CompilerError> CheckProjs ()
         {
             // proj references:
             // * item.shoot
@@ -536,12 +535,12 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             List<CompilerError> errors = new List<CompilerError>();
 
             // item.shoot
-            for (int i = 0; i < current.items.Count; i++)
-                AddIfNotNull(CheckProjExists(current.items[i].shoot, "Key 'shoot' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
+            for (int i = 0; i < Building.items.Count; i++)
+                AddIfNotNull(CheckProjExists(Building.items[i].shoot, "Key 'shoot' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
             return errors;
         }
-        static List<CompilerError> CheckPfixes()
+        List<CompilerError> CheckPfixes()
         {
             // prefix references:
             // * ...
@@ -554,7 +553,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             //return errors;
         }
-        static List<CompilerError> CheckTiles ()
+        List<CompilerError> CheckTiles ()
         {
             // tile references:
             // * item.createTile
@@ -562,33 +561,33 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             List<CompilerError> errors = new List<CompilerError>();
 
-            for (int i = 0; i < current.items.Count; i++)
+            for (int i = 0; i < Building.items.Count; i++)
             {
-                AddIfNotNull(CheckTileExists(current.items[i].createTile, "Key 'createTile' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
+                AddIfNotNull(CheckTileExists(Building.items[i].createTile, "Key 'createTile' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
-                AddIfNotNull(CheckTileExists(current.items[i].tileWand  , "Key 'tileWand' in Item "   + current.items[i].internalName, current.items[i].internalName), errors);
+                AddIfNotNull(CheckTileExists(Building.items[i].tileWand  , "Key 'tileWand' in Item "   + Building.items[i].internalName, Building.items[i].internalName), errors);
             }
 
             return errors;
         }
-        static List<CompilerError> CheckWalls ()
+        List<CompilerError> CheckWalls ()
         {
             // wall references:
             // * item.createWall
 
             List<CompilerError> errors = new List<CompilerError>();
 
-            for (int i = 0; i < current.items.Count; i++)
-                AddIfNotNull(CheckTileExists(current.items[i].createWall, "Key 'createWall' in Item " + current.items[i].internalName, current.items[i].internalName), errors);
+            for (int i = 0; i < Building.items.Count; i++)
+                AddIfNotNull(CheckTileExists(Building.items[i].createWall, "Key 'createWall' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
             return errors;
         }
 
-        internal static IEnumerable<CompilerError> Check()
+        internal IEnumerable<CompilerError> Check()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(CheckForModBase(current.Assembly), errors);
+            AddIfNotNull(CheckForModBase(Building.Assembly), errors);
 
             LoadDefs();
 

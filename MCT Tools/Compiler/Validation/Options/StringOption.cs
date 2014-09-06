@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A string option.
     /// </summary>
-    public class StringOption : Option
+    public class StringOption(ModCompiler mc) : Option(mc)
     {
 #pragma warning disable 1591
         public int length;
