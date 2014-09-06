@@ -60,7 +60,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 placementConditions = size[0] > 1 || size[1] > 1 ? "flatGroundSolid" : "placeTouchingSolid";
             AddIfNotNull(SetJsonValue(json, "placementOrigin", ref placementOrigin, new int[2] { 0, 0 }), errors);
             if (placementOrigin.Length == 0 || placementOrigin.Length > 2)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new IndexOutOfRangeException(),
                     FilePath = json.Path,

@@ -26,7 +26,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "stack", ref stack, 1), errors);
             if (stack <= 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -36,7 +36,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "item",  ref item), errors);
             AddIfNotNull(SetJsonValue(json, "chance", ref chance, 0f), errors);
             if (chance > 1f)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -44,7 +44,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Message = "'chance' is above 1. Set it to 1."
                 });
             if (chance <= 0f)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,

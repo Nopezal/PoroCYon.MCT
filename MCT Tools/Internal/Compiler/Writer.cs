@@ -3,11 +3,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using Microsoft.Build.Framework;
+using LitJson;
 using Ionic.Zip;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
-using LitJson;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
@@ -19,6 +20,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             BinBuffer bb = new BinBuffer();
 
+            Compiler.Log("Writing header.", MessageImportance.Low);
             bb.Write(API.versionAssembly);
             bb.Write(Building.JSONs[0].Json.ToJson());
             bb.Write(Building.Files.Count + (Building.Info.includePDB ? 1 : 0));
@@ -34,6 +36,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (pdb != null)
             {
+                Compiler.Log("Got PDB file.", MessageImportance.Low);
                 bb.Write("DebugInformation.pdb");
                 bb.Write(pdb.Length);
             }
@@ -58,6 +61,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             //    bb.Write(jsons[jsons.Count - 1].Item1       );
             //    bb.Write(jsons[jsons.Count - 1].Item2.Length);
             //}
+            Compiler.Log("Writing file headers.", MessageImportance.Low);
             foreach (KeyValuePair<string, byte[]> current in Building.Files)
             {
                 bb.Write(current.Key);
@@ -66,11 +70,13 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (pdb != null)
                 bb.Write(pdb);
+            Compiler.Log("Writing files.", MessageImportance.Low);
             //for (int i = 0; i < jsons.Count; i++)
             //    bb.Write(jsons[i].Item2);
             foreach (KeyValuePair<string, byte[]> current in Building.Files)
                 bb.Write(current.Value);
 
+            Compiler.Log("Writing assembly.", MessageImportance.Low);
             bb.Write(File.ReadAllBytes(Building.Assembly.Location));
             bb.Pos = 0;
 
@@ -82,6 +88,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             if (Building.Info.compress)
                 using (ZipFile zf = new ZipFile())
                 {
+                    Compiler.Log("Compressing output.", MessageImportance.Low);
                     if (!Directory.Exists(CommonToolUtilities.modsBinDir))
                         Directory.CreateDirectory(CommonToolUtilities.modsBinDir);
 
@@ -93,10 +100,14 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     foreach (KeyValuePair<string, byte[]> current in Building.Files)
                         zf.AddEntry(current.Key, current.Value);
 
+                    Compiler.Log("Writing compressed output to disk.", MessageImportance.Low);
                     zf.Save(outputFile);
                 }
             else
+            {
+                Compiler.Log("Writing uncompressed output to disk.", MessageImportance.Low);
                 File.WriteAllBytes(outputFile, bb.ReadBytes(bb.GetSize()));
+            }
 
             if (Building.Info.extractDLL)
             {

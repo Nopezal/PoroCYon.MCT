@@ -120,7 +120,7 @@ namespace PoroCYon.MCT.Tools.Compiler
                 }
                 catch (Exception e)
                 {
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = e,
                         FilePath = Path.GetTempPath() + "MCT\\" + mod.Info.modReferences[i] + ".dll",
@@ -139,7 +139,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             CompilerResults cr = cdp.CompileAssemblyFromFile(cp, files);
 
             foreach (CodeDomError ce in cr.Errors)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new CompilerException(ce.ErrorNumber),
                     FilePath = ce.FileName,

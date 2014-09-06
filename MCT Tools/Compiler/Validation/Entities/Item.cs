@@ -108,7 +108,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         JsonData tip = tt[i];
 
                         if (!tip.IsString)
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -123,7 +123,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         tooltip.Add(tips[i]);
                 }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -142,7 +142,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 else if (v.IsArray)
                 {
                     if (v.Count > 4)
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new IndexOutOfRangeException(),
                             FilePath = json.Path,
@@ -157,7 +157,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         JsonData val = v[i];
 
                         if (!val.IsInt)
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -170,11 +170,11 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                     value += values[0] * 1000000; // p
                     value += values[1] * 10000;   // g
-                    value += values[2] * 100;     // g
-                    value += values[3] * 1;       // g
+                    value += values[2] * 100;     // s
+                    value += values[3] * 1;       // c
                 }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -195,7 +195,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     {
                         if (!recs[i].IsObject)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -212,7 +212,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         recipes.Add(r);
                     }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -244,7 +244,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "textureArm", ref textureArm, texture + "._Arm"), errors);
             AddIfNotNull(SetJsonValue(json, "hairType", ref hairType, 0), errors);
             if (hairType < 0 || hairType > 3)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -257,7 +257,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             #region use
             AddIfNotNull(SetJsonValue(json, "useStyle", ref useStyle, 0), errors);
             if (useStyle < 0 || useStyle > 5)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -266,7 +266,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             AddIfNotNull(SetJsonValue(json, "holdStyle", ref holdStyle, 0), errors);
             if (holdStyle < 0 || holdStyle > 2)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -275,7 +275,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             AddIfNotNull(SetJsonValue(json, "useTime", ref useTime, 100), errors);
             if (useTime <= 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -284,7 +284,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             AddIfNotNull(SetJsonValue(json, "useAnimation", ref useAnimation, 100), errors);
             if (useTime <= 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -293,7 +293,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             AddIfNotNull(SetJsonValue(json, "holdoutOffset", ref holdoutOffset, new float[2]), errors);
             if (holdoutOffset.Length != 2)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new IndexOutOfRangeException(),
                     FilePath = json.Path,
@@ -302,7 +302,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             AddIfNotNull(SetJsonValue(json, "holdoutOrigin", ref holdoutOrigin, new float[2]), errors);
             if (holdoutOrigin.Length != 2)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new IndexOutOfRangeException(),
                     FilePath = json.Path,

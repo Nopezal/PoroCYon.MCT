@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 using System.Runtime;
-using Microsoft.Xna.Framework;
+using Microsoft.Build.Framework;
 using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
@@ -12,9 +12,6 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    using Item = Tools.Compiler.Validation.Entities.Item;
-    using NPC = Tools.Compiler.Validation.Entities.NPC;
-    using Recipe = Tools.Compiler.Validation.Entities.Recipe;
 
     class Checker(ModCompiler mc) : CompilerPhase(mc)
     {
@@ -107,19 +104,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     AddIfNotNull(e, list);
         }
 
-        CompilerError CheckForModBase(Assembly asm)
+        CompilerError CheckForModBase()
         {
             bool foundModBase = false;
 
-            foreach (Type t in asm.GetTypes())
+            foreach (Type t in Building.Assembly.GetTypes())
                 if (t.IsSubclassOf(typeof(ModBase)))
                     foundModBase = true;
 
             if (!foundModBase)
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new TypeLoadException(),
-                    FilePath = asm.Location,
+                    FilePath = Building.Assembly.Location,
                     IsWarning = false,
                     Message = "No ModBase class found."
                 };
@@ -137,7 +134,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i <= 0 || i >= Main.maxBuffs)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -160,7 +157,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     string internalName = name.Split(':')[0];
 
                     if (internalName != "Vanilla" && internalName != Building.Info.internalName)
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ObjectNotFoundException(name),
                             FilePath = file,
@@ -168,7 +165,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             Message = "Could not find Buff " + name + " in " + source + ": mod '" + internalName + "' not found."
                         };
 
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -192,7 +189,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i == 0 || i < -48 || i >= Main.maxItemTypes)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -211,7 +208,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     name = "Vanilla:" + name;
                 else if (name.StartsWith("g:") && !Defs.itemGroups.Any(kvp => kvp.Key == name)
                         && !Building.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -225,7 +222,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     string internalName = name.Split(':')[0];
 
                     if (internalName != "Vanilla" && internalName != Building.Info.internalName)
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ObjectNotFoundException(name),
                             FilePath = file,
@@ -233,7 +230,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             Message = "Could not find Item " + name + " in " + source + ": mod '" + internalName + "' not found."
                         };
 
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -255,7 +252,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i == 0 || i < -65 || i >= Main.maxNPCTypes)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -278,7 +275,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     string internalName = name.Split(':')[0];
 
                     if (internalName != "Vanilla" && internalName != Building.Info.internalName)
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ObjectNotFoundException(name),
                             FilePath = file,
@@ -286,7 +283,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             Message = "Could not find NPC " + name + " in " + source + ": mod '" + internalName + "' not found."
                         };
 
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -308,7 +305,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i <= 0 || i >= Main.maxProjectileTypes)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -331,7 +328,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     string internalName = name.Split(':')[0];
 
                     if (internalName != "Vanilla" && internalName != Building.Info.internalName)
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ObjectNotFoundException(name),
                             FilePath = file,
@@ -339,7 +336,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             Message = "Could not find Projectile " + name + " in " + source + ": mod '" + internalName + "' not found."
                         };
 
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -361,7 +358,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 string internalName = id.Split(':')[0];
 
                 if (internalName != "Vanilla" && internalName != Building.Info.internalName)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(id),
                         FilePath = file,
@@ -369,7 +366,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         Message = "Could not find Prefix " + id + " in " + source + ": mod '" + internalName + "' not found."
                     };
 
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new ObjectNotFoundException(id),
                     FilePath = file,
@@ -392,7 +389,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i <= 0 || i >= Main.maxTileSets)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -415,7 +412,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     name = "Adamantite or Titanium Forge";
 
                 if (!TileDef.type.Any(kvp => kvp.Key == name) && !Building.tiles.Any(t => t.internalName == name))
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -436,7 +433,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (i <= 0 || i >= Main.maxWallTypes)
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
                         FilePath = file,
@@ -452,7 +449,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     return null;
 
                 if (!TileDef.wall.Any(kvp => kvp.Key == name) && !Building.walls.Any(w => w.internalName == name))
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
                         FilePath = file,
@@ -583,20 +580,46 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return errors;
         }
 
+        List<CompilerError> CheckTypeNames()
+        {
+            List<CompilerError> errors = new List<CompilerError>();
+
+
+
+            return errors;
+        }
+
         internal IEnumerable<CompilerError> Check()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            AddIfNotNull(CheckForModBase(Building.Assembly), errors);
+            Compiler.Log("Checking for ModBase...", MessageImportance.Low);
+            AddIfNotNull(CheckForModBase(), errors);
+
+            Compiler.Log("Checking entity types...", MessageImportance.Low);
+            AddIfNotNull(CheckTypeNames(), errors);
 
             LoadDefs();
 
+            Compiler.Log("Checking for items...", MessageImportance.Low);
             AddIfNotNull(CheckItems (), errors);
+
+            Compiler.Log("Checking for buffs...", MessageImportance.Low);
             AddIfNotNull(CheckBuffs (), errors);
+
+            Compiler.Log("Checking for NPCs...", MessageImportance.Low);
             AddIfNotNull(CheckNPCs  (), errors);
+
+            Compiler.Log("Checking for projectiles...", MessageImportance.Low);
             AddIfNotNull(CheckProjs (), errors);
+
+            Compiler.Log("Checking for prefixes...", MessageImportance.Low);
             AddIfNotNull(CheckPfixes(), errors);
+
+            Compiler.Log("Checking for tiles...", MessageImportance.Low);
             AddIfNotNull(CheckTiles (), errors);
+
+            Compiler.Log("Checking for walls...", MessageImportance.Low);
             AddIfNotNull(CheckWalls (), errors);
 
             // main.Dispose();

@@ -30,7 +30,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
             if (Enum.TryParse(def, true, out Keys key))
                 defaultValue = key;
             else
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.Path,

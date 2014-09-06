@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Build.Framework;
 using LitJson;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
@@ -42,7 +43,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
                 catch (IOException e)
                 {
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = e,
                         FilePath = s,
@@ -68,7 +69,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     }
                     catch (Exception e)
                     {
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             IsWarning = false,
                             Cause = e,
@@ -88,13 +89,15 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 if (relativeFileName != "ModInfo.json")
                     files.Add(Path.ChangeExtension(relativeFileName, Path.GetExtension(relativeFileName).ToLowerInvariant()), fileBin);
+
+                Compiler.Log("Loaded file " + fileName + ", path is " + relativeFileName + ".", MessageImportance.Low);
             }
 
             if (modInfo == null)
             {
                 modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(Path.GetDirectoryName(directory))));
 
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     IsWarning = true,
                     Cause = new FileNotFoundException("Could not find ModInfo.json."),

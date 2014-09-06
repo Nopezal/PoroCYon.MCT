@@ -6,11 +6,11 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Framework;
-using Microsoft.Build.Logging;
 using PoroCYon.Extensions.Collections;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.MCT.Tools.Compiler.Loggers;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -58,10 +58,11 @@ namespace PoroCYon.MCT.Tools
 
                         int argNum = 0;
 
-                        if (WriteHelp(args[argNum], "BUILD <verbosity?> <mod folder/dll file>"))
+                        if (WriteHelp(args[argNum], "BUILD <verbosity?=Quiet> <mod folder/dll file>" +
+                                "\tPossible values for 'verbosity' flag: Quiet, Minimal, Normal, Detailed, Diagnostic. All values are case-insensitive."))
                             return;
 
-                        LoggerVerbosity verbosity = LoggerVerbosity.Normal;
+                        LoggerVerbosity verbosity = LoggerVerbosity.Quiet;
 
                         if ((string vArg = args[argNum].TrimStart('-', '/').ToLowerInvariant()) == "v" || vArg == "verbose" || vArg == "verbosity")
                         {
@@ -77,7 +78,10 @@ namespace PoroCYon.MCT.Tools
                             }
                         }
 
-                        ModCompiler compiler = new ModCompiler(new ConsoleLogger(verbosity));
+                        ModCompiler compiler = new ModCompiler(new ConsoleMctLogger(verbosity));
+
+                        if (Debugger.IsAttached)
+                            compiler.Loggers.Add(new DebugMctLogger(verbosity));
 
                         string path = args.Skip(argNum).Join(CommonJoinValues.Space);
 
@@ -85,10 +89,8 @@ namespace PoroCYon.MCT.Tools
                             ? compiler.CompileFromAssembly(path)
                             : compiler.CompileFromSource  (path);
 
-                        if (Debugger.IsAttached)
-                            Debug.WriteLine(ret);
-
-                        Console.WriteLine(ret);
+                        // done by ConsoleMctLogger
+                        //Console.WriteLine(ret);
                     }
                 },
                 #endregion

@@ -86,7 +86,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 else if (v.IsArray)
                 {
                     if (v.Count > 4)
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new IndexOutOfRangeException(),
                             FilePath = json.Path,
@@ -101,7 +101,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         JsonData val = v[i];
 
                         if (!val.IsInt)
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -118,7 +118,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     value += values[3] * 1;       // g
                 }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -145,7 +145,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             // interface
             AddIfNotNull(SetJsonValue(json, "textureHead", ref textureHead, texture + "._Head"), errors);
             if (!Building.files.ContainsKey(textureHead))
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new FileNotFoundException(),
                     FilePath = json.Path,
@@ -174,7 +174,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 JsonData j = json.Json["buffImmune"];
 
                 if (!j.IsArray)
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new ArrayTypeMismatchException(),
                         FilePath = json.Path,
@@ -188,7 +188,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         else if (j[i].IsInt)
                             buffImmune.Add((int   )j[i]);
                         else
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -222,7 +222,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                             drops.Add(d);
                         }
                         else
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -231,7 +231,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                             });
                     }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,

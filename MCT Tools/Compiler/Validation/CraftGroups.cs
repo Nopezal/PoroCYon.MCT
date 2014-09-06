@@ -34,7 +34,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     {
                         if (!iGroups[i].IsObject)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -51,7 +51,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                         itemGroups.Add(icg);
                     }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -71,7 +71,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     {
                         if (!tGroups[i].IsObject)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArrayTypeMismatchException(),
                                 FilePath = json.Path,
@@ -88,7 +88,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                         tileGroups.Add(tcg);
                     }
                 else
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,

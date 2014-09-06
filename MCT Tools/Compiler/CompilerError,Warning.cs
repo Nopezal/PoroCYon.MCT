@@ -8,8 +8,10 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// An error during compile-time containing detailed information of what went wrong.
     /// </summary>
-    public class CompilerError
+    public class CompilerError(ModData built)
     {
+        ModData data = built;
+
         /// <summary>
         /// Gets the error message of the CompilerError.
         /// </summary>
@@ -59,13 +61,14 @@ namespace PoroCYon.MCT.Tools.Compiler
         /// <returns>The string representation of the current instance.</returns>
         public override string ToString()
         {
-            return (IsWarning ? "Warning: " : "Error: ") +
-                Message + Environment.NewLine +
-                FilePath +
-                (LocationInFile.X >= 0 && LocationInFile.Y >= 0
-                    ? " (" + LocationInFile.X + ";" + LocationInFile.Y + ")"
-                    : String.Empty) +
-                Environment.NewLine + Environment.NewLine +
+            string relative = FilePath;
+            if (FilePath.StartsWith(data.OriginPath))
+                relative = FilePath.Substring(data.OriginPath.Length);
+
+            return (IsWarning ? "Warning: " : "Error: ") + Message + Environment.NewLine +
+                relative + (LocationInFile.X >= 0 && LocationInFile.Y >= 0
+                    ? " (" + LocationInFile.Y + ";" + LocationInFile.X + ")"
+                    : String.Empty) + Environment.NewLine +
                 Cause;
         }
     }

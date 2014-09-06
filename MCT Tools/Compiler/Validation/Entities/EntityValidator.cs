@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "texture", ref texture, baseFolder + "/" + json.Path), errors);
             if (!Building.files.ContainsKey(texture + ".png"))
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new FileNotFoundException(),
                     FilePath = json.Path,
@@ -57,7 +57,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "size", ref size, new int[2] { -1, -1 }), errors);
             if (size.Length != 2)
             {
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new IndexOutOfRangeException(),
                     FilePath = json.Path,
@@ -70,7 +70,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "width" , ref size[0], size[0]), errors);
             AddIfNotNull(SetJsonValue(json, "height", ref size[1], size[1]), errors);
             if (size[0] <= 0 || size[1] <= 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
@@ -82,7 +82,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "color", ref colour, new int[3] { 255, 255, 255 }), errors);
             if (colour.Length < 3 || colour.Length > 4)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new IndexOutOfRangeException(),
                     FilePath = json.Path,
@@ -91,7 +91,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
             for (int i = 0; i < colour.Length; i++)
                 if (colour[i] < 0 || colour[i] > 255)
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new ArgumentOutOfRangeException(),
                         FilePath = json.Path,

@@ -161,7 +161,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             AddIfNotNull(SetJsonValue(json, "internalName", ref internalName), errors);
 
             if (internalName == "g")
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ValueNotAllowedException("internalName", internalName),
                     FilePath = json.Path,
@@ -188,7 +188,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     {
                         foreach (CompilerError ce in err)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = ce.Cause,
                                 FilePath = ce.FilePath,
@@ -202,7 +202,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     {
                         if (d == null || !Directory.Exists(d))
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 FilePath = json.Path,
                                 Message = "'modReferences[" + i + "]': could not find mod '" + modReferences[i] + "', either as a binary or in a source directory."
@@ -210,7 +210,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                         }
                         else
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new CompilerWarning(),
                                 FilePath = json.Path,
@@ -225,7 +225,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 }
 
                 if (checkCircularRefs && CheckCircularModRef(this))
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new CircularReferenceException(circularPath),
                         FilePath = json.Path,
@@ -250,7 +250,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 }
                 catch (Exception e)
                 {
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = e,
                         FilePath = json.Path,
@@ -269,7 +269,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     if (File.Exists(Building.OriginPath + "\\" + msBuildFile))
                         msBuildFile = Building.OriginPath + "\\" + msBuildFile;
                     else
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new FileNotFoundException(),
                             FilePath = json.Path,
@@ -291,7 +291,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 if (!ver.IsString)
                 {
                     if (!ver.IsArray || ver.Count == 0)
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new InvalidCastException(),
                             FilePath = json.Path,
@@ -304,7 +304,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
                         for (int i = 0; i < Math.Min(ver.Count, 4); i++)
                             if (!ver[i].IsInt)
-                                errors.Add(new CompilerError()
+                                errors.Add(new CompilerError(Building)
                                 {
                                     Cause = new InvalidCastException(),
                                     FilePath = json.Path,
@@ -321,7 +321,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                                 }
                                 catch (Exception e)
                                 {
-                                    errors.Add(new CompilerError()
+                                    errors.Add(new CompilerError(Building)
                                     {
                                         Cause = e,
                                         FilePath = json.Path,
@@ -340,7 +340,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     }
                     catch (Exception e)
                     {
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = e,
                             FilePath = json.Path,
@@ -364,7 +364,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             AddIfNotNull(SetJsonValue(json, "warningLevel",  ref warningLevel,  4    ), errors);
             AddIfNotNull(SetJsonValue(json, "ignore", ref ignore, EmptyStringArr     ), errors);
             if (warningLevel < 0 || warningLevel > 4)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,

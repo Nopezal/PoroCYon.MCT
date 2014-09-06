@@ -85,7 +85,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     else if (j.IsInt)
                         type |= (PrefixType)(int)j;
                     else
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new InvalidCastException(),
                             FilePath = json.Path,

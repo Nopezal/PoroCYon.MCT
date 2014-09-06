@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Microsoft.Build.Framework;
 using PoroCYon.MCT.Tools.Compiler;
 using PoroCYon.MCT.Tools.Compiler.Validation;
 using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
@@ -22,16 +23,19 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 modOptionsJson  = jsons[1],
                 craftGroupsJson = jsons[2];
 
+            Compiler.Log("Validating ModInfo...", MessageImportance.Low);
             Building.Info = new ModInfo(Compiler);
             errors.AddRange(Building.Info.CreateAndValidate(modInfoJson));
 
             if (!Building.Info.validate) // HELLO, HERE AM I, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT, KTHXBAI.
                 return errors;
 
+            Compiler.Log("Validating ModOptions...", MessageImportance.Low);
             Building.Options = new ModOptions(Compiler);
             if (modOptionsJson != null)
                 errors.AddRange(Building.Options.CreateAndValidate(modOptionsJson));
 
+            Compiler.Log("Validating CraftGroups...", MessageImportance.Low);
             Building.CraftGroups = new CraftGroups(Compiler);
             if (craftGroupsJson != null)
                 errors.AddRange(Building.CraftGroups.CreateAndValidate(modOptionsJson));
@@ -70,7 +74,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                             break;
 
                         default:
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new CompilerWarning(),
                                 FilePath = jsons[i].Path,
@@ -82,6 +86,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                     if (obj != null)
                     {
+                        Compiler.Log("Validating " + jsons[i].Path + "...", MessageImportance.Low);
                         errors.AddRange(obj.CreateAndValidate(jsons[i])); // ACTUAL VALIDATION
 
                         // I'm too lazy to type casts today

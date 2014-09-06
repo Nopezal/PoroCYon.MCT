@@ -39,7 +39,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             if (json.Json.IsArray)
                 optionsArr = json.Json;
             else if (!json.Json.Has("options"))
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     IsWarning = false,
@@ -58,8 +58,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
                 options.Add(result.Item1);
                 errors.AddRange(result.Item2);
-
-                Option.Options.Clear(); // might mess up with modcompiler refs, thus clearing the dictionary.
             }
 
             return errors;

@@ -47,10 +47,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="key">The key to check.</param>
         /// <param name="value">The object to put the JSON value in.</param>
         /// <returns>null if no errors are found, not null otherwise.</returns>
-        protected static CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
+        protected CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
         {
             if (!json.Json.Has(key))
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -69,7 +69,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="value">The object to put the JSON value in.</param>
         /// <param name="defaultValue">The default value of the key/value pair.</param>
         /// <returns>null if no errors are found, not null otherwise.</returns>
-        protected static CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value, TJsonObj defaultValue)
+        protected CompilerError SetJsonValue<TJsonObj>(JsonFile json, string key, ref TJsonObj value, TJsonObj defaultValue)
         {
             if (!json.Json.Has(key))
             {
@@ -89,10 +89,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="key">The key to check.</param>
         /// <param name="value">The object to put the JSON value in.</param>
         /// <returns>null if no errors are found, not null otherwise.</returns>
-        protected static CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value)
+        protected CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value)
         {
             if (!json.Json.Has(key))
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -105,7 +105,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             if (typeof(T1) == typeof(object))
             {
                 if (typeof(T2) == typeof(object))
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -141,7 +141,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 return null;
             }
 
-            return new CompilerError()
+            return new CompilerError(Building)
             {
                 Cause = new InvalidCastException(),
                 FilePath = json.Path,
@@ -160,7 +160,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         /// <param name="value">The object to put the JSON value in.</param>
         /// <param name="defaultValue">The default value of the key/value pair.</param>
         /// <returns>null if no errors are found, not null otherwise.</returns>
-        protected static CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value, Union<T1, T2> defaultValue)
+        protected CompilerError SetJsonValue<T1, T2>(JsonFile json, string key, ref Union<T1, T2> value, Union<T1, T2> defaultValue)
         {
             if (!json.Json.Has(key))
             {
@@ -172,7 +172,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             return SetJsonValue(json, key, ref value);
         }
 
-        static CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
+        CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
         {
             if (typeof(TJsonObj).IsArray)
             {
@@ -181,7 +181,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 for (int i = 0; i < json.Json[key].Count; i++)
                 {
                     if (typeof(TJsonObj) != typeof(object) && json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ArrayTypeMismatchException(),
                             FilePath = json.Path,
@@ -201,7 +201,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             }
 
             if (typeof(TJsonObj) != typeof(object) && json.Json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.Path,
@@ -214,7 +214,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             return null;
         }
-        static CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, ref TJsonObj value)
+        CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, ref TJsonObj value)
         {
             if (typeof(TJsonObj).IsArray)
             {
@@ -223,7 +223,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 for (int i = 0; i < json.Json.Count; i++)
                 {
                     if (typeof(TJsonObj) != typeof(object) && json.Json[i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new ArrayTypeMismatchException(),
                             FilePath = json.Path,
@@ -241,7 +241,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             }
 
             if (typeof(TJsonObj) != typeof(object) && json.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
-                return new CompilerError()
+                return new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.Path,

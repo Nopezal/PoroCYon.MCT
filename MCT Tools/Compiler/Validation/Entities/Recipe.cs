@@ -31,7 +31,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             if (json.Json.Has("items"))
             {
                 if (!json.Json["items"].IsObject)
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     {
                         if (items.ContainsKey(kvp.Key.ToString()))
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new ArgumentException(),
                                 FilePath = json.Path,
@@ -55,7 +55,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                             });
 
                             if (!(kvp.Value is int))
-                                errors.Add(new CompilerError()
+                                errors.Add(new CompilerError(Building)
                                 {
                                     Cause = new InvalidCastException(),
                                     FilePath = json.Path,
@@ -67,7 +67,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                                 items[kvp.Key.ToString()] += (int)kvp.Value;
                         }
                         else if (!(kvp.Value is int))
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new InvalidCastException(),
                                 FilePath = json.Path,
@@ -81,7 +81,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 }
             }
             else
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -90,7 +90,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
 
             if (items.Count == 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.Path,
@@ -102,7 +102,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             if (json.Json.Has("tiles"))
             {
                 if (!json.Json["tiles"].IsArray)
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
@@ -117,7 +117,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     {
                         if (!tis[i].IsString)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new InvalidCastException(),
                                 FilePath = json.Path,
@@ -134,7 +134,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 }
             }
             else
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -143,7 +143,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 });
 
             if (tiles.Count == 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -154,7 +154,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "creates", ref creates, 1), errors);
             if (creates <= 0)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,

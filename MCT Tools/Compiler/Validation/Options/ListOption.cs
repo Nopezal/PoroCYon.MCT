@@ -24,7 +24,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
             List<CompilerError> errors = new List<CompilerError>();
 
             if (!json.Json.Has("list"))
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -58,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
                 if (def.IsString)
                 {
                     if (!values.Contains(defaultValue = (string)def))
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new KeyNotFoundException(),
                             FilePath = json.Path,
@@ -71,7 +71,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
                     int id = (int)(defaultValue = (int)def);
 
                     if (id < 0 || id >= values.Count)
-                        return new CompilerError()
+                        return new CompilerError(Building)
                         {
                             Cause = new IndexOutOfRangeException(),
                             FilePath = json.Path,
@@ -80,7 +80,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
                         };
                 }
                 else
-                    return new CompilerError()
+                    return new CompilerError(Building)
                     {
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,

@@ -18,8 +18,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
         public string displayName = String.Empty;
 #pragma warning restore 1591
 
-        internal static Dictionary<string, Func<Option>> Options = new Dictionary<string, Func<Option>>(); // func should be paramless ctor ('() => return new MyOpt()')
-
         /// <summary>
         /// Creates a new option object.
         /// </summary>
@@ -28,23 +26,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
         /// <returns>A tuple containing the option, and a collection of errors.</returns>
         public static Tuple<Option, IEnumerable<CompilerError>> NewOption(ModCompiler mc, JsonFile json)
         {
-            if (Options.Count == 0)
-            {
-                // only lower-case
-                Options.Add("string",     () => new StringOption    (mc));
-                Options.Add("integer",    () => new IntegerOption   (mc));
-                Options.Add("float",      () => new FloatOption     (mc));
-                Options.Add("keybinding", () => new KeybindingOption(mc));
-                Options.Add("list",       () => new ListOption      (mc));
-                Options.Add("boolean",    () => new BoolOption      (mc));
-                Options.Add("dynamic",    () => new DynamicOption   (mc));
-            }
+            Dictionary<string, Func<Option>> Options = new Dictionary<string, Func<Option>>();
+
+            // only lower-case
+            Options.Add("string",     () => new StringOption    (mc));
+            Options.Add("integer",    () => new IntegerOption   (mc));
+            Options.Add("float",      () => new FloatOption     (mc));
+            Options.Add("keybinding", () => new KeybindingOption(mc));
+            Options.Add("list",       () => new ListOption      (mc));
+            Options.Add("boolean",    () => new BoolOption      (mc));
+            Options.Add("dynamic",    () => new DynamicOption   (mc));
 
             Option ret = null;
             List<CompilerError> errors = new List<CompilerError>();
 
             if (!json.Json.Has("type"))
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(mc.building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = json.Path,
@@ -56,7 +53,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
                 string type = ((string)json.Json["type"]).ToLowerInvariant();
 
                 if (!Options.ContainsKey(type))
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(mc.building)
                     {
                         Cause = new KeyNotFoundException(),
                         FilePath = json.Path,

@@ -7,6 +7,7 @@ using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
 using Microsoft.Xna.Framework;
+using PoroCYon.Extensions.Collections;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
@@ -14,8 +15,10 @@ using PoroCYon.MCT.Tools.Internal.Compiler.Compilers;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class BuildLogger : ILogger
+    class BuildLogger(ModData md) : ILogger
     {
+        ModData building = md;
+
         internal bool succeeded = true;
         internal List<CompilerError> errors = new List<CompilerError>();
         internal List<object> log = new List<object>();
@@ -35,7 +38,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         {
             eventSource.ErrorRaised += (s, e) =>
             {
-                CompilerError ce = new CompilerError()
+                CompilerError ce = new CompilerError(building)
                 {
                     Cause = new CompilerException(e.Message),
                     FilePath = e.File,
@@ -52,7 +55,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             {
                 if (Verbosity >= LoggerVerbosity.Minimal)
                 {
-                    CompilerError ce = new CompilerError()
+                    CompilerError ce = new CompilerError(building)
                     {
                         Cause = new CompilerWarning(e.Message),
                         FilePath = e.File,
@@ -233,7 +236,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         }
                         catch (Exception e)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = e,
                                 FilePath = mod.OriginPath,
@@ -249,7 +252,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         }
                         catch (Exception e)
                         {
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = e,
                                 FilePath = mod.OriginPath,
@@ -283,6 +286,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
         Tuple<Assembly, string, List<CompilerError>> BuildMSBuild()
         {
+            Compiler.Log("Building using MSBuild.", MessageImportance.Low);
+
             List<CompilerError> errors = new List<CompilerError>();
             Assembly asm = null;
             string pdb = null;
@@ -312,9 +317,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     Building.files.Remove(r);
             }
 
-            BuildLogger logger = new BuildLogger();
+            BuildLogger logger = new BuildLogger(Building);
             BuildResult result = BuildManager.DefaultBuildManager.Build(new BuildParameters(new ProjectCollection())
-                { Loggers = new List<ILogger>() { logger }.Union(Compiler.Loggers) /* P: */ },
+                { Loggers = new List<ILogger>() { logger }.Union(Compiler.Loggers.CastAll(ml => ml.GetMSBuildLogger()).Where(il => il != null)) /* P: */ },
                 new BuildRequestData(Building.Info.msBuildFile, new Dictionary<string, string>
                 {
                     { "Configuration", Building.Info.includePDB ? "Debug" : "Release" },
@@ -332,7 +337,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
                 catch (Exception e)
                 {
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = e,
                         FilePath = Building.Info.msBuildFile,
@@ -346,7 +351,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(Building.Info.msBuildFile);
 
                     if (!File.Exists(pdb))
-                        errors.Add(new CompilerError()
+                        errors.Add(new CompilerError(Building)
                         {
                             Cause = new FileNotFoundException(),
                             FilePath = Building.Info.msBuildFile,
@@ -378,8 +383,10 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     break;
                 }
 
+            Compiler.Log("Building using an ICompiler, language=" + lang + ", compiler=" + (compiler?.GetType().ToString() ?? "null"), MessageImportance.Low);
+
             if (compiler == null)
-                errors.Add(new CompilerError()
+                errors.Add(new CompilerError(Building)
                 {
                     Cause = new KeyNotFoundException(),
                     FilePath = Building.jsons[0].Path,
@@ -399,7 +406,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         pdb = Path.ChangeExtension(asm.Location, ".pdb");
 
                         if (!File.Exists(pdb))
-                            errors.Add(new CompilerError()
+                            errors.Add(new CompilerError(Building)
                             {
                                 Cause = new FileNotFoundException(),
                                 FilePath = Building.Info.msBuildFile,
@@ -422,7 +429,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
                 catch (Exception e)
                 {
-                    errors.Add(new CompilerError()
+                    errors.Add(new CompilerError(Building)
                     {
                         Cause = e,
                         FilePath = Building.jsons[0].Path,

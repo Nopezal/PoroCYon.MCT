@@ -28,7 +28,7 @@ namespace PoroCYon.MCT.Tools
         /// <summary>
         /// Gets the collection of loggers attached to the <see cref="ModCompiler" />.
         /// </summary>
-        public List<ILogger> Loggers
+        public List<MctLogger> Loggers
         {
             get;
             private set;
@@ -38,7 +38,7 @@ namespace PoroCYon.MCT.Tools
         /// Creates a new instance of the <see cref="ModCompiler" /> class.
         /// </summary>
         public ModCompiler()
-            : this(new List<ILogger>())
+            : this(new List<MctLogger>())
         {
 
         }
@@ -46,16 +46,16 @@ namespace PoroCYon.MCT.Tools
         /// Creates a new instance of the <see cref="ModCompiler" /> class.
         /// </summary>
         /// <param name="loggers">A collection of loggers to fill the <see cref="Loggers" /> collection with.</param>
-        public ModCompiler(IEnumerable<ILogger> loggers)
+        public ModCompiler(IEnumerable<MctLogger> loggers)
         {
-            Loggers = new List<ILogger>(loggers);
+            Loggers = new List<MctLogger>(loggers);
         }
         /// <summary>
         /// Creates a new instance of the <see cref="ModCompiler" /> class.
         /// </summary>
         /// <param name="loggers">A collection of loggers to fill the <see cref="Loggers" /> collection with.</param>
-        public ModCompiler(params ILogger[] loggers)
-            : this((IEnumerable<ILogger>)loggers)
+        public ModCompiler(params MctLogger[] loggers)
+            : this((IEnumerable<MctLogger>)loggers)
         {
 
         }
@@ -78,66 +78,90 @@ namespace PoroCYon.MCT.Tools
                 else
                     folder = Path.GetFullPath(folder);
 
+            Log("Compiling source " + folder, MessageImportance.Normal);
+
+            building = new ModData(this);
+
             try
             {
+                building.OriginPath = folder;
+                building.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
+
                 if (!BeginCompile(folder))
-                    return CreateOutput(new List<CompilerError>()
+                {
+                    LogError(Exception cause = new CompilerException("Mod already building!"));
+
+                    LogResult(var o = CreateOutput(new List<CompilerError>()
                     {
-                        new CompilerError()
+                        new CompilerError(building)
                         {
-                            Cause = new CompilerException("Mod already building!"),
+                            Cause = cause,
                             FilePath = folder,
                             IsWarning = true,
                             Message = "The mod is already being built."
                         }
-                    });
-                building.OriginPath = folder;
-                building.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
+                    }));
+
+                    return o;
+                }
 
                 #region check if folder exists
                 if (!Directory.Exists(folder))
                 {
                     EndCompile(folder);
 
-                    return new CompilerOutput()
+                    LogError(Exception cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."));
+                    
+                    LogResult(var o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
                         {
-                            new CompilerError()
+                            new CompilerError(building)
                             {
-                                Cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."),
+                                Cause = cause,
                                 Message = "The mod directory (" + folder + ") was not found",
                                 IsWarning = false,
                                 FilePath = folder
                             }
                         }
-                    };
+                    });
+
+                    return o;
                 }
                 #endregion
 
                 CompilerOutput outp;
 
+                Log("Loading files.", MessageImportance.High);
+
                 var readFiles = new FileLoader(this).LoadFiles(folder);
                 outp = CreateOutput(readFiles.Item3);
                 if (!outp.Succeeded)
                 {
+                    LogResult(outp);
                     EndCompile(folder);
                     return outp;
                 }
 
+                Log("Validating JSONs.", MessageImportance.High);
+
                 outp = Validate(readFiles.Item1, readFiles.Item2, true);
                 if (!outp.Succeeded)
                 {
+                    LogResult(outp);
                     EndCompile(folder);
                     return outp;
                 }
+
+                Log("Building sources.", MessageImportance.High);
 
                 var compiled = new Builder(this).Build();
                 outp = CreateOutput(compiled.Item3);
                 outp.Succeeded &= compiled.Item1 != null;
                 if (!outp.Succeeded)
                 {
+                    LogResult(outp);
                     EndCompile(folder);
                     return outp;
                 }
@@ -146,18 +170,22 @@ namespace PoroCYon.MCT.Tools
             }
             catch (Exception e)
             {
+                LogError(e, "Unexpected error.");
+
                 EndCompile(folder);
 
-                return CreateOutput(new List<CompilerError>()
+                LogResult(var o = CreateOutput(new List<CompilerError>()
                 {
-                    new CompilerError()
+                    new CompilerError(building)
                     {
                         Cause = e,
                         FilePath = folder,
                         IsWarning = false,
                         Message = "An unexpected error occured while compiling."
                     }
-                });
+                }));
+
+                return o;
             }
         }
         /// <summary>
@@ -167,37 +195,51 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public CompilerOutput CompileFromAssembly(string assemblyPath)
         {
+            Log("Compiling assembly from path " + assemblyPath, MessageImportance.Normal);
+
+            building = new ModData(this);
+
+            building.OriginPath = assemblyPath;
+            building.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
+
             if (!BeginCompile(assemblyPath))
-                return CreateOutput(new List<CompilerError>()
+            {
+                LogError(Exception cause = new CompilerException("Mod already building!"));
+
+                LogResult(var o = CreateOutput(new List<CompilerError>()
                 {
-                    new CompilerError()
+                    new CompilerError(building)
                     {
-                        Cause = new CompilerException("Mod already building!"),
+                        Cause = cause,
                         FilePath = assemblyPath,
                         IsWarning = true,
                         Message = "The mod is already being built."
                     }
-                });
+                }));
 
-            building.OriginPath = assemblyPath;
-            building.OriginName = Path.GetFileNameWithoutExtension(assemblyPath);
+                return o;
+            }
 
             try
             {
                 #region check if file exists
                 if (!File.Exists(assemblyPath))
-                    return new CompilerOutput()
+                {
+                    LogResult(var o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
                         {
-                            new CompilerError()
+                            new CompilerError(building)
                             {
                                 Cause = new FileNotFoundException("File '" + assemblyPath + "' not found."),
                                 Message = "The assembly '" + assemblyPath + "' was not found."
                             }
                         }
-                    };
+                    });
+
+                    return o;
+                }
                 #endregion
 
                 Assembly asm;
@@ -208,36 +250,45 @@ namespace PoroCYon.MCT.Tools
                 }
                 #region check if assembly is valid
                 catch (BadImageFormatException e)
+                // if (e is BadImageFormatException || e is DllNotFoundException || e is InvalidProgramException || e is TypeLoadException)
                 {
-                    return new CompilerOutput()
+                    LogError(e);
+
+                    LogResult(var o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
                         {
-                            new CompilerError()
+                            new CompilerError(building)
                             {
                                 Cause = e,
                                 Message = "The assembly is not a manged assembly -or- is not compiled with the x86 architecture.",
                                 FilePath = assemblyPath
                             }
                         }
-                    };
+                    });
+
+                    return o;
                 }
                 catch (Exception e)
                 {
-                    return new CompilerOutput()
+                    LogError(e);
+
+                    LogResult(var o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
                         {
-                            new CompilerError()
+                            new CompilerError(building)
                             {
                                 Cause = e,
                                 Message = "The assembly could not be loaded.",
                                 FilePath = assemblyPath
                             }
                         }
-                    };
+                    });
+
+                    return o;
                 }
                 #endregion
 
@@ -245,18 +296,22 @@ namespace PoroCYon.MCT.Tools
             }
             catch (Exception e)
             {
+                LogError(e, "Unexpected error.");
+
                 EndCompile(assemblyPath);
 
-                return CreateOutput(new List<CompilerError>()
+                LogResult(var o = CreateOutput(new List<CompilerError>()
                 {
-                    new CompilerError()
+                    new CompilerError(building)
                     {
                         Cause = e,
                         FilePath = assemblyPath,
                         IsWarning = false,
                         Message = "An unexpected error occured while compiling."
                     }
-                });
+                }));
+
+                return o;
             }
         }
         /// <summary>
@@ -266,33 +321,55 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public CompilerOutput CompileFromAssembly(Assembly asm)
         {
+            Log("Compiling assembly " + asm, MessageImportance.Normal);
+
+            if (building == null)
+            {
+                building = new ModData(this);
+
+                building.OriginPath = asm.Location;
+                building.OriginName = Path.GetFileNameWithoutExtension(asm.Location);
+            }
+
             if (!BeginCompile(asm.Location))
-                return CreateOutput(new List<CompilerError>()
+            {
+                LogError(Exception cause = new CompilerException("Mod already building!"));
+
+                LogResult(var o = CreateOutput(new List<CompilerError>()
                 {
-                    new CompilerError()
+                    new CompilerError(building)
                     {
-                        Cause = new CompilerException("Mod already building!"),
+                        Cause = cause,
                         FilePath = asm.Location,
                         IsWarning = true,
                         Message = "The mod is already being built."
                     }
-                });
+                }));
+
+                return o;
+            }
 
             try
             {
                 CompilerOutput outp;
 
+                Log("Extracting files.", MessageImportance.High);
+
                 var extracted = new Extractor(this).ExtractData(asm);
                 outp = CreateOutput(extracted.Item3);
                 if (!outp.Succeeded)
                 {
+                    LogResult(outp);
                     EndCompile(asm.Location);
                     return outp;
                 }
 
+                Log("Validating JSONs.", MessageImportance.High);
+
                 outp = Validate(extracted.Item1, extracted.Item2, true);
                 if (!outp.Succeeded)
                 {
+                    LogResult(outp);
                     EndCompile(asm.Location);
                     return outp;
                 }
@@ -303,16 +380,20 @@ namespace PoroCYon.MCT.Tools
             {
                 EndCompile(asm.Location);
 
-                return CreateOutput(new List<CompilerError>()
+                LogError(e, "Unexpected error.");
+
+                LogResult(var o = CreateOutput(new List<CompilerError>()
                 {
-                    new CompilerError()
+                    new CompilerError(building)
                     {
                         Cause = e,
                         FilePath = asm.Location,
                         IsWarning = false,
                         Message = "An unexpected error occured while compiling."
                     }
-                });
+                }));
+
+                return o;
             }
         }
 
@@ -364,7 +445,13 @@ namespace PoroCYon.MCT.Tools
             if (!File.Exists(Consts.MctDirectory + "\\.building.json"))
                 File.WriteAllText(Consts.MctDirectory + "\\.building.json", "[]");
 
-            building = new ModData(this);
+            if (building == null)
+            {
+                building = new ModData(this);
+
+                building.OriginPath = path;
+                building.OriginName = Path.GetFileNameWithoutExtension(path);
+            }
 
             modDict = Mods.GetInternalNameToPathDictionary(); // dat name
 
@@ -388,12 +475,19 @@ namespace PoroCYon.MCT.Tools
 
             List<CompilerError> errors = new List<CompilerError>();
 
+            Log("Checking JSON files.", MessageImportance.High);
+
             errors.AddRange(new Checker(this).Check());
+
+            Log("Writing output file.", MessageImportance.High);
+
             errors.AddRange(new Writer (this).Write());
 
             CompilerOutput outp = CreateOutput(errors);
             if (outp.Succeeded)
                 outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.OriginName + (mod.Info.compress ? ".tapi" : ".tapimod");
+
+            LogResult(outp);
 
             EndCompile(mod.OriginPath);
 
@@ -443,6 +537,37 @@ namespace PoroCYon.MCT.Tools
 
             json = list.ToJson();
             File.WriteAllText(BuildingList, json);
+        }
+
+        /// <summary>
+        /// Logs a message to the loggers of the <see cref="ModCompiler" />.
+        /// </summary>
+        /// <param name="text">The message to log.</param>
+        /// <param name="importance">The importance of the message.</param>
+        public void Log(string text, MessageImportance importance)
+        {
+            for (int i = 0; i < Loggers.Count; i++)
+                if (Loggers[i].Verbosity >= (LoggerVerbosity)((int)LoggerVerbosity.Minimal + (int)importance))
+                    Loggers[i].Log(text, importance);
+        }
+        /// <summary>
+        /// Logs an error the the loggers of the <see cref="ModCompiler" />.
+        /// </summary>
+        /// <param name="e">The error to log.</param>
+        /// <param name="comment">An optional comment on the error.</param>
+        public void LogError(Exception e, string comment = null)
+        {
+            for (int i = 0; i < Loggers.Count; i++)
+                Loggers[i].LogError(e, comment);
+        }
+        /// <summary>
+        /// Logs the build result to the loggers of the <see cref="ModCompiler" />.
+        /// </summary>
+        /// <param name="output">The build result.</param>
+        public void LogResult(CompilerOutput output)
+        {
+            for (int i = 0; i < Loggers.Count; i++)
+                Loggers[i].LogResult(output);
         }
     }
 }
