@@ -1,8 +1,13 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.2.0" String="1.3.2.0" />
+  <CurrentVersion Number="4" Version="1.3.3.0" String="1.3.3.0" />
   
   <Changelog>
+    <Release Version="1.3.3.0">
+      <Change>Added build logging.</Change>
+      <Change>Changed how the MCT Tools compiler works internally... a bit.</Change>
+      <Change>MCT Tools compiler now checks for existing types referenced by JSONs.</Change>
+    </Release>
     <Release Version="1.3.2.0">
       <Change>Updated PoroCYon.Extensions.dll</Change>
       <Change>Enhanced JSON validation/checking for the MCT compiler. (this will reduce the amount of 'Key not found' errors you see when your mod is loading.)</Change>

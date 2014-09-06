@@ -16,6 +16,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public string displayName;
         public string internalName;
 
+        internal bool hasCode = false;
+
         // appearance
         public string texture = String.Empty;
         public int[] size = new int[2] { 16, 16 };
@@ -38,6 +40,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
 
+            hasCode = json.Json.Has("code");
             AddIfNotNull(SetJsonValue(json, "code", ref code, baseType + "." + Defs.ParseName(internalName)), errors);
             if (code.Contains(':'))
                 code = code.Replace(':', '.');

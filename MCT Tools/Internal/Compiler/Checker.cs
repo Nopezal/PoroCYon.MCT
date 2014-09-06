@@ -464,6 +464,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
         CompilerError CheckTypeExists(EntityValidator entity)
         {
+            if (!entity.hasCode) // code not specified in JSON
+                return null;
+
             if (Building.Assembly.GetType(entity.code, false, false) == null)
                 return new CompilerError(Building)
                 {
