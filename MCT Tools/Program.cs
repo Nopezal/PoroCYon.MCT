@@ -66,12 +66,14 @@ namespace PoroCYon.MCT.Tools
 
                         if ((string vArg = args[argNum].TrimStart('-', '/').ToLowerInvariant()) == "v" || vArg == "verbose" || vArg == "verbosity")
                         {
-                            if (Int32.TryParse(vArg, NumberStyles.Integer, CultureInfo.InvariantCulture, out int i))
+                            argNum++;
+
+                            if (Int32.TryParse(args[argNum], NumberStyles.Integer, CultureInfo.InvariantCulture, out int i))
                             {
                                 verbosity = (LoggerVerbosity)i;
                                 argNum++;
                             }
-                            else if (Enum.TryParse(vArg, true, out LoggerVerbosity v))
+                            else if (Enum.TryParse(args[argNum], true, out LoggerVerbosity v))
                             {
                                 verbosity = v;
                                 argNum++;

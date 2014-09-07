@@ -5,6 +5,7 @@ using System.IO;
 using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Framework;
+using PoroCYon.Extensions;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
@@ -68,6 +69,11 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public CompilerOutput CompileFromSource  (string folder)
         {
+            for (int i = 0; i < Loggers.Count; i++)
+                Loggers[i].compiler_wr = new WeakReference<ModCompiler>(this);
+
+            folder = Environment.ExpandEnvironmentVariables(folder);
+
             if (folder.EndsWith("\\"))
                 folder = folder.Remove(folder.Length - 1);
 
@@ -195,6 +201,11 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public CompilerOutput CompileFromAssembly(string assemblyPath)
         {
+            for (int i = 0; i < Loggers.Count; i++)
+                Loggers[i].compiler_wr = new WeakReference<ModCompiler>(this);
+
+            assemblyPath = Environment.ExpandEnvironmentVariables(assemblyPath);
+
             Log("Compiling assembly from path " + assemblyPath, MessageImportance.Normal);
 
             building = new ModData(this);
@@ -321,6 +332,9 @@ namespace PoroCYon.MCT.Tools
         /// <returns>The output of the compiler.</returns>
         public CompilerOutput CompileFromAssembly(Assembly asm)
         {
+            for (int i = 0; i < Loggers.Count; i++)
+                Loggers[i].compiler_wr = new WeakReference<ModCompiler>(this);
+
             Log("Compiling assembly " + asm, MessageImportance.Normal);
 
             if (building == null)

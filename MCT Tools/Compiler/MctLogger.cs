@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Build.Framework;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Compiler
 {
@@ -10,6 +11,22 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// </summary>
     public abstract class MctLogger
     {
+        internal WeakReference<ModCompiler> compiler_wr;
+
+        /// <summary>
+        /// Gets the compiler that is logging the output.
+        /// </summary>
+        protected ModCompiler Compiler
+        {
+            get
+            {
+                if (!compiler_wr.IsAlive)
+                    throw new ObjectDisposedException("Compiler");
+
+                return compiler_wr.Target;
+            }
+        }
+
         /// <summary>
         /// Gets or sets the verbosity of the <see cref="MctLogger" />.
         /// </summary>

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
+using Microsoft.Xna.Framework;
 using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Compiler.Loggers
@@ -76,7 +77,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         /// <returns>An <see cref="ILogger" /> that will report progress on an MSBuild compilation. Null to report nothing.</returns>
         public override ILogger GetMSBuildLogger()
         {
-            return null;
+            return new DefaultMSBuildLogger(this, Compiler);
         }
     }
 }

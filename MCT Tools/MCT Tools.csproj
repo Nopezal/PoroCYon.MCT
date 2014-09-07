@@ -91,6 +91,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Compiler\Loggers\DebugMctLogger.cs" />
+    <Compile Include="Compiler\Loggers\DefaultMSBuildLogger.cs" />
     <Compile Include="Compiler\MctLogger.cs" />
     <Compile Include="Compiler\CodeDomCompilerHelper.cs" />
     <Compile Include="Compiler\CompilerError,Warning.cs" />

@@ -6,6 +6,9 @@ using Microsoft.Build.Framework;
 
 namespace PoroCYon.MCT.Tools.Compiler.Loggers
 {
+    /// <summary>
+    /// A logger for the <see cref="ModCompiler" /> that pipes output to the debugger.
+    /// </summary>
     public class DebugMctLogger : MctLogger
     {
         /// <summary>
@@ -23,6 +26,13 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         public DebugMctLogger(LoggerVerbosity verbosity)
         {
             Verbosity = verbosity;
+
+            if (!Debugger.IsAttached)
+                try
+                {
+                    Debugger.Launch();
+                }
+                catch { }
         }
 
         /// <summary>
@@ -66,7 +76,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         /// <returns>An <see cref="ILogger" /> that will report progress on an MSBuild compilation. Null to report nothing.</returns>
         public override ILogger GetMSBuildLogger()
         {
-            return null;
+            return new DefaultMSBuildLogger(this, Compiler);
         }
     }
 }
