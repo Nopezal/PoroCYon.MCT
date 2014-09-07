@@ -61,6 +61,8 @@ namespace PoroCYon.MCT.Tools.Compiler
         /// <returns>The string representation of the current instance.</returns>
         public override string ToString()
         {
+            FilePath = FilePath ?? String.Empty;
+
             string relative = FilePath;
             if (FilePath.StartsWith(data.OriginPath))
                 relative = FilePath.Substring(data.OriginPath.Length);

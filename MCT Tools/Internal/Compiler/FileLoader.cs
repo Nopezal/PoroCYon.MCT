@@ -73,6 +73,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         {
                             IsWarning = false,
                             Cause = e,
+                            FilePath = relativeFileName,
                             Message = "Invalid JSON file: '" + relativeFileName + "'."
                         });
                     }
