@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.3.2" String="1.3.3.2" />
+  <CurrentVersion Number="4" Version="1.3.4.0" String="1.3.4.0" />
   
   <Changelog>
+    <Release Version="1.3.4.0">
+      <Change>Fixed a bug that made the ModCompiler ignore (thus not validate) any JSON files.</Change>
+      <!-- the fix surfaced a lot of other bugs, which are now fixed, too. -->
+    </Release>
     <Release Version="1.3.3.2">
       <Change>Fixed a bug that made the ModCompiler chrash when no file path is given when a CompilerError is raised.</Change>
     </Release>

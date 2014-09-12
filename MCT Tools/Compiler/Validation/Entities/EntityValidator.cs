@@ -42,12 +42,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             hasCode = json.Json.Has("code");
             AddIfNotNull(SetJsonValue(json, "code", ref code, baseType + "." + Defs.ParseName(internalName)), errors);
-            if (code.Contains(':'))
-                code = code.Replace(':', '.');
-            else
-                code = Building.Info.internalName + "." + code;
+            if (code != null)
+            {
+                if (code.Contains(':'))
+                    code = code.Replace(':', '.');
+                else
+                    code = Building.Info.internalName + "." + code;
+            }
 
-            AddIfNotNull(SetJsonValue(json, "texture", ref texture, baseFolder + "/" + json.Path), errors);
+            string r = Path.ChangeExtension(json.Path.Substring(Building.OriginPath.Length + 1).Replace('\\', '/'), null);
+            AddIfNotNull(SetJsonValue(json, "texture", ref texture, r), errors);
             if (!Building.files.ContainsKey(texture + ".png"))
                 errors.Add(new CompilerError(Building)
                 {
@@ -57,7 +61,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Message = "Could not find item texture '" + texture + ".png'."
                 });
 
-            AddIfNotNull(SetJsonValue(json, "size", ref size, new int[2] { -1, -1 }), errors);
+            AddIfNotNull(SetJsonValue(json, "size", ref size, true, new int[2] { -1, -1 }), errors);
             if (size.Length != 2)
             {
                 errors.Add(new CompilerError(Building)
@@ -83,7 +87,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "scale", ref scale, 1f), errors);
 
-            AddIfNotNull(SetJsonValue(json, "color", ref colour, new int[3] { 255, 255, 255 }), errors);
+            AddIfNotNull(SetJsonValue(json, "color", ref colour, true, new int[3] { 255, 255, 255 }), errors);
             if (colour.Length < 3 || colour.Length > 4)
                 errors.Add(new CompilerError(Building)
                 {

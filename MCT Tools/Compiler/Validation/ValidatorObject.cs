@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime;
 using LitJson;
 using PoroCYon.Extensions;
+using PoroCYon.Extensions.Collections;
 using PoroCYon.MCT.Internal;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation
@@ -58,7 +59,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     Message = "Required key '" + key + "' not found."
                 };
 
-            return SetJsonValueInternal(json, key, ref value);
+            return SetJsonValueInternal_Generic(json, key, ref value);
         }
         /// <summary>
         /// Sets a JSON value. If the key isn't specified, <paramref name="defaultValue" /> is used.
@@ -78,7 +79,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 return null;
             }
 
-            return SetJsonValueInternal(json, key, ref value);
+            return SetJsonValueInternal_Generic(json, key, ref value);
         }
         /// <summary>
         /// Sets a JSON value. If the key isn't specified, a CompilerError is returned.
@@ -171,76 +172,152 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             return SetJsonValue(json, key, ref value);
         }
-
-        CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
+        /// <summary>
+        /// Sets a JSON value from an array.
+        /// </summary>
+        /// <typeparam name="TJsonElement">The type of the elements in the array.</typeparam>
+        /// <param name="json">The JSON file which contains the key/value pair to check.</param>
+        /// <param name="key">The key to check.</param>
+        /// <param name="value">The object to put the JSON value in.</param>
+        /// <param name="hasDefault">Whether to return an empty array when the key is not found. If false and the key does not exist, a CompilerError is returned.</param>
+        /// <param name="default">The default value for the array.</param>
+        /// <returns>null if no errors are found, not null otherwise.</returns>
+        protected CompilerError SetJsonValue<TJsonElement>(JsonFile json, string key, ref TJsonElement[] value, bool hasDefault, TJsonElement[] @default = null)
         {
-            if (typeof(TJsonObj).IsArray)
+            if (!json.Json.Has(key))
             {
-                dynamic arr = new dynamic[json.Json[key].Count];
-                
-                for (int i = 0; i < json.Json[key].Count; i++)
+                if (hasDefault)
                 {
-                    if (typeof(TJsonObj) != typeof(object) && json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
-                        return new CompilerError(Building)
-                        {
-                            Cause = new ArrayTypeMismatchException(),
-                            FilePath = json.Path,
-                            IsWarning = false,
-                            Message = "'" + key + "[" + i + "]' is a " + json.Json.GetJsonType() +
-                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()) + "."
-                        };
+                    value = @default ?? new TJsonElement[0];
 
-                    TJsonObj j = (TJsonObj)arr[i];
-                    SetJsonValueInternal(new JsonFile(json.Path, json.Json[key][i]), ref j);
-                    arr[i] = j;
+                    return null;
                 }
-                
-                value = arr;
 
-                return null;
+                return new CompilerError(Building)
+                {
+                    Cause = new KeyNotFoundException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Required key '" + key + "' not found."
+                };
             }
 
-            if (typeof(TJsonObj) != typeof(object) && json.Json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
+            return SetJsonValueInternal_GenericArr(json, key, ref value);
+        }
+
+        CompilerError SetJsonValueInternal_GenericArr<TJsonElement>(JsonFile json, string key, ref TJsonElement[] value)
+        {
+            for (int i = 0; i < json.Json[key].Count; i++)
+            {
+                if (json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonElement)))
+                    return new CompilerError(Building)
+                    {
+                        Cause = new ArrayTypeMismatchException(),
+                        FilePath = json.Path,
+                        IsWarning = false,
+                        Message = "'" + key + "[" + i + "]' is a " + json.Json.GetJsonType() +
+                                  ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonElement)) + "."
+                    };
+
+                if ((CompilerError err = DeserializeJsonPrimitive(new JsonFile(json.Path, json.Json[key][i]), ref value[i])) != null)
+                    return err;
+            }
+
+            return null;
+        }
+        /*CompilerError SetJsonValueInternal_Arr(JsonFile json, string key, Type elemType, ref object[] value)
+        {
+            for (int i = 0; i < json.Json[key].Count; i++)
+            {
+                if (json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(elemType))
+                    return new CompilerError(Building)
+                    {
+                        Cause = new ArrayTypeMismatchException(),
+                        FilePath = json.Path,
+                        IsWarning = false,
+                        Message = "'" + key + "[" + i + "]' is a " + json.Json.GetJsonType() +
+                                  ", not a " + CommonToolUtilities.JsonTypeFromType(elemType) + "."
+                    };
+
+                if ((CompilerError err = DeserializeJsonPrimitive(new JsonFile(json.Path, json.Json[key][i]), elemType, ref value[i])) != null)
+                    return err;
+            }
+
+            return null;
+        }*/
+
+        CompilerError SetJsonValueInternal_Generic<TJsonObj>(JsonFile json, string key, ref TJsonObj value)
+        {
+            object o = value;
+            CompilerError ret = SetJsonValueInternal(json, key, typeof(TJsonObj), ref o);
+            if (o != null)
+                value = typeof(TJsonObj) == o.GetType() ? (TJsonObj)o : (TJsonObj)Convert.ChangeType(o, typeof(TJsonObj));
+
+            return ret;
+        }
+
+        CompilerError SetJsonValueInternal(JsonFile json, string key, Type jsonType, ref object value)
+        {
+            if (jsonType.IsArray)
+                return new CompilerError(Building)
+                {
+                    Cause = new ArgumentException("The type cannot be an array, use the proper overload.", "jsonType"),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Wrong overload used."
+                };
+
+            if (jsonType != typeof(object) && json.Json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(jsonType)
+                    && ImplicitelyConvert(new JsonFile(json.Path, json.Json[key]), jsonType) == null)
                 return new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
                     FilePath = json.Path,
                     IsWarning = false,
                     Message = "'" + key + "' is a " + json.Json.GetJsonType() +
-                              ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
+                              ", not a " + CommonToolUtilities.JsonTypeFromType(jsonType) + "."
                 };
 
-            value = (TJsonObj)(dynamic)json.Json[key]; // dynamic++
-
-            return null;
+            return DeserializeJsonPrimitive(new JsonFile(json.Path, json.Json[key]), jsonType, ref value);
         }
-        CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, ref TJsonObj value)
+
+        /*CompilerError SetJsonValueInternal(JsonFile json, Type jsonType, ref object value)
+        {
+            if (jsonType.IsArray)
+                return new CompilerError(Building)
+                {
+                    Cause = new ArgumentException("The type cannot be an array, use the proper overload.", "jsonType"),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Wrong overload used."
+                };
+
+            if (jsonType != typeof(object) && json.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(jsonType)
+                    && ImplicitelyConvert(new JsonFile(json.Path, json.Json), jsonType) == null)
+                return new CompilerError(Building)
+                {
+                    Cause = new InvalidCastException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "JSON value is a " + json.Json.GetJsonType() +
+                              ", not a " + CommonToolUtilities.JsonTypeFromType(jsonType) + "."
+                };
+
+            return DeserializeJsonPrimitive(json, jsonType, ref value);
+        }*/
+        /*CompilerError SetJsonValueInternal<TJsonObj>(JsonFile json, ref TJsonObj value)
         {
             if (typeof(TJsonObj).IsArray)
-            {
-                dynamic arr = new dynamic[json.Json.Count];
-
-                for (int i = 0; i < json.Json.Count; i++)
+                return new CompilerError(Building)
                 {
-                    if (typeof(TJsonObj) != typeof(object) && json.Json[i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()))
-                        return new CompilerError(Building)
-                        {
-                            Cause = new ArrayTypeMismatchException(),
-                            FilePath = json.Path,
-                            IsWarning = false,
-                            Message = "JSON value is a " + json.Json.GetJsonType() +
-                                      ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj).GetElementType()) + "."
-                        };
+                    Cause = new ArgumentException("The type cannot be an array, use the proper overload.", "TJsonObj"),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Wrong overload used."
+                };
 
-                    SetJsonValueInternal(new JsonFile(json.Path, json.Json[i]), null, ref arr[i]);
-                }
-
-                value = arr;
-
-                return null;
-            }
-
-            if (typeof(TJsonObj) != typeof(object) && json.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)))
+            if (typeof(TJsonObj) != typeof(object) && json.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj))
+                    && ImplicitelyConvert(new JsonFile(json.Path, json.Json), typeof(TJsonObj)) == null)
                 return new CompilerError(Building)
                 {
                     Cause = new InvalidCastException(),
@@ -250,7 +327,87 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                               ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonObj)) + "."
                 };
 
-            value = (TJsonObj)(dynamic)json.Json; // dynamic++
+            return DeserializeJsonPrimitive(json, ref value);
+        }*/
+
+        CompilerError DeserializeJsonPrimitive<TJson>(JsonFile jPrimitive, ref TJson outp)
+        {
+            dynamic o = outp;
+            CompilerError ret = DeserializeJsonPrimitive(jPrimitive, typeof(TJson), ref o);
+            if (o != null)
+                outp = o;
+            return ret;
+        }
+        CompilerError DeserializeJsonPrimitive(JsonFile jPrimitive, Type toType, ref object outp)
+        {
+            if ((object i = ImplicitelyConvert(jPrimitive, toType)) != null)
+            {
+                outp = i;
+
+                return null;
+            }
+
+            if (jPrimitive.Json.GetJsonType() != CommonToolUtilities.JsonTypeFromType(toType))
+                return new CompilerError(Building)
+                {
+                    Cause = new InvalidCastException(),
+                    FilePath = jPrimitive.Path,
+                    IsWarning = false,
+                    Message = "JSON value is a " + jPrimitive.Json.GetJsonType() +
+                              ", not a " + CommonToolUtilities.JsonTypeFromType(toType) + "."
+                };
+
+            switch (jPrimitive.Json.GetJsonType())
+            {
+                case JsonType.Boolean:
+                    outp = (bool)jPrimitive.Json;
+                    break;
+                case JsonType.Double:
+                    outp = (double)jPrimitive.Json;
+                    break;
+                case JsonType.Int:
+                    outp = (int)jPrimitive.Json;
+                    break;
+                case JsonType.Long:
+                    outp = (long)jPrimitive.Json;
+                    break;
+                case JsonType.None:
+                    outp = null;
+                    break;
+                case JsonType.String:
+                    outp = (string)jPrimitive.Json;
+                    break;
+                default:
+                    return new CompilerError(Building)
+                    {
+                        Cause = new InvalidCastException(),
+                        FilePath = jPrimitive.Path,
+                        IsWarning = false,
+                        Message = "JSON value is not a primitive."
+                    };
+            }
+
+            return null;
+        }
+
+        object ImplicitelyConvert(JsonFile jPrimitive, Type toType)
+        {
+            JsonType
+                from = jPrimitive.Json.GetJsonType(),
+                to   = CommonToolUtilities.JsonTypeFromType(toType);
+
+            if (to == JsonType.Double)
+            {
+                if (from == JsonType.Long)
+                    return (double)(long)jPrimitive.Json;
+                if (from == JsonType.Int)
+                    return (double)(int )jPrimitive.Json;
+            }
+            if (to == JsonType.Long)
+            {
+                if (from == JsonType.Int)
+                    return (long)(int)jPrimitive.Json;
+            }
 
             return null;
         }

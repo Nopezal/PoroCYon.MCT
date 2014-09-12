@@ -40,16 +40,15 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             if (craftGroupsJson != null)
                 errors.AddRange(Building.CraftGroups.CreateAndValidate(modOptionsJson));
 
-            for (int i = 3; i < errors.Count; i++)
+            for (int i = 3; i < Building.jsons.Count; i++)
             {
-                string path = jsons[i].Path;
-                int index = path.IndexOf(Path.DirectorySeparatorChar);
-
+                string r = jsons[i].Path.Substring(Building.OriginPath.Length + 1).Replace('\\', '/');
+                int index = r.IndexOf('/');
                 if (index != -1)
                 {
                     ValidatorObject obj = null;
 
-                    switch (path.Remove(index).ToLowerInvariant())
+                    switch (r.Remove(index).ToLowerInvariant())
                     {
                         case "buff":
                             obj = new Buff      (Compiler);

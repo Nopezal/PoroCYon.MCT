@@ -42,9 +42,9 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 {
                     JsonData its = json.Json["items"];
 
-                    foreach (DictionaryEntry kvp in its)
+                    foreach (KeyValuePair<string, JsonData> kvp in its)
                     {
-                        if (items.ContainsKey(kvp.Key.ToString()))
+                        if (items.ContainsKey(kvp.Key))
                         {
                             errors.Add(new CompilerError(Building)
                             {
@@ -54,7 +54,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                                 Message = "The key '" + kvp.Key + " is already present in the items list, adding the two stacks..."
                             });
 
-                            if (!(kvp.Value is int))
+                            if (!kvp.Value.IsInt)
                                 errors.Add(new CompilerError(Building)
                                 {
                                     Cause = new InvalidCastException(),
@@ -66,7 +66,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                             else
                                 items[kvp.Key.ToString()] += (int)kvp.Value;
                         }
-                        else if (!(kvp.Value is int))
+                        else if (!kvp.Value.IsInt)
                             errors.Add(new CompilerError(Building)
                             {
                                 Cause = new InvalidCastException(),

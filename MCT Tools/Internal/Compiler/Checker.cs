@@ -462,9 +462,25 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return null;
         }
 
+        CompilerError CheckTypeExists(Buff buff)
+        {
+            if (!buff.hasCode || buff.code == null) // code not specified in JSON
+                return null;
+
+            if (Building.Assembly.GetType(buff.code, false, false) == null)
+                return new CompilerError(Building)
+                {
+                    Cause = new TypeLoadException("Type " + buff.code + " not found."),
+                    FilePath = buff.internalName,
+                    IsWarning = false,
+                    Message = "Could not load type " + buff.code + "."
+                };
+
+            return null;
+        }
         CompilerError CheckTypeExists(EntityValidator entity)
         {
-            if (!entity.hasCode) // code not specified in JSON
+            if (!entity.hasCode || entity.code == null) // code not specified in JSON
                 return null;
 
             if (Building.Assembly.GetType(entity.code, false, false) == null)

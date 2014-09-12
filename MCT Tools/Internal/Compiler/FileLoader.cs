@@ -6,6 +6,7 @@ using Microsoft.Build.Framework;
 using LitJson;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {

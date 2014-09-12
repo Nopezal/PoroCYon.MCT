@@ -5,6 +5,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Threading;
 using Microsoft.Build.Framework;
 using PoroCYon.Extensions.Collections;
 using TAPI;
@@ -40,13 +41,23 @@ namespace PoroCYon.MCT.Tools
                     }
                 },
                 #endregion
+                #region inv
+                {
+                    "inv", () =>
+                    {
+                        Thread.CurrentThread.CurrentCulture   = CultureInfo.InvariantCulture;
+                        Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
+                    }
+                },
+                #endregion
 
                 { "banner"  , () => suppressBanner = !suppressBanner }
             };
 
-            Commands.Add("?"       , Commands["help"  ]);
-            Commands.Add("h"       , Commands["help"  ]);
-            Commands.Add("nobanner", Commands["banner"]);
+            Commands.Add("?"        , Commands["help"  ]);
+            Commands.Add("h"        , Commands["help"  ]);
+            Commands.Add("invariant", Commands["inv"   ]);
+            Commands.Add("nobanner" , Commands["banner"]);
 
             ToolCommands = new Dictionary<string, Action<string[]>>()
             {
