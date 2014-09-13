@@ -1,12 +1,17 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.4.0" String="1.3.4.0" />
+  <CurrentVersion Number="4" Version="1.3.4.1" String="1.3.4.1" />
   
   <Changelog>
+    <Release Version="1.3.4.1">
+      <Change>The MCT compiler now uses slightly less memory and is slightly faster.</Change>
+      <!-- structs ftw -->
+    </Release>
     <Release Version="1.3.4.0">
       <Change>Fixed a bug that made the ModCompiler ignore (thus not validate) any JSON files.</Change>
       <!-- the fix surfaced a lot of other bugs, which are now fixed, too. -->
     </Release>
+
     <Release Version="1.3.3.2">
       <Change>Fixed a bug that made the ModCompiler chrash when no file path is given when a CompilerError is raised.</Change>
     </Release>
@@ -18,10 +23,12 @@
       <Change>Changed how the MCT Tools compiler works internally... a bit.</Change>
       <Change>MCT Tools compiler now checks for existing types referenced by JSONs.</Change>
     </Release>
+
     <Release Version="1.3.2.0">
       <Change>Updated PoroCYon.Extensions.dll</Change>
       <Change>Enhanced JSON validation/checking for the MCT compiler. (this will reduce the amount of 'Key not found' errors you see when your mod is loading.)</Change>
     </Release>
+    
     <Release Version="1.3.1.2">
       <Change>Fixed mouse intput sometimes not properly blocking when the tAPI window is inactive.</Change>
     </Release>
@@ -31,6 +38,7 @@
     <Release Version="1.3.1.0">
       <Change>Fixed .json files not always saving to the .tapimod.</Change>
     </Release>
+    
     <Release Version="1.3.0.3">
       <Change>Made the hacky core of the MCT public (the methods, that is).</Change>
     </Release>
@@ -44,19 +52,6 @@
     <Release Version="1.3.0.0">
       <Change>Added vanilla player/world file porter.</Change>
       <Change>Updated to newer version of PoroCYon.XnaExtensions. All mods that reference the PoroCYon.XnaExtensions must be recompiled.</Change>
-    </Release>
-      
-    <Release Version="1.2.0.2">
-      <Change>Modified how the MCT Tools handles invalid Version formatting.</Change>
-    </Release>
-    <Release Version="1.2.0.1">
-      <Change>CodableEntity.AttachModEntity(ModEntity, [AttachMode = AttachMode.New])</Change>
-    </Release>
-    <Release Version="1.2.0.0">
-      <Change>
-        Enabled Edit &amp; Continue in Visual Studio.
-        Use the DEBUG &lt;internal name&gt; &lt;path to assembly&gt; command-line arguments.
-      </Change>
     </Release>
   </Changelog>
 </Version>

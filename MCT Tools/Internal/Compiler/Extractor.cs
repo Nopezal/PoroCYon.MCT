@@ -25,9 +25,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
 
             JsonFile
-                modInfo = null,
-                modOptions = null,
-                craftGroups = null;
+                modInfo     = new JsonFile(),
+                modOptions  = new JsonFile(),
+                craftGroups = new JsonFile();
 
             string asmName = asm.GetName().Name;
 
@@ -41,7 +41,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                     if (name.EndsWith(".json"))
                     {
-                        JsonFile current = null;
+                        JsonFile current = new JsonFile();
 
                         try
                         {
@@ -84,7 +84,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     Compiler.Log("Extracted file " + name + ", path is " + Path.GetExtension(name).ToLowerInvariant() + ".", MessageImportance.Low);
                 }
 
-            if (modInfo == null)
+            if (modInfo.IsEmpty)
             {
                 modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(asmName)));
 
@@ -96,8 +96,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 });
             }
 
-            jsons.Insert(0, modInfo);
-            jsons.Insert(1, modOptions); // check if it's null later
+            jsons.Insert(0, modInfo    );
+            jsons.Insert(1, modOptions ); // check if it's null later
             jsons.Insert(2, craftGroups); // same here
 
             return new Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>>(jsons, files, errors);

@@ -1,3 +1,16 @@
+
+<Release Version="1.2.0.2">
+    <Change>Modified how the MCT Tools handles invalid Version formatting.</Change>
+</Release>
+<Release Version="1.2.0.1">
+    <Change>CodableEntity.AttachModEntity(ModEntity, [AttachMode = AttachMode.New])</Change>
+</Release>
+<Release Version="1.2.0.0">
+    <Change>
+    Enabled Edit &amp; Continue in Visual Studio.
+    Use the DEBUG &lt;internal name&gt; &lt;path to assembly&gt; command-line arguments.
+    </Change>
+</Release>
 <Release Version="1.1.0.15">
     <Change>Fixed ObjectLoader.AddToGame(Item, Texture2D, LoadParameters, [ArmorParameters]) not working.</Change>
 </Release>

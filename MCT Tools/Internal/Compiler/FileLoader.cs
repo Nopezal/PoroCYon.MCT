@@ -25,9 +25,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             Dictionary<string, byte[]> files = new Dictionary<string, byte[]>();
 
             JsonFile
-                modInfo = null,
-                modOptions = null,
-                craftGroups = null;
+                modInfo     = new JsonFile(),
+                modOptions  = new JsonFile(),
+                craftGroups = new JsonFile();
 
             foreach (string s in Directory.EnumerateFiles(directory, "*.*", SearchOption.AllDirectories))
             {
@@ -62,7 +62,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 if (s.EndsWith(".json"))
                 {
-                    JsonFile current = null;
+                    JsonFile current = new JsonFile();
 
                     try
                     {
@@ -95,7 +95,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 Compiler.Log("Loaded file " + fileName + ", path is " + relativeFileName + ".", MessageImportance.Low);
             }
 
-            if (modInfo == null)
+            if (modInfo.IsEmpty)
             {
                 modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(Path.GetDirectoryName(directory))));
 

@@ -30,15 +30,21 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             if (!Building.Info.validate) // HELLO, HERE AM I, I JUST WANTED TO SAY THAT THIS BLOCK CONTAINS A RETURN STATEMENT, KTHXBAI.
                 return errors;
 
-            Compiler.Log("Validating ModOptions...", MessageImportance.Low);
             Building.Options = new ModOptions(Compiler);
-            if (modOptionsJson != null)
-                errors.AddRange(Building.Options.CreateAndValidate(modOptionsJson));
+            if (!modOptionsJson.IsEmpty)
+            {
+                Compiler.Log("Validating ModOptions...", MessageImportance.Low);
 
-            Compiler.Log("Validating CraftGroups...", MessageImportance.Low);
+                errors.AddRange(Building.Options.CreateAndValidate(modOptionsJson));
+            }
+
             Building.CraftGroups = new CraftGroups(Compiler);
-            if (craftGroupsJson != null)
+            if (!craftGroupsJson.IsEmpty)
+            {
+                Compiler.Log("Validating CraftGroups...", MessageImportance.Low);
+
                 errors.AddRange(Building.CraftGroups.CreateAndValidate(modOptionsJson));
+            }
 
             for (int i = 3; i < Building.jsons.Count; i++)
             {

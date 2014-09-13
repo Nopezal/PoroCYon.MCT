@@ -8,23 +8,26 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// A JsonData object paired with its file path.
     /// </summary>
-    public class JsonFile
+    public struct JsonFile
     {
         /// <summary>
         /// Gets the path to the JSON file
         /// </summary>
-        public string Path
-        {
-            get;
-            internal set;
-        }
+        public string Path;
         /// <summary>
         /// Gets the JSON object.
         /// </summary>
-        public JsonData Json
+        public JsonData Json;
+
+        /// <summary>
+        /// Gets whether the JsonFile is an empty instance or not.
+        /// </summary>
+        public bool IsEmpty
         {
-            get;
-            internal set;
+            get
+            {
+                return Path == null || Json == null;
+            }
         }
 
         /// <summary>
