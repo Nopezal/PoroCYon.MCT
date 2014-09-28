@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="4" Version="1.3.4.1" String="1.3.4.1" />
+  <CurrentVersion Number="4" Version="1.3.4.2" String="1.3.4.2" />
   
   <Changelog>
+    <Release Version="1.3.4.1">
+      <Change>Forgot to check whether an NPC is a town NPC, when searching for the ._Head texture.</Change>
+    </Release>
     <Release Version="1.3.4.1">
       <Change>The MCT compiler now uses slightly less memory and is slightly faster.</Change>
       <!-- structs ftw -->
