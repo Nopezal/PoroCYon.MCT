@@ -136,6 +136,18 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "critChance", ref critChance, 4), errors);
             AddIfNotNull(SetJsonValue(json, "critMult", ref critMult, 4), errors);
 
+            // gameplay
+            AddIfNotNull(SetJsonValue(json, "npcSlots", ref npcSlots, 1f), errors);
+            AddIfNotNull(SetJsonValue(json, "aiStyle", ref aiStyle, 0), errors);
+            AddIfNotNull(SetJsonValue(json, "friendly", ref friendly, false), errors);
+            AddIfNotNull(SetJsonValue(json, "townNPC", ref townNPC, false), errors);
+            AddIfNotNull(SetJsonValue(json, "male", ref male, true /* based on the vanilla male/female raito + default value of the field, don't sue me because of this */), errors);
+            AddIfNotNull(SetJsonValue(json, "boss", ref boss, false), errors);
+            AddIfNotNull(SetJsonValue(json, "dontTakeDamage", ref dontTakeDamage, false), errors);
+            AddIfNotNull(SetJsonValue(json, "lavaImmune", ref lavaImmune, false), errors);
+            AddIfNotNull(SetJsonValue(json, "noGravity", ref noGravity, false), errors);
+            AddIfNotNull(SetJsonValue(json, "noTileCollide", ref noTileCollide, false), errors);
+
             // appearance
             AddIfNotNull(SetJsonValue(json, "frameCount", ref frameCount, 1), errors);
             AddIfNotNull(SetJsonValue(json, "animationStyle", ref animationStyle, 0), errors);
@@ -144,7 +156,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             // interface
             AddIfNotNull(SetJsonValue(json, "textureHead", ref textureHead, texture + "._Head"), errors);
-            if (!Building.files.ContainsKey(textureHead))
+            if (townNPC && !Building.files.ContainsKey(textureHead))
                 errors.Add(new CompilerError(Building)
                 {
                     Cause = new FileNotFoundException(),
@@ -156,18 +168,6 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "showHealthBar", ref showHealthBar, true), errors);
             AddIfNotNull(SetJsonValue(json, "lifeBarScale", ref lifeBarScale, 1f), errors);
             AddIfNotNull(SetJsonValue(json, "realLifeHealthBar", ref realLifeHealthBar, false), errors);
-
-            // gameplay
-            AddIfNotNull(SetJsonValue(json, "npcSlots", ref npcSlots, 1f), errors);
-            AddIfNotNull(SetJsonValue(json, "aiStyle", ref aiStyle, 0), errors);
-            AddIfNotNull(SetJsonValue(json, "friendly", ref friendly, false), errors);
-            AddIfNotNull(SetJsonValue(json, "townNPC", ref townNPC, false), errors);
-            AddIfNotNull(SetJsonValue(json, "male", ref male, true /* based on the vanilla male/female raito, don't sue me because of this */), errors);
-            AddIfNotNull(SetJsonValue(json, "boss", ref boss, false), errors);
-            AddIfNotNull(SetJsonValue(json, "dontTakeDamage", ref dontTakeDamage, false), errors);
-            AddIfNotNull(SetJsonValue(json, "lavaImmune", ref lavaImmune, false), errors);
-            AddIfNotNull(SetJsonValue(json, "noGravity", ref noGravity, false), errors);
-            AddIfNotNull(SetJsonValue(json, "noTileCollide", ref noTileCollide, false), errors);
 
             if (json.Json.Has("buffImmune"))
             {
