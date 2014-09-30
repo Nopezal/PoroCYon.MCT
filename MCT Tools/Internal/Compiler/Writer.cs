@@ -109,6 +109,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 				}
 				catch { }
 
+			// write the PDB output
+			File.WriteAllBytes(Mods.pathCompiled + "\\" + Building.Info.outputName + ".pdb", pdb);
+
 			if (pdb != null)
 			{
 				Compiler.Log("Got PDB file.", MessageImportance.Low);

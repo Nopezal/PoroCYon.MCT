@@ -59,12 +59,21 @@ namespace PoroCYon.MCT
 
         static void InsertMctMod()
         {
-            // hacky stuff #1
-            // add mod etc to list...
-            //ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), typeof(Mod), 0, displayName);
+			// hacky stuff #1
+			// add mod etc to list...
+			//ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), typeof(Mod), 0, displayName);
 
-            // the old way is redundant now, but keeping it here
-            /*
+			Mod m = new Mod(Assembly.GetExecutingAssembly().Location);
+			m.enabled = true;
+			m.modBase = new MctMod();
+			m.modBase.mod = m;
+			m.modInterface = new MUI();
+			typeof(Mod).GetField("_modInfo", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance).SetValue(m, JsonMapper.ToObject(ReadResource("ModInfo.json")));
+			m.Load();
+			Mods.mods.Add(m);
+
+			// the old way is redundant now, but keeping it here
+			/*
             Assembly code = Assembly.GetExecutingAssembly();
 
             JsonData modInfo = JsonMapper.ToObject(ReadResource("ModInfo.json"));
@@ -103,7 +112,7 @@ namespace PoroCYon.MCT
 
             mod.modPrefixes[0].Init(null);
             */
-        }
+		}
         static void LoadData()
         {
             SyncedRandom.Reset();
