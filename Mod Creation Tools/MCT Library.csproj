@@ -109,7 +109,7 @@
     <Compile Include="Internal\ModClasses\MNPC.cs" />
     <Compile Include="Internal\ModClasses\MPrefix.cs" />
     <Compile Include="Internal\ModClasses\MProj.cs" />
-    <Compile Include="Internal\ModClasses\MTile.cs" />
+    <Compile Include="Internal\ModClasses\MTileType.cs" />
     <Compile Include="Internal\ModClasses\MUI.cs" />
     <Compile Include="Internal\ModClasses\MWorld.cs" />
     <Compile Include="Internal\MctCustomUI.cs" />
@@ -131,7 +131,7 @@
     <Compile Include="Mct.cs" />
     <Compile Include="Internal\ModClasses\MItem.cs" />
     <Compile Include="Internal\ModClasses\MPlayer.cs" />
-    <Compile Include="Internal\ModClasses\Mod.cs" />
+    <Compile Include="Internal\ModClasses\MctMod.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="MctConstants.cs" />
     <Compile Include="UI\Extensions.cs" />

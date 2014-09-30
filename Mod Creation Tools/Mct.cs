@@ -57,7 +57,41 @@ namespace PoroCYon.MCT
             }
         }
 
-        static void InsertMctMod()
+		static void Setup(Mod mod)
+		{
+			mod.modBase.modItemTemplates       = new List<ModItem      >() { new MItem    () };
+			mod.modBase.modNPCTemplates        = new List<ModNPC       >() { new MNPC     () };
+			mod.modBase.modPlayerTemplates     = new List<ModPlayer    >() { new MPlayer  () };
+			mod.modBase.modPrefixTemplates     = new List<ModPrefix    >() { new MPrefix  () };
+			mod.modBase.modProjectileTemplates = new List<ModProjectile>() { new MProj    () };
+			mod.modBase.modTileTypeTemplates   = new List<ModTileType  >() { new MTileType() };
+			mod.modBase.modWorldTemplates      = new List<ModWorld     >() { new MWorld   () };
+
+			List<ModBase> mBases = new List<ModBase>();
+			List<ModInterface> mUIs = new List<ModInterface>();
+			List<ModWorld> mWorlds = new List<ModWorld>();
+			List<ModPrefix> mPfixes = new List<ModPrefix>();
+
+			if (mod.enabled && mod.Loaded)
+			{
+				mBases.Add(mod.modBase);
+
+				if (mod.modInterface != null)
+					mUIs.Add(mod.modInterface);
+				if (mod.modBase.modWorldTemplates.Count > 0)
+					mWorlds.AddRange(mod.modBase.modWorldTemplates);
+				if (mod.modBase.modPrefixTemplates.Count > 0)
+					mPfixes.AddRange(mod.modBase.modPrefixTemplates);
+			}
+
+			Hooks.Base.Setup(mBases);
+			Hooks.Interface.Setup(mUIs);
+			Hooks.World.Setup(mWorlds);
+			Hooks.Prefixes.Setup(mPfixes);
+
+		}
+
+		static void InsertMctMod()
         {
 			// hacky stuff #1
 			// add mod etc to list...
@@ -71,6 +105,9 @@ namespace PoroCYon.MCT
 			typeof(Mod).GetField("_modInfo", BindingFlags.GetField | BindingFlags.NonPublic | BindingFlags.Instance).SetValue(m, JsonMapper.ToObject(ReadResource("ModInfo.json")));
 			m.Load();
 			Mods.mods.Add(m);
+			Setup(m);
+
+			m.modBase.OnLoad();
 
 			// the old way is redundant now, but keeping it here
 			/*
