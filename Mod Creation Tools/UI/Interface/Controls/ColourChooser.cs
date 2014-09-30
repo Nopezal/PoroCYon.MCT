@@ -19,7 +19,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return API.main.colorBarTexture;
+                return Main.colorBarTexture;
             }
         }
         static Texture2D hueBG

@@ -6,7 +6,7 @@ using PoroCYon.Extensions;
 
 namespace PoroCYon.MCT.Tools.Internal.Porting
 {
-    using BitsByte = TAPI.BitsByte;
+    using BitsByte = Terraria.DataStructures.BitsByte;
 
     enum CollisionType : sbyte
     {

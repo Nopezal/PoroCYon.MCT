@@ -19,14 +19,14 @@ namespace PoroCYon.MCT
         {
             base.OnAllModsLoaded();
 
-            // hacky stuff #2
+			// hacky stuff #2
 
-            // remove from list, but the file still exists
+			// remove from list, but the file still exists
 
-            // this is so it's using the .dll (shared objects) instead from some byte array (not so shared objects),
-            // but that would make the modinfo display chrash. Adding this .tapi file and removing it from the list by code fixes it.
+			// this is so it's using the .dll (shared objects) instead from some byte array (not so shared objects),
+			// but that would make the modinfo display chrash. Adding this .tapi file and removing it from the list by code fixes it.
 
-            ModController.UnloadMod(this);
+			mod.Unload();
 
             // idem here (see Mct.cs)
             /*

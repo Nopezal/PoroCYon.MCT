@@ -9,19 +9,19 @@ namespace PoroCYon.MCT.Internal.ModClasses
     [GlobalMod]
     sealed class MPlayer : ModPlayer
     {
-        public MPlayer(ModBase @base, Player p)
-            : base(@base, p)
+        public MPlayer()
+            : base()
         {
 
         }
 
-        public override void OnUpdate()
+        public override void MidUpdate()
         {
             // ensure it's the local player >__>
             if (player == Main.localPlayer)
-                Mod.UpdateThings(UpdateMode.PlayerUpdate);
+                MctMod.UpdateThings(UpdateMode.PlayerUpdate);
 
-            base.OnUpdate();
+            base.MidUpdate();
         }
-    }
+	}
 }

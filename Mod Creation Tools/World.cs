@@ -325,7 +325,7 @@ namespace PoroCYon.MCT
         /// <param name="noGravity">Wether the particle is bound to the laws of gravity or not; default is false (laws do apply)</param>
         /// <param name="noLight">Weter the particle can emit light or not; default is false (can emit light)</param>
         /// <returns>The ID of the newly spawned Dust instance</returns>
-        public static int SpawnCustomDust(Vector2 position, Vector2 size, Texture2D texture, Action onUpdate,
+        public static int SpawnCustomDust(Vector2 position, Vector2 size, Texture2D texture, Action<Dust> onUpdate,
             Vector2 velocity = default(Vector2), Color? c = null, float scale = 1f, bool noGravity = false, bool noLight = false)
         {
             Color co = c ?? new Color(255, 255, 255, 0);

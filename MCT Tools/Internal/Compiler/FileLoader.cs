@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using LitJson;
+using PoroCYon.Extensions;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
-using PoroCYon.Extensions;
+using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class FileLoader(ModCompiler mc) : CompilerPhase(mc)
+	class FileLoader(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Loads JSON and other files from a mod's source folder.
@@ -97,7 +98,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (modInfo.IsEmpty)
             {
-                modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(Path.GetDirectoryName(directory))));
+                modInfo = new JsonFile(String.Empty, ModCompile.GenerateBlankModInfo(Path.GetDirectoryName(directory)));
 
                 errors.Add(new CompilerError(Building)
                 {

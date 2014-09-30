@@ -6,12 +6,11 @@ using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.Extensions;
 using Terraria;
 using TAPI;
+using TAPI.UIKit;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
 namespace PoroCYon.MCT.UI.Interface.Controls
 {
-    using ItemSlot = TAPI.Interface.ItemSlot;
-
     /// <summary>
     /// An Item slot
     /// </summary>
@@ -34,18 +33,19 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
                 return parent.Target.CanSetItem(item);
             }
-            public override void DrawItemSlotBackground(SpriteBatch sb)
-            {
-                if (!parent.IsAlive)
-                {
-                    base.DrawItemSlotBackground(sb);
-                    return;
-                }
+			public override void DrawItemSlotBackground(SpriteBatch sb, Vector2 offset)
+			{
+				if (!parent.IsAlive)
+				{
+					base.DrawItemSlotBackground(sb, offset);
+					return;
+				}
 
-                if (TAPI.Hooks.Interface.PreDrawItemSlotBackground(sb, this))
-                    sb.Draw(parent.Target.bgTex, pos, null, Main.inventoryBack, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
-                TAPI.Hooks.Interface.PostDrawItemSlotBackground(sb, this);
-            }
+				if (TAPI.Hooks.Interface.PreDrawItemSlotBackground(sb, this))
+					sb.Draw(parent.Target.bgTex, pos + offset, null, Main.inventoryBack, 0f, default(Vector2), Main.inventoryScale, SpriteEffects.None, 0f);
+
+				TAPI.Hooks.Interface.PostDrawItemSlotBackground(sb, this);
+			}
         }
 
         Texture2D bgTex = Main.inventoryBackTexture;

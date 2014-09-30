@@ -14,7 +14,8 @@ namespace PoroCYon.MCT.Internal.Diagnostics
     // Hacky stuff #ilostthecount
     // remove a mod (.tapi(mod)) from the mod list, and insert the mod from the .dll, so it can be debugged using VS.
 
-    static class ModDebugger
+	// TODO: REWRITE!
+    /*static class ModDebugger
     {
         internal static List<APIModBase           > tempBases = new List<APIModBase           >();
         internal static List<Tuple<string, string>> toDebug   = new List<Tuple<string, string>>();
@@ -290,5 +291,5 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 
             Trace.WriteLine("Debugging " + @base, "MCT Debugger");
         }
-    }
+    }*/
 }

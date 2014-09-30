@@ -4,6 +4,7 @@ using System.Linq;
 using Ionic.Zip;
 using LitJson;
 using Terraria;
+using Terraria.DataStructures;
 using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Porting

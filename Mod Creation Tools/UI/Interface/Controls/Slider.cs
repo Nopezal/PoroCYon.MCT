@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using TAPI;
+using Terraria;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
 
@@ -46,7 +46,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return API.main.colorSliderTexture;
+                return Main.colorSliderTexture;
             }
         }
 
@@ -57,7 +57,7 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         {
             get
             {
-                return background ?? API.main.colorBarTexture;
+                return background ?? Main.colorBarTexture;
             }
             set
             {

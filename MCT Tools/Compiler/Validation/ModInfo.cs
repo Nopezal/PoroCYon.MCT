@@ -36,6 +36,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string author = "<unknown>";
         public Version version = new Version(1, 0);
         public string info = String.Empty;
+		public string icon = null;
 
         // new compiler stuff
         public string language = null;
@@ -159,14 +160,13 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             List<CompilerError> errors = new List<CompilerError>();
 
             AddIfNotNull(SetJsonValue(json, "internalName", ref internalName), errors);
-
             if (internalName == "g")
                 errors.Add(new CompilerError(Building)
                 {
                     Cause = new ValueNotAllowedException("internalName", internalName),
                     FilePath = json.Path,
                     IsWarning = false,
-                    Message = "The internal name 'g' cannot be used, as it is used as the prefix for crafting groups."
+                    Message = "The internal mod name 'g' cannot be used, as it is reserved as the prefix for crafting groups."
                 });
 
             AddIfNotNull(SetJsonValue(json, "includePDB", ref includePDB, false), errors);
@@ -354,9 +354,19 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             AddIfNotNull(SetJsonValue(json, "info", ref info, "Mod " + displayName + " v" + version + " by " + author), errors);
 
-            // ---
+			AddIfNotNull(SetJsonValue(json, "icon", ref icon, null), errors);
+			if (icon != null && !Building.Files.ContainsKey(icon + ".png"))
+				errors.Add(new CompilerError(Building)
+				{
+					Cause = new FileNotFoundException(),
+					FilePath = json.Path,
+					IsWarning = false,
+					Message = "Icon '" + icon + ".png' not found."
+				});
 
-            AddIfNotNull(SetJsonValue(json, "language",      ref language,      "C#" ), errors);
+			// ---
+
+			AddIfNotNull(SetJsonValue(json, "language",      ref language,      "C#" ), errors);
             AddIfNotNull(SetJsonValue(json, "compress",      ref compress,      true ), errors);
             AddIfNotNull(SetJsonValue(json, "validate",      ref validate,      true ), errors);
             AddIfNotNull(SetJsonValue(json, "includeSource", ref includeSource, false), errors);

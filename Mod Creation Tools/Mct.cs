@@ -61,7 +61,7 @@ namespace PoroCYon.MCT
         {
             // hacky stuff #1
             // add mod etc to list...
-            ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), typeof(Mod), 0, displayName);
+            //ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), typeof(Mod), 0, displayName);
 
             // the old way is redundant now, but keeping it here
             /*
@@ -110,9 +110,9 @@ namespace PoroCYon.MCT
 
             ModdableObject.Reset();
 
-            ObjectLoader.AddInvasion(Mod.instance, "Goblin Army", new GoblinArmyInv());
-            ObjectLoader.AddInvasion(Mod.instance, "Frost Legion", new FrostLegionInv());
-            ObjectLoader.AddInvasion(Mod.instance, "Pirates", new PiratesInv());
+            ObjectLoader.AddInvasion(MctMod.instance, "Goblin Army", new GoblinArmyInv());
+            ObjectLoader.AddInvasion(MctMod.instance, "Frost Legion", new FrostLegionInv());
+            ObjectLoader.AddInvasion(MctMod.instance, "Pirates", new PiratesInv());
         }
 
         /// <summary>
@@ -122,10 +122,10 @@ namespace PoroCYon.MCT
         /// </summary>
         public static void Init()
         {
-            if (!Inited)
-                ModDebugger.GetModsToDebug();
+            //if (!Inited)
+            //    ModDebugger.GetModsToDebug();
 
-            ModDebugger.TryDebugMod(Assembly.GetCallingAssembly());
+            //ModDebugger.TryDebugMod(Assembly.GetCallingAssembly());
 
             if (Inited)
                 return;
@@ -144,10 +144,10 @@ namespace PoroCYon.MCT
             Invasion.invasions.Clear();
             Invasion.invasionTypes.Clear();
 
-            ModDebugger.tempBases.Clear();
-            ModDebugger.toDebug.Clear();
+            //ModDebugger.tempBases.Clear();
+            //ModDebugger.toDebug  .Clear();
 
-            Mod.instance = null;
+            MctMod.instance = null;
 
             Inited = false;
         }

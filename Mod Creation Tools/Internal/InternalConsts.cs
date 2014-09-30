@@ -14,14 +14,14 @@ namespace PoroCYon.MCT.Internal
         internal const int ENUM_OFFSET = 128;
     }
 
-    enum InternalNetMessages : int
+    enum InternalNetMessages : byte
     {
         SyncRandom_Sync = Consts.ENUM_OFFSET + 0,
         SyncRandom_CTOR = Consts.ENUM_OFFSET + 1,
         SyncRandom_DTOR = Consts.ENUM_OFFSET + 2
     }
-    enum InternalModMessages : int
-    {
+    enum InternalModMessages : byte
+	{
 
     }
 }

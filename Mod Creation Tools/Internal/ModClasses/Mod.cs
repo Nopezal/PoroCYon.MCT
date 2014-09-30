@@ -23,17 +23,17 @@ namespace PoroCYon.MCT.Internal.ModClasses
     }
 
     [GlobalMod]
-    sealed class Mod : ModBase
+    sealed class MctMod : ModBase
     {
         internal readonly static string MCTDataFile = Main.SavePath + "\\MCT_Data.sav";
 
-        internal static Mod instance;
+        internal static MctMod instance;
 
         internal static UpdateMode UpdateMode
         {
             get
             {
-                if (AudioDef.volume > 0f)
+                if (Main.musicVolume > 0f)
                     return UpdateMode.AudioUpdate;
                 if (!Main.gameMenu && !Main.gamePaused)
                     return UpdateMode.PlayerUpdate;
@@ -42,7 +42,7 @@ namespace PoroCYon.MCT.Internal.ModClasses
             }
         }
 
-        public Mod()
+        public MctMod()
             : base()
         {
             instance = this;
@@ -99,10 +99,10 @@ namespace PoroCYon.MCT.Internal.ModClasses
             base.OnAllModsLoaded();
 
             // remove temporary modbase instances
-            for (int i = 0; i < ModDebugger.tempBases.Count; i++)
-                Mods.modBases.Remove(ModDebugger.tempBases[i]);
+            //for (int i = 0; i < ModDebugger.tempBases.Count; i++)
+            //    Mods.modBases.Remove(ModDebugger.tempBases[i]);
 
-            ModDebugger.tempBases.Clear();
+            //ModDebugger.tempBases.Clear();
 
             // insert settings menu button in the Options menu
             Menu.menuPages.Add("MCT:Settings", new SettingsPage());
@@ -159,50 +159,50 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
             return base.OnModCall(mod, arguments);
         }
-        [CallPriority(Single.PositiveInfinity)]
-        public override void NetReceive(int id, BinBuffer bb)
-        {
-            base.NetReceive(id, bb);
+		[CallPriority(Single.PositiveInfinity)]
+		public override void NetReceive(byte msg, BinBuffer bb)
+		{
+			base.NetReceive(msg, bb);
 
-            switch ((InternalNetMessages)id)
-            {
-                case InternalNetMessages.SyncRandom_Sync:
-                    SyncedRandom.GetCached(bb.ReadInt()).NextDouble();
-                    break;
-                case InternalNetMessages.SyncRandom_CTOR:
-                    {
-                        string group = bb.ReadString();
-                        int seed = bb.ReadInt();
+			switch ((InternalNetMessages)msg)
+			{
+				case InternalNetMessages.SyncRandom_Sync:
+					SyncedRandom.GetCached(bb.ReadInt()).NextDouble();
+					break;
+				case InternalNetMessages.SyncRandom_CTOR:
+					{
+						string group = bb.ReadString();
+						int seed = bb.ReadInt();
 
-                        SyncedRandom.rands[group] = seed;
-                        SyncedRandom.refs[group]++;
-                    }
-                    break;
-                case InternalNetMessages.SyncRandom_DTOR:
-                    {
-                        int seed = bb.ReadInt();
-                        string group = null;
+						SyncedRandom.rands[group] = seed;
+						SyncedRandom.refs[group]++;
+					}
+					break;
+				case InternalNetMessages.SyncRandom_DTOR:
+					{
+						int seed = bb.ReadInt();
+						string group = null;
 
-                        foreach (var kvp in SyncedRandom.rands)
-                            if (kvp.Value == seed)
-                                group = kvp.Key;
+						foreach (var kvp in SyncedRandom.rands)
+							if (kvp.Value == seed)
+								group = kvp.Key;
 
-                        if (group == null)
-                            return;
+						if (group == null)
+							return;
 
-                        SyncedRandom.refs[group]--;
-                        if (SyncedRandom.refs[group] <= 0)
-                        {
-                            SyncedRandom.rands.Remove(group);
-                            SyncedRandom.refs.Remove(group);
-                            SyncedRandom.RemoveCached(seed);
-                        }
-                    }
-                    break;
-            }
-        }
+						SyncedRandom.refs[group]--;
+						if (SyncedRandom.refs[group] <= 0)
+						{
+							SyncedRandom.rands.Remove(group);
+							SyncedRandom.refs.Remove(group);
+							SyncedRandom.RemoveCached(seed);
+						}
+					}
+					break;
+			}
+		}
 
-        [CallPriority(Single.PositiveInfinity)]
+		[CallPriority(Single.PositiveInfinity)]
         public override void PreGameDraw(SpriteBatch sb)
         {
             base.PreGameDraw(sb);

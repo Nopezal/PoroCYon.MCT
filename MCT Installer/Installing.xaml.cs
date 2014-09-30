@@ -125,12 +125,14 @@ namespace PoroCYon.MCT.Installer
                 try
                 {
                     Environment.SetEnvironmentVariable("TAPIBINDIR", steamDir.Remove(steamDir.Length - 1), EnvironmentVariableTarget.Machine);
-                    Environment.SetEnvironmentVariable("TAPIMODDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                        + "\\My Games\\Terraria\\tAPI\\Mods", EnvironmentVariableTarget.Machine);
-                    Environment.SetEnvironmentVariable("TAPIMODSRCDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                    Environment.SetEnvironmentVariable("TAPIDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+                        + "\\My Games\\Terraria\\tAPI", EnvironmentVariableTarget.Machine);
+					Environment.SetEnvironmentVariable("TAPIMODDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
+						+ "\\My Games\\Terraria\\tAPI\\Mods", EnvironmentVariableTarget.Machine);
+					Environment.SetEnvironmentVariable("TAPIMODSRCDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
                         + "\\My Games\\Terraria\\tAPI\\Mods\\Sources", EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("TAPIMODOUTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
-                        + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted", EnvironmentVariableTarget.Machine);
+                        + "\\My Games\\Terraria\\tAPI\\Mods\\Local", EnvironmentVariableTarget.Machine);
                     Environment.SetEnvironmentVariable("MCTDIR", Environment.GetFolderPath(Environment.SpecialFolder.Personal)
                         + "\\My Games\\Terraria\\tAPI\\MCT", EnvironmentVariableTarget.Machine);
 

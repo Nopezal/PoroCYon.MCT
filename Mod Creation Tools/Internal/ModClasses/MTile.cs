@@ -7,8 +7,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
 {
     sealed class MTile : ModTile
     {
-        public MTile(ModBase @base)
-            : base(@base)
+        public MTile()
+            : base()
         {
 
         }

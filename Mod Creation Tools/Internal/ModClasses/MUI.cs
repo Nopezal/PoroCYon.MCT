@@ -27,8 +27,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
             }
         }
 
-        public MUI(ModBase @base)
-            : base(@base)
+        public MUI()
+            : base()
         {
 
         }

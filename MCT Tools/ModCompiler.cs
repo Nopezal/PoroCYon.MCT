@@ -11,6 +11,7 @@ using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
 using PoroCYon.MCT.Tools.Internal.Compiler;
+using Ionic.Zip;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -26,10 +27,63 @@ namespace PoroCYon.MCT.Tools
 
         static JsonData list;
 
-        /// <summary>
-        /// Gets the collection of loggers attached to the <see cref="ModCompiler" />.
-        /// </summary>
-        public List<MctLogger> Loggers
+		static JsonData ModInfoFromModStream(Stream stream)
+		{
+			BinBuffer bb = new BinBuffer(new BinBufferStream(stream));
+			bb.ReadInt(); // version
+			return JsonMapper.ToObject(bb.ReadString());
+		}
+
+		/// <summary>
+		/// 
+		/// </summary>
+		/// <returns></returns>
+		public static Dictionary<string, string> GetInternalNameToPathDictionary()
+		{
+			Dictionary<string, string> dictionary = new Dictionary<string, string>();
+			if (Directory.Exists(Mods.pathCompiled))
+			{
+				string[] files = Directory.GetFiles(Mods.pathCompiled);
+				for (int i = 0; i < files.Length; i++)
+				{
+					string modFile = files[i];
+					if (modFile.EndsWith(".tapimod") || modFile.EndsWith(".tapi"))
+					{
+						string[] split = modFile.Split('\\', '/');
+						string fileName = split[split.Length - 1];
+
+						if (modFile.EndsWith(".tapimod"))
+							using (FileStream fs = new FileStream(modFile, FileMode.Open))
+							{
+								JsonData modInfo = ModInfoFromModStream(fs);
+								dictionary[(string)modInfo["internalName"]] = modFile;
+							}
+						else if (modFile.EndsWith(".tapi"))
+							using (ZipFile zipFile = ZipFile.Read(modFile))
+							{
+								if (zipFile.ContainsEntry("Mod.tapimod"))
+								{
+									ZipEntry zipEntry = zipFile["Mod.tapimod"];
+
+									using (MemoryStream ms = new MemoryStream())
+									{
+										zipEntry.Extract(ms);
+										ms.Position = 0L;
+										JsonData modInfo = ModInfoFromModStream(ms);
+										dictionary[(string)modInfo["internalName"]] = modFile;
+									}
+								}
+							}
+					}
+				}
+			}
+			return dictionary;
+		}
+
+		/// <summary>
+		/// Gets the collection of loggers attached to the <see cref="ModCompiler" />.
+		/// </summary>
+		public List<MctLogger> Loggers
         {
             get;
             private set;
@@ -80,7 +134,7 @@ namespace PoroCYon.MCT.Tools
             if (folder[1] != ':' && !folder.StartsWith("\\")) // <drive>:\path or \\ServerName\path
                 // if the folder doesn't exist, it's maybe a folder in the Mods\Sources directory?
                 if (!Directory.Exists(folder))
-                    folder = CommonToolUtilities.modsSrcDir + "\\" + folder;
+                    folder = Mods.pathSources + "\\" + folder;
                 else
                     folder = Path.GetFullPath(folder);
 
@@ -91,7 +145,7 @@ namespace PoroCYon.MCT.Tools
             try
             {
                 building.OriginPath = folder;
-                building.OriginName = Path.GetFileName(Path.GetDirectoryName(folder));
+                building.OriginName = Path.GetFileName(folder);
 
                 if (!BeginCompile(folder))
                 {
@@ -434,7 +488,7 @@ namespace PoroCYon.MCT.Tools
 
         internal string FindSourceFolderFromInternalName(string internalName)
         {
-            foreach (string d in Directory.EnumerateFiles(Mods.pathDirModsSources))
+            foreach (string d in Directory.EnumerateFiles(Mods.pathSources))
             {
                 if (File.Exists(d + "\\ModInfo.json"))
                 {
@@ -467,7 +521,7 @@ namespace PoroCYon.MCT.Tools
                 building.OriginName = Path.GetFileNameWithoutExtension(path);
             }
 
-            modDict = Mods.GetInternalNameToPathDictionary(); // dat name
+            modDict = GetInternalNameToPathDictionary(); // dat name
 
             if (!Directory.Exists(Path.GetTempPath() + "\\MCT"))
                 Directory.CreateDirectory(Path.GetTempPath() + "\\MCT");
@@ -499,7 +553,7 @@ namespace PoroCYon.MCT.Tools
 
             CompilerOutput outp = CreateOutput(errors);
             if (outp.Succeeded)
-                outp.outputFile = CommonToolUtilities.modsBinDir + "\\" + mod.OriginName + (mod.Info.compress ? ".tapi" : ".tapimod");
+                outp.outputFile = Mods.pathCompiled + "\\" + mod.OriginName + (mod.Info.compress ? ".tapi" : ".tapimod");
 
             LogResult(outp);
 
@@ -558,27 +612,30 @@ namespace PoroCYon.MCT.Tools
         /// </summary>
         /// <param name="text">The message to log.</param>
         /// <param name="importance">The importance of the message.</param>
+		[DebuggerStepThrough]
         public void Log(string text, MessageImportance importance)
         {
             for (int i = 0; i < Loggers.Count; i++)
                 if (Loggers[i].Verbosity >= (LoggerVerbosity)((int)LoggerVerbosity.Minimal + (int)importance))
                     Loggers[i].Log(text, importance);
         }
-        /// <summary>
-        /// Logs an error the the loggers of the <see cref="ModCompiler" />.
-        /// </summary>
-        /// <param name="e">The error to log.</param>
-        /// <param name="comment">An optional comment on the error.</param>
-        public void LogError(Exception e, string comment = null)
+		/// <summary>
+		/// Logs an error the the loggers of the <see cref="ModCompiler" />.
+		/// </summary>
+		/// <param name="e">The error to log.</param>
+		/// <param name="comment">An optional comment on the error.</param>
+		[DebuggerStepThrough]
+		public void LogError(Exception e, string comment = null)
         {
             for (int i = 0; i < Loggers.Count; i++)
                 Loggers[i].LogError(e, comment);
         }
-        /// <summary>
-        /// Logs the build result to the loggers of the <see cref="ModCompiler" />.
-        /// </summary>
-        /// <param name="output">The build result.</param>
-        public void LogResult(CompilerOutput output)
+		/// <summary>
+		/// Logs the build result to the loggers of the <see cref="ModCompiler" />.
+		/// </summary>
+		/// <param name="output">The build result.</param>
+		[DebuggerStepThrough]
+		public void LogResult(CompilerOutput output)
         {
             for (int i = 0; i < Loggers.Count; i++)
                 Loggers[i].LogResult(output);

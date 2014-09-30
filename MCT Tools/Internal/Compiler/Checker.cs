@@ -13,8 +13,7 @@ using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-
-    class Checker(ModCompiler mc) : CompilerPhase(mc)
+	class Checker(ModCompiler mc) : CompilerPhase(mc)
     {
         // static Game main;
 
@@ -71,24 +70,25 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             Main.dedServ = true;
             Main.rand = new Random();
-            Main.player[Main.myPlayer] = new Player();
-            Defs.itemNextType = Main.maxItemTypes;
+			ItemDef.nextType = Main.maxItemTypes;
 
             PropertyInfo pi = typeof(API).GetProperty("SoundAvailable", BindingFlags.Static | BindingFlags.Public);
             pi.SetValue(null, false, BindingFlags.NonPublic | BindingFlags.Static, null, null, null);
 
-            // CreateMainAndLoadContent();
+			// CreateMainAndLoadContent();
 
-            Defs.FillVanillaBuffNames();
-            Defs.FillVanillaBuffs();
-            Defs.FillVanillaItems();
-            Defs.FillVanillaNPCs();
+			BuffDef.FillBuffNames();
+			BuffDef.FillVanilla();
+			ItemDef.FillVanilla();
+			 NPCDef.FillVanilla();
             Defs.FillVanillaPrefixes();
-            Defs.FillVanillaProjectiles();
-            Defs.FillVanillaSounds();
-            Defs.FillVanillaCraftingGroups();
+			ProjDef.FillVanilla();
+			SoundDef.FillVanillaSounds();
+			ItemDef.FillVanillaCraftingGroups();
 
-            loaded = true;
+			Main.player[Main.myPlayer] = new Player();
+
+			loaded = true;
         }
 
         [TargetedPatchingOptOut(Consts.TPOOReason)]
@@ -134,7 +134,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (i == 0) // not defined
                     return null;
 
-                if (i <= 0 || i >= Main.maxBuffs)
+                if (i <= 0 || i >= Main.maxBuffTypes)
                     return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
@@ -153,7 +153,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.buffNames.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
+                if (!BuffDef.name.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -207,7 +207,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
-                else if (name.StartsWith("g:") && !Defs.itemGroups.Any(kvp => kvp.Key == name)
+                else if (name.StartsWith("g:") && !ItemDef.itemGroups.Any(kvp => kvp.Key == name)
                         && !Building.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
                     return new CompilerError(Building)
                     {
@@ -217,7 +217,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         Message = "Could not find craft group " + name + " in " + source + "."
                     };
 
-                if (!Defs.items.ContainsKey(name) && !Building.items.Any(i => i.internalName == name))
+                if (!ItemDef.byName.ContainsKey(name) && !Building.items.Any(i => i.internalName == name))
                 {
 
                     string internalName = name.Split(':')[0];
@@ -271,7 +271,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.npcs.ContainsKey(name) && !Building.npcs.Any(n => n.internalName == name))
+                if (!NPCDef.byName.ContainsKey(name) && !Building.npcs.Any(n => n.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -324,7 +324,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.projectiles.ContainsKey(name) && !Building.projs.Any(p => p.internalName == name))
+                if (!ProjDef.byName.ContainsKey(name) && !Building.projs.Any(p => p.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 

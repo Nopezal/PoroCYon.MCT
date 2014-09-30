@@ -120,8 +120,8 @@ namespace PoroCYon.MCT.Tools
     "DECOMPILE <.tapi or .tapimod file> \t\t '.tapi or .tapimod file' should be in Documents\\My Games\\Terraria\\tAPI\\Mods, eg. 'DECOMPILE Unsorted\\YourMod.tapi'"))
                             return;
 
-                        if (!path.Contains('/') && !path.Contains('\\'))
-                            path = Mods.pathDirMods + "\\" + path;
+                        //if (!path.Contains('/') && !path.Contains('\\'))
+                        //    path = Mods.pathCompiled + "\\" + path;
 
                         //if (File.Exists(path + ".tapi"))
                         //    path += ".tapi";
@@ -234,7 +234,7 @@ namespace PoroCYon.MCT.Tools
         [STAThread]
         static void Main(string[] args)
         {
-            Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+            //Environment.CurrentDirectory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
 
             CommonToolUtilities.Init();
 

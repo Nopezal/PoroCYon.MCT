@@ -5,12 +5,13 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Framework;
 using LitJson;
+using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class Extractor(ModCompiler mc) : CompilerPhase(mc)
+	class Extractor(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Extracts JSON and other files from a managed assembly's embedded resources.
@@ -86,7 +87,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (modInfo.IsEmpty)
             {
-                modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(asmName)));
+                modInfo = new JsonFile(String.Empty, ModCompile.GenerateBlankModInfo(asmName));
 
                 errors.Add(new CompilerError(Building)
                 {
