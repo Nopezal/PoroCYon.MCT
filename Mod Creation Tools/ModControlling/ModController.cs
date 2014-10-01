@@ -230,6 +230,9 @@ namespace PoroCYon.MCT.ModControlling
 		{
 			Mod m = new Mod(asm.Location);
 
+			m.modBase = @base;
+			@base.mod = m;
+
 			m.SetModInfo(info);
 			m.SetIcon(icon);
 
