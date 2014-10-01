@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime;
 using Microsoft.Build.Framework;
 using PoroCYon.Extensions;
+using PoroCYon.Extensions.Collections;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal;
@@ -15,53 +16,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
 	class Checker(ModCompiler mc) : CompilerPhase(mc)
     {
-        // static Game main;
-
         static bool loaded = false;
-
-        [Obsolete]
-        static void CreateMainAndLoadContent()
-        {
-            //main = new Main();
-
-            //Main.dedServ = true;
-            //Main.showSplash = false;
-
-            //string dir = Environment.CurrentDirectory;
-            //Environment.CurrentDirectory = Environment.GetEnvironmentVariable("TAPIBINDIR", EnvironmentVariableTarget.Machine);
-            //main.Content.RootDirectory = Environment.CurrentDirectory + "\\Content";
-            //typeof(Game).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase).Invoke(main, null);
-            //Environment.CurrentDirectory = dir;
-
-            //Lang.setLang(false);
-
-            /*// probably also hacky stuff
-
-            main = new Main();
-            Type mType = typeof(Game);
-
-            // from Game.RunGame(bool)
-
-            // graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
-            // if (graphicsDeviceManager != null)
-            //     graphicsDeviceManager.CreateDevice();
-            FieldInfo gdm = mType.GetField("graphicsDeviceManager",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.IgnoreCase | BindingFlags.SetField);
-
-            gdm.SetValue(main, main.Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager);
-            if (gdm.GetValue(main) != null)
-            {
-                MethodInfo CreateDevice = typeof(IGraphicsDeviceManager).GetMethod("CreateDevice");
-
-                CreateDevice.Invoke(gdm.GetValue(main), null);
-            }
-
-            string dir = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = Environment.GetEnvironmentVariable("TAPIBINDIR", EnvironmentVariableTarget.Machine);
-            main.Content.RootDirectory = Environment.CurrentDirectory + "\\Content";
-            mType.GetMethod("LoadContent", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase).Invoke(main, null);
-            Environment.CurrentDirectory = dir;*/
-        }
 
         internal static void LoadDefs()
         {
@@ -107,22 +62,37 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
         CompilerError CheckForModBase()
         {
-            bool foundModBase = false;
+			List<Type> bases = new List<Type>();
 
-            foreach (Type t in Building.Assembly.GetTypes())
-                if (t.IsSubclassOf(typeof(ModBase)))
-                    foundModBase = true;
+			foreach (Type t in Building.Assembly.GetTypes())
+				if (t.IsSubclassOf(typeof(ModBase)))
+				{
+					bases.Add(t);
 
-            if (!foundModBase)
+					if (bases.Count >= 2)
+						break;
+				}
+
+            if (bases.Count <= 0)
                 return new CompilerError(Building)
                 {
                     Cause = new TypeLoadException(),
                     FilePath = Building.Assembly.Location,
-                    IsWarning = false,
-                    Message = "No ModBase class found."
+                    IsWarning = true,
+                    Message = "No ModBase class found, using default"
                 };
+			if (bases.Count > 1)
+				return new CompilerError(Building)
+				{
+					Cause = new TypeLoadException(),
+					FilePath = Building.Assembly.Location,
+					IsWarning = false,
+					Message = "Multiple ModBase classes found: " + bases.CastAll(t => t.FullName).Join(CommonJoinValues.Comma) + "."
+				};
 
-            return null;
+			bases.Clear();
+
+			return null;
         }
 
         CompilerError CheckBuffExists(Union<string, int> id, string source, string file)

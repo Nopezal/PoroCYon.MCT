@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using Microsoft.Build.Framework;
 using PoroCYon.Extensions;
+using PoroCYon.Extensions.IO;
 using LitJson;
 using TAPI;
 using PoroCYon.MCT.Internal;
@@ -15,6 +16,8 @@ using Ionic.Zip;
 
 namespace PoroCYon.MCT.Tools
 {
+	using BinBuffer = TAPI.BinBuffer;
+
     /// <summary>
     /// The MCT mod compiler
     /// </summary>
@@ -563,8 +566,10 @@ namespace PoroCYon.MCT.Tools
         }
 
         bool AppendBuilding(string path)
-        {
-            string json = "[]";
+		{
+			IOHelper.WaitWhileFileLocked(BuildingList, sleepTime: 5);
+
+			string json = "[]";
             if (File.Exists(BuildingList))
                 json = File.ReadAllText(BuildingList);
 
@@ -586,8 +591,10 @@ namespace PoroCYon.MCT.Tools
             return false;
         }
         void RemoveBuilding(string path)
-        {
-            string json = String.Empty;
+		{
+			IOHelper.WaitWhileFileLocked(BuildingList, sleepTime: 5);
+
+			string json = String.Empty;
             if (File.Exists(BuildingList))
                 json = File.ReadAllText(BuildingList);
 

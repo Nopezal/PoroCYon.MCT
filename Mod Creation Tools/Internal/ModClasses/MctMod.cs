@@ -98,6 +98,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.OnAllModsLoaded();
 
+			ModDebugger.DebugMods();
+
             // remove temporary modbase instances
             //for (int i = 0; i < ModDebugger.tempBases.Count; i++)
             //    Mods.modBases.Remove(ModDebugger.tempBases[i]);

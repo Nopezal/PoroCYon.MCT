@@ -351,7 +351,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             {
                 try
                 {
-                    asm = Assembly.LoadFile(MSBOutputPath + "\\" + GetOutputFileName(Building.Info.msBuildFile));
+                    asm = Assembly.ReflectionOnlyLoadFrom(MSBOutputPath + "\\" + GetOutputFileName(Building.Info.msBuildFile));
                 }
                 catch (Exception e)
                 {
