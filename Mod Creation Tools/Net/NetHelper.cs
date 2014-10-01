@@ -105,7 +105,7 @@ namespace PoroCYon.MCT.Net
             {
                 BinBuffer bb = new BinBuffer(new BinBufferByte(NetMessage.buffer[num].writeBuffer, false));
                 bb.Pos = 4; //for size
-                bb.WriteX((byte)100, Mods.mods.IndexOf(@base.mod), (byte)message);
+                bb.WriteX((byte)100, (byte)Mods.mods.IndexOf(@base.mod), (byte)message);
 
                 // write stuff here
 
