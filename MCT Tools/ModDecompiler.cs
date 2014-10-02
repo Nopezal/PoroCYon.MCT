@@ -123,7 +123,7 @@ namespace PoroCYon.MCT.Tools
 			ushort count = bb.ReadUShort();
 			for (int i = 0; i < count; i++)
 			{
-				string path = decompPath + "\\" + bb.ReadString();
+				string path = decompPath + "\\" + bb.ReadString() + ".png";
 
 				if (!Directory.Exists(Path.GetDirectoryName(path)))
 					Directory.CreateDirectory(Path.GetDirectoryName(path));
