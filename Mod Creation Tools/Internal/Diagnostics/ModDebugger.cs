@@ -17,7 +17,6 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 	// Hacky stuff #ilostthecount
 	// remove a mod (.tapi(mod)) from the mod list, and insert the mod from the .dll, so it can be debugged using VS.
 
-	// TODO: REWRITE!
 	static class ModDebugger
 	{
 		const string DEBUG_SWITCH = "DEBUG";

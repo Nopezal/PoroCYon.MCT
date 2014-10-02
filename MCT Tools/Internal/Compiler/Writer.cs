@@ -87,7 +87,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 			bb.Write((ushort)arr.Length); // so long ago that I typed Length, I typed 'Count' first...
 			for (int i = 0; i < arr.Length; i++)
 			{
-				bb.Write(arr[i]);
+				bb.Write(Path.ChangeExtension(arr[i], null));
 				WritePrefixedArray(bb, Building.Files[arr[i]]);
 			}
 			
