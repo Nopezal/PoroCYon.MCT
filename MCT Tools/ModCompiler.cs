@@ -202,7 +202,7 @@ namespace PoroCYon.MCT.Tools
                 outp = CreateOutput(readFiles.Item3);
                 if (!outp.Succeeded)
                 {
-                    LogResult(outp);
+                    LogResult (outp  );
                     EndCompile(folder);
                     return outp;
                 }
@@ -212,7 +212,7 @@ namespace PoroCYon.MCT.Tools
                 outp = Validate(readFiles.Item1, readFiles.Item2, true);
                 if (!outp.Succeeded)
                 {
-                    LogResult(outp);
+                    LogResult (outp  );
                     EndCompile(folder);
                     return outp;
                 }
@@ -224,7 +224,7 @@ namespace PoroCYon.MCT.Tools
                 outp.Succeeded &= compiled.Item1 != null;
                 if (!outp.Succeeded)
                 {
-                    LogResult(outp);
+                    LogResult (outp  );
                     EndCompile(folder);
                     return outp;
                 }
@@ -241,10 +241,10 @@ namespace PoroCYon.MCT.Tools
                 {
                     new CompilerError(building)
                     {
-                        Cause = e,
-                        FilePath = folder,
+                        Cause     = e,
+                        FilePath  = folder,
                         IsWarning = false,
-                        Message = "An unexpected error occured while compiling."
+                        Message   = "An unexpected error occured while compiling."
                     }
                 }));
 

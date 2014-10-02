@@ -58,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
 
                 string
-                    fileName = Path.GetFileName(s),
+                    fileName         = Path.GetFileName(s),
                     relativeFileName = s.Substring(directory.Length + 1).Replace('\\', '/');
 
                 if (s.EndsWith(".json"))
@@ -108,8 +108,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 });
             }
 
-            jsons.Insert(0, modInfo);
-            jsons.Insert(1, modOptions); // check if it's null later
+            jsons.Insert(0, modInfo    );
+            jsons.Insert(1, modOptions ); // check if it's null later
             jsons.Insert(2, craftGroups); // same here
 
             return new Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>>(jsons, files, errors);

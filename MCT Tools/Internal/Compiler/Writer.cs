@@ -53,11 +53,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 		string[] FindImages()
 		{
 			// screw tAPI code, I'm doing it the functional way.
-			return Building.Files.CastAll(kvp => kvp.Key).Where(p => Path.GetExtension(p) == ".png").ToArray();
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) == ".png" select kvp.Key).ToArray();
 		}
 		string[] FindFiles ()
 		{
-			return Building.Files.CastAll(kvp => kvp.Key).Where(p => Path.GetExtension(p) != ".png").ToArray();
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) != ".png" select kvp.Key).ToArray();
 		}
 
 		internal IEnumerable<CompilerError> Write()
