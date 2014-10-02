@@ -302,7 +302,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 			return elementsByTagName[0].InnerText + ".pdb";
 		}
 
-		Tuple<Assembly, string, List<CompilerError>> BuildMSBuild()
+		Tuple<Assembly, string, List<CompilerError>> BuildMSBuild  ()
         {
             Compiler.Log("Building using MSBuild.", MessageImportance.Low);
 
@@ -351,7 +351,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             {
                 try
                 {
-                    asm = Assembly.ReflectionOnlyLoadFrom(MSBOutputPath + "\\" + GetOutputFileName(Building.Info.msBuildFile));
+                    asm = Assembly.LoadFrom(MSBOutputPath + "\\" + GetOutputFileName(Building.Info.msBuildFile));
                 }
                 catch (Exception e)
                 {
