@@ -12,6 +12,26 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
     /// </summary>
     public class DefaultMSBuildLogger(MctLogger logger, ModCompiler compiler) : ILogger
     {
+		readonly static string
+			Init    = "Initializing MSBuild logger, Parameters=",
+			Error   = "MSBuild error.",
+            Warning = "MSBuild warning.",
+
+			Colon = ": ",
+
+			BuildStarted   = "Build started: "  ,
+			ProjectStarted = "Project started: ",
+			TargetStarted  = "Target started: " ,
+			TaskStarted    = "Task started: "   ,
+
+			BuildFinished   = "Build finished, Succeeded="  ,
+			ProjectFinished = "Project finished, Succeeded=",
+			TargetFinished  = "Target finished, Succeeded=" ,
+			TaskFinished    = "Task finished, Succeeded="   ,
+
+			Message     = "Message: "     ,
+            StatusEvent = "Status event: ";
+
         /// <summary>
         /// Gets the <see cref="MctLogger" /> that is collecting the log messages.
         /// </summary>
@@ -66,7 +86,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         /// <param name="es">The events available to loggers.</param>
         public void Initialize(IEventSource es)
         {
-            Logger.Log("Initializing MSBuild logger, Parameters=" + Parameters, MessageImportance.Normal);
+            Logger.Log(ConcatStringBuilder(Init, Parameters), MessageImportance.Normal);
 
             es.ErrorRaised += (s, e) =>
             {
@@ -77,9 +97,9 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
                         FilePath = e.File,
                         IsWarning = false,
                         LocationInFile = new Point(e.LineNumber, e.ColumnNumber),
-                        Message = e.Code + ": " + e.Message + " (in project " + e.ProjectFile + ")"
+                        Message = ConcatStringBuilder(e.Code, Colon, e.Message, " (in project ", e.ProjectFile, ")")
                     }
-                }).ToString()), "MSBuild error.");
+                }).ToString()), Error);
             };
             es.WarningRaised += (s, e) =>
             {
@@ -90,44 +110,54 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
                         FilePath = e.File,
                         IsWarning = true,
                         LocationInFile = new Point(e.LineNumber, e.ColumnNumber),
-                        Message = e.Code + ": " + e.Message + " (in project " + e.ProjectFile + ")"
+                        Message = ConcatStringBuilder(e.Code, Colon, e.Message, " (in project ", e.ProjectFile, ")")
                     }
-                }).ToString()), "MSBuild warning.");
+                }).ToString()), Warning);
             };
 
-            es.BuildStarted   += (s, e) => Logger.Log("Build started: "   + e.Message, MessageImportance.Low   );
-            es.ProjectStarted += (s, e) => Logger.Log("Project started: " + e.Message, MessageImportance.Normal);
-            es.TargetStarted  += (s, e) => Logger.Log("Target started: "  + e.Message, MessageImportance.Low   );
-            es.TaskStarted    += (s, e) => Logger.Log("Task started: "    + e.Message, MessageImportance.Low   );
+            es.BuildStarted   += (s, e) => Logger.Log(ConcatStringBuilder(BuildStarted  , e.Message), MessageImportance.Low   );
+            es.ProjectStarted += (s, e) => Logger.Log(ConcatStringBuilder(ProjectStarted, e.Message), MessageImportance.Normal);
+            es.TargetStarted  += (s, e) => Logger.Log(ConcatStringBuilder(TargetStarted , e.Message), MessageImportance.Low   );
+            es.TaskStarted    += (s, e) => Logger.Log(ConcatStringBuilder(TaskStarted   , e.Message), MessageImportance.Low   );
 
             es.BuildFinished   += (s, e) =>
             {
-                Logger.Log("Build finished, Succeeded="   + e.Succeeded + ": " + e.Message, MessageImportance.Low   );
+                Logger.Log(ConcatStringBuilder(BuildFinished  , e.Succeeded, Colon, e.Message), MessageImportance.Low   );
 
                 Succeeded &= e.Succeeded;
             };
             es.ProjectFinished += (s, e) =>
             {
-                Logger.Log("Project finished, Succeeded=" + e.Succeeded + ": " + e.Message, MessageImportance.Normal);
+				Logger.Log(ConcatStringBuilder(ProjectFinished, e.Succeeded, Colon, e.Message), MessageImportance.Normal);
 
                 Succeeded &= e.Succeeded;
             };
             es.TargetFinished  += (s, e) =>
             {
-                Logger.Log("Target finished, Succeeded="  + e.Succeeded + ": " + e.Message, MessageImportance.Low   );
+                Logger.Log(ConcatStringBuilder(TargetFinished , e.Succeeded, Colon, e.Message), MessageImportance.Low   );
 
                 //succeeded &= e.Succeeded;
             };
             es.TaskFinished    += (s, e) =>
             {
-                Logger.Log("Task finished, Succeeded="    + e.Succeeded + ": " + e.Message, MessageImportance.Low   );
+                Logger.Log(ConcatStringBuilder(TaskFinished   , e.Succeeded, Colon, e.Message), MessageImportance.Low   );
 
                 //succeeded &= e.Succeeded;
             };
 
-            es.MessageRaised     += (s, e) => Logger.Log("Message: "      + e.Message, MessageImportance.Low);
-            es.StatusEventRaised += (s, e) => Logger.Log("Status event: " + e.Message, MessageImportance.Low);
+            es.MessageRaised     += (s, e) => Logger.Log(ConcatStringBuilder(Message    , e.Message), MessageImportance.Low);
+            es.StatusEventRaised += (s, e) => Logger.Log(ConcatStringBuilder(StatusEvent, e.Message), MessageImportance.Low);
         }
+
+		static string ConcatStringBuilder(params object[] toConcat)
+		{
+			StringBuilder sb = new StringBuilder();
+
+			for (int i = 0; i < toConcat.Length; i++)
+				sb.Append(toConcat[i]);
+
+			return sb.ToString();
+		}
 
         /// <summary>
         /// Releases the resources allocated to the logger at the time of initialization or during the build. This method is called when the logger is unregistered from the engine, after all events are raised. A host of MSBuild typically unregisters loggers immediately before quitting.

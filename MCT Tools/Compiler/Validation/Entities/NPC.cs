@@ -204,17 +204,17 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             #region drops
             if (json.Json.Has("drops"))
             {
-                JsonData drs = json.Json["drops"];
+                JsonData drps = json.Json["drops"]; // I read this as 'derps' instead of 'drops' .__.
 
-                if (drs.IsObject)
-                    drs = JsonMapper.ToObject("[" + drs.ToJson() + "]");
+                if (drps.IsObject)
+                    drps = JsonMapper.ToObject("[" + drps.ToJson() + "]");
 
-                if (drs.IsArray)
-                    for (int i = 0; i < drs.Count; i++)
+                if (drps.IsArray)
+                    for (int i = 0; i < drps.Count; i++)
                     {
-                        JsonData drop = drs[i];
+                        JsonData drop = drps[i];
 
-                        if (drs.IsObject)
+                        if (drop.IsObject)
                         {
                             Drop d = new Drop(Compiler);
 
@@ -236,7 +236,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         Cause = new InvalidCastException(),
                         FilePath = json.Path,
                         IsWarning = false,
-                        Message = "'drops' must be a Drop or an array of drops, but is a " + drs.GetJsonType() + "."
+                        Message = "'drops' must be a Drop or an array of drops, but is a " + drps.GetJsonType() + "."
                     });
             }
             #endregion
