@@ -195,8 +195,8 @@ namespace PoroCYon.MCT.Content
             TileDef.height[type] = Tparam.Height;
             TileDef.frameWidth[type] = Tparam.FrameWidth;
             TileDef.frameHeight[type] = Tparam.FrameHeight;
-            TileDef.sheetColumns[type] = Tparam.SheetColumns;
-            TileDef.sheetRows[type] = Tparam.SheetRows;
+            //TileDef.sheetColumns[type] = Tparam.SheetColumns;
+            //TileDef.sheetRows[type] = Tparam.SheetRows;
 
             TileDef.solid[type] = Tparam.Solid;
             TileDef.solidTop[type] = Tparam.SolidTop;

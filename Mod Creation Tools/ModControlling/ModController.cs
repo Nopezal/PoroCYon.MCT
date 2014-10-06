@@ -17,8 +17,7 @@ namespace PoroCYon.MCT.ModControlling
 	public sealed class ModClasses
 	{
 #pragma warning disable 1591
-		public ModInterface ModInterface = null;
-
+		public List<ModInterface > Interfaces  = new List<ModInterface >();
 		public List<ModItem      > GlobalItems = new List<ModItem      >();
 		public List<ModNPC       > GlobalNPCs  = new List<ModNPC       >();
 		public List<ModProjectile> GlobalProjs = new List<ModProjectile>();
@@ -94,8 +93,7 @@ namespace PoroCYon.MCT.ModControlling
 		{
 			CheckModBaseAndInfo(mod, mod.modBase);
 
-			mod.modInterface = InstantiateAndReturnTypes<ModInterface>(mod.modBase).FirstOrDefault();
-
+			mod.modBase.modInterfaceTemplates  = InstantiateAndReturnTypes<ModInterface >(mod.modBase);
 			mod.modBase.modItemTemplates       = InstantiateAndReturnTypes<ModItem      >(mod.modBase, true);
 			mod.modBase.modNPCTemplates        = InstantiateAndReturnTypes<ModNPC       >(mod.modBase, true);
 			mod.modBase.modPlayerTemplates     = InstantiateAndReturnTypes<ModPlayer    >(mod.modBase);
@@ -108,8 +106,7 @@ namespace PoroCYon.MCT.ModControlling
 		{
 			CheckModBaseAndInfo(mod, mod.modBase);
 
-			mod.modInterface = classes.ModInterface;
-
+			mod.modBase.modInterfaceTemplates  = classes.Interfaces ;
 			mod.modBase.modItemTemplates       = classes.GlobalItems;
 			mod.modBase.modNPCTemplates        = classes.GlobalNPCs ;
 			mod.modBase.modProjectileTemplates = classes.GlobalProjs;
@@ -142,12 +139,11 @@ namespace PoroCYon.MCT.ModControlling
 
 			mBases.Add(mod.modBase);
 
-			if (mod.modInterface != null)
-				mUIs.Add(mod.modInterface);
-
-			if (mod.modBase.modWorldTemplates .Count > 0)
+			if (mod.modBase.modInterfaceTemplates.Count > 0)
+				mUIs   .AddRange(mod.modBase.modInterfaceTemplates);
+			if (mod.modBase.modWorldTemplates    .Count > 0)
 				mWorlds.AddRange(mod.modBase.modWorldTemplates );
-			if (mod.modBase.modPrefixTemplates.Count > 0)
+			if (mod.modBase.modPrefixTemplates   .Count > 0)
 				mPfixes.AddRange(mod.modBase.modPrefixTemplates);
 
 			Hooks.Base     .Setup(mBases );

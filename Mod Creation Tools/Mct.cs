@@ -41,7 +41,7 @@ namespace PoroCYon.MCT
 
 			ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), null, new ModClasses()
 			{
-				ModInterface = new MUI(),
+				Interfaces =  new List<ModInterface>() { new MUI() },
 
 				GlobalItems = new List<ModItem      >() { new MItem    () },
 				GlobalNPCs  = new List<ModNPC       >() { new MNPC     () },
