@@ -41,6 +41,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 			SoundDef.FillVanillaSounds();
 			ItemDef.FillVanillaCraftingGroups();
 
+			Biome.InitBiomes();
+
 			Main.player[Main.myPlayer] = new Player();
 
 			loaded = true;
@@ -464,6 +466,20 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
+        CompilerError CheckBiomeExists(Tools.Compiler.Validation.Entities.Item item)
+        {
+            for (int i = 0; i < item.fish.biomes.Length; i++)
+                if (!Biome.Biomes.ContainsKey(item.fish.biomes[i]))
+                    return new CompilerError(Building)
+                    {
+                        Cause = new ObjectNotFoundException(item.fish.biomes[i]),
+                        FilePath = item.internalName,
+                        IsWarning = item.fish.biomes[i].Split(':')[0] == Building.Info.internalName,
+                        Message = "Biome " + item.fish.biomes[i] + " not found."
+                    };
+
+            return null;
+        }
 
         List<CompilerError> CheckBuffs ()
         {
@@ -485,14 +501,15 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return errors;
         }
         List<CompilerError> CheckItems ()
-        {
-            // item references:
-            // * item.recipes.items
-            // * npc.drops.item
-            // * tile.drop
-            // * wall.drop
+		{
+			// item references:
+			// * item.recipes.items
+			// * npc.drops.item
+			// * tile.drop
+			// * wall.drop
+			// * npc.catchItem
 
-            List<CompilerError> errors = new List<CompilerError>();
+			List<CompilerError> errors = new List<CompilerError>();
 
             // item.recipes.items
             for (int i = 0; i < Building.items.Count; i++)
@@ -513,14 +530,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             for (int i = 0; i < Building.walls.Count; i++)
                 AddIfNotNull(CheckItemExists(Building.walls[i].drop, "Key 'drop' of Wall " + Building.walls[i].internalName, Building.walls[i].internalName), errors);
 
-            return errors;
+			// npc.catchItem
+			for (int i = 0; i < Building.npcs.Count; i++)
+				AddIfNotNull(CheckItemExists(Building.npcs[i].catchItem, "Catch item of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
+
+			return errors;
         }
         List<CompilerError> CheckNPCs  ()
-        {
-            // npc references:
-            // * ...
+		{
+			// npc references:
+			// * ...
 
-            return null;
+			return null;
 
             //List<CompilerError> errors = new List<CompilerError>();
 
@@ -607,6 +628,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             // tiles
             for (int i = 0; i < Building.tiles.Count; i++)
                 errors.Add(CheckTypeExists(Building.tiles[i]));
+
+            return errors;
+        }
+        List<CompilerError> CheckBiomes()
+        {
+            List<CompilerError> errors = new List<CompilerError>();
+
+            // biome references:
+            // * item.fish.biomes
+
+            for (int i = 0; i < Building.items.Count; i++)
+                AddIfNotNull(CheckBiomeExists(Building.items[i]), errors);
 
             return errors;
         }

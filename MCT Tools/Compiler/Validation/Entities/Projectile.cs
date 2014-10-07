@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Microsoft.Xna.Framework;
 
 namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 {
@@ -22,6 +23,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public bool pet = false;
         public bool ranged = true;
         public bool tileCollide = true;
+		public bool bobber = false;
 
         // ints
         public int aiStyle = 0;
@@ -39,6 +41,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
         // strings
         public string killedSound = String.Empty;
+
+		// other
+		public int  [] bobberLineColor;
+		public float[] bobberLineEnd  ;
 
 #pragma warning restore 1591
 
@@ -78,6 +84,31 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "npcCritMult", ref npcCritMult, 2f), errors);
 
             AddIfNotNull(SetJsonValue(json, "killedSound", ref killedSound, String.Empty), errors);
+
+			AddIfNotNull(SetJsonValue(json, "bobber", ref bobber, false), errors);
+
+			if (bobber)
+			{
+				AddIfNotNull(SetJsonValue(json, "bobberLineColor", ref bobberLineColor, true, new[] { 255, 255, 255 }), errors);
+				if (bobberLineColor.Length < 3 || bobberLineColor.Length > 4)
+					errors.Add(new CompilerError(Building)
+					{
+						Cause = new IndexOutOfRangeException(),
+						FilePath = json.Path,
+						IsWarning = false,
+						Message = "'bobberLineColor' should be an array of ints with length 3 or 4."
+					});
+
+				AddIfNotNull(SetJsonValue(json, "bobberLineEnd", ref bobberLineEnd, true, new[] { 0f, 0f }), errors);
+				if (bobberLineEnd.Length != 2)
+					errors.Add(new CompilerError(Building)
+					{
+						Cause = new IndexOutOfRangeException(),
+						FilePath = json.Path,
+						IsWarning = false,
+						Message = "'bobberLineEnd' should be an array of floats with length 2."
+					});
+			}
 
             return errors;
         }

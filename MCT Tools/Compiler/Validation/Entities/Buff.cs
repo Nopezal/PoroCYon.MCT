@@ -65,7 +65,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(CreateAndValidateBase(json, "Buff", "Buffs"));
+            errors.AddRange(CreateAndValidateBase(json, "Buffs", "Buffs"));
 
             AddIfNotNull(SetJsonValue(json, "tip",         ref tip        ), errors);
 

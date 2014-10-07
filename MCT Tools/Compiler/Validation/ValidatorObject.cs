@@ -357,6 +357,29 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                               ", not a " + CommonToolUtilities.JsonTypeFromType(toType) + "."
                 };
 
+            if (toType.IsEnum)
+            {
+                if (jPrimitive.Json.IsInt)
+                    outp = Convert.ChangeType((int)jPrimitive.Json, toType);
+                if (jPrimitive.Json.IsLong)
+                    outp = Convert.ChangeType((long)jPrimitive.Json, toType);
+                if (jPrimitive.Json.IsString)
+                    try
+                    {
+                        outp = Enum.Parse(toType, (string)jPrimitive.Json, true);
+                    }
+                    catch (Exception e)
+                    {
+                        return new CompilerError(Building)
+                        {
+                            Cause = e,
+                            FilePath = jPrimitive.Path,
+                            IsWarning = false,
+                            Message = "Invalid enum value " + jPrimitive.Json + " in JSON file " + jPrimitive.Path
+                        };
+                    }
+            }
+
             switch (jPrimitive.Json.GetJsonType())
             {
                 case JsonType.Boolean:
@@ -371,7 +394,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 case JsonType.Long:
                     outp = (long)jPrimitive.Json;
                     break;
-                case JsonType.None:
+                case JsonType.None: // JSON null
                     outp = null;
                     break;
                 case JsonType.String:

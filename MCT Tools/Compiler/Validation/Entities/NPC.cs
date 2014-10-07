@@ -58,6 +58,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public Union<string, int> soundKilled = 0;
         public string music = String.Empty;
         public List<Drop> drops = new List<Drop>();
+		public Union<string, int> catchItem = 0;
 #pragma warning restore 1591
         #endregion
 
@@ -147,9 +148,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "lavaImmune", ref lavaImmune, false), errors);
             AddIfNotNull(SetJsonValue(json, "noGravity", ref noGravity, false), errors);
             AddIfNotNull(SetJsonValue(json, "noTileCollide", ref noTileCollide, false), errors);
+			AddIfNotNull(SetJsonValue(json, "catchItem", ref catchItem, catchItem), errors);
 
-            // appearance
-            AddIfNotNull(SetJsonValue(json, "frameCount", ref frameCount, 1), errors);
+			// appearance
+			AddIfNotNull(SetJsonValue(json, "frameCount", ref frameCount, 1), errors);
             AddIfNotNull(SetJsonValue(json, "animationStyle", ref animationStyle, 0), errors);
             AddIfNotNull(SetJsonValue(json, "behindTiles", ref behindTiles, false), errors);
             AddIfNotNull(SetJsonValue(json, "alpha", ref alpha, 0), errors);
