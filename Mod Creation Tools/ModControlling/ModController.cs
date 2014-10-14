@@ -17,6 +17,8 @@ namespace PoroCYon.MCT.ModControlling
 	public sealed class ModClasses
 	{
 #pragma warning disable 1591
+        public ModNet Net;
+
 		public List<ModInterface > Interfaces  = new List<ModInterface >();
 		public List<ModItem      > GlobalItems = new List<ModItem      >();
 		public List<ModNPC       > GlobalNPCs  = new List<ModNPC       >();
@@ -93,6 +95,13 @@ namespace PoroCYon.MCT.ModControlling
 		{
 			CheckModBaseAndInfo(mod, mod.modBase);
 
+            List<ModNet> nets = InstantiateAndReturnTypes<ModNet>(mod.modBase);
+
+            if (nets.Count > 1)
+                throw new InvalidProgramException("Cannot have more than 1 ModNet class.");
+
+            mod.modBase.modNet = nets.FirstOrDefault();
+
 			mod.modBase.modInterfaceTemplates  = InstantiateAndReturnTypes<ModInterface >(mod.modBase);
 			mod.modBase.modItemTemplates       = InstantiateAndReturnTypes<ModItem      >(mod.modBase, true);
 			mod.modBase.modNPCTemplates        = InstantiateAndReturnTypes<ModNPC       >(mod.modBase, true);
@@ -105,6 +114,8 @@ namespace PoroCYon.MCT.ModControlling
 		internal static void ApplyClasses(Mod mod, ModClasses classes)
 		{
 			CheckModBaseAndInfo(mod, mod.modBase);
+
+            mod.modBase.modNet = classes.Net;
 
 			mod.modBase.modInterfaceTemplates  = classes.Interfaces ;
 			mod.modBase.modItemTemplates       = classes.GlobalItems;
@@ -150,6 +161,9 @@ namespace PoroCYon.MCT.ModControlling
 			Hooks.Interface.Setup(mUIs   );
 			Hooks.World    .Setup(mWorlds);
 			Hooks.Prefixes .Setup(mPfixes);
+
+            if (mod.modBase.modNet != null)
+                Hooks.Net.Setup(new List<ModNet>() { mod.modBase.modNet });
 		}
 
 		internal static void LoadModInternal(Mod mod, ModBase @base)

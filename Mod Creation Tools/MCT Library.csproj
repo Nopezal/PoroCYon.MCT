@@ -106,6 +106,7 @@
     <Compile Include="Internal\InternalConsts.cs" />
     <Compile Include="Internal\Diagnostics\ModDebugger.cs" />
     <Compile Include="Internal\ModClasses\MBuff.cs" />
+    <Compile Include="Internal\ModClasses\MNet.cs" />
     <Compile Include="Internal\ModClasses\MNPC.cs" />
     <Compile Include="Internal\ModClasses\MPrefix.cs" />
     <Compile Include="Internal\ModClasses\MProj.cs" />

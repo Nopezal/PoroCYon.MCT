@@ -9,11 +9,29 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// </summary>
     public enum WorldLayer
     {
+        /// <summary>
+        /// Sky
+        /// </summary>
         Sky,
+        /// <summary>
+        /// Surface
+        /// </summary>
         Surface,
+        /// <summary>
+        /// DirtLayer
+        /// </summary>
         DirtLayer,
+        /// <summary>
+        /// RockLayer
+        /// </summary>
         RockLayer,
+        /// <summary>
+        /// Hell
+        /// </summary>
         Hell,
+        /// <summary>
+        /// Underworld
+        /// </summary>
         Underworld = Hell // two possibilities, same value
     }
     /// <summary>
@@ -21,8 +39,17 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// </summary>
     public enum LiquidType
     {
+        /// <summary>
+        /// Water
+        /// </summary>
         Water,
+        /// <summary>
+        /// Lava
+        /// </summary>
         Lava,
+        /// <summary>
+        /// Honey
+        /// </summary>
         Honey
     }
 
