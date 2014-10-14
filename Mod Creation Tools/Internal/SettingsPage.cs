@@ -100,8 +100,8 @@ namespace PoroCYon.MCT.Internal
 
                 mb.Click += () =>
                 {
-                    FileStream fs = new FileStream(Mod.MCTDataFile, FileMode.Create);
-                    Mod.WriteSettings(fs);
+                    FileStream fs = new FileStream(MctMod.MCTDataFile, FileMode.Create);
+					MctMod.WriteSettings(fs);
                     fs.Close();
                 };
             }));

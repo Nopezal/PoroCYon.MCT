@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Xml;
 using Microsoft.Build.Evaluation;
 using Microsoft.Build.Execution;
 using Microsoft.Build.Framework;
@@ -284,7 +285,24 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return new Tuple<Assembly, string, List<CompilerError>>(ret.Item1, ret.Item2, errors);
         }
 
-        Tuple<Assembly, string, List<CompilerError>> BuildMSBuild()
+		static string GetOutputFileName(string msBuildFile)
+		{
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.Load(msBuildFile);
+			XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("AssemblyName");
+			XmlNodeList elementsByTagName2 = xmlDocument.GetElementsByTagName("OutputType");
+			return elementsByTagName[0].InnerText + ((elementsByTagName2[0].InnerText.ToLower() == "library") ? ".dll" : ".exe");
+		}
+		static string GetPdbFileName   (string msBuildFile)
+		{
+			XmlDocument xmlDocument = new XmlDocument();
+			xmlDocument.Load(msBuildFile);
+			XmlNodeList elementsByTagName = xmlDocument.GetElementsByTagName("AssemblyName");
+			xmlDocument.GetElementsByTagName("OutputType");
+			return elementsByTagName[0].InnerText + ".pdb";
+		}
+
+		Tuple<Assembly, string, List<CompilerError>> BuildMSBuild  ()
         {
             Compiler.Log("Building using MSBuild.", MessageImportance.Low);
 
@@ -333,7 +351,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             {
                 try
                 {
-                    asm = Assembly.LoadFile(MSBOutputPath + "\\" + ModsCompile.GetOutputFileName(Building.Info.msBuildFile));
+                    asm = Assembly.LoadFrom(MSBOutputPath + "\\" + GetOutputFileName(Building.Info.msBuildFile));
                 }
                 catch (Exception e)
                 {
@@ -348,7 +366,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 if (Building.Info.includePDB)
                 {
-                    pdb = MSBOutputPath + "\\" + ModsCompile.GetPdbFileName(Building.Info.msBuildFile);
+                    pdb = MSBOutputPath + "\\" + GetPdbFileName(Building.Info.msBuildFile);
 
                     if (!File.Exists(pdb))
                         errors.Add(new CompilerError(Building)

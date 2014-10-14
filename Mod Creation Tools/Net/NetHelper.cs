@@ -105,7 +105,7 @@ namespace PoroCYon.MCT.Net
             {
                 BinBuffer bb = new BinBuffer(new BinBufferByte(NetMessage.buffer[num].writeBuffer, false));
                 bb.Pos = 4; //for size
-                bb.WriteX((byte)100, (byte)@base.modIndex, (byte)message);
+                bb.WriteX((byte)100, (byte)Mods.mods.IndexOf(@base.mod), (byte)message);
 
                 // write stuff here
 
@@ -158,13 +158,13 @@ namespace PoroCYon.MCT.Net
                     }
                     else if (t == typeof(BinBuffer))
                     {
-                        bb.Write(((BinBuffer)toSend[i]).BytesLeft());
+                        bb.Write(((BinBuffer)toSend[i]).BytesLeft);
                         bb.Write(((BinBuffer)toSend[i]));
                     }
-                    else if (t == typeof(BinBufferBuffer) || t.IsSubclassOf(typeof(BinBufferBuffer)))
+                    else if (t == typeof(BinBufferAbstract) || t.IsSubclassOf(typeof(BinBufferAbstract)))
                     {
-                        bb.Write(((BinBufferBuffer)toSend[i]).BytesLeft());
-                        bb.Write((new BinBuffer((BinBufferBuffer)toSend[i])));
+                        bb.Write(((BinBufferAbstract)toSend[i]).BytesLeft());
+                        bb.Write((new BinBuffer((BinBufferAbstract)toSend[i])));
                     }
 
                     else if (t == typeof(Vector2))
@@ -326,7 +326,7 @@ namespace PoroCYon.MCT.Net
                 ret = new MemoryStream(bb.ReadBytes(bb.ReadInt()));
             else if (t == typeof(BinBuffer))
                 ret = new BinBuffer(new BinBufferByte(bb.ReadBytes(bb.ReadInt())));
-            else if (t == typeof(BinBufferBuffer))
+            else if (t == typeof(BinBufferAbstract))
                 ret = new BinBuffer(new BinBufferByte(bb.ReadBytes(bb.ReadInt())));
 
             else if (t == typeof(Vector2))

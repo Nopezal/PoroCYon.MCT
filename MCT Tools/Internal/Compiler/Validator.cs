@@ -9,7 +9,7 @@ using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class Validator(ModCompiler mc) : CompilerPhase(mc)
+	class Validator(ModCompiler mc) : CompilerPhase(mc)
     {
         internal List<CompilerError> ValidateJsons(List<JsonFile> jsons, Dictionary<string, byte[]> files, bool validateModInfo = true)
         {

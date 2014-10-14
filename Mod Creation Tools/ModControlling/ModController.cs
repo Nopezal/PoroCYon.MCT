@@ -2,357 +2,341 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
+using Microsoft.Xna.Framework.Graphics;
 using LitJson;
 using Terraria;
 using TAPI;
 
 namespace PoroCYon.MCT.ModControlling
 {
-    // Also hacky stuff. Lots of it.
+	// Also hacky stuff. Lots of it.
 
-    /// <summary>
-    /// How to handle ModEntity attachments when there is already a ModEntity attached.
-    /// </summary>
-    public enum AttachMode
-    {
-        /// <summary>
-        /// Set the ModEntity if there is no ModEntity attached. Otherwise, throw an exception.
-        /// </summary>
-        New,
-        /// <summary>
-        /// Overwrite the ModEntity if there is already one attached.
-        /// </summary>
-        Overwrite,
-        /// <summary>
-        /// Append the ModEntity to the array if there is already one attached.
-        /// </summary>
-        Append
-    }
+	/// <summary>
+	/// Contains the global mod classes of a mod.
+	/// </summary>
+	public sealed class ModClasses
+	{
+#pragma warning disable 1591
+        public ModNet Net;
 
-    /// <summary>
-    /// Controls loaded mods and mod sets.
-    /// </summary>
-    /// <remarks>Mod set control is planned, and will be implemented when tAPI implements them.</remarks>
-    public static class ModController
-    {
-        /// <summary>
-        /// Gets the <see cref="Type" /> representation of <see cref="ModBase" />.
-        /// </summary>
-        public readonly static Type ModBaseType = typeof(ModBase);
+		public List<ModInterface > Interfaces  = new List<ModInterface >();
+		public List<ModItem      > GlobalItems = new List<ModItem      >();
+		public List<ModNPC       > GlobalNPCs  = new List<ModNPC       >();
+		public List<ModProjectile> GlobalProjs = new List<ModProjectile>();
+		public List<ModTileType  > GlobalTiles = new List<ModTileType  >();
+		public List<ModPlayer    > Players     = new List<ModPlayer    >();
+		public List<ModPrefix    > Prefixes    = new List<ModPrefix    >();
+		public List<ModWorld     > Worlds      = new List<ModWorld     >();
+#pragma warning restore 1591
+	}
 
-        readonly static Type GlobalModAttrType = typeof(GlobalModAttribute);
+	/// <summary>
+	/// Provides methods to load and manipulate mods.
+	/// </summary>
+	public static class ModController
+	{
+		readonly static MethodInfo
+			SoundDefLoadInfo = typeof(SoundDef).GetMethod("Load", BindingFlags.NonPublic | BindingFlags.Static | BindingFlags.InvokeMethod);
 
-        /// <summary>
-        /// Loads a mod.
-        /// </summary>
-        /// <param name="asm">The assembly that contains the code of the mod.</param>
-        /// <param name="info">The <see cref="ModInfo" /> of the mod, formatted as JSON.</param>
-        /// <param name="baseType">The <see cref="Type" /> representing the <see cref="ModBase" /> of the mod.</param>
-        /// <param name="index">Where to insert the mod in the list. Use -1 to append it to the list. Default is -1.</param>
-        /// <param name="displayName">The display name of the mod. Use null to use the Name of <paramref name="asm" />. Default is null.</param>
-        /// <param name="files">The dictionary of files of the mod, with as key the file name, and as value its binary content. Directories are separated by a single forward-slash ('/') character. Use null for an empty collection. Default is null.</param>
-        /// <returns>The ModBase.</returns>
-        public static ModBase LoadMod(Assembly asm, JsonData info, Type baseType, int index = -1, string displayName = null, Dictionary<string, byte[]> files = null)
-        {
-            if (!baseType.IsSubclassOf(ModBaseType) || baseType == ModBaseType)
-                throw new ArgumentException(baseType + " is not a ModBase!");
+		internal static void CheckModBaseAndInfo(Mod mod, ModBase @base)
+		{
+			if (mod == null || @base == null || mod.modBase == null || @base.mod == null || mod.ModInfo == null)
+				throw new ArgumentException("Mod & ModBase are not correctly configured.");
+		}
 
-            if (index == -1)
-                index = Mods.modBases.Count;
-            if (index < 0 && index > Mods.modBases.Count)
-                throw new ArgumentOutOfRangeException("index");
+		internal static List<T> InstantiateAndReturnTypes<T>(Assembly asm  )
+			where T : class
+		{
+			List<T> ret = new List<T>();
 
-            files = files ?? new Dictionary<string, byte[]>();
+			foreach (Type t in asm.GetTypes())
+				if (t.IsSubclassOf(typeof(T)))
+				{
+					T c = Activator.CreateInstance(t, t.IsNotPublic) as T;
 
-            displayName = displayName ?? asm.GetName().Name;
+					if (c == null)
+						continue;
 
-            List<Assembly> dlls = new List<Assembly>();
+					ret.Add(c);
+				}
 
-            #region load dllrefs
-            if (info.Has("dllReferences"))
-            {
-                JsonData @ref = info["dllReferences"];
+			return ret;
+		}
+		internal static List<T> InstantiateAndReturnTypes<T>(ModBase  @base, bool requiresGlobalMod = false)
+			where T : class
+		{
+			List<T> ret = new List<T>();
 
-                for (int i = 0; i < @ref.Count; i++)
-                {
-                    string refStr = (string)@ref[i];
-                    Assembly refAsm = null;
+			foreach (Type t in @base.GetType().Assembly.GetTypes())
+				if (t.IsSubclassOf(typeof(T)))
+				{
+					if (requiresGlobalMod && t.GetCustomAttributes(typeof(GlobalModAttribute), true).Length == 0)
+						continue;
 
-                    if (files.ContainsKey(refStr))
-                        refAsm = Assembly.Load(files[refStr]);
-                    else
-                        try
-                        {
-                            refAsm = Assembly.Load(AssemblyName.GetAssemblyName(refStr));
-                        }
-                        catch
-                        {
-                            refAsm = Assembly.LoadFrom(refStr);
-                        }
+					T c = Activator.CreateInstance(t, t.IsNotPublic) as T;
 
-                    if (refAsm != null)
-                    {
-                        Mods.dlls.Add(refAsm);
-                        dlls.Add(refAsm);
-                    }
-                }
-            }
-            #endregion
+					if (c == null)
+						continue;
 
-            ModBase mod;
+					c.GetType().GetField("modBase").SetValue(c, @base);
 
-            try
-            {
-                mod = (ModBase)Activator.CreateInstance(baseType);
-            }
-            catch (ReflectionTypeLoadException rtle)
-            {
-                StringBuilder sb = new StringBuilder();
+					ret.Add(c);
+				}
 
-                sb.AppendLine(rtle.Message);
+			return ret;
+		}
 
-                for (int i = 0; i < rtle.LoaderExceptions.Length; i++)
-                    sb.AppendLine(rtle.LoaderExceptions[i].ToString());
+		internal static void SoundDefLoad(ModBase @base)
+		{
+			SoundDefLoadInfo.Invoke(null, new[] { @base });
+		}
 
-                throw new Mods.LoadException(sb.ToString());
-            }
-            catch (Exception e)
-            {
-                throw new Mods.LoadException("Could not load mod: " + Environment.NewLine + e.ToString());
-            }
+		internal static void  LoadClasses(Mod mod)
+		{
+			CheckModBaseAndInfo(mod, mod.modBase);
 
-            mod.code = asm;
-            mod.fileName = displayName + ".tapi";
-            mod.modName = (string)info["internalName"];
-            mod.modInfo = new ModInfo(info);
+            List<ModNet> nets = InstantiateAndReturnTypes<ModNet>(mod.modBase);
 
-            mod.dlls = dlls;
+            if (nets.Count > 1)
+                throw new InvalidProgramException("Cannot have more than 1 ModNet class.");
 
-            mod.modIndex = index;
+            mod.modBase.modNet = nets.FirstOrDefault();
 
-            Mods.modJsons.Add(mod.modName, info);
+			mod.modBase.modInterfaceTemplates  = InstantiateAndReturnTypes<ModInterface >(mod.modBase);
+			mod.modBase.modItemTemplates       = InstantiateAndReturnTypes<ModItem      >(mod.modBase, true);
+			mod.modBase.modNPCTemplates        = InstantiateAndReturnTypes<ModNPC       >(mod.modBase, true);
+			mod.modBase.modPlayerTemplates     = InstantiateAndReturnTypes<ModPlayer    >(mod.modBase);
+			mod.modBase.modPrefixTemplates     = InstantiateAndReturnTypes<ModPrefix    >(mod.modBase);
+			mod.modBase.modProjectileTemplates = InstantiateAndReturnTypes<ModProjectile>(mod.modBase, true);
+			mod.modBase.modTileTypeTemplates   = InstantiateAndReturnTypes<ModTileType  >(mod.modBase, true);
+			mod.modBase.modWorldTemplates      = InstantiateAndReturnTypes<ModWorld     >(mod.modBase);
+		}
+		internal static void ApplyClasses(Mod mod, ModClasses classes)
+		{
+			CheckModBaseAndInfo(mod, mod.modBase);
 
-            mod.files = files;
+            mod.modBase.modNet = classes.Net;
 
-            for (int i = index + 1; i < Mods.modBases.Count; i++)
-                Mods.modBases[i].modIndex++;
+			mod.modBase.modInterfaceTemplates  = classes.Interfaces ;
+			mod.modBase.modItemTemplates       = classes.GlobalItems;
+			mod.modBase.modNPCTemplates        = classes.GlobalNPCs ;
+			mod.modBase.modProjectileTemplates = classes.GlobalProjs;
+			mod.modBase.modTileTypeTemplates   = classes.GlobalTiles;
+			mod.modBase.modPlayerTemplates     = classes.Players    ;
+			mod.modBase.modPrefixTemplates     = classes.Prefixes   ;
+			mod.modBase.modWorldTemplates      = classes.Worlds     ;
+		}
+		internal static void Setup       (Mod mod)
+		{
+			SetupNoContent(mod);
 
-            // :O
-            Mods.loadOrder.Insert(index, mod.modName);
-            Mods.modBases .Insert(index, mod        );
+			if (!Main.dedServ)
+			{
+					SoundDefLoad(mod.modBase);
+				WavebankDef.Load(mod.modBase);
+				GoreDef    .Load(mod.modBase);
+			}
 
-            #region instantiate mod*
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModPlayer)))
-                mod.modPlayers.Add((ModPlayer)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase), typeof(Player) }, new[] { mod, null }));
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModWorld)))
-                mod.modWorlds.Add((ModWorld)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase) }, new[] { mod }));
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModInterface)))
-                mod.modInterfaces.Add((ModInterface)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase) }, new[] { mod }));
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModPrefix)))
-                mod.modPrefixes.Add((ModPrefix)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase) }, new[] { mod }));
+			ModJsonHandler.Handle(mod.modBase);
+		}
+		internal static void SetupNoContent(Mod mod)
+		{
+			CheckModBaseAndInfo(mod, mod.modBase);
 
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModItem)))
-                if (t.IsDefined(GlobalModAttrType, true))
-                    mod.modItems.Add((ModItem)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase), typeof(Item) }, new[] { mod, null }));
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModNPC)))
-                if (t.IsDefined(GlobalModAttrType, true))
-                    mod.modNPCs.Add((ModNPC)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase), typeof(NPC) }, new[] { mod, null }));
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModProjectile)))
-                if (t.IsDefined(GlobalModAttrType, true))
-                    mod.modProjectiles.Add((ModProjectile)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase), typeof(Projectile) }, new[] { mod, null }));
+			List<ModBase     > mBases  = new List<ModBase     >();
+			List<ModInterface> mUIs    = new List<ModInterface>();
+			List<ModWorld    > mWorlds = new List<ModWorld    >();
+			List<ModPrefix   > mPfixes = new List<ModPrefix   >();
 
-            foreach (Type t in ReflectionHelper.FindSubclasses(asm, typeof(ModTileType)))
-                if (t.IsDefined(GlobalModAttrType, true))
-                    mod.modTileTypes.Add((ModTileType)ReflectionHelper.Instantiate(t, new[] { typeof(ModBase) }, new[] { mod }));
+			mBases.Add(mod.modBase);
 
-            Mods.globalModPlayers.AddRange(mod.modPlayers);
-            Mods.globalModWorlds.AddRange(mod.modWorlds);
-            Mods.globalModInterfaces.AddRange(mod.modInterfaces);
-            Mods.globalModPrefixes.AddRange(mod.modPrefixes);
+			if (mod.modBase.modInterfaceTemplates.Count > 0)
+				mUIs   .AddRange(mod.modBase.modInterfaceTemplates);
+			if (mod.modBase.modWorldTemplates    .Count > 0)
+				mWorlds.AddRange(mod.modBase.modWorldTemplates );
+			if (mod.modBase.modPrefixTemplates   .Count > 0)
+				mPfixes.AddRange(mod.modBase.modPrefixTemplates);
 
-            Mods.globalModItems.AddRange(mod.modItems);
-            Mods.globalModNPCs.AddRange(mod.modNPCs);
-            Mods.globalModProjectiles.AddRange(mod.modProjectiles);
+			Hooks.Base     .Setup(mBases );
+			Hooks.Interface.Setup(mUIs   );
+			Hooks.World    .Setup(mWorlds);
+			Hooks.Prefixes .Setup(mPfixes);
 
-            TileDef.codeGlobal.AddRange(mod.modTileTypes);
+            if (mod.modBase.modNet != null)
+                Hooks.Net.Setup(new List<ModNet>() { mod.modBase.modNet });
+		}
 
-            Defs.FillCallPriorities(baseType);
+		internal static void LoadModInternal(Mod mod, ModBase @base)
+		{
+			CheckModBaseAndInfo(mod, @base);
 
-            foreach (var m in mod.modPlayers)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (var m in mod.modWorlds)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (var m in mod.modInterfaces)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (var m in mod.modPrefixes)
-                Defs.FillCallPriorities(m.GetType());
+			Mods.mods.Add(mod);
 
-            foreach (var m in mod.modItems)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (var m in mod.modNPCs)
-                Defs.FillCallPriorities(m.GetType());
-            foreach (var m in mod.modProjectiles)
-                Defs.FillCallPriorities(m.GetType());
+			Setup(mod);
 
-            // seems to chrash?
-            //TileDef.FillCodeHandlers();
-            #endregion
+			@base.OnLoad();
 
-            ModsLoadContent.Load(asm, mod);
-            mod.OnLoad();
+			@base.SetTimesLoaded(@base.GetTimesLoaded() + 1);
+		}
 
-            mod.modPrefixes[0].Init(null);
+		public static void LoadMod(Mod mod, ModBase @base)
+		{
+			mod.enabled = true;
 
-            mod.SetTimesLoaded(mod.GetTimesLoaded() + 1);
+			mod.modBase = @base;
+			@base.mod = mod;
 
-            Mods.loadOrderBackup = new List<string>(Mods.loadOrder);
+			LoadModInternal(mod, @base);
+		}
+        public static void LoadMod(Mod mod, ModBase @base, ModClasses classes)
+		{
+			mod.enabled = true;
 
-            // keep these commented
-            //Hooks.Setup();
-            //Mods.SetModOptions();
-            //Mods.SaveModState(Mods.pathDirModsUnsorted);
-            //Recipe.FixMaterials();
+			mod.modBase = @base;
+			@base.mod = mod;
 
-            return mod;
-        }
-        /// <summary>
-        /// Unloads a mod.
-        /// </summary>
-        /// <param name="base">The mod to unload.</param>
-        public static void UnloadMod(ModBase @base)
-        {
-            @base.OnUnload();
+			ApplyClasses(mod, classes);
 
-            ModsLoadContent.Unload(@base);
+			LoadMod(mod, @base);
+		}
+		public static void LoadMod(string   basePath, JsonData info, Texture2D icon, ModBase @base, ModClasses classes)
+		{
+			Mod m = new Mod(basePath);
 
-            @base.modInfo = default(ModInfo);
+			m.SetModInfo(info);
+			m.SetIcon   (icon);
 
-            @base.modInterfaces  = null;
-            @base.modItems       = null;
-            @base.modNPCs        = null;
-            @base.modPlayers     = null;
-            @base.modPrefixes    = null;
-            @base.modProjectiles = null;
-            @base.modWorlds      = null;
+			LoadClasses(m);
 
-            int tempIndex = @base.modIndex;
+			LoadMod(m, @base, classes);
+		}
+		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon)
+		{
+			Mod m = new Mod(asm.Location);
 
-            for (int i = tempIndex; i < Mods.modBases.Count; i++)
-                Mods.modBases[i].modIndex--;
+			ModBase @base = InstantiateAndReturnTypes<ModBase>(asm).FirstOrDefault() ?? new ModBase();
 
-            Mods.loadOrder.RemoveAt(tempIndex);
-            if (Mods.loadOrderBackup.Contains(@base.modName))
-                Mods.loadOrderBackup.RemoveAt(tempIndex);
+            m.SetModInfo(info);
+			m.SetIcon   (icon);
 
-            Mods.modJsons  .Remove(@base.modName);
-            Mods.modOptions.Remove(@base.modName);
+			LoadClasses(m);
 
-            @base.modIndex = -1;
-            @base.modName = @base.fileName = null;
-            @base.textures.Clear();
-            @base.files.Clear();
-            @base.code = null;
+			LoadMod(m, @base);
+		}
+		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon, ModClasses classes)
+		{
+			Mod m = new Mod(asm.Location);
 
-            Mods.modBases.Remove(@base);
-        }
-    }
+			ModBase @base = InstantiateAndReturnTypes<ModBase>(asm).FirstOrDefault() ?? new ModBase();
 
-    /// <summary>
-    /// Provides extension methods for mod hackery.
-    /// </summary>
-    public static class ModExtensions
-    {
-        readonly static FieldInfo timesLoadedInfo
-            = ModController.ModBaseType.GetField("timesLoaded", BindingFlags.GetField | BindingFlags.Instance | BindingFlags.NonPublic);
+            m.SetModInfo(info);
+			m.SetIcon   (icon);
 
-        /// <summary>
-        /// Gets the value of the internal field 'timesLoaded' of a <see cref="ModBase" /> instance.
-        /// </summary>
-        /// <param name="base">The <see cref="ModBase" /> which timesLoaded value to fetch.</param>
-        /// <returns>The value of the internal field 'timesLoaded' as a 32-bit signed integer.</returns>
-        public static int  GetTimesLoaded(this ModBase @base)
-        {
-            return (int)timesLoadedInfo.GetValue(@base);
-        }
-        /// <summary>
-        /// Sets the value of the internal field 'timesLoaded' of a <see cref="ModBase" /> instance.
-        /// </summary>
-        /// <param name="base">The <see cref="ModBase" /> which timesLoaded value to get.</param>
-        /// <param name="value">The new value of <paramref name="base" />.timesLoaded.</param>
-        public static void SetTimesLoaded(this ModBase @base, int value)
-        {
-            timesLoadedInfo.SetValue(@base, value);
-        }
+			ApplyClasses(m, classes);
 
-        /// <summary>
-        /// Attaches a ModEntity to a CodableEntity.
-        /// </summary>
-        /// <param name="entity">The CodableEntity where the ModEntity will be attached to.</param>
-        /// <param name="toAttach">The ModEntity to attach to the CodableEntity.</param>
-        /// <param name="mode">How to handle attached ModEntities. Default is <see cref="AttachMode" />.Append.</param>
-        public static void AttachModEntity(this CodableEntity entity, ModEntity toAttach, AttachMode mode = AttachMode.Append)
-        {
-            if (entity == null)
-                throw new ArgumentNullException("entity");
-            if (toAttach == null)
-                throw new ArgumentNullException("toAttach");
+			LoadMod(m, @base);
+		}
+		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon, ModClasses classes, ModBase @base)
+		{
+			Mod m = new Mod(asm.Location);
 
-            if (entity.subClass != null)
-                switch (mode)
-                {
-                    case AttachMode.Append:
-                        if (entity.subClass != null)
-                        {
-                            Array.Resize(ref entity.allSubClasses, entity.allSubClasses.Length + 1);
-                            entity.allSubClasses[entity.allSubClasses.Length - 1] = toAttach;
-                        }
-                        else
-                        {
-                            entity.subClass = toAttach;
-                            entity.subClassName = toAttach.GetType().Name;
-                            entity.modBase = toAttach.modBase;
-                        }
-                        break;
-                    case AttachMode.New:
-                        throw new InvalidOperationException("There is already a ModEntity attached!");
-                    case AttachMode.Overwrite:
-                        entity.subClass = toAttach;
-                        entity.subClassName = toAttach.GetType().Name;
-                        entity.modBase = toAttach.modBase;
-                        break;
-                }
-            else
-            {
-                entity.subClass = toAttach;
-                entity.modBase = toAttach.modBase;
-            }
-        }
-        /// <summary>
-        /// Removes a ModEntity from a CodableEntity.
-        /// </summary>
-        /// <param name="entity">The CodableEntity where the ModEntity will be removed from.</param>
-        /// <param name="removeIndex">The index of the entity to remove. Use -1 to remove the default field. Default is -1.</param>
-        /// <returns>True if the ModEntity was removed, false otherwise. No exceptions are thrown.</returns>
-        public static bool RemoveModEntity(this CodableEntity entity, int removeIndex = -1)
-        {
-            if (removeIndex == -1)
-            {
-                entity.subClass = null;
-                entity.subClassName = String.Empty;
-                entity.modBase = null;
-            }
-            else if (removeIndex >= 0 && removeIndex < entity.allSubClasses.Length)
-            {
-                List<ModEntity> list = new List<ModEntity>(entity.allSubClasses.Take(removeIndex));
-                list.AddRange(entity.allSubClasses.Skip(removeIndex + 1));
+			m.modBase = @base;
+			@base.mod = m;
 
-                entity.allSubClasses = list.ToArray();
-            }
-            else
-                return false;
+			m.SetModInfo(info);
+			m.SetIcon(icon);
 
-            return true;
-        }
-    }
+			ApplyClasses(m, classes);
+
+			LoadMod(m, @base);
+		}
+	}
+
+	/// <summary>
+	/// Provides extension methods for mod hackery.
+	/// </summary>
+	public static class ModExtensions
+	{
+		readonly static FieldInfo
+			timesLoadedInfo
+				= typeof(ModBase).GetField("timesLoaded", BindingFlags.GetField | BindingFlags.Instance | BindingFlags.NonPublic),
+			modInfoInfo	// kinda inconvenient
+				= typeof(Mod    ).GetField("_modInfo"   , BindingFlags.GetField | BindingFlags.Instance | BindingFlags.NonPublic),
+			iconInfo
+				= typeof(Mod    ).GetField("_icon"      , BindingFlags.GetField | BindingFlags.Instance | BindingFlags.NonPublic);
+
+		/// <summary>
+		/// Gets the value of the internal field 'timesLoaded' of a <see cref="ModBase" /> instance.
+		/// </summary>
+		/// <param name="base">The <see cref="ModBase" /> which timesLoaded value to fetch.</param>
+		/// <returns>The value of the internal field 'timesLoaded' as a 32-bit signed integer.</returns>
+		public static int  GetTimesLoaded(this ModBase @base)
+		{
+			return (int)timesLoadedInfo.GetValue(@base);
+		}
+		/// <summary>
+		/// Sets the value of the internal field 'timesLoaded' of a <see cref="ModBase" /> instance.
+		/// </summary>
+		/// <param name="base">The <see cref="ModBase" /> which timesLoaded value to get.</param>
+		/// <param name="value">The new value of <paramref name="base" />.timesLoaded.</param>
+		public static void SetTimesLoaded(this ModBase @base, int value)
+		{
+			timesLoadedInfo.SetValue(@base, value);
+		}
+
+		/// <summary>
+		/// Sets the <see cref="Mod.ModInfo" /> property.
+		/// </summary>
+		/// <param name="mod">The Mod which ModInfo should be set.</param>
+		/// <param name="value">The new value of the ModInfo property.</param>
+		public static void SetModInfo    (this Mod mod, JsonData value)
+		{
+			modInfoInfo.SetValue(mod, value);
+		}
+		/// <summary>
+		/// Sets the <see cref="Mod.Icon" /> property.
+		/// </summary>
+		/// <param name="mod">The Mod which Icon should be set.</param>
+		/// <param name="value">The new value of the Icon property.</param>
+		public static void SetIcon(this Mod mod, Texture2D value)
+		{
+			if (Main.dedServ)
+				return;
+
+			iconInfo.SetValue(mod, value);
+		}
+
+		/// <summary>
+		/// Attaches a ModEntity to a CodableEntity.
+		/// </summary>
+		/// <typeparam name="T">The type of the ModEntity (Item, NPC, etc).</typeparam>
+		/// <param name="e">The CodableEntity.</param>
+		/// <param name="toAdd">The ModEntity to detach.</param>
+		public static void AttachModEntity<T>(this CodableEntity e, ModEntity<T> toAdd)
+			where T : class
+		{
+			if ((FieldInfo fi = e.GetType().GetField("modEntities")) != null
+					&& fi.FieldType.GetGenericTypeDefinition() == typeof(List<>)
+					&& fi.FieldType.GetGenericArguments()[0].IsSubclassOf(typeof(ModEntity<T>)))
+				fi.FieldType.GetMethod("Add", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance).Invoke(e, new[] { toAdd });
+			else
+				throw new ArgumentException("This CodableEntity does not have a modEntities list.", "e");
+		}
+		/// <summary>
+		/// Detaches a ModEntity from a CodableEntity.
+		/// </summary>
+		/// <typeparam name="T">The type of the ModEntity (Item, NPC, etc).</typeparam>
+		/// <param name="e">The CodableEntity.</param>
+		/// <param name="toRemove">The ModEntity to detach.</param>
+		public static void DetachModEntity<T>(this CodableEntity e, ModEntity<T> toRemove)
+			where T : class
+		{
+			if ((FieldInfo fi = e.GetType().GetField("modEntities")) != null
+					&& fi.FieldType.GetGenericTypeDefinition() == typeof(List<>)
+					&& fi.FieldType.GetGenericArguments()[0].IsSubclassOf(typeof(ModEntity<T>)))
+				fi.FieldType.GetMethod("Remove", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance).Invoke(e, new[] { toRemove });
+			else
+				throw new ArgumentException("This CodableEntity does not have a modEntities list.", "e");
+		}
+	}
 }

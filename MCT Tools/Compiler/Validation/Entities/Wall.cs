@@ -32,7 +32,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(CreateAndValidateBase(json, "Wall", "Walls"));
+            errors.AddRange(CreateAndValidateBase(json, "Walls", "Walls"));
 
             AddIfNotNull(SetJsonValue(json, "house", ref house, true), errors);
             AddIfNotNull(SetJsonValue(json, "dungeon", ref dungeon, false), errors);

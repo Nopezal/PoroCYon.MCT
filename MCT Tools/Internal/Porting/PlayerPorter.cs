@@ -311,9 +311,9 @@ namespace PoroCYon.MCT.Tools.Internal.Porting
 
                 for (int i = 0; i < player.buffType.Length; i++)
                 {
-                    bb.Write((ushort)(player.buffType[i] >= Main.maxBuffs ? 0 : player.buffType[i]));
+                    bb.Write((ushort)(player.buffType[i] >= Main.maxBuffTypes ? 0 : player.buffType[i]));
 
-                    if (player.buffType[i] != 0 && player.buffType[i] < Main.maxBuffs)
+                    if (player.buffType[i] != 0 && player.buffType[i] < Main.maxBuffTypes)
                     {
                         bb.Write(player.buffTime[i]);
 

@@ -39,12 +39,12 @@ namespace PoroCYon.MCT.Content
         /// <param name="base">Sets the ModBase field</param>
         /// <param name="subClassName">Sets the SubClassTypeName field</param>
         /// <param name="asm">Sets the Assembly field</param>
-        public LoadParameters(string name, ModBase @base, string subClassName, Assembly asm)
+        public LoadParameters(string name, ModBase @base, string subClassName, Assembly asm = null)
         {
             Name = name;
             ModBase = @base;
             SubClassTypeName = subClassName;
-            Assembly = asm;
+			Assembly = (asm ?? @base.code) ?? @base.GetType().Assembly;
         }
     }
 

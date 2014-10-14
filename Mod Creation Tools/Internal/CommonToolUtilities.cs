@@ -2,39 +2,25 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Numerics;
-using System.Text;
 using LitJson;
 using TAPI;
+using Terraria;
 
 namespace PoroCYon.MCT.Internal
 {
     internal static class CommonToolUtilities
     {
-        internal readonly static string
-            modsDir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods",
-            modsSrcDir = modsDir + "\\Sources",
-            modsBinDir = modsDir + "\\Unsorted";
-
         internal static void Init()
-        {
-            API.SetupVariablesOnce();
-        }
+		{
+			Mods.path         = Main.SavePath.Combine("Mods"   );
+			Mods.pathSources  = Mods.path    .Combine("Sources");
+			Mods.pathCompiled = Mods.path    .Combine("Local"  );
 
-        internal static string CreateDefaultModInfo(string modName)
-        {
-            JsonData j = JsonMapper.ToObject("{}");
-
-            j["displayName"] = "TAPI." + modName;
-            j["author"] = "<unknown>";
-            j["info"] = "A mod called " + modName;
-            j["internalName"] = modName;
-
-            StringBuilder sb = new StringBuilder();
-
-            JsonMapper.ToJson(j, new JsonWriter(sb) { PrettyPrint = true });
-
-            return sb.ToString();
-        }
+			if (!Mods.path.Exists)
+				 Mods.path.CreateDirectory();
+			if (!Mods.pathCompiled.Exists)
+				 Mods.pathCompiled.CreateDirectory();
+		}
 
         internal static JsonType JsonTypeFromType(Type t)
         {

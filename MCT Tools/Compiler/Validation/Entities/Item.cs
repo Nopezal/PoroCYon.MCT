@@ -11,6 +11,13 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// </summary>
     public class Item(ModCompiler mc) : EntityValidator(mc)
     {
+        readonly static string[] defaultAnglerText =
+        {
+            "Hey, there's this neat catch I've heard of.",
+		    "It sounds like the perfect thing to have, so I want it!",
+		    "Go get it for me!"
+        };
+
         #region fields
 #pragma warning disable 1591
         // informative
@@ -76,6 +83,39 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public Union<string, int> tileWand   =  0;
         public Union<string, int> createWall =  0;
         public int placeStyle = 0;
+
+	// various 1.2.4.1 stuff
+	public bool questItem = false;
+	public string[] questAnglerText = defaultAnglerText;
+	public int fishingPole = 0;
+
+	public Fish fish = null;
+
+	public bool lavaRod = false, honeyRod = true, waterRod = false;
+
+	public int bait = 0;
+	
+	public Union<string, string[]> autoSelect = String.Empty;
+
+	public Union<string, int> makeNpc = 0;
+
+	public bool wings = false;
+	public int wingTime = 0;
+	public float wingSpeedMax = 0f;
+	public float wingRateMult = 1f;
+	public string textureWings = String.Empty;
+
+	public string
+	    textureHandsOn = String.Empty,
+	    textureHandsOff = String.Empty,
+	    textureNeck = String.Empty,
+	    textureBack = String.Empty,
+	    textureShoes = String.Empty,
+	    textureWaist = String.Empty,
+	    textureShield = String.Empty,
+	    textureFace = String.Empty,
+	    textureBalloon = String.Empty;
+
 #pragma warning restore 1591
         #endregion
 
@@ -88,7 +128,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(CreateAndValidateBase(json, "Item", "Items"));
+            errors.AddRange(CreateAndValidateBase(json, "Items", "Items"));
 
             #region informative
             AddIfNotNull(SetJsonValue(json, "rare", ref rare, 0), errors);
@@ -183,7 +223,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     });
             }
             #endregion
-            AddIfNotNull(SetJsonValue(json, "maxStack",    ref maxStack,        1), errors);
+            AddIfNotNull(SetJsonValue(json, "maxStack", ref maxStack, 1), errors);
             AddIfNotNull(SetJsonValue(json, "notMaterial", ref notMaterial, false), errors);
             #region recipes
             if (json.Json.Has("recipes"))
@@ -207,7 +247,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                         }
 
                         Recipe r = new Recipe(Compiler);
-                        
+
                         errors.AddRange(r.CreateAndValidate(new JsonFile(json.Path, recs[i])));
                         recipes.Add(r);
                     }
@@ -338,21 +378,74 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             #endregion
 
             #region potion
-            AddIfNotNull(SetJsonValue(json, "potion",   ref potion,   false), errors);
-            AddIfNotNull(SetJsonValue(json, "healLife", ref healLife, 0    ), errors);
-            AddIfNotNull(SetJsonValue(json, "healMana", ref healMana, 0    ), errors);
+            AddIfNotNull(SetJsonValue(json, "potion", ref potion, false), errors);
+            AddIfNotNull(SetJsonValue(json, "healLife", ref healLife, 0), errors);
+            AddIfNotNull(SetJsonValue(json, "healMana", ref healMana, 0), errors);
 
             AddIfNotNull(SetJsonValue(json, "buff", ref buff, buff), errors);
 
-            AddIfNotNull(SetJsonValue(json, "buffTime", ref buffTime, 0    ), errors);
+            AddIfNotNull(SetJsonValue(json, "buffTime", ref buffTime, 0), errors);
             #endregion
 
             #region tile
             AddIfNotNull(SetJsonValue(json, "createTile", ref createTile, createTile), errors);
-            AddIfNotNull(SetJsonValue(json, "tileWand"  , ref tileWand  , tileWand  ), errors);
+            AddIfNotNull(SetJsonValue(json, "tileWand", ref tileWand, tileWand), errors);
             AddIfNotNull(SetJsonValue(json, "createWall", ref createWall, createWall), errors);
 
             AddIfNotNull(SetJsonValue(json, "placeStyle", ref placeStyle, 0), errors);
+            #endregion
+
+            #region 1.2.4.1 stuff
+            AddIfNotNull(SetJsonValue(json, "questItem", ref questItem, false), errors);
+
+            if (questItem)
+                AddIfNotNull(SetJsonValue(json, "questAnglerText", ref questAnglerText, defaultAnglerText), errors);
+
+            AddIfNotNull(SetJsonValue(json, "fishingPole", ref fishingPole, 0), errors);
+
+            if (fishingPole > 0)
+            {
+                AddIfNotNull(SetJsonValue(json, "lavaRod", ref lavaRod, false), errors);
+                AddIfNotNull(SetJsonValue(json, "honeyRod", ref honeyRod, true), errors);
+                AddIfNotNull(SetJsonValue(json, "waterRod", ref waterRod, true), errors);
+            }
+
+            AddIfNotNull(SetJsonValue(json, "bait", ref bait, 0), errors);
+
+            if (json.Json.Has("fish"))
+            {
+                fish = new Fish(Compiler);
+
+                fish.CreateAndValidate(new JsonFile(json.Path, json.Json["fish"])); // press F12 here
+            }
+
+            AddIfNotNull(SetJsonValue(json, "autoSelect", ref autoSelect, String.Empty), errors);
+
+            AddIfNotNull(SetJsonValue(json, "makeNpc", ref makeNpc, 0), errors);
+
+            AddIfNotNull(SetJsonValue(json, "wings", ref wings, false), errors);
+
+            if (wings)
+            {
+                AddIfNotNull(SetJsonValue(json, "wingTime", ref wingTime, 0), errors);
+                AddIfNotNull(SetJsonValue(json, "wingSpeedMax", ref wingSpeedMax, 0f), errors);
+                AddIfNotNull(SetJsonValue(json, "wingRateMult", ref wingRateMult, 1f), errors);
+
+                AddIfNotNull(SetJsonValue(json, "textureWings", ref textureWings, texture + "_Wings"), errors);
+            }
+
+            if (accessory)
+            {
+                AddIfNotNull(SetJsonValue(json, "textureHandsOn", ref textureHandsOn, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureHandsOff", ref textureHandsOff, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureNeck", ref textureNeck, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureBack", ref textureBack, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureShoes", ref textureShoes, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureWaist", ref textureWaist, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureShield", ref textureShield, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureFace", ref textureFace, String.Empty), errors);
+                AddIfNotNull(SetJsonValue(json, "textureBalloon", ref textureBalloon, String.Empty), errors);
+            }
             #endregion
 
             return errors;

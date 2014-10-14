@@ -9,119 +9,160 @@ using Ionic.Zip;
 using TAPI;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
+using PoroCYon.Extensions.Collections;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class Writer(ModCompiler mc) : CompilerPhase(mc)
+	class Writer(ModCompiler mc) : CompilerPhase(mc)
     {
-        internal IEnumerable<CompilerError> Write()
+		static void WritePrefixedArray(BinBuffer bb, byte[] toWrite)
+		{
+			bb.Write(toWrite.Length);
+			bb.Write(toWrite);
+		}
+
+		/*
+		 * .tapimod file format:
+		 * 
+		 * - mod version (int)
+		 * - modinfo (string)
+		 * - icon
+		 *   ?
+		 *     - icon size (in bytes) (int)
+		 *     - icon data (byte[])
+		 *   :
+		 *     - 0 (int)
+		 * 
+		 * - assembly size (in bytes) (int)
+		 * - assembly data (byte[])
+		 * 
+		 * - image count (ushort)
+		 * - [for each image]
+		 *     - path (string)
+		 *     - image size (bytes) (int)
+		 *     - image content (byte[])
+
+		 * - file count (ushort)
+		 *   [for each file]
+		 *     - path (string)
+		 *     - file size (bytes) (int)
+		 *     - file content (byte[])
+		 * 
+		 **/
+
+		string[] FindImages()
+		{
+			// screw tAPI code, I'm doing it the functional way.
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) == ".png" select kvp.Key).ToArray();
+		}
+		string[] FindFiles ()
+		{
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) != ".png" select kvp.Key).ToArray();
+		}
+
+		internal IEnumerable<CompilerError> Write()
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            BinBuffer bb = new BinBuffer();
+            BinBuffer bb = new BinBuffer(131072);  // no idea why it's 131072, but w/e
 
-            Compiler.Log("Writing header.", MessageImportance.Low);
-            bb.Write(API.versionAssembly);
+			Compiler.Log("Writing header.", MessageImportance.Low);
+            bb.Write((ushort)ModCompile.MOD_VERSION);
             bb.Write(Building.JSONs[0].Json.ToJson());
-            bb.Write(Building.Files.Count + (Building.Info.includePDB ? 1 : 0));
 
-            byte[] pdb = null;
+			if (Building.Info.icon == null)
+				bb.Write(0);
+			else
+			{
+				Compiler.Log("Writing icon file.", MessageImportance.Low);
 
-            if (Building.Info.includePDB)
-                try
-                {
-                    pdb = File.ReadAllBytes(Path.ChangeExtension(Building.Assembly.Location, ".pdb"));
-                }
-                catch { }
+				WritePrefixedArray(bb, Building.Files[Building.Info.icon + ".png"]);
+			}
 
-            if (pdb != null)
-            {
-                Compiler.Log("Got PDB file.", MessageImportance.Low);
-                bb.Write("DebugInformation.pdb");
-                bb.Write(pdb.Length);
-            }
-            //Uri baseUri = new Uri(File.Exists(mod.OriginPath) ? Path.GetDirectoryName(mod.OriginPath) : mod.OriginPath);
+			Compiler.Log("Writing assembly.", MessageImportance.Low);
+			WritePrefixedArray(bb, File.ReadAllBytes(Building.Assembly.Location));
 
-            //List<Tuple<string, byte[]>> jsons = new List<Tuple<string, byte[]>>();
-            //for (int i = 1; i < mod.JSONs.Count; i++)
-            //{
-            //    if (mod.JSONs[i] == null)
-            //        continue;
-
-            //    Uri relative =  baseUri.MakeRelativeUri(new Uri(mod.JSONs[i].Path));
-            //    jsons.Add
-            //    (
-            //        var t = new Tuple<string, byte[]>
-            //        (
-            //            relative.OriginalString,
-            //            Encoding.UTF8.GetBytes(JsonMapper.ToJson(mod.JSONs[i].Json))
-            //        )
-            //    );
-
-            //    bb.Write(jsons[jsons.Count - 1].Item1       );
-            //    bb.Write(jsons[jsons.Count - 1].Item2.Length);
-            //}
-            Compiler.Log("Writing file headers.", MessageImportance.Low);
-            foreach (KeyValuePair<string, byte[]> current in Building.Files)
-            {
-                bb.Write(current.Key);
-                bb.Write(current.Value.Length);
-            }
-
-            if (pdb != null)
-                bb.Write(pdb);
+			Compiler.Log("Writing images.", MessageImportance.Low);
+			string[] arr = FindImages();
+			bb.Write((ushort)arr.Length); // so long ago that I typed Length, I typed 'Count' first...
+			for (int i = 0; i < arr.Length; i++)
+			{
+				bb.Write(Path.ChangeExtension(arr[i], null));
+				WritePrefixedArray(bb, Building.Files[arr[i]]);
+			}
+			
             Compiler.Log("Writing files.", MessageImportance.Low);
-            //for (int i = 0; i < jsons.Count; i++)
-            //    bb.Write(jsons[i].Item2);
-            foreach (KeyValuePair<string, byte[]> current in Building.Files)
-                bb.Write(current.Value);
+			         arr = FindFiles();
+			bb.Write((ushort)(arr.Length + (Building.Info.includePDB ? 1 : 0)));
+			for (int i = 0; i < arr.Length; i++)
+			{
+				bb.Write(arr[i]);
+				WritePrefixedArray(bb, Building.Files[arr[i]]);
+			}
 
-            Compiler.Log("Writing assembly.", MessageImportance.Low);
-            bb.Write(File.ReadAllBytes(Building.Assembly.Location));
-            bb.Pos = 0;
+			byte[] pdb = null;
 
-            string outputFile = CommonToolUtilities.modsBinDir + "\\" + Building.Info.outputName + (Building.Info.compress ? ".tapi" : ".tapimod");
+			if (Building.Info.includePDB)
+				try
+				{
+					pdb = File.ReadAllBytes(Path.ChangeExtension(Building.Assembly.Location, ".pdb"));
+				}
+				catch { }
 
-            if (File.Exists(outputFile))
-                File.Delete(outputFile);
+			// write the PDB output
+			File.WriteAllBytes(Mods.pathCompiled + "\\" + Building.Info.outputName + ".pdb", pdb);
 
-            if (Building.Info.compress)
-                using (ZipFile zf = new ZipFile())
-                {
-                    Compiler.Log("Compressing output.", MessageImportance.Low);
-                    if (!Directory.Exists(CommonToolUtilities.modsBinDir))
-                        Directory.CreateDirectory(CommonToolUtilities.modsBinDir);
+			if (pdb != null)
+			{
+				Compiler.Log("Got PDB file.", MessageImportance.Low);
 
-                    zf.AddEntry("Mod.tapimod", bb.ReadBytes(bb.GetSize()));
-                    zf.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(Building.JSONs[0].Json.ToJson()));
-                    if (pdb != null)
-                        zf.AddEntry("DebugInformation.pdb", pdb);
+				bb.Write("DebugInformation.pdb");
+				WritePrefixedArray(bb, pdb);
+			}
 
-                    foreach (KeyValuePair<string, byte[]> current in Building.Files)
-                        zf.AddEntry(current.Key, current.Value);
+			bb.Pos = 0;
+			string outputFile = Mods.pathCompiled + "\\" + Building.Info.outputName + (Building.Info.compress ? ".tapi" : ".tapimod");
 
-                    Compiler.Log("Writing compressed output to disk.", MessageImportance.Low);
-                    zf.Save(outputFile);
-                }
-            else
-            {
-                Compiler.Log("Writing uncompressed output to disk.", MessageImportance.Low);
-                File.WriteAllBytes(outputFile, bb.ReadBytes(bb.GetSize()));
-            }
+			if (File.Exists(outputFile))
+				File.Delete(outputFile);
 
-            if (Building.Info.extractDLL)
-            {
-                string dll = Path.ChangeExtension(outputFile, ".dll");
+			if (Building.Info.compress)
+				using (ZipFile zf = new ZipFile())
+				{
+					Compiler.Log("Compressing output.", MessageImportance.Low);
+					if (!Directory.Exists(Mods.pathCompiled))
+						Directory.CreateDirectory(Mods.pathCompiled);
 
-                if (File.Exists(dll))
-                    File.Delete(dll);
+					zf.AddEntry("!Mod.tapimod", bb.ReadBytes(bb.Size));
+					zf.AddEntry("ModInfo.json", Encoding.UTF8.GetBytes(Building.JSONs[0].Json.ToJson()));
+					if (pdb != null)
+						zf.AddEntry("!DebugInformation.pdb", pdb);
 
-                File.Copy(Building.Assembly.Location, dll);
+					foreach (KeyValuePair<string, byte[]> current in Building.Files)
+						zf.AddEntry(current.Key, current.Value);
 
-                File.WriteAllBytes(Path.ChangeExtension(outputFile, ".pdb"), pdb);
-            }
+					Compiler.Log("Writing compressed output to disk.", MessageImportance.Low);
+					zf.Save(outputFile);
+				}
+			else
+			{
+				Compiler.Log("Writing uncompressed output to disk.", MessageImportance.Low);
+				File.WriteAllBytes(outputFile, bb.ReadBytes());
+			}
 
-            return errors;
+			if (Building.Info.extractDLL)
+			{
+				string dll = Path.ChangeExtension(outputFile, ".dll");
+
+				if (File.Exists(dll))
+					File.Delete(dll);
+
+				File.Copy(Building.Assembly.Location, dll);
+
+				File.WriteAllBytes(Path.ChangeExtension(outputFile, ".pdb"), pdb);
+			}
+
+			return errors;
         }
     }
 }

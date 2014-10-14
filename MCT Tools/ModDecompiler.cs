@@ -1,10 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Ionic.Zip;
 using TAPI;
 using PoroCYon.MCT.Internal;
+using LitJson;
 
 namespace PoroCYon.MCT.Tools
 {
@@ -21,23 +23,20 @@ namespace PoroCYon.MCT.Tools
         /// <param name="modFile">The .tapimod file to decompile</param>
         public static void Decompile(string modFile)
         {
-            if (!File.Exists(Mods.pathDirMods + "\\" + modFile))
-                throw new FileNotFoundException(Mods.pathDirMods + "\\" + modFile);
+            if (!File.Exists(Mods.pathCompiled + "\\" + modFile))
+                throw new FileNotFoundException(Mods.pathCompiled + "\\" + modFile);
 
             string
                 modName = Path.GetFileNameWithoutExtension(modFile),
                 decompPath = decompDir + "\\" + modName;
 
-            byte[]
-                tapimod = new byte[0],
-                modInfo = new byte[0],
-                modInfoZip = new byte[0];
+            byte[] tapimod = new byte[0];
 
             List<Tuple<string, byte[]>>
                 zipFiles = new List<Tuple<string, byte[]>>(),
                 tapimodFiles = new List<Tuple<string,byte[]>>();
 
-            uint versionAssembly = 0u;
+            ushort modVersion = 0;
 
             if (Directory.Exists(decompPath))
                 Directory.Delete(decompPath, true);
@@ -45,28 +44,28 @@ namespace PoroCYon.MCT.Tools
 
             #region load data from zip
             if (modFile.EndsWith(".tapi"))
-                using (ZipFile zf = ZipFile.Read(Mods.pathDirMods + "\\" + modFile))
+                using (ZipFile zf = ZipFile.Read(Mods.pathCompiled + "\\" + modFile))
                 {
                     using (MemoryStream ms = new MemoryStream())
                     {
-                        ZipEntry ze = zf["Mod.tapimod"];
+                        ZipEntry ze = zf["!Mod.tapimod"];
                         if (ze != null)
                         {
                             ze.Extract(ms);
                             tapimod = ms.ToArray();
                         }
                     }
-                    using (MemoryStream ms = new MemoryStream())
-                    {
-                        ZipEntry ze = zf["ModInfo.json"];
-                        if (ze != null)
-                        {
-                            ze.Extract(ms);
-                            modInfoZip = ms.ToArray();
-                        }
-                    }
+                    //using (MemoryStream ms = new MemoryStream())
+                    //{
+                    //    ZipEntry ze = zf["ModInfo.json"];
+                    //    if (ze != null)
+                    //    {
+                    //        ze.Extract(ms);
+                    //        modInfoZip = ms.ToArray();
+                    //    }
+                    //}
                     foreach (ZipEntry ze in zf.Entries)
-                        if (ze.FileName != "Mod.tapimod" && ze.FileName != "ModInfo.json")
+                        if (ze.FileName != "!Mod.tapimod"/* && ze.FileName != "ModInfo.json"*/)
                             using (MemoryStream ms = new MemoryStream())
                             {
                                 ze.Extract(ms);
@@ -75,52 +74,72 @@ namespace PoroCYon.MCT.Tools
                 }
             #endregion
             else if (modFile.EndsWith(".tapimod"))
-                tapimod = File.ReadAllBytes(Mods.pathDirMods + "\\" + modFile);
+                tapimod = File.ReadAllBytes(Mods.pathCompiled + "\\" + modFile);
             else
                 throw new FileLoadException("File is not a .tapi or .tapimod file!");
 
-            // create binary buffer of .tapimod file
-            BinBuffer bb = new BinBuffer(new BinBufferByte(tapimod));
+			// write files from zip data (.pdb is automatically included)
+			foreach (Tuple<string, byte[]> t in zipFiles)
+			{
+				string name = t.Item1;
+
+				if (t.Item1 == "!DebugInformation.pdb")
+					name = modName + ".pdb";
+
+				string dir = decompPath + "\\_FromZip\\" + name;
+
+				if (!Directory.Exists(Path.GetDirectoryName(dir)))
+					Directory.CreateDirectory(Path.GetDirectoryName(dir));
+
+				File.WriteAllBytes(dir, t.Item2);
+			}
+
+			// create binary buffer of .tapimod file
+			BinBuffer bb = new BinBuffer(new BinBufferByte(tapimod));
 
             // read/write tAPI version
-            File.WriteAllText(decompPath + "\\tAPI_Version.txt", (versionAssembly = bb.ReadUInt()).ToString());
+            File.WriteAllText(decompPath + "\\Mod_Version.txt", (modVersion = bb.ReadUShort()).ToString());
 
             // read ModInfo.json
-            File.WriteAllText(decompPath + "\\ModInfo.json", bb.ReadString());
+            File.WriteAllText(decompPath + "\\ModInfo.json", string modInfoStr = bb.ReadString());
 
-            // write files from zip data (.pdb is automatically included)
-            foreach (Tuple<string, byte[]> t in zipFiles)
-            {
-                string dir = decompPath + "\\_FromZip\\" + t.Item1;
+			JsonData modInfo = JsonMapper.ToObject(modInfoStr);
 
-                if (!Directory.Exists(Path.GetDirectoryName(dir)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(dir));
+			// get the icon
+			if (modInfo.Has("icon"))
+			{
+				string icon = (string)modInfo["icon"];
 
-                File.WriteAllBytes(dir, t.Item2);
-            }
+				File.WriteAllBytes(decompPath + "\\" + icon + ".png", bb.ReadBytes(bb.ReadInt()));
+			}
+			else
+				Debug.Assert(bb.ReadInt() == 0);
 
-            // read (normal) files
-            List<Tuple<string, int>> fileInfo = new List<Tuple<string, int>>();
+			// write .dll
+			File.WriteAllBytes(decompPath + "\\" + modName + ".dll", bb.ReadBytes(bb.ReadInt()));
 
-            int count = bb.ReadInt();
-            for (int i = 0; i < count; i++)
-                fileInfo.Add(new Tuple<string, int>(bb.ReadString(), bb.ReadInt()));
-            for (int i = 0; i < count; i++)
-                tapimodFiles.Add(new Tuple<string, byte[]>(fileInfo[i].Item1, bb.ReadBytes(fileInfo[i].Item2)));
+			// read (normal) files
+			// one for images, one for other files
+			ushort count = bb.ReadUShort();
+			for (int i = 0; i < count; i++)
+			{
+				string path = decompPath + "\\" + bb.ReadString() + ".png";
 
-            // write them
-            foreach (Tuple<string, byte[]> t in tapimodFiles)
-            {
-                string dir = decompPath + "\\" + t.Item1;
+				if (!Directory.Exists(Path.GetDirectoryName(path)))
+					Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-                if (!Directory.Exists(Path.GetDirectoryName(dir)))
-                    Directory.CreateDirectory(Path.GetDirectoryName(dir));
+				File.WriteAllBytes(path, bb.ReadBytes(bb.ReadInt()));
+			}
+			count = bb.ReadUShort();
+			for (int i = 0; i < count; i++)
+			{
+				string path = decompPath + "\\" + bb.ReadString();
 
-                File.WriteAllBytes(dir, t.Item2);
-            }
+				if (!Directory.Exists(Path.GetDirectoryName(path)))
+					Directory.CreateDirectory(Path.GetDirectoryName(path));
 
-            // write .dll
-            File.WriteAllBytes(decompPath + "\\" + modName + ".dll", bb.ReadBytes(bb.BytesLeft()));
+				File.WriteAllBytes(path, bb.ReadBytes(bb.ReadInt()));
+			}
         }
     }
 }

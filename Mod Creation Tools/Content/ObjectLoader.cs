@@ -43,9 +43,9 @@ namespace PoroCYon.MCT.Content
         {
             ArmorReturnValues ret = new ArmorReturnValues(-1, -1, -1);
 
-            i.netID = i.type = Defs.itemNextType++;
+            i.netID = i.type = ItemDef.nextType++;
             i.stack = 1;
-            i.name = param.ModBase.modName + ":" + param.Name;
+            i.name = param.ModBase.mod.InternalName + ":" + param.Name;
             //i.displayName = param.Name;
 
             #region Aparam
@@ -53,7 +53,7 @@ namespace PoroCYon.MCT.Content
             {
                 if (Aparam.HeadTexture != null)
                 {
-                    i.headSlot = Defs.headSlotNextType++;
+                    i.headSlot = ItemDef.headSlotNextType++;
 
                     if (Item.headType.ContainsKey(i.headSlot))
                         Item.headType[i.headSlot] = i.type;
@@ -68,7 +68,7 @@ namespace PoroCYon.MCT.Content
 
                 if (Aparam.BodyTexture != null)
                 {
-                    i.bodySlot = Defs.bodySlotNextType++;
+                    i.bodySlot = ItemDef.bodySlotNextType++;
 
                     if (Item.bodyType.ContainsKey(i.bodySlot))
                         Item.bodyType[i.bodySlot] = i.type;
@@ -88,7 +88,7 @@ namespace PoroCYon.MCT.Content
 
                 if (Aparam.LegsTexture != null)
                 {
-                    i.legSlot = Defs.legSlotNextType++;
+                    i.legSlot = ItemDef.legSlotNextType++;
 
                     if (Item.legType.ContainsKey(i.legSlot))
                         Item.legType[i.legSlot] = i.type;
@@ -103,20 +103,11 @@ namespace PoroCYon.MCT.Content
             }
             #endregion
 
-            if (param.SubClassTypeName != null)
-            {
-                i.subClass = (ModItem)param.Assembly.CreateInstance(param.SubClassTypeName, false, BindingFlags.Public | BindingFlags.Instance, null,
-                    new object[] { param.ModBase, i }, CultureInfo.CurrentCulture, new object[] { });
-
-                if (i.subClass != null)
-                    Defs.FillCallPriorities(i.subClass.GetType());
-            }
-
             if (!Main.dedServ)
                 Main.itemTexture.Add(i.type, texture);
 
-            Defs.items.Add(i.name, i);
-            Defs.itemNames.Add(i.type, i.name);
+            ItemDef.byName.Add(i.name, i);
+            ItemDef.byType.Add(i.type, i);
 
             return ret;
         }
@@ -139,23 +130,15 @@ namespace PoroCYon.MCT.Content
         /// <param name="param">Common object loading parameters</param>
         public static void AddToGame(NPC n, Texture2D texture, LoadParameters param)
         {
-            n.netID = n.type = Defs.npcNextType++;
-            n.name = param.ModBase.modName + ":" + param.Name;
+            n.netID = n.type = NPCDef.nextType++;
+            n.name = param.ModBase.mod.InternalName + ":" + param.Name;
             n.displayName = param.Name;
-
-            if (!String.IsNullOrEmpty(param.SubClassTypeName))
-            {
-                n.subClass = (ModNPC)param.Assembly.CreateInstance(param.SubClassTypeName, false, BindingFlags.Public | BindingFlags.Instance, null,
-                    new object[] { param.ModBase, n }, CultureInfo.CurrentCulture, new object[] { });
-
-                if (n.subClass != null)
-                    Defs.FillCallPriorities(n.subClass.GetType());
-            }
 
             if (!Main.dedServ)
                 Main.npcTexture.Add(n.type, texture);
-            Defs.npcs.Add(n.name, n);
-            Defs.npcNames.Add(n.type, n.name);
+
+			NPCDef.byName.Add(n.name, n);
+            NPCDef.byType.Add(n.type, n);
         }
 
         /// <summary>
@@ -167,17 +150,8 @@ namespace PoroCYon.MCT.Content
         /// <param name="pet">Wether the Projectile is a pet or not</param>
         public static void AddToGame(Projectile p, Texture2D texture, LoadParameters param, bool pet = false)
         {
-            p.type = Defs.projectileNextType++;
-            p.name = param.ModBase.modName + ":" + param.Name;
-
-            if (!String.IsNullOrEmpty(param.SubClassTypeName))
-            {
-                p.subClass = (ModProjectile)param.Assembly.CreateInstance(param.SubClassTypeName, false, BindingFlags.Public | BindingFlags.Instance, null,
-                    new object[] { param.ModBase, p }, CultureInfo.CurrentCulture, new object[] { });
-
-                if (p.subClass != null)
-                    Defs.FillCallPriorities(p.subClass.GetType());
-            }
+            p.type = ProjDef.nextType++;
+            p.name = param.ModBase.mod.InternalName + ":" + param.Name;
 
             if (pet)
             {
@@ -187,8 +161,11 @@ namespace PoroCYon.MCT.Content
 
             if (!Main.dedServ)
                 Main.projectileTexture.Add(p.type, texture);
-            Defs.projectiles.Add(p.name, p);
-            Defs.projectileNames.Add(p.type, p.name);
+
+			p.def = new ProjDef(param.ModBase);
+
+            ProjDef.byName.Add(p.name, p);
+            ProjDef.byType.Add(p.type, p);
         }
 
         /// <summary>
@@ -198,8 +175,8 @@ namespace PoroCYon.MCT.Content
         /// <param name="param">Common object loading parameters</param>
         public static void AddToGame(TileParameters Tparam, LoadParameters param)
         {
-            int type = Defs.tileNextType++;
-            TileDef.ResizeTiles(Defs.tileNextType);
+            int type = TileDef.tileNextType++;
+            TileDef.ResizeTiles(TileDef.tileNextType);
 
             if (!Main.dedServ)
                 Main.tileTexture[type] = Tparam.Texture;
@@ -208,21 +185,18 @@ namespace PoroCYon.MCT.Content
             {
                 TileDef.codeClass[type] = (ModTile)param.Assembly.CreateInstance(param.SubClassTypeName, false, BindingFlags.Public | BindingFlags.Instance, null,
                     new object[] { param.ModBase }, CultureInfo.CurrentCulture, new object[] { });
-
-                if (TileDef.codeClass[type] != null)
-                    Defs.FillCallPriorities(TileDef.codeClass[type].GetType());
             }
 
             // helk
-            TileDef.name[type] = param.ModBase.modName + ":" + param.Name;
+            TileDef.name[type] = param.ModBase.mod.InternalName + ":" + param.Name;
             TileDef.displayName[type] = param.Name;
 
             TileDef.width[type] = Tparam.Width;
             TileDef.height[type] = Tparam.Height;
             TileDef.frameWidth[type] = Tparam.FrameWidth;
             TileDef.frameHeight[type] = Tparam.FrameHeight;
-            TileDef.sheetColumns[type] = Tparam.SheetColumns;
-            TileDef.sheetRows[type] = Tparam.SheetRows;
+            //TileDef.sheetColumns[type] = Tparam.SheetColumns;
+            //TileDef.sheetRows[type] = Tparam.SheetRows;
 
             TileDef.solid[type] = Tparam.Solid;
             TileDef.solidTop[type] = Tparam.SolidTop;
@@ -266,13 +240,13 @@ namespace PoroCYon.MCT.Content
         /// <param name="param">Common object loading parameters</param>
         public static void AddWallToGame(Texture2D texture, LoadParameters param)
         {
-            int type = Defs.wallNextType++;
-            TileDef.ResizeWalls(Defs.wallNextType);
+            int type = TileDef.wallNextType++;
+            TileDef.ResizeWalls(TileDef.wallNextType);
 
             if (!Main.dedServ)
                 Main.wallTexture[type] = texture;
 
-            TileDef.wall[param.ModBase.modName + ":" + param.Name] = (ushort)type;
+            TileDef.wall[param.ModBase.mod.InternalName + ":" + param.Name] = (ushort)type;
         }
 
         /// <summary>
@@ -282,7 +256,7 @@ namespace PoroCYon.MCT.Content
         /// <param name="param">Common object loading parameters</param>
         public static void AddToGame(Prefix pfix, LoadParameters param)
         {
-            pfix.name = param.ModBase.modName + ":" + param.Name;
+            pfix.name = param.ModBase.mod.InternalName + ":" + param.Name;
 
             pfix.GetType().GetField("id", BindingFlags.Instance | BindingFlags.NonPublic).SetValue(pfix, Defs.prefixNextType++);
             Defs.prefixes.Add(pfix.name, pfix);
@@ -294,13 +268,13 @@ namespace PoroCYon.MCT.Content
         /// <param name="texture">The texture of the Gore to add</param>
         /// <param name="param">Common object loading parameters</param>
         public static void AddGoreToGame(Texture2D texture, LoadParameters param)
-        {
-            int type = Defs.goreNextType++;
+		{
+			int type = GoreDef.goreNextType++;
 
-            if (!Main.dedServ)
-                Main.goreTexture[type] = texture;
+			if (!Main.dedServ)
+				Main.goreTexture[type] = texture;
 
-            Defs.gores[param.ModBase.modName + ":" + param.Name] = type;
+			GoreDef.gores[param.ModBase.mod.InternalName + ":" + param.Name] = type;
         }
 
         /// <summary>
@@ -310,21 +284,29 @@ namespace PoroCYon.MCT.Content
         /// <param name="param">Common object loading parameters</param>
         public static void AddToGame(BuffParameters Bparam, LoadParameters param)
         {
-            int type = Defs.buffNextType++;
+            int type = BuffDef.nextType++;
 
             if (!Main.dedServ)
                 Main.buffTexture.Add(type, Bparam.Texture);
 
-            Defs.buffNames[type] = param.ModBase.modName + ":" + param.Name;
-            Defs.buffType[param.ModBase.modName + ":" + param.Name] = type;
+			BuffDef def = new BuffDef(param.ModBase);
 
-            if (!String.IsNullOrEmpty(param.SubClassTypeName))
-            {
-                Defs.buffs.Add(type, (ModBuff)param.Assembly.CreateInstance(param.SubClassTypeName, false, BindingFlags.Public | BindingFlags.Instance,
-                    null, new object[] { param.ModBase }, System.Globalization.CultureInfo.CurrentCulture, new object[] { }));
+			BuffDef.name[type] = param.ModBase.mod.InternalName + ":" + param.Name;
+            BuffDef.type[param.ModBase.mod.InternalName + ":" + param.Name] = type;
 
-                if (Defs.buffs[type] != null)
-                    Defs.FillCallPriorities(Defs.buffs[type].GetType());
+			if (!Main.dedServ)
+				Main.buffTexture[type] = Bparam.Texture;
+
+			if (!String.IsNullOrEmpty(param.SubClassTypeName))
+			{
+				try
+				{
+					def.modBuffType = param.Assembly.GetType(param.SubClassTypeName);
+				}
+				catch (Exception e)
+				{
+					throw new ArgumentException("Invalid subclass name: " + param.SubClassTypeName, "param", e);
+				}
             }
 
             Array.Resize(ref Main.buffName, Main.buffName.Length + 1);
@@ -356,10 +338,15 @@ namespace PoroCYon.MCT.Content
                 foreach (KeyValuePair<int, Texture2D> kvp in Main.wingsTexture)
                     if (kvp.Value == texture)
                     {
-                        if (Main.wingsLoaded.ContainsKey(id))
-                            Main.wingsLoaded[id] = true;
-                        else
-                            Main.wingsLoaded.Add(id, true);
+						if (id < 0 || id >= Main.wingsLoaded.Length)
+							Array.Resize(ref Main.wingsLoaded, Math.Max(Main.wingsLoaded.Length, id) + 1);
+
+						Main.wingsLoaded[id] = true;
+
+                        //if (Main.wingsLoaded.ContainsKey(id))
+                        //    Main.wingsLoaded[id] = true;
+                        //else
+                        //    Main.wingsLoaded.Add(id, true);
 
                         id = kvp.Key;
                     }
@@ -367,12 +354,17 @@ namespace PoroCYon.MCT.Content
             else
                 Main.wingsTexture.Add(id, texture);
 
-            if (Main.wingsLoaded.ContainsKey(id))
-                Main.wingsLoaded[id] = true;
-            else
-                Main.wingsLoaded.Add(id, true);
+			if (id < 0 || id >= Main.wingsLoaded.Length)
+				Array.Resize(ref Main.wingsLoaded, Math.Max(Main.wingsLoaded.Length, id) + 1);
 
-            return id;
+			Main.wingsLoaded[id] = true;
+
+			//if (Main.wingsLoaded.ContainsKey(id))
+			//    Main.wingsLoaded[id] = true;
+			//else
+			//    Main.wingsLoaded.Add(id, true);
+
+			return id;
         }
 
         /// <summary>
@@ -499,8 +491,8 @@ namespace PoroCYon.MCT.Content
         {
             invasion.ID = ++invasionNextType;
 
-            Invasion.invasions.Add(@base.modName + ":" + name, invasion);
-            Invasion.invasionTypes.Add(invasion.ID, @base.modName + ":" + name);
+            Invasion.invasions.Add(@base.mod.InternalName + ":" + name, invasion);
+            Invasion.invasionTypes.Add(invasion.ID, @base.mod.InternalName + ":" + name);
 
             return invasion.ID;
         }

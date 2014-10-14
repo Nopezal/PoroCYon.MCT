@@ -113,7 +113,7 @@ namespace PoroCYon.MCT.UI
         {
             get
             {
-                return API.main.spriteBatch;
+                return Main.spriteBatch;
             }
         }
         /// <summary>
@@ -188,7 +188,7 @@ namespace PoroCYon.MCT.UI
 
             MouseText(i.AffixName() + (i.stack > 1 ? " (" + i.stack + ")" : ""));
 
-            Main.toolTip = new ItemTooltip();
+            Main.toolTip = new Item();
         }
 
         /// <summary>

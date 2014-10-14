@@ -5,6 +5,7 @@ using System.Reflection;
 using System.Runtime;
 using Microsoft.Build.Framework;
 using PoroCYon.Extensions;
+using PoroCYon.Extensions.Collections;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT.Internal;
@@ -13,56 +14,9 @@ using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-
-    class Checker(ModCompiler mc) : CompilerPhase(mc)
+	class Checker(ModCompiler mc) : CompilerPhase(mc)
     {
-        // static Game main;
-
         static bool loaded = false;
-
-        [Obsolete]
-        static void CreateMainAndLoadContent()
-        {
-            //main = new Main();
-
-            //Main.dedServ = true;
-            //Main.showSplash = false;
-
-            //string dir = Environment.CurrentDirectory;
-            //Environment.CurrentDirectory = Environment.GetEnvironmentVariable("TAPIBINDIR", EnvironmentVariableTarget.Machine);
-            //main.Content.RootDirectory = Environment.CurrentDirectory + "\\Content";
-            //typeof(Game).GetMethod("Initialize", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase).Invoke(main, null);
-            //Environment.CurrentDirectory = dir;
-
-            //Lang.setLang(false);
-
-            /*// probably also hacky stuff
-
-            main = new Main();
-            Type mType = typeof(Game);
-
-            // from Game.RunGame(bool)
-
-            // graphicsDeviceManager = Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager;
-            // if (graphicsDeviceManager != null)
-            //     graphicsDeviceManager.CreateDevice();
-            FieldInfo gdm = mType.GetField("graphicsDeviceManager",
-                BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.GetField | BindingFlags.IgnoreCase | BindingFlags.SetField);
-
-            gdm.SetValue(main, main.Services.GetService(typeof(IGraphicsDeviceManager)) as IGraphicsDeviceManager);
-            if (gdm.GetValue(main) != null)
-            {
-                MethodInfo CreateDevice = typeof(IGraphicsDeviceManager).GetMethod("CreateDevice");
-
-                CreateDevice.Invoke(gdm.GetValue(main), null);
-            }
-
-            string dir = Environment.CurrentDirectory;
-            Environment.CurrentDirectory = Environment.GetEnvironmentVariable("TAPIBINDIR", EnvironmentVariableTarget.Machine);
-            main.Content.RootDirectory = Environment.CurrentDirectory + "\\Content";
-            mType.GetMethod("LoadContent", BindingFlags.NonPublic | BindingFlags.Instance | BindingFlags.InvokeMethod | BindingFlags.IgnoreCase).Invoke(main, null);
-            Environment.CurrentDirectory = dir;*/
-        }
 
         internal static void LoadDefs()
         {
@@ -71,24 +25,27 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             Main.dedServ = true;
             Main.rand = new Random();
-            Main.player[Main.myPlayer] = new Player();
-            Defs.itemNextType = Main.maxItemTypes;
+			ItemDef.nextType = Main.maxItemTypes;
 
             PropertyInfo pi = typeof(API).GetProperty("SoundAvailable", BindingFlags.Static | BindingFlags.Public);
             pi.SetValue(null, false, BindingFlags.NonPublic | BindingFlags.Static, null, null, null);
 
-            // CreateMainAndLoadContent();
+			// CreateMainAndLoadContent();
 
-            Defs.FillVanillaBuffNames();
-            Defs.FillVanillaBuffs();
-            Defs.FillVanillaItems();
-            Defs.FillVanillaNPCs();
+			BuffDef.FillBuffNames();
+			BuffDef.FillVanilla();
+			ItemDef.FillVanilla();
+			 NPCDef.FillVanilla();
             Defs.FillVanillaPrefixes();
-            Defs.FillVanillaProjectiles();
-            Defs.FillVanillaSounds();
-            Defs.FillVanillaCraftingGroups();
+			ProjDef.FillVanilla();
+			SoundDef.FillVanillaSounds();
+			ItemDef.FillVanillaCraftingGroups();
 
-            loaded = true;
+			Biome.InitBiomes();
+
+			Main.player[Main.myPlayer] = new Player();
+
+			loaded = true;
         }
 
         [TargetedPatchingOptOut(Consts.TPOOReason)]
@@ -107,22 +64,37 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
         CompilerError CheckForModBase()
         {
-            bool foundModBase = false;
+			List<Type> bases = new List<Type>();
 
-            foreach (Type t in Building.Assembly.GetTypes())
-                if (t.IsSubclassOf(typeof(ModBase)))
-                    foundModBase = true;
+			foreach (Type t in Building.Assembly.GetTypes())
+				if (t.IsSubclassOf(typeof(ModBase)))
+				{
+					bases.Add(t);
 
-            if (!foundModBase)
+					if (bases.Count >= 2)
+						break;
+				}
+
+            if (bases.Count <= 0)
                 return new CompilerError(Building)
                 {
                     Cause = new TypeLoadException(),
                     FilePath = Building.Assembly.Location,
-                    IsWarning = false,
-                    Message = "No ModBase class found."
+                    IsWarning = true,
+                    Message = "No ModBase class found, using default"
                 };
+			if (bases.Count > 1)
+				return new CompilerError(Building)
+				{
+					Cause = new TypeLoadException(),
+					FilePath = Building.Assembly.Location,
+					IsWarning = false,
+					Message = "Multiple ModBase classes found: " + bases.CastAll(t => t.FullName).Join(CommonJoinValues.Comma) + "."
+				};
 
-            return null;
+			bases.Clear();
+
+			return null;
         }
 
         CompilerError CheckBuffExists(Union<string, int> id, string source, string file)
@@ -134,7 +106,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (i == 0) // not defined
                     return null;
 
-                if (i <= 0 || i >= Main.maxBuffs)
+                if (i <= 0 || i >= Main.maxBuffTypes)
                     return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(i.ToString()),
@@ -153,7 +125,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.buffNames.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
+                if (!BuffDef.name.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -207,7 +179,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
-                else if (name.StartsWith("g:") && !Defs.itemGroups.Any(kvp => kvp.Key == name)
+                else if (name.StartsWith("g:") && !ItemDef.itemGroups.Any(kvp => kvp.Key == name)
                         && !Building.CraftGroups.itemGroups.Any(icg => "g:" + icg.name == name))
                     return new CompilerError(Building)
                     {
@@ -217,7 +189,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         Message = "Could not find craft group " + name + " in " + source + "."
                     };
 
-                if (!Defs.items.ContainsKey(name) && !Building.items.Any(i => i.internalName == name))
+                if (!ItemDef.byName.ContainsKey(name) && !Building.items.Any(i => i.internalName == name))
                 {
 
                     string internalName = name.Split(':')[0];
@@ -271,7 +243,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.npcs.ContainsKey(name) && !Building.npcs.Any(n => n.internalName == name))
+                if (!NPCDef.byName.ContainsKey(name) && !Building.npcs.Any(n => n.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -324,7 +296,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!Defs.projectiles.ContainsKey(name) && !Building.projs.Any(p => p.internalName == name))
+                if (!ProjDef.byName.ContainsKey(name) && !Building.projs.Any(p => p.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -494,6 +466,20 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return null;
         }
+        CompilerError CheckBiomeExists(Tools.Compiler.Validation.Entities.Item item)
+        {
+            for (int i = 0; i < item.fish.biomes.Length; i++)
+                if (!Biome.Biomes.ContainsKey(item.fish.biomes[i]))
+                    return new CompilerError(Building)
+                    {
+                        Cause = new ObjectNotFoundException(item.fish.biomes[i]),
+                        FilePath = item.internalName,
+                        IsWarning = item.fish.biomes[i].Split(':')[0] == Building.Info.internalName,
+                        Message = "Biome " + item.fish.biomes[i] + " not found."
+                    };
+
+            return null;
+        }
 
         List<CompilerError> CheckBuffs ()
         {
@@ -515,14 +501,15 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             return errors;
         }
         List<CompilerError> CheckItems ()
-        {
-            // item references:
-            // * item.recipes.items
-            // * npc.drops.item
-            // * tile.drop
-            // * wall.drop
+		{
+			// item references:
+			// * item.recipes.items
+			// * npc.drops.item
+			// * tile.drop
+			// * wall.drop
+			// * npc.catchItem
 
-            List<CompilerError> errors = new List<CompilerError>();
+			List<CompilerError> errors = new List<CompilerError>();
 
             // item.recipes.items
             for (int i = 0; i < Building.items.Count; i++)
@@ -543,14 +530,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             for (int i = 0; i < Building.walls.Count; i++)
                 AddIfNotNull(CheckItemExists(Building.walls[i].drop, "Key 'drop' of Wall " + Building.walls[i].internalName, Building.walls[i].internalName), errors);
 
-            return errors;
+			// npc.catchItem
+			for (int i = 0; i < Building.npcs.Count; i++)
+				AddIfNotNull(CheckItemExists(Building.npcs[i].catchItem, "Catch item of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
+
+			return errors;
         }
         List<CompilerError> CheckNPCs  ()
-        {
-            // npc references:
-            // * ...
+		{
+			// npc references:
+			// * ...
 
-            return null;
+			return null;
 
             //List<CompilerError> errors = new List<CompilerError>();
 
@@ -637,6 +628,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             // tiles
             for (int i = 0; i < Building.tiles.Count; i++)
                 errors.Add(CheckTypeExists(Building.tiles[i]));
+
+            return errors;
+        }
+        List<CompilerError> CheckBiomes()
+        {
+            List<CompilerError> errors = new List<CompilerError>();
+
+            // biome references:
+            // * item.fish.biomes
+
+            for (int i = 0; i < Building.items.Count; i++)
+                AddIfNotNull(CheckBiomeExists(Building.items[i]), errors);
 
             return errors;
         }

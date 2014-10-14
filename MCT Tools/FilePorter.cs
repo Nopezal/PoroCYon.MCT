@@ -5,10 +5,12 @@ using PoroCYon.MCT.Tools.Internal.Porting;
 
 namespace PoroCYon.MCT.Tools
 {
-    /// <summary>
-    /// Ports files in the Vanilla format to the tAPI format.
-    /// </summary>
-    public unsafe static class FilePorter
+	// TODO: rewrite!
+
+	/// <summary>
+	/// Ports files in the Vanilla format to the tAPI format.
+	/// </summary>
+	public unsafe static class FilePorter
     {
         /// <summary>
         /// Ports a Player file.

@@ -45,7 +45,7 @@ namespace PoroCYon.MCT.Net
             refs[group]++;
 
             if (Main.netMode != 0 && sync)
-                NetHelper.SendModData(Mod.instance, InternalNetMessages.SyncRandom_CTOR, GroupName, seed);
+                NetHelper.SendModData(MctMod.instance, InternalNetMessages.SyncRandom_CTOR, GroupName, seed);
         }
 
         /// <summary>
@@ -92,7 +92,7 @@ namespace PoroCYon.MCT.Net
         void DecreaseRef()
         {
             if (Main.netMode != 0)
-                NetHelper.SendModData(Mod.instance, InternalNetMessages.SyncRandom_DTOR, seed);
+                NetHelper.SendModData(MctMod.instance, InternalNetMessages.SyncRandom_DTOR, seed);
 
             refs[GroupName]--;
 
@@ -176,7 +176,7 @@ namespace PoroCYon.MCT.Net
         void Sync()
         {
             if (Main.netMode != 0)
-                NetHelper.SendModData(Mod.instance, InternalNetMessages.SyncRandom_Sync, seed);
+                NetHelper.SendModData(MctMod.instance, InternalNetMessages.SyncRandom_Sync, seed);
         }
 
         internal static void Reset()

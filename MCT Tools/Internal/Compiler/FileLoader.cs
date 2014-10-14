@@ -4,13 +4,14 @@ using System.IO;
 using System.Linq;
 using Microsoft.Build.Framework;
 using LitJson;
+using PoroCYon.Extensions;
 using PoroCYon.MCT.Internal;
 using PoroCYon.MCT.Tools.Compiler;
-using PoroCYon.Extensions;
+using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class FileLoader(ModCompiler mc) : CompilerPhase(mc)
+	class FileLoader(ModCompiler mc) : CompilerPhase(mc)
     {
         /// <summary>
         /// Loads JSON and other files from a mod's source folder.
@@ -57,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 }
 
                 string
-                    fileName = Path.GetFileName(s),
+                    fileName         = Path.GetFileName(s),
                     relativeFileName = s.Substring(directory.Length + 1).Replace('\\', '/');
 
                 if (s.EndsWith(".json"))
@@ -97,7 +98,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (modInfo.IsEmpty)
             {
-                modInfo = new JsonFile(String.Empty, JsonMapper.ToObject(CommonToolUtilities.CreateDefaultModInfo(Path.GetDirectoryName(directory))));
+                modInfo = new JsonFile(String.Empty, ModCompile.GenerateBlankModInfo(Path.GetDirectoryName(directory)));
 
                 errors.Add(new CompilerError(Building)
                 {
@@ -107,8 +108,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 });
             }
 
-            jsons.Insert(0, modInfo);
-            jsons.Insert(1, modOptions); // check if it's null later
+            jsons.Insert(0, modInfo    );
+            jsons.Insert(1, modOptions ); // check if it's null later
             jsons.Insert(2, craftGroups); // same here
 
             return new Tuple<List<JsonFile>, Dictionary<string, byte[]>, List<CompilerError>>(jsons, files, errors);
