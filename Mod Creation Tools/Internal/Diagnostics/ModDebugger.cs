@@ -21,11 +21,22 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 	{
 		const string DEBUG_SWITCH = "DEBUG";
 
+        static bool? cachedShouldDebug = null;
+
 		readonly static string
+            DEBUG_SWITCH_INST   = DEBUG_SWITCH,
 			DEBUG_HELP_TEXT     = "-DEBUG <internal mod name> <path to assembly>.",
             INVALID_ARGS_SYNTAX = "Incorrect DEBUG arguments." + Environment.NewLine +
 								   "The correct syntax is: " + DEBUG_HELP_TEXT + Environment.NewLine +
 								   "Eg. -DEBUG \"Me.MyMod\" \"C:\\Path\\To\\Assembly.dll\".";
+
+        internal static bool ShouldDebug
+        {
+            get
+            {
+                return cachedShouldDebug ?? (cachedShouldDebug = Environment.CommandLine.Split(' ').Any(s => s.TrimStart('-', '/').ToUpperInvariant() == DEBUG_SWITCH_INST)).Value;
+            }
+        }
 
 		static string TrimArg(string arg)
 		{
@@ -72,7 +83,7 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 		{
 			List<Tuple<string, string>> ret = new List<Tuple<string, string>>();
 
-			if (!Debugger.IsAttached)
+			if (!Debugger.IsAttached || !ShouldDebug)
 				return ret;
 
 			string[] args = Environment.GetCommandLineArgs();
@@ -81,8 +92,7 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 				switch (TrimArg(args[i].ToUpperInvariant()))
 				{
 					case DEBUG_SWITCH:
-
-						if (i == args.Length -1)
+						if (i == args.Length - 1)
 							throw new FormatException(INVALID_ARGS_SYNTAX);
 						if (i == args.Length - 2)
 						{
@@ -96,7 +106,6 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 						}
 						else
 							ret.Add(new Tuple<string, string>(args[++i], args[++i])); // built-in tuples would be nice...
-
 						break;
 				}
 
@@ -105,7 +114,7 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 
 		internal static void DebugMod (Tuple<string, string> modIdent)
 		{
-			if (!Debugger.IsAttached)
+			if (!Debugger.IsAttached || !ShouldDebug)
 				return;
 
 			string
@@ -129,6 +138,9 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 		}
 		internal static void DebugMods()
 		{
+            if (!ShouldDebug)
+                return;
+
 			if (!Debugger.IsAttached)
 			{
 				TConsole.Track("NO DEBUGGER ATTACHED", Color.Red, "MCT Debugger", 900);

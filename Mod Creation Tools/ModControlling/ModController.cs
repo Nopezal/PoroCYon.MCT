@@ -179,6 +179,11 @@ namespace PoroCYon.MCT.ModControlling
 			@base.SetTimesLoaded(@base.GetTimesLoaded() + 1);
 		}
 
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="mod">The mod to load.</param>
+        /// <param name="base">The <see cref="ModBase" /> of the mod to load.</param>
 		public static void LoadMod(Mod mod, ModBase @base)
 		{
 			mod.enabled = true;
@@ -187,7 +192,13 @@ namespace PoroCYon.MCT.ModControlling
 			@base.mod = mod;
 
 			LoadModInternal(mod, @base);
-		}
+        }
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="mod">The mod to load.</param>
+        /// <param name="base">The <see cref="ModBase" /> of the mod to load.</param>
+        /// <param name="classes">The ModX classes that belong to the mod.</param>
         public static void LoadMod(Mod mod, ModBase @base, ModClasses classes)
 		{
 			mod.enabled = true;
@@ -199,6 +210,14 @@ namespace PoroCYon.MCT.ModControlling
 
 			LoadMod(mod, @base);
 		}
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="basePath">The base path of the mod.</param>
+        /// <param name="info">The ModInfo JSON representation of the mod.</param>
+        /// <param name="icon">The icon of the mod.</param>
+        /// <param name="base">The <see cref="ModBase" /> of the mod to load.</param>
+        /// <param name="classes">The ModX classes that belong to the mod.</param>
 		public static void LoadMod(string   basePath, JsonData info, Texture2D icon, ModBase @base, ModClasses classes)
 		{
 			Mod m = new Mod(basePath);
@@ -209,7 +228,13 @@ namespace PoroCYon.MCT.ModControlling
 			LoadClasses(m);
 
 			LoadMod(m, @base, classes);
-		}
+        }
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="asm">The <see cref="Assembly" /> of the mod.</param>
+        /// <param name="info">The ModInfo JSON representation of the mod.</param>
+        /// <param name="icon">The icon of the mod.</param>
 		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon)
 		{
 			Mod m = new Mod(asm.Location);
@@ -222,7 +247,14 @@ namespace PoroCYon.MCT.ModControlling
 			LoadClasses(m);
 
 			LoadMod(m, @base);
-		}
+        }
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="asm">The <see cref="Assembly" /> of the mod.</param>
+        /// <param name="info">The ModInfo JSON representation of the mod.</param>
+        /// <param name="icon">The icon of the mod.</param>
+        /// <param name="classes">The ModX classes that belong to the mod.</param>
 		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon, ModClasses classes)
 		{
 			Mod m = new Mod(asm.Location);
@@ -235,7 +267,15 @@ namespace PoroCYon.MCT.ModControlling
 			ApplyClasses(m, classes);
 
 			LoadMod(m, @base);
-		}
+        }
+        /// <summary>
+        /// Loads a mod.
+        /// </summary>
+        /// <param name="asm">The <see cref="Assembly" /> of the mod.</param>
+        /// <param name="info">The ModInfo JSON representation of the mod.</param>
+        /// <param name="icon">The icon of the mod.</param>
+        /// <param name="classes">The ModX classes that belong to the mod.</param>
+        /// <param name="base">The <see cref="ModBase" /> of the mod to load.</param>
 		public static void LoadMod(Assembly asm     , JsonData info, Texture2D icon, ModClasses classes, ModBase @base)
 		{
 			Mod m = new Mod(asm.Location);

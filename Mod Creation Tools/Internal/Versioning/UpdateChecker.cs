@@ -28,11 +28,9 @@ namespace PoroCYon.MCT.Internal.Versioning
             {
                 XmlNode downloaded = GetXml().ChildNodes[1].ChildNodes[0];
 
-                uint version_num = UInt32.Parse(downloaded.Attributes["Number"].Value);
-                //string version_str = downloaded.Attributes["String"].Value;
                 Version version = new Version(downloaded.Attributes["Version"].Value);
 
-                return LastUpdateAvailable = (version_num > MctConstants.VERSION_NUM /*|| version_str != MctConstants.VERSION_STRING*/ || version > MctConstants.VERSION);
+                return LastUpdateAvailable = version > MctConstants.VERSION;
             }
             catch
             {

@@ -318,8 +318,8 @@ namespace PoroCYon.MCT.Installer
                 return "You do not have tAPI installed";
 
             Assembly a = Assembly.LoadFrom(baseFolder + "\\tAPI.exe"); // no try/catch needed, already checked at previous if-statement
-            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 9u) // not r9
-                return "You do not have tAPI r9 installed";
+            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 11u) // not r11
+                return "You do not have tAPI r11 installed";
 
             #region Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()
             Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()

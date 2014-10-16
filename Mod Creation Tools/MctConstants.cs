@@ -12,14 +12,10 @@ namespace PoroCYon.MCT
         /// <summary>
         /// The version of the MCT as a string
         /// </summary>
-        public const string VERSION_STRING = "2.0.0.0";
+        public const string VERSION_STRING = "2.0.0.1";
         /// <summary>
         /// The version of the MCT as a <see cref="System.Version"/>
         /// </summary>
         public readonly static Version VERSION = new Version(VERSION_STRING);
-        /// <summary>
-        /// The version number of the MCT
-        /// </summary>
-        public const uint VERSION_NUM = 4u;
     }
 }

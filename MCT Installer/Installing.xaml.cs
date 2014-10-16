@@ -63,7 +63,7 @@ namespace PoroCYon.MCT.Installer
                         "PoroCYon.MCT.dll",            "PoroCYon.MCT.xml",
                         "MCT Tools.exe",               "MCT Tools.xml",
 
-                        "PoroCYon.MCT.tapi"
+                        //"PoroCYon.MCT.tapi"
                     };
 
                     if (ToInstall.FSharpCompiler)
@@ -236,20 +236,25 @@ namespace PoroCYon.MCT.Installer
 
                             File.WriteAllBytes(folder + Path.GetFileName(t.Item1), t.Item2);
                         }
-                        else if (t.Item1.EndsWith(".tapi"))
-                        {
-                            //if (!Directory.Exists(steamDir + "Temp"))
-                            //    Directory.CreateDirectory(steamDir + "Temp");
-                            //File.WriteAllBytes(steamDir + "Temp\\PoroCYon.MCT.dll", t.Item2);
-                            string dir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\";
+                        //else if (t.Item1.EndsWith(".tapi"))
+                        //{
+                        //    //if (!Directory.Exists(steamDir + "Temp"))
+                        //    //    Directory.CreateDirectory(steamDir + "Temp");
+                        //    //File.WriteAllBytes(steamDir + "Temp\\PoroCYon.MCT.dll", t.Item2);
+                        //    string dir = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Local\\";
 
-                            if (!Directory.Exists(dir))
-                                Directory.CreateDirectory(dir);
+                        //    if (!Directory.Exists(dir))
+                        //        Directory.CreateDirectory(dir);
 
-                            File.WriteAllBytes(dir + Path.GetFileName(t.Item1), t.Item2);
-                        }
-                        else
+                        //    File.WriteAllBytes(dir + Path.GetFileName(t.Item1), t.Item2);
+                        //}
+                        //else
                             File.WriteAllBytes(steamDir + t.Item1, t.Item2);
+
+                        if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Local\\PoroCYon.MCT.tapi"))
+                            File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Local\\PoroCYon.MCT.tapi");
+                        if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\PoroCYon.MCT.tapi"))
+                            File.Delete(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Unsorted\\PoroCYon.MCT.tapi");
 
                         UpdateProgress(100d / (total / (i + 1d)), null);
 

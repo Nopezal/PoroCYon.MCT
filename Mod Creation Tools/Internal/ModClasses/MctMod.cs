@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Windows;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using PoroCYon.Extensions;
@@ -10,7 +11,6 @@ using TAPI;
 using PoroCYon.MCT.Input;
 using PoroCYon.MCT.Internal.Diagnostics;
 using PoroCYon.MCT.Internal.Versioning;
-using PoroCYon.MCT.Net;
 using PoroCYon.MCT.UI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
@@ -98,29 +98,37 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.OnAllModsLoaded();
 
-			ModDebugger.DebugMods();
-
-            // remove temporary modbase instances
-            //for (int i = 0; i < ModDebugger.tempBases.Count; i++)
-            //    Mods.modBases.Remove(ModDebugger.tempBases[i]);
-
-            //ModDebugger.tempBases.Clear();
-
-            // insert settings menu button in the Options menu
-            Menu.menuPages.Add("MCT:Settings", new SettingsPage());
-
-            MenuAnchor aOptions = new MenuAnchor()
+            try
             {
-                anchor        = new Vector2(0.5f, 0f  ),
-                offset        = new Vector2(315f, 200f),
-                offset_button = new Vector2(0f  , 50f )
-            };
+                if (ModDebugger.ShouldDebug)
+                    ModDebugger.DebugMods();
 
-            Menu.menuPages["Options"].anchors.Add(aOptions);
-            Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
+                // remove temporary modbase instances
+                //for (int i = 0; i < ModDebugger.tempBases.Count; i++)
+                //    Mods.modBases.Remove(ModDebugger.tempBases[i]);
 
-            if (UpdateChecker.GetIsUpdateAvailable())
-                UpdateBoxInjector.Inject();
+                //ModDebugger.tempBases.Clear();
+
+                // insert settings menu button in the Options menu
+                Menu.menuPages.Add("MCT:Settings", new SettingsPage());
+
+                MenuAnchor aOptions = new MenuAnchor()
+                {
+                    anchor = new Vector2(0.5f, 0f),
+                    offset = new Vector2(315f, 200f),
+                    offset_button = new Vector2(0f, 50f)
+                };
+
+                Menu.menuPages["Options"].anchors.Add(aOptions);
+                Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
+
+                if (UpdateChecker.GetIsUpdateAvailable())
+                    UpdateBoxInjector.Inject();
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show("An unexpected exception occured in the MCT internally, please show this to PoroCYon:" + Environment.NewLine + e, "MCT internal error");
+            }
         }
 
         internal static void  ReadSettings(Stream s)
