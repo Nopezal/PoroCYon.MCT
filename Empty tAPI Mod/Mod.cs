@@ -3,21 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
-using PoroCYon.XnaExtensions;
+using PoroCYon.Extensions;
+using PoroCYon.Extensions.Xna;
 using Terraria;
 using TAPI;
 using PoroCYon.MCT;
 
 namespace $safeprojectname$
 {
-    public sealed class Mod : ModBase
+    public sealed class MyMod : ModBase
     {
-        public Mod()
-            : base()
-        {
-            
-        }
-
         public override void OnLoad()
         {
             base.OnLoad();

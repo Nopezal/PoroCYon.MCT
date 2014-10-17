@@ -34,6 +34,15 @@
     <Reference Include="Microsoft.Xna.Framework.Game, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Graphics, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
     <Reference Include="Microsoft.Xna.Framework.Xact, Version=4.0.0.0, Culture=neutral, PublicKeyToken=842cf8be1de50553, processorArchitecture=x86" />
+    <Reference Include="PoroCYon.Extensions">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="PoroCYon.Extensions.IL">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.Extensions.IL.dll</HintPath>
+    </Reference>
+    <Reference Include="PoroCYon.Extensions.Xna">
+      <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.Extensions.Xna.dll</HintPath>
+    </Reference>
     <Reference Include="PoroCYon.MCT">
       <HintPath>..\..\..\..\..\Program Files (x86)\Steam\steamapps\Common\Terraria\PoroCYon.MCT.dll</HintPath>
     </Reference>

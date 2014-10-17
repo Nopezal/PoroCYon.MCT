@@ -33,11 +33,13 @@ namespace PoroCYon.MCT.Tools
                 {
                     "help", () =>
                     {
-                        Console.WriteLine("BUILD\t\tBuilds a tAPI mod from a source folder or a managed .dll file.");
-                        Console.WriteLine("DECOMPILE\t\tDecompiles a .tapi or .tapimod file");
-                        Console.WriteLine("HELP\t\tDisplays this text. H or ? can also be used for this.");
+                        Console.WriteLine("BUILD <tobuild>\t\tBuilds a tAPI mod from a source folder or a managed .dll file. COMPILE can be used, too.");
+                        Console.WriteLine("DECOMPILE <todecomp>\t\tDecompiles a .tapi or .tapimod file");
+                        Console.WriteLine("HELP\t\tDisplays this text. H or ? can also be used for this. H or ? can be used, too.");
+                        Console.WriteLine("INVARIANT\t\tSwitches to the Invariant Culture. INV can be used, too.");
+                        Console.WriteLine("NOBANNER\t\tDon't display the 'Mod Creation Tools ...' banner. BANNER can be used, too.");
                         Console.WriteLine();
-                        Console.WriteLine("\t\tYou can use HELP, H or ? for any of these commands for arguments info, except for HELP.");
+                        Console.WriteLine("Use '<CommandName>' /? to display extra information for that command (except for HELP, INVARIANT and NOBANNER).");
                     }
                 },
                 #endregion
@@ -51,7 +53,7 @@ namespace PoroCYon.MCT.Tools
                 },
                 #endregion
 
-                { "banner"  , () => suppressBanner = !suppressBanner }
+                { "banner", () => suppressBanner = !suppressBanner }
             };
 
             Commands.Add("?"        , Commands["help"  ]);
@@ -68,6 +70,13 @@ namespace PoroCYon.MCT.Tools
                         WriteBanner("mod compiler");
 
                         int argNum = 0;
+
+                        if (args.Length <= argNum)
+                        {
+                            Console.WriteLine("Not enough arguments. See the help info.");
+
+                            return;
+                        }
 
                         if (WriteHelp(args[argNum], "BUILD <verbosity?=Quiet> <mod folder/dll file>" +
                                 "\tPossible values for 'verbosity' flag: Quiet, Minimal, Normal, Detailed, Diagnostic. All values are case-insensitive."))
@@ -91,6 +100,13 @@ namespace PoroCYon.MCT.Tools
                             }
                         }
 
+                        if (args.Length <= argNum)
+                        {
+                            Console.WriteLine("Not enough arguments. See the help info.");
+
+                            return;
+                        }
+
                         ModCompiler compiler = new ModCompiler(new ConsoleMctLogger(verbosity));
 
                         if (Debugger.IsAttached)
@@ -112,6 +128,13 @@ namespace PoroCYon.MCT.Tools
                 {
                     "decompile", (args) =>
                     {
+                        if (args.Length <= 0)
+                        {
+                            Console.WriteLine("Not enough arguments. See the help info.");
+
+                            return;
+                        }
+
                         string path = args[0];
 
                         WriteBanner("mod decompiler");
@@ -138,6 +161,15 @@ namespace PoroCYon.MCT.Tools
                 {
                     "port", (args) =>
                     {
+                        if (args.Length <= 0)
+                        {
+                            Console.WriteLine("Not enough arguments. See the help info.");
+
+                            return;
+                        }
+
+                        Console.Error.WriteLine("WARNING: NOT PORTED TO r11!");
+
                         string file = args[0];
 
                         WriteBanner("file porter");

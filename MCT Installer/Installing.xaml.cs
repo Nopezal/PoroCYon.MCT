@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
 using System.IO;
 using System.Net;
@@ -31,11 +30,11 @@ namespace PoroCYon.MCT.Installer
 
             finishedDownloading = false;
 
-            AquireProgress.ValueChanged += (s, e) => AquireProgressPercent.Text = (int)AquireProgress.Value + "%";
-            ApplyProgress .ValueChanged += (s, e) => ApplyProgressPercent .Text = (int)ApplyProgress .Value + "%";
+            AcquireProgress.ValueChanged += (s, e) => AcquireProgressPercent.Text = (int)AcquireProgress.Value + "%";
+            ApplyProgress  .ValueChanged += (s, e) => ApplyProgressPercent  .Text = (int)ApplyProgress  .Value + "%";
 
-            #region aquire
-            Thread aquire = new Thread(() =>
+            #region acquire
+            Thread acquire = new Thread(() =>
             {
                 try
                 {
@@ -44,9 +43,9 @@ namespace PoroCYon.MCT.Installer
                         Dispatcher.Invoke(((Action)delegate
                         {
                             if (procent >= 0d && procent <= 100d)
-                                AquireProgress.Value = procent;
+                                AcquireProgress.Value = procent;
                             if (!String.IsNullOrEmpty(text))
-                                AquireProgressText.Text = "Aquiring: " + text;
+                                AcquireProgressText.Text = "Aquiring: " + text;
                         }), DispatcherPriority.Render);
                     };
 
@@ -115,8 +114,8 @@ namespace PoroCYon.MCT.Installer
                     Program.DisplayError(e);
                 }
             });
-            aquire.SetApartmentState(ApartmentState.STA);
-            aquire.Start();
+            acquire.SetApartmentState(ApartmentState.STA);
+            acquire.Start();
             #endregion
 
             #region envvar
@@ -200,7 +199,7 @@ namespace PoroCYon.MCT.Installer
                                 if ((VsVersions.ChosenVersions & v) == 0)
                                     continue;
 
-                                string version = "";
+                                string version = null;
                                 switch (v)
                                 {
                                     case VsVersion.VCSExpress:
@@ -248,7 +247,7 @@ namespace PoroCYon.MCT.Installer
 
                         //    File.WriteAllBytes(dir + Path.GetFileName(t.Item1), t.Item2);
                         //}
-                        //else
+                        else
                             File.WriteAllBytes(steamDir + t.Item1, t.Item2);
 
                         if (File.Exists(Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\My Games\\Terraria\\tAPI\\Mods\\Local\\PoroCYon.MCT.tapi"))
