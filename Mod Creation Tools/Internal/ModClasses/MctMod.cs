@@ -53,8 +53,11 @@ namespace PoroCYon.MCT.Internal.ModClasses
         {
             base.OnLoad();
 
-            (MctUI.WhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
-            (MctUI.InversedWhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 255) });
+            if (!Main.dedServ)
+            {
+                (MctUI.WhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 0) });
+                (MctUI.InversedWhitePixel = new Texture2D(API.main.GraphicsDevice, 1, 1)).SetData(new Color[1] { new Color(255, 255, 255, 255) });
+            }
 
             instance = this;
 
@@ -103,11 +106,8 @@ namespace PoroCYon.MCT.Internal.ModClasses
                 if (ModDebugger.ShouldDebug)
                     ModDebugger.DebugMods();
 
-                // remove temporary modbase instances
-                //for (int i = 0; i < ModDebugger.tempBases.Count; i++)
-                //    Mods.modBases.Remove(ModDebugger.tempBases[i]);
-
-                //ModDebugger.tempBases.Clear();
+                if (Main.dedServ)
+                    return;
 
                 // insert settings menu button in the Options menu
                 Menu.menuPages.Add("MCT:Settings", new SettingsPage());

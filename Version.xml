@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="5" Version="2.0.0.2" String="2.0.0.2" />
+  <CurrentVersion Number="5" Version="2.0.0.3" String="2.0.0.3" />
   
   <Changelog>
+    <Release Version="2.0.0.3">
+      <Change>Fixed even more bugs, related to dedicated server stuff.</Change>
+    </Release>
     <Release Version="2.0.0.2">
       <Change>Fixed more hidden bugs.</Change>
     </Release>
