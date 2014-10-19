@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="5" Version="2.0.0.3" String="2.0.0.3" />
+  <CurrentVersion Number="5" Version="2.0.0.4" String="2.0.0.4" />
   
   <Changelog>
+    <Release Version="2.0.0.4">
+      <Change>Enhanced the type checker of the mod compiler a bit.</Change>
+    </Release>
     <Release Version="2.0.0.3">
       <Change>Fixed even more bugs, related to dedicated server stuff.</Change>
     </Release>

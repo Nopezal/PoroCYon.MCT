@@ -452,7 +452,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         }
         CompilerError CheckTypeExists(EntityValidator entity)
         {
-            if (!entity.hasCode || entity.code == null) // code not specified in JSON
+            if (entity.codeDefaultValue)
                 return null;
 
             if (Building.Assembly.GetType(entity.code, false, false) == null)
@@ -609,6 +609,13 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         {
             List<CompilerError> errors = new List<CompilerError>();
 
+            // type references:
+            // * buff (modbuff)
+            // * item (moditem)
+            // * npc  (modnpc)
+            // * proj (modprojectile)
+            // * tile (modtile, modtiletype)
+
             // buffs
             for (int i = 0; i < Building.buffs.Count; i++)
                 errors.Add(CheckTypeExists(Building.buffs[i]));
@@ -631,7 +638,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             return errors;
         }
-        List<CompilerError> CheckBiomes()
+        List<CompilerError> CheckBiomes   ()
         {
             List<CompilerError> errors = new List<CompilerError>();
 

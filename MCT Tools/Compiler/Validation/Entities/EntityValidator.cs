@@ -16,14 +16,14 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public string displayName;
         public string internalName;
 
-        internal bool hasCode = false;
-
         // appearance
         public string texture = String.Empty;
         public int[] size = new int[2] { 16, 16 };
         public float scale = 1f;
         public int[] colour = new int[4] { 255, 255, 255, 0 };
 #pragma warning restore 1591
+
+        internal bool codeDefaultValue = false;
 
         /// <summary>
         /// Base class field validation.
@@ -40,15 +40,18 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
 
-            hasCode = json.Json.Has("code");
-            AddIfNotNull(SetJsonValue(json, "code", ref code, baseType + "." + Defs.ParseName(internalName)), errors);
-            if (code != null)
+            AddIfNotNull(SetJsonValue(json, "code", ref code, null), errors);
+
+            if (code == null)
             {
-                if (code.Contains(':'))
-                    code = code.Replace(':', '.');
-                else
-                    code = Building.Info.internalName + "." + code;
+                code = Defs.ParseName(Building.Info.internalName) + "." + baseType + "." + Defs.ParseName(internalName);
+
+                codeDefaultValue = true;
             }
+            else if (code.Contains(':'))
+                code = code.Replace(':', '.');
+            else
+                code = Defs.ParseName(Building.Info.internalName) + "." + code;
 
             string r = Path.ChangeExtension(json.Path.Substring(Building.OriginPath.Length + 1).Replace('\\', '/'), null);
             AddIfNotNull(SetJsonValue(json, "texture", ref texture, r), errors);
