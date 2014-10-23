@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Content
     /// <summary>
     /// Common parameter values for ObjectLoader methods
     /// </summary>
-    public class LoadParameters
+    public struct LoadParameters
     {
         /// <summary>
         /// The <see cref="TAPI.ModBase"/> of the parameters
@@ -51,7 +51,7 @@ namespace PoroCYon.MCT.Content
     /// <summary>
     /// Parameter values for armor items
     /// </summary>
-    public class ArmorParameters
+    public struct ArmorParameters
     {
         /// <summary>
         /// The texture of the helmet. null for no helmet.
@@ -88,7 +88,7 @@ namespace PoroCYon.MCT.Content
     /// <summary>
     /// Retur values for armor items
     /// </summary>
-    public class ArmorReturnValues
+    public struct ArmorReturnValues
     {
         /// <summary>
         /// The ID of the helmet. -1 for no helmet.
@@ -145,14 +145,14 @@ namespace PoroCYon.MCT.Content
         /// The frame height of the <see cref="Terraria.Tile" />
         /// </summary>
         public int FrameHeight;
-        /// <summary>
-        /// The amoutn of columns on the tile sheet
-        /// </summary>
-        public int SheetColumns;
-        /// <summary>
-        /// The amoutn of rows on the tile sheet
-        /// </summary>
-        public int SheetRows;
+        ///// <summary>
+        ///// The amoutn of columns on the tile sheet
+        ///// </summary>
+        //public int SheetColumns;
+        ///// <summary>
+        ///// The amoutn of rows on the tile sheet
+        ///// </summary>
+        //public int SheetRows;
         /// <summary>
         /// The chance the tile has to sparkle
         /// </summary>
@@ -575,7 +575,7 @@ namespace PoroCYon.MCT.Content
     /// <summary>
     /// Parameter values for Buffs
     /// </summary>
-    public class BuffParameters
+    public struct BuffParameters
     {
         /// <summary>
         /// The icon texture of the Buff to add

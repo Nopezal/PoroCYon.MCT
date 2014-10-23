@@ -125,7 +125,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (!name.Contains(':'))
                     name = "Vanilla:" + name;
 
-                if (!BuffDef.name.Any(kvp => kvp.Value == name) && !Building.buffs.Any(b => b.internalName == name))
+                if (!BuffDef.byName.Any(kvp => kvp.Key == name) && !Building.buffs.Any(b => b.internalName == name))
                 {
                     string internalName = name.Split(':')[0];
 
@@ -384,7 +384,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (name == "Adamantite Forge" || name == "Titanium Forge")
                     name = "Adamantite or Titanium Forge";
 
-                if (!TileDef.type.Any(kvp => kvp.Key == name) && !Building.tiles.Any(t => t.internalName == name))
+                if (!TileDef.byName.Any(kvp => kvp.Key == name) && !Building.tiles.Any(t => t.internalName == name))
                     return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),
@@ -421,7 +421,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                 if (String.IsNullOrEmpty(name)) // not defined
                     return null;
 
-                if (!TileDef.wall.Any(kvp => kvp.Key == name) && !Building.walls.Any(w => w.internalName == name))
+                if (!TileDef.wallByName.Any(kvp => kvp.Key == name) && !Building.walls.Any(w => w.internalName == name))
                     return new CompilerError(Building)
                     {
                         Cause = new ObjectNotFoundException(name),

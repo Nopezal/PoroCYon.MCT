@@ -1,17 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using PoroCYon.MCT.Net;
+using Terraria;
 using TAPI;
+using PoroCYon.MCT.Net;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
     sealed class MNet : ModNet
     {
         [CallPriority(Single.PositiveInfinity)]
-        public override void NetReceive(BinBuffer bb, int msg)
+        public override void NetReceive(BinBuffer bb, int msg, MessageBuffer buffer)
         {
-            base.NetReceive(bb, msg);
+            base.NetReceive(bb, msg, buffer);
 
             switch ((InternalNetMessages)msg)
             {

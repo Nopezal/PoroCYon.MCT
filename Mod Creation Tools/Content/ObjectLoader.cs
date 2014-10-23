@@ -49,57 +49,54 @@ namespace PoroCYon.MCT.Content
             //i.displayName = param.Name;
 
             #region Aparam
-            if (Aparam != null)
+            if (Aparam.HeadTexture != null)
             {
-                if (Aparam.HeadTexture != null)
+                i.headSlot = ItemDef.headSlotNextType++;
+
+                if (Item.headType.ContainsKey(i.headSlot))
+                    Item.headType[i.headSlot] = i.type;
+                else
+                    Item.headType.Add(i.headSlot, i.type);
+
+                if (!Main.dedServ)
+                    Main.armorHeadTexture.Add(i.headSlot, Aparam.HeadTexture);
+
+                ret.HeadID = i.headSlot;
+            }
+
+            if (Aparam.BodyTexture != null)
+            {
+                i.bodySlot = ItemDef.bodySlotNextType++;
+
+                if (Item.bodyType.ContainsKey(i.bodySlot))
+                    Item.bodyType[i.bodySlot] = i.type;
+                else
+                    Item.bodyType.Add(i.bodySlot, i.type);
+
+                if (!Main.dedServ)
                 {
-                    i.headSlot = ItemDef.headSlotNextType++;
+                    Main.armorHeadTexture.Add(i.bodySlot, Aparam.BodyTexture);
 
-                    if (Item.headType.ContainsKey(i.headSlot))
-                        Item.headType[i.headSlot] = i.type;
-                    else
-                        Item.headType.Add(i.headSlot, i.type);
-
-                    if (!Main.dedServ)
-                        Main.armorHeadTexture.Add(i.headSlot, Aparam.HeadTexture);
-
-                    ret.HeadID = i.headSlot;
+                    if (Aparam.FemaleBodyTexture != null)
+                        Main.femaleBodyTexture.Add(i.bodySlot, Aparam.FemaleBodyTexture);
                 }
 
-                if (Aparam.BodyTexture != null)
-                {
-                    i.bodySlot = ItemDef.bodySlotNextType++;
+                ret.BodyID = i.bodySlot;
+            }
 
-                    if (Item.bodyType.ContainsKey(i.bodySlot))
-                        Item.bodyType[i.bodySlot] = i.type;
-                    else
-                        Item.bodyType.Add(i.bodySlot, i.type);
+            if (Aparam.LegsTexture != null)
+            {
+                i.legSlot = ItemDef.legSlotNextType++;
 
-                    if (!Main.dedServ)
-                    {
-                        Main.armorHeadTexture.Add(i.bodySlot, Aparam.BodyTexture);
+                if (Item.legType.ContainsKey(i.legSlot))
+                    Item.legType[i.legSlot] = i.type;
+                else
+                    Item.legType.Add(i.legSlot, i.type);
 
-                        if (Aparam.FemaleBodyTexture != null)
-                            Main.femaleBodyTexture.Add(i.bodySlot, Aparam.FemaleBodyTexture);
-                    }
+                if (!Main.dedServ)
+                    Main.armorLegTexture.Add(i.legSlot, Aparam.LegsTexture);
 
-                    ret.BodyID = i.bodySlot;
-                }
-
-                if (Aparam.LegsTexture != null)
-                {
-                    i.legSlot = ItemDef.legSlotNextType++;
-
-                    if (Item.legType.ContainsKey(i.legSlot))
-                        Item.legType[i.legSlot] = i.type;
-                    else
-                        Item.legType.Add(i.legSlot, i.type);
-
-                    if (!Main.dedServ)
-                        Main.armorLegTexture.Add(i.legSlot, Aparam.LegsTexture);
-
-                    ret.LegsID = i.legSlot;
-                }
+                ret.LegsID = i.legSlot;
             }
             #endregion
 
@@ -188,7 +185,8 @@ namespace PoroCYon.MCT.Content
             }
 
             // helk
-            TileDef.name[type] = param.ModBase.mod.InternalName + ":" + param.Name;
+            TileDef.byType[type] = param.ModBase.mod.InternalName + ":" + param.Name;
+            TileDef.byName[param.ModBase.mod.InternalName + ":" + param.Name] = (ushort)type;
             TileDef.displayName[type] = param.Name;
 
             TileDef.width[type] = Tparam.Width;
@@ -246,7 +244,8 @@ namespace PoroCYon.MCT.Content
             if (!Main.dedServ)
                 Main.wallTexture[type] = texture;
 
-            TileDef.wall[param.ModBase.mod.InternalName + ":" + param.Name] = (ushort)type;
+            TileDef.wallByName[param.ModBase.mod.InternalName + ":" + param.Name] = (ushort)type;
+            TileDef.wallByType[(ushort)type] = param.ModBase.mod.InternalName + ":" + param.Name;
         }
 
         /// <summary>
@@ -291,8 +290,8 @@ namespace PoroCYon.MCT.Content
 
 			BuffDef def = new BuffDef(param.ModBase);
 
-			BuffDef.name[type] = param.ModBase.mod.InternalName + ":" + param.Name;
-            BuffDef.type[param.ModBase.mod.InternalName + ":" + param.Name] = type;
+			BuffDef.byType[type] = param.ModBase.mod.InternalName + ":" + param.Name;
+            BuffDef.byName[param.ModBase.mod.InternalName + ":" + param.Name] = type;
 
 			if (!Main.dedServ)
 				Main.buffTexture[type] = Bparam.Texture;
