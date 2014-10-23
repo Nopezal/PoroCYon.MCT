@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="5" Version="2.0.0.5" String="2.0.0.5" />
+  <CurrentVersion Number="5" Version="2.0.1.0" String="2.0.1.0" />
   
   <Changelog>
+    <Release Version="2.0.1.0">
+      <Change>Fixed a bug that caused the MCT sometimes not being loaded at all (I hope).</Change>
+      <Change>PoroCYon.MCT is now an APIModBase.</Change>
+    </Release>
     <Release Version="2.0.0.5">
       <Change>Updated to r12.</Change>
     </Release>

@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Internal.Versioning
     static class UpdateChecker
     {
         internal static bool
-            CheckForUpdates = true,
+            CheckForUpdates     = true ,
             LastUpdateAvailable = false;
 
         static WebClient client = new WebClient();

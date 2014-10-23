@@ -1,4 +1,7 @@
-﻿using System;
+﻿
+#define USE_APIMODBASE
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -23,7 +26,12 @@ namespace PoroCYon.MCT.Internal.ModClasses
     }
 
     [GlobalMod]
-    sealed class MctMod : ModBase
+    sealed class MctMod :
+#if USE_APIMODBASE
+        APIModBase
+#else
+        ModBase
+#endif
     {
         internal readonly static string MCTDataFile = Main.SavePath + "\\MCT_Data.sav";
 
@@ -121,6 +129,14 @@ namespace PoroCYon.MCT.Internal.ModClasses
 
                 Menu.menuPages["Options"].anchors.Add(aOptions);
                 Menu.menuPages["Options"].buttons.Add(new MenuButton(0, "MCT Settings", "MCT:Settings").Where(mb => mb.SetAutomaticPosition(aOptions, 0)));
+
+#if !USE_APIMODBASE
+                Menu.menuPages["Mods Menu"].OnEntry += () =>
+                {
+                    Mods.mods    .Insert(0, mod);
+                    Mods.modsCopy.Insert(0, mod);
+                };
+#endif
 
                 if (UpdateChecker.GetIsUpdateAvailable())
                     UpdateBoxInjector.Inject();

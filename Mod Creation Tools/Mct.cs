@@ -10,7 +10,6 @@ using LitJson;
 using TAPI;
 using PoroCYon.MCT.Content;
 using PoroCYon.MCT.Internal;
-using PoroCYon.MCT.Internal.Diagnostics;
 using PoroCYon.MCT.Internal.ModClasses;
 using PoroCYon.MCT.ModControlling;
 using PoroCYon.MCT.ObjectModel;
@@ -25,6 +24,7 @@ namespace PoroCYon.MCT
     /// </summary>
     public static class Mct
     {
+        static bool inserted = false;
         /// <summary>
         /// Wether the MCT is initalized or not
         /// </summary>
@@ -41,17 +41,21 @@ namespace PoroCYon.MCT
 
             ModController.LoadMod(Assembly.GetExecutingAssembly(), JsonMapper.ToObject(ReadResource("ModInfo.json")), null, new ModClasses()
             {
-                Interfaces = new List<ModInterface>() { new MUI() },
+                Net = new MNet(),
 
-                GlobalItems = new List<ModItem>() { new MItem() },
-                GlobalNPCs = new List<ModNPC>() { new MNPC() },
-                GlobalProjs = new List<ModProjectile>() { new MProj() },
-                GlobalTiles = new List<ModTileType>() { new MTileType() },
+                Interfaces  = new List<ModInterface >() { new MUI() },
 
-                Players = new List<ModPlayer>() { new MPlayer() },
+                GlobalItems = new List<ModItem      >() { new MItem    () },
+                GlobalNPCs  = new List<ModNPC       >() { new MNPC     () },
+                GlobalProjs = new List<ModProjectile>() { new MProj    () },
+                GlobalTiles = new List<ModTileType  >() { new MTileType() },
+
+                Players  = new List<ModPlayer>() { new MPlayer() },
                 Prefixes = new List<ModPrefix>() { new MPrefix() },
-                Worlds = new List<ModWorld>() { new MWorld() }
+                Worlds   = new List<ModWorld >() { new MWorld () }
             }, new MctMod());
+
+            inserted = true;
 
             //Mod m = new Mod(Assembly.GetExecutingAssembly().Location);
             //m.enabled = true;
@@ -65,7 +69,7 @@ namespace PoroCYon.MCT
 
             //m.modBase.OnLoad();
         }
-        static void LoadData()
+        static void LoadData    ()
         {
             SyncedRandom.Reset();
 
@@ -80,7 +84,7 @@ namespace PoroCYon.MCT
         {
             MctUI.Uninit();
 
-            Invasion.invasions.Clear();
+            Invasion.invasions    .Clear();
             Invasion.invasionTypes.Clear();
 
             //ModDebugger.tempBases.Clear();
@@ -114,7 +118,8 @@ namespace PoroCYon.MCT
             {
                 Inited = true; // prevent stack overflow (onload -> init -> loaddebugmod -> onload -> ...) or things getting messed up by being loaded twice.
 
-                InsertMctMod();
+                if (!inserted)
+                    InsertMctMod();
 
                 LoadData();
             }

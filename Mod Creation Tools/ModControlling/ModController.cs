@@ -14,7 +14,7 @@ namespace PoroCYon.MCT.ModControlling
 	/// <summary>
 	/// Contains the global mod classes of a mod.
 	/// </summary>
-	public sealed class ModClasses
+	public struct ModClasses
 	{
 #pragma warning disable 1591
         public ModNet Net;
@@ -170,7 +170,8 @@ namespace PoroCYon.MCT.ModControlling
 		{
 			CheckModBaseAndInfo(mod, @base);
 
-			Mods.mods.Add(mod);
+			Mods.mods    .Add(mod);
+            Mods.modsCopy.Add(mod);
 
 			Setup(mod);
 
