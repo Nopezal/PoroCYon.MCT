@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using Microsoft.Xna.Framework;
 using Microsoft.Xna.Framework.Graphics;
 using Microsoft.Xna.Framework.Input;
+using PoroCYon.Extensions;
 using Terraria;
 using PoroCYon.MCT.ObjectModel;
 using PoroCYon.MCT.UI.Interface.Controls.Primitives;
@@ -121,6 +122,14 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get;
             set;
         }
+        /// <summary>
+        /// Gets or sets the default text of the <see cref="TextBox" />.
+        /// </summary>
+        public string DefaultText
+        {
+            get;
+            set;
+        }
 
         /// <summary>
         /// The text of the Textbox that does include the caret
@@ -159,8 +168,8 @@ namespace PoroCYon.MCT.UI.Interface.Controls
             get
             {
                 return new Rectangle((int)Position.X - 8, (int)Position.Y - 8,
-                    (int)(Scale.X * (Size.HasValue ? Size.Value.X : Font.MeasureString(TextWithCaret).X)) + 16,
-                    (int)(Scale.Y * (Size.HasValue ? Size.Value.Y : Font.MeasureString(TextWithCaret).Y)) + 16);
+                    (int)(Scale.X * (Size.HasValue ? Size.Value.X : Font.MeasureString(Text.IsEmpty() && !IsFocused ? DefaultText : TextWithCaret).X)) + 16,
+                    (int)(Scale.Y * (Size.HasValue ? Size.Value.Y : Font.MeasureString(Text.IsEmpty() && !IsFocused ? DefaultText : TextWithCaret).Y)) + 16);
             }
         }
 
@@ -317,7 +326,10 @@ namespace PoroCYon.MCT.UI.Interface.Controls
 
             DrawBackground(sb);
 
-            DrawOutlinedString(sb, Font, Text, Position + (Size.HasValue ? Size.Value / 2f - Font.MeasureString(Text) / 2f : Vector2.Zero), Colour);
+            if (!Text.IsEmpty() || IsFocused)
+                DrawOutlinedString(sb, Font, TextWithCaret, Position + (Size.HasValue ? Size.Value / 2f - Font.MeasureString(Text) / 2f : Vector2.Zero), Colour);
+            else
+                DrawOutlinedString(sb, Font, DefaultText  , Position + (Size.HasValue ? Size.Value / 2f - Font.MeasureString(Text) / 2f : Vector2.Zero), Color.Lerp(Colour, Color.Black, 0.4f));
         }
     }
 }

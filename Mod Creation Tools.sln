@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
-VisualStudioVersion = 14.0.22013.1
+VisualStudioVersion = 14.0.22129.1
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCT Library", "Mod Creation Tools\MCT Library.csproj", "{20D85F91-12D1-4653-A46F-E7BA53FEEC1C}"
 EndProject
@@ -15,7 +15,9 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DC660323-F51F-4B40-9C5A-AC75E77B51C1}"
 	ProjectSection(SolutionItems) = preProject
 		LICENSE = LICENSE
+		MCTT.psess = MCTT.psess
 		Older changelog.txt = Older changelog.txt
+		Performance1.psess = Performance1.psess
 		README.md = README.md
 		Version.xml = Version.xml
 	EndProjectSection
@@ -29,6 +31,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MCT Tools Tests", "MCT Tools Tests\MCT Tools Tests.csproj", "{FE3B641F-6D66-4C98-9EA8-5D8A455A57B5}"
 EndProject
 Global
+	GlobalSection(Performance) = preSolution
+		HasPerformanceSessions = true
+	EndGlobalSection
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Debug|Mixed Platforms = Debug|Mixed Platforms
@@ -89,12 +94,10 @@ Global
 		{48FE4F3B-8F10-485D-B725-CC42AD7E965E}.Release|Win32.ActiveCfg = Release|Any CPU
 		{48FE4F3B-8F10-485D-B725-CC42AD7E965E}.Release|x86.ActiveCfg = Release|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{D8010413-661D-4011-91DE-76EFFC13B394}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Debug|Win32.ActiveCfg = Debug|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Debug|x86.ActiveCfg = Debug|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{D8010413-661D-4011-91DE-76EFFC13B394}.Release|Any CPU.Build.0 = Release|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Release|Win32.ActiveCfg = Release|Any CPU
 		{D8010413-661D-4011-91DE-76EFFC13B394}.Release|x86.ActiveCfg = Release|Any CPU
