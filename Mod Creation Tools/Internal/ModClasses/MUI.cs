@@ -10,7 +10,6 @@ using PoroCYon.MCT.UI.Interface.Controls;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
-    [GlobalMod]
     sealed class MUI : ModInterface
     {
         sealed class PostInventoryLayer : InterfaceLayer
@@ -25,12 +24,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
             {
                 MctUI.Draw(sb, DrawCalled.PostDrawInventory);
             }
-        }
-
-        public MUI()
-            : base()
-        {
-
         }
 
         [CallPriority(Single.Epsilon)]

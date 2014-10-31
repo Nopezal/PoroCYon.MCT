@@ -8,10 +8,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
     [GlobalMod]
     sealed class MBuff : ModBuff
     {
-        public MBuff()
-            : base()
-        {
 
-        }
     }
 }

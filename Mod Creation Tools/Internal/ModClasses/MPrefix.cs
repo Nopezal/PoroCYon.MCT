@@ -9,10 +9,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
     [GlobalMod]
     sealed class MPrefix : ModPrefix
     {
-        public MPrefix()
-            : base()
-        {
 
-        }
     }
 }

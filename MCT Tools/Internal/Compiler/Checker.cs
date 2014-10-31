@@ -504,6 +504,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 		{
 			// item references:
 			// * item.recipes.items
+            // * item.tileWand
 			// * npc.drops.item
 			// * tile.drop
 			// * wall.drop
@@ -511,16 +512,24 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
 			List<CompilerError> errors = new List<CompilerError>();
 
-            // item.recipes.items
+            // item.tileWand, item.recipes.items
             for (int i = 0; i < Building.items.Count; i++)
+            {
+                AddIfNotNull(CheckItemExists(Building.items[i].tileWand, "field tileWand of Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
+
                 for (int j = 0; j < Building.items[i].recipes.Count; j++)
                     foreach (var kvp in Building.items[i].recipes[j].items)
                         AddIfNotNull(CheckItemExists(kvp.Key, "Recipe " + (j + 1) + " of Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
+            }
 
             // npc.drops.item
             for (int i = 0; i < Building.npcs.Count; i++)
                 for (int j = 0; j < Building.npcs[i].drops.Count; j++)
-                    AddIfNotNull(CheckItemExists(Building.npcs[i].drops[j].item, "Drop " + (j + 1) + " of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
+                    if (Building.npcs[i].drops[j].usesChoose)
+                        for (int k = 0; k < Building.npcs[i].drops[j].choose.Length; k++)
+                            AddIfNotNull(CheckItemExists(Building.npcs[i].drops[j].choose[k].item, "Choice " + (k + 1) + " in Drop " + (j + 1) + " of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
+                    else
+                        AddIfNotNull(CheckItemExists(Building.npcs[i].drops[j].item, "Drop " + (j + 1) + " of NPC " + Building.npcs[i].internalName, Building.npcs[i].internalName), errors);
 
             // tile.drop
             for (int i = 0; i < Building.tiles.Count; i++)
@@ -579,16 +588,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         {
             // tile references:
             // * item.createTile
-            // * item.tileWand
 
             List<CompilerError> errors = new List<CompilerError>();
 
             for (int i = 0; i < Building.items.Count; i++)
-            {
                 AddIfNotNull(CheckTileExists(Building.items[i].createTile, "Key 'createTile' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
-
-                AddIfNotNull(CheckTileExists(Building.items[i].tileWand  , "Key 'tileWand' in Item "   + Building.items[i].internalName, Building.items[i].internalName), errors);
-            }
 
             return errors;
         }
@@ -600,7 +604,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             List<CompilerError> errors = new List<CompilerError>();
 
             for (int i = 0; i < Building.items.Count; i++)
-                AddIfNotNull(CheckTileExists(Building.items[i].createWall, "Key 'createWall' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
+                AddIfNotNull(CheckWallExists(Building.items[i].createWall, "Key 'createWall' in Item " + Building.items[i].internalName, Building.items[i].internalName), errors);
 
             return errors;
         }

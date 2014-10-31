@@ -56,25 +56,25 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                     switch (r.Remove(index).ToLowerInvariant())
                     {
-                        case "buff":
+                        case "buffs":
                             obj = new Buff      (Compiler);
                             break;
-                        case "item":
+                        case "items":
                             obj = new Item      (Compiler);
                             break;
-                        case "npc":
+                        case "npcs":
                             obj = new NPC       (Compiler);
                             break;
-                        case "prefix":
+                        case "prefixes":
                             obj = new Prefix    (Compiler);
                             break;
-                        case "projectile":
+                        case "projectiles":
                             obj = new Projectile(Compiler);
                             break;
-                        case "tile":
+                        case "tiles":
                             obj = new Tile      (Compiler);
                             break;
-                        case "wall":
+                        case "walls":
                             obj = new Wall      (Compiler);
                             break;
 

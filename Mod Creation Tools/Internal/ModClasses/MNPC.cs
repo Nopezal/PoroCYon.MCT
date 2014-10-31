@@ -9,10 +9,6 @@ namespace PoroCYon.MCT.Internal.ModClasses
     [GlobalMod]
     sealed class MNPC : ModNPC
     {
-        public MNPC()
-            : base()
-        {
 
-        }
     }
 }

@@ -18,6 +18,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
             Warning = "MSBuild warning.",
 
 			Colon = ": ",
+            Exec = "EXEC",
 
 			BuildStarted   = "Build started: "  ,
 			ProjectStarted = "Project started: ",
@@ -31,6 +32,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
 
 			Message     = "Message: "     ,
             StatusEvent = "Status event: ";
+
+        readonly static Point EmptyPt = new Point(-1, -1);
 
         /// <summary>
         /// Gets the <see cref="MctLogger" /> that is collecting the log messages.
@@ -94,10 +97,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
                 {
                     new CompilerError(Compiler.building)
                     {
-                        FilePath = e.File,
+                        FilePath = e.File == Exec ? String.Empty : e.File,
                         IsWarning = false,
-                        LocationInFile = new Point(e.LineNumber, e.ColumnNumber),
-                        Message = ConcatStringBuilder(e.Code, Colon, e.Message, " (in project ", e.ProjectFile, ")")
+                        LocationInFile = e.File == Exec ? EmptyPt : new Point(e.LineNumber, e.ColumnNumber),
+                        Message = ConcatStringBuilder(e.Code, e.Message, " (in project ", e.ProjectFile, ")")
                     }
                 }).ToString()), Error);
             };
@@ -109,8 +112,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
                     {
                         FilePath = e.File,
                         IsWarning = true,
-                        LocationInFile = new Point(e.LineNumber, e.ColumnNumber),
-                        Message = ConcatStringBuilder(e.Code, Colon, e.Message, " (in project ", e.ProjectFile, ")")
+                        LocationInFile = e.File == Exec ? EmptyPt : new Point(e.LineNumber, e.ColumnNumber),
+                        Message = ConcatStringBuilder(e.Code, e.Message, " (in project ", e.ProjectFile, ")")
                     }
                 }).ToString()), Warning);
             };

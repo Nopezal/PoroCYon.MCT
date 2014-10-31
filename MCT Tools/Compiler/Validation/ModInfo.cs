@@ -233,19 +233,24 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                     });
             }
 
-            AddIfNotNull(SetJsonValue(json, "dllReferences", ref dllReferences, EmptyStringArr), errors);
+            AddIfNotNull(SetJsonValue(json, "dllReferences", ref dllReferences, true, EmptyStringArr), errors);
             for (int i = 0; i < dllReferences.Length; i++)
                 try
                 {
                     try
                     {
-                        Assembly.LoadFrom(dllReferences[i]);
+                        Assembly.ReflectionOnlyLoadFrom(dllReferences[i]);
                     }
                     catch
                     {
-                        dllReferences[i] = Path.GetDirectoryName(json.Path) + "\\References\\" + dllReferences[i];
-
-                        Assembly.LoadFrom(dllReferences[i]);
+                        try
+                        {
+                            Assembly.ReflectionOnlyLoadFrom(Building.OriginPath + "\\" + dllReferences[i]);
+                        }
+                        catch
+                        {
+                            Assembly.ReflectionOnlyLoadFrom(Building.OriginPath + "\\References\\" + dllReferences[i]);
+                        }
                     }
                 }
                 catch (Exception e)

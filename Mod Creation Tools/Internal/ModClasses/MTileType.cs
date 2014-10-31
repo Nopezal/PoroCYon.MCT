@@ -5,12 +5,14 @@ using TAPI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
+    [GlobalMod]
     sealed class MTileType : ModTileType
     {
-        public MTileType()
-            : base()
-        {
 
-        }
+    }
+    [GlobalMod]
+    sealed class MTile : ModTile
+    {
+
     }
 }

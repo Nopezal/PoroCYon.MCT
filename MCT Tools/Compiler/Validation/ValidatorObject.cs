@@ -207,6 +207,11 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
         CompilerError SetJsonValueInternal_GenericArr<TJsonElement>(JsonFile json, string key, ref TJsonElement[] value)
         {
+            if (value == null)
+                value = new TJsonElement[json.Json[key].Count];
+            if (value.Length != json.Json[key].Count)
+                Array.Resize(ref value, json.Json[key].Count);
+
             for (int i = 0; i < json.Json[key].Count; i++)
             {
                 if (json.Json[key][i].GetJsonType() != CommonToolUtilities.JsonTypeFromType(typeof(TJsonElement)))
@@ -261,10 +266,10 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             if (jsonType.IsArray)
                 return new CompilerError(Building)
                 {
-                    Cause = new ArgumentException("The type cannot be an array, use the proper overload.", "jsonType"),
+                    Cause = new ArgumentException("The type cannot be an array, use the proper SetJsonValue overload. This indicates a bug in the compiler.", "jsonType"),
                     FilePath = json.Path,
                     IsWarning = false,
-                    Message = "Wrong overload used."
+                    Message = "Wrong overload used. There is a bug in the compiler, please file it. Stack trace: " + Environment.StackTrace
                 };
 
             if (jsonType != typeof(object) && json.Json[key].GetJsonType() != CommonToolUtilities.JsonTypeFromType(jsonType)

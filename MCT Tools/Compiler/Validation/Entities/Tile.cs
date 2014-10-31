@@ -13,15 +13,15 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 #pragma warning disable 1591
         public int frameWidth = 16;
         public int frameHeight = 16;
-        public int sheetColumns = 1;
-        public int sheetRows = 1;
+        //public int sheetColumns = 1;
+        //public int sheetRows = 1;
         public bool solid = false;
         public bool solidTop = false;
         public bool frameImportant = false;
         public int placementFrameX = 0;
         public int placementFrameY = 0;
         public string placementConditions = "placeTouchingSolid"; 
-        public int[] placementOrigin;
+        public int[] placementOrigin = { 0, 0 };
         public bool breaksFast, breaskByPick, breaksByAxe, breaksByHammer, breaksByCut, breaksByWater, breaksByLava;
         public int minPick, minAxe, minHammer;
         public float ratePick, rateAxe, rateHammer;
@@ -45,8 +45,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
             AddIfNotNull(SetJsonValue(json, "frameWidth",     ref frameWidth,     16   ), errors);
             AddIfNotNull(SetJsonValue(json, "frameHeight",    ref frameHeight,    16   ), errors);
-            AddIfNotNull(SetJsonValue(json, "sheetColumns",   ref sheetColumns,   1    ), errors);
-            AddIfNotNull(SetJsonValue(json, "sheetRows",      ref sheetRows,      1    ), errors);
+            //AddIfNotNull(SetJsonValue(json, "sheetColumns",   ref sheetColumns,   1    ), errors);
+            //AddIfNotNull(SetJsonValue(json, "sheetRows",      ref sheetRows,      1    ), errors);
             AddIfNotNull(SetJsonValue(json, "solid",          ref solid,          false), errors);
             AddIfNotNull(SetJsonValue(json, "solidTop",       ref solidTop,       false), errors);
             AddIfNotNull(SetJsonValue(json, "frameImportant", ref frameImportant, false), errors);
@@ -58,7 +58,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
             AddIfNotNull(SetJsonValue(json, "placementConditions", ref placementConditions, null), errors);
             if (String.IsNullOrEmpty(placementConditions))
                 placementConditions = size[0] > 1 || size[1] > 1 ? "flatGroundSolid" : "placeTouchingSolid";
-            AddIfNotNull(SetJsonValue(json, "placementOrigin", ref placementOrigin, new int[2] { 0, 0 }), errors);
+            AddIfNotNull(SetJsonValue(json, "placementOrigin", ref placementOrigin, true, placementOrigin), errors);
             if (placementOrigin.Length == 0 || placementOrigin.Length > 2)
                 errors.Add(new CompilerError(Building)
                 {

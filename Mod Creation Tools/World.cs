@@ -141,17 +141,17 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Sets wether the game should be in christmas state or not
         /// </summary>
-        public static bool ForceChristmas
+        public static bool? ForceChristmas
         {
-            internal get;
+            get;
             set;
         }
         /// <summary>
         /// Sets wether the game should be in halloween state or not
         /// </summary>
-        public static bool ForceHalloween
+        public static bool? ForceHalloween
         {
-            internal get;
+            get;
             set;
         }
 
@@ -213,7 +213,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stop raining
         /// </summary>
-        public static void StopRain()
+        public static void  StopRain()
         {
             Main.StopRain();
         }
@@ -231,14 +231,14 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stops a Blood Moon
         /// </summary>
-        public static void StopBloodMoon()
+        public static void  StopBloodMoon()
         {
             Main.bloodMoon = false;
         }
         /// <summary>
         /// Starts a Solar Eclipse
         /// </summary>
-        public static void StartEclipse()
+        public static void StartEclipse  ()
         {
             Main.eclipse = true;
             Main.time = 0d;
@@ -249,7 +249,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stops a Solar Eclipse
         /// </summary>
-        public static void StopEclipse()
+        public static void  StopEclipse  ()
         {
             Main.eclipse = false;
         }
@@ -265,7 +265,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stops a Pumpkin Moon
         /// </summary>
-        public static void StopPumpkinMoon()
+        public static void  StopPumpkinMoon()
         {
             Main.pumpkinMoon = false;
             NPC.waveKills = NPC.waveCount = 0;
@@ -273,7 +273,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Starts a Frost Moon
         /// </summary>
-        public static void StartFrostMoon()
+        public static void StartFrostMoon  ()
         {
             Main.dayTime = false;
             Main.startSnowMoon();
@@ -281,7 +281,7 @@ namespace PoroCYon.MCT
         /// <summary>
         /// Stops a Frost Moon
         /// </summary>
-        public static void StopFrostMoon()
+        public static void  StopFrostMoon  ()
         {
             Main.snowMoon = false;
             NPC.waveKills = NPC.waveCount = 0;

@@ -18,7 +18,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
         // appearance
         public string texture = String.Empty;
-        public int[] size = new int[2] { 16, 16 };
+        public int[] size;
         public float scale = 1f;
         public int[] colour = new int[4] { 255, 255, 255, 0 };
 #pragma warning restore 1591
@@ -64,7 +64,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Message = "Could not find item texture '" + texture + ".png'."
                 });
 
-            AddIfNotNull(SetJsonValue(json, "size", ref size, true, new int[2] { -1, -1 }), errors);
+            AddIfNotNull(SetJsonValue(json, "size", ref size, false), errors);
             if (size.Length != 2)
             {
                 errors.Add(new CompilerError(Building)
@@ -77,7 +77,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                 size = new int[2] { 16, 16 };
             }
-            AddIfNotNull(SetJsonValue(json, "width" , ref size[0], size[0]), errors);
+            AddIfNotNull(SetJsonValue(json, "width", ref size[0], size[0]), errors);
             AddIfNotNull(SetJsonValue(json, "height", ref size[1], size[1]), errors);
             if (size[0] <= 0 || size[1] <= 0)
                 errors.Add(new CompilerError(Building)
@@ -85,7 +85,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Cause = new ArgumentOutOfRangeException(),
                     FilePath = json.Path,
                     IsWarning = false,
-                    Message = "Invalid item size values -or- size values not set."
+                    Message = "Invalid item size value."
                 });
 
             AddIfNotNull(SetJsonValue(json, "scale", ref scale, 1f), errors);

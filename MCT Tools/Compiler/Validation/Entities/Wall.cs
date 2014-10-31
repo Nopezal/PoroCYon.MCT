@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using PoroCYon.Extensions;
 
@@ -8,9 +9,14 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A wall.
     /// </summary>
-    public class Wall(ModCompiler mc) : EntityValidator(mc)
+    public class Wall(ModCompiler mc) : ValidatorObject(mc)
     {
 #pragma warning disable 1591
+        public string displayName;
+        public string internalName;
+
+        public string texture = String.Empty;
+
         public bool house = true;
         public bool dungeon = false;
         public bool light = false;
@@ -32,7 +38,20 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         {
             List<CompilerError> errors = new List<CompilerError>();
 
-            errors.AddRange(CreateAndValidateBase(json, "Walls", "Walls"));
+            internalName = Building.Info.internalName + ":" + Path.GetFileNameWithoutExtension(json.Path);
+
+            AddIfNotNull(SetJsonValue(json, "displayName", ref displayName, internalName), errors);
+
+            string r = Path.ChangeExtension(json.Path.Substring(Building.OriginPath.Length + 1).Replace('\\', '/'), null);
+            AddIfNotNull(SetJsonValue(json, "texture", ref texture, r), errors);
+            if (!Building.files.ContainsKey(texture + ".png"))
+                errors.Add(new CompilerError(Building)
+                {
+                    Cause = new FileNotFoundException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Could not find item texture '" + texture + ".png'."
+                });
 
             AddIfNotNull(SetJsonValue(json, "house", ref house, true), errors);
             AddIfNotNull(SetJsonValue(json, "dungeon", ref dungeon, false), errors);

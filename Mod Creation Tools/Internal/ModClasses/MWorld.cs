@@ -5,30 +5,17 @@ using TAPI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
-    [GlobalMod]
     sealed class MWorld : ModWorld
     {
-        public MWorld()
-            : base()
-        {
-
-        }
-
         [CallPriority(Single.Epsilon)]
         public override bool? CheckChristmas()
         {
-            bool forced = World.ForceChristmas;
-            World.ForceChristmas = false;
-
-            return base.CheckChristmas().HasValue ? base.CheckChristmas() : forced;
+            return World.ForceChristmas ?? base.CheckChristmas();
         }
         [CallPriority(Single.Epsilon)]
         public override bool? CheckHalloween()
         {
-            bool forced = World.ForceHalloween;
-            World.ForceHalloween = false;
-
-            return base.CheckHalloween().HasValue ? base.CheckHalloween() : forced;
+            return World.ForceHalloween ?? base.CheckChristmas();
         }
     }
 }

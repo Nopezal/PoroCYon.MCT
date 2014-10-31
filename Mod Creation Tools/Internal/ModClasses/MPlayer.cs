@@ -6,15 +6,8 @@ using TAPI;
 
 namespace PoroCYon.MCT.Internal.ModClasses
 {
-    [GlobalMod]
     sealed class MPlayer : ModPlayer
     {
-        public MPlayer()
-            : base()
-        {
-
-        }
-
         public override void MidUpdate()
         {
             // ensure it's the local player >__>

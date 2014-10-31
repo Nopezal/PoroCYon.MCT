@@ -21,7 +21,7 @@
       <PdhCountersRate>500</PdhCountersRate>
       <PdhCounters>
         <PdhCounter>\Fysieke schijf(_Total)\Gemiddelde wachtrijlengte voor schijf</PdhCounter>
-        <PdhCounter>\Geheugen\Pagina&amp;amp;amp;amp;amp;#39;s per seconde</PdhCounter>
+        <PdhCounter>\Geheugen\Pagina&amp;amp;amp;amp;amp;amp;amp;#39;s per seconde</PdhCounter>
         <PdhCounter>\Processor(_Total)\Percentage processortijd</PdhCounter>
       </PdhCounters>
     </PdhSettings>
@@ -51,7 +51,7 @@
       <LaunchMethod>Executable</LaunchMethod>
       <ExecutablePath>MCT Tools\bin\Debug\MCT Tools.exe</ExecutablePath>
       <StartupDirectory>MCT Tools\bin\Debug\</StartupDirectory>
-      <Arguments>-inv compile -v Diagnostic &amp;quot;%userprofile%\Dropbox\Avalon\Avalon tAPI Solution\Avalon&amp;quot;</Arguments>
+      <Arguments>-inv compile -v Diagnostic &amp;quot;Avalon-Bullseye55\Avalon&amp;quot;</Arguments>
       <NetAppHost>IIS</NetAppHost>
       <NetBrowser>InternetExplorer</NetBrowser>
       <ExcludeSmallFuncs>true</ExcludeSmallFuncs>
@@ -67,14 +67,6 @@
       <ProjName>MCT Tools</ProjName>
     </ProjBinary>
   </Binaries>
-  <Reports>
-    <Report>
-      <Path>MCTT141024.vsp</Path>
-    </Report>
-    <Report>
-      <Path>MCTT141025.vsp</Path>
-    </Report>
-  </Reports>
   <Launches>
     <ProjBinary>
       <Path>:PB:{FE1A503F-8B67-4D06-8BBE-FFEC7956634E}|MCT Tools\MCT Tools.csproj</Path>
