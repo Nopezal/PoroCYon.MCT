@@ -64,8 +64,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                     Message = "Could not find item texture '" + texture + ".png'."
                 });
 
-            AddIfNotNull(SetJsonValue(json, "size", ref size, false), errors);
-            if (size.Length != 2)
+            AddIfNotNull(SetJsonValue(json, "size", ref size, true, new int[2]), errors);
+            if (size != null && size.Length != 2)
             {
                 errors.Add(new CompilerError(Building)
                 {
@@ -77,7 +77,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
                 size = new int[2] { 16, 16 };
             }
-            AddIfNotNull(SetJsonValue(json, "width", ref size[0], size[0]), errors);
+            AddIfNotNull(SetJsonValue(json, "width" , ref size[0], size[0]), errors);
             AddIfNotNull(SetJsonValue(json, "height", ref size[1], size[1]), errors);
             if (size[0] <= 0 || size[1] <= 0)
                 errors.Add(new CompilerError(Building)
