@@ -7,12 +7,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A string option.
     /// </summary>
-    public class StringOption(ModCompiler mc) : Option(mc)
+    public class StringOption : Option
     {
 #pragma warning disable 1591
         public int length;
         public string defaultValue = String.Empty;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="StringOption" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public StringOption(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate subclass-only fields.

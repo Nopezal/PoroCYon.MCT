@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
     /// <summary>
     /// An <see cref="ILogger" /> meant to be returned from <see cref="MctLogger.GetMSBuildLogger" />.
     /// </summary>
-    public class DefaultMSBuildLogger(MctLogger logger, ModCompiler compiler) : ILogger
+    public class DefaultMSBuildLogger : ILogger
     {
 		readonly static string
 			Init    = "Initializing MSBuild logger, Parameters=",
@@ -41,7 +41,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         public MctLogger Logger
         {
             get;
-        } = logger;
+            private set;
+        }
         /// <summary>
         /// Gets the <see cref="ModCompiler" /> that is currently logging.
         /// </summary>
@@ -49,7 +50,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
         {
             get;
             private set;
-        } = compiler;
+        }
 
         /// <summary>
         /// Gets whether the build succeeded or not.
@@ -81,6 +82,17 @@ namespace PoroCYon.MCT.Tools.Compiler.Loggers
             {
                 Logger.Verbosity = value;
             }
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="DefaultMSBuildLogger" /> class.
+        /// </summary>
+        /// <param name="logger"></param>
+        /// <param name="mc"></param>
+        public DefaultMSBuildLogger(MctLogger logger, ModCompiler mc)
+        {
+            Logger = logger;
+            Compiler = mc;
         }
 
         /// <summary>

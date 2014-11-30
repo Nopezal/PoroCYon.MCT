@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// The base class for all mod options
     /// </summary>
-    public abstract class Option(ModCompiler mc) : ValidatorObject(mc)
+    public abstract class Option : ValidatorObject
     {
 #pragma warning disable 1591
         public bool notify = true;
@@ -17,6 +17,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
         public string toolTip = String.Empty;
         public string displayName = String.Empty;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Option" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        protected Option(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Creates a new option object.

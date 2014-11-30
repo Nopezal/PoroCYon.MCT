@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An object that helps with the validation of an entity.
     /// </summary>
-    public abstract class EntityValidator(ModCompiler mc) : ValidatorObject(mc)
+    public abstract class EntityValidator : ValidatorObject
     {
 #pragma warning disable 1591
         public string code;
@@ -22,6 +22,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public float scale = 1f;
         public int[] colour = new int[4] { 255, 255, 255, 0 };
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="EntityValidator" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        protected EntityValidator(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         internal bool codeDefaultValue = false;
 

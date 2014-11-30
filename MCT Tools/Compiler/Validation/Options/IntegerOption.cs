@@ -7,13 +7,23 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// An integer option.
     /// </summary>
-    public class IntegerOption(ModCompiler mc) : Option(mc)
+    public class IntegerOption : Option
     {
 #pragma warning disable 1591
         public int minimum;
         public int maximum;
         public int defaultValue = 0;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="IntegerOption" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public IntegerOption(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate subclass-only fields.

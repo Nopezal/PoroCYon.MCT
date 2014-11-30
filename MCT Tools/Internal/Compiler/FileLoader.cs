@@ -11,8 +11,14 @@ using TAPI;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-	class FileLoader(ModCompiler mc) : CompilerPhase(mc)
+	class FileLoader : CompilerPhase
     {
+        public FileLoader(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
+
         /// <summary>
         /// Loads JSON and other files from a mod's source folder.
         /// </summary>

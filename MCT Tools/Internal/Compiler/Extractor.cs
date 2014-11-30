@@ -11,8 +11,14 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-	class Extractor(ModCompiler mc) : CompilerPhase(mc)
+	class Extractor : CompilerPhase
     {
+        public Extractor(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
+
         /// <summary>
         /// Extracts JSON and other files from a managed assembly's embedded resources.
         /// </summary>

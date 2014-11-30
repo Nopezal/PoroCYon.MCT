@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An NPC.
     /// </summary>
-    public class NPC(ModCompiler mc) : EntityValidator(mc)
+    public class NPC : EntityValidator
     {
         #region fields
 #pragma warning disable 1591
@@ -61,6 +61,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 		public Union<string, int> catchItem = 0;
 #pragma warning restore 1591
         #endregion
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="NPC" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public NPC(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

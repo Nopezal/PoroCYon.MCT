@@ -8,9 +8,9 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// An error during compile-time containing detailed information of what went wrong.
     /// </summary>
-    public class CompilerError(ModData built)
+    public class CompilerError
     {
-        ModData data = built;
+        ModData data;
 
         /// <summary>
         /// Gets the error message of the CompilerError.
@@ -54,6 +54,15 @@ namespace PoroCYon.MCT.Tools.Compiler
             get;
             internal set;
         } = new CompilerException();
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CompilerError" /> class.
+        /// </summary>
+        /// <param name="built">The mod that was being built.</param>
+        public CompilerError(ModData built)
+        {
+            data = built;
+        }
 
         /// <summary>
         /// Returns the string representation of the current instance.

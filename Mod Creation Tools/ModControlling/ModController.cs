@@ -19,14 +19,14 @@ namespace PoroCYon.MCT.ModControlling
 #pragma warning disable 1591
         public ModNet Net;
 
-		public List<ModInterface > Interfaces  = new List<ModInterface >();
-		public List<ModItem      > GlobalItems = new List<ModItem      >();
-		public List<ModNPC       > GlobalNPCs  = new List<ModNPC       >();
-		public List<ModProjectile> GlobalProjs = new List<ModProjectile>();
-		public List<ModTileType  > GlobalTiles = new List<ModTileType  >();
-		public List<ModPlayer    > Players     = new List<ModPlayer    >();
-		public List<ModPrefix    > Prefixes    = new List<ModPrefix    >();
-		public List<ModWorld     > Worlds      = new List<ModWorld     >();
+        public List<ModInterface > Interfaces ; // = new List<ModInterface >();
+        public List<ModItem      > GlobalItems; // = new List<ModItem      >();
+        public List<ModNPC       > GlobalNPCs ; // = new List<ModNPC       >();
+        public List<ModProjectile> GlobalProjs; // = new List<ModProjectile>();
+        public List<ModTileType  > GlobalTiles; // = new List<ModTileType  >();
+        public List<ModPlayer    > Players    ; // = new List<ModPlayer    >();
+        public List<ModPrefix    > Prefixes   ; // = new List<ModPrefix    >();
+        public List<ModWorld     > Worlds     ; // = new List<ModWorld     >();
 #pragma warning restore 1591
 	}
 
@@ -117,16 +117,16 @@ namespace PoroCYon.MCT.ModControlling
 
             mod.modBase.modNet = classes.Net;
 
-			mod.modBase.modInterfaceTemplates  = classes.Interfaces ;
-			mod.modBase.modItemTemplates       = classes.GlobalItems;
-			mod.modBase.modNPCTemplates        = classes.GlobalNPCs ;
-			mod.modBase.modProjectileTemplates = classes.GlobalProjs;
-			mod.modBase.modTileTypeTemplates   = classes.GlobalTiles;
-			mod.modBase.modPlayerTemplates     = classes.Players    ;
-			mod.modBase.modPrefixTemplates     = classes.Prefixes   ;
-			mod.modBase.modWorldTemplates      = classes.Worlds     ;
+			mod.modBase.modInterfaceTemplates  = classes.Interfaces  ?? new List<ModInterface >();
+			mod.modBase.modItemTemplates       = classes.GlobalItems ?? new List<ModItem      >();
+			mod.modBase.modNPCTemplates        = classes.GlobalNPCs  ?? new List<ModNPC       >();
+			mod.modBase.modProjectileTemplates = classes.GlobalProjs ?? new List<ModProjectile>();
+			mod.modBase.modTileTypeTemplates   = classes.GlobalTiles ?? new List<ModTileType  >();
+			mod.modBase.modPlayerTemplates     = classes.Players     ?? new List<ModPlayer    >();
+			mod.modBase.modPrefixTemplates     = classes.Prefixes    ?? new List<ModPrefix    >();
+			mod.modBase.modWorldTemplates      = classes.Worlds      ?? new List<ModWorld     >();
 		}
-		internal static void Setup       (Mod mod)
+		internal static void Setup         (Mod mod)
 		{
 			SetupNoContent(mod);
 
@@ -356,7 +356,8 @@ namespace PoroCYon.MCT.ModControlling
 		public static void AttachModEntity<T>(this CodableEntity e, ModEntity<T> toAdd)
 			where T : class
 		{
-			if ((FieldInfo fi = e.GetType().GetField("modEntities")) != null
+            FieldInfo fi;
+			if ((fi = e.GetType().GetField("modEntities")) != null
 					&& fi.FieldType.GetGenericTypeDefinition() == typeof(List<>)
 					&& fi.FieldType.GetGenericArguments()[0].IsSubclassOf(typeof(ModEntity<T>)))
 				fi.FieldType.GetMethod("Add", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance).Invoke(e, new[] { toAdd });
@@ -371,8 +372,9 @@ namespace PoroCYon.MCT.ModControlling
 		/// <param name="toRemove">The ModEntity to detach.</param>
 		public static void DetachModEntity<T>(this CodableEntity e, ModEntity<T> toRemove)
 			where T : class
-		{
-			if ((FieldInfo fi = e.GetType().GetField("modEntities")) != null
+        {
+            FieldInfo fi;
+            if ((fi = e.GetType().GetField("modEntities")) != null
 					&& fi.FieldType.GetGenericTypeDefinition() == typeof(List<>)
 					&& fi.FieldType.GetGenericArguments()[0].IsSubclassOf(typeof(ModEntity<T>)))
 				fi.FieldType.GetMethod("Remove", BindingFlags.InvokeMethod | BindingFlags.Public | BindingFlags.Instance).Invoke(e, new[] { toRemove });

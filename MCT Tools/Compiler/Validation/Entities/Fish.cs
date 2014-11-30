@@ -56,7 +56,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A fish.
     /// </summary>
-    public class Fish(ModCompiler mc) : ValidatorObject(mc)
+    public class Fish : ValidatorObject
     {
         readonly static string[] EmptyStringArr = { };
 
@@ -67,6 +67,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public string[] biomes;
         public int poolCount = 0;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Fish" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Fish(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

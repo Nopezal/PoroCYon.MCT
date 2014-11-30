@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A tile craft group.
     /// </summary>
-    public class TileCraftGroup(ModCompiler mc) : ValidatorObject(mc)
+    public class TileCraftGroup : ValidatorObject
     {
 #pragma warning disable 1591
         public string name;
@@ -15,6 +15,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string displayTile;
         public string[] tiles;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="TileCraftGroup" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public TileCraftGroup(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

@@ -9,9 +9,9 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// A subroutine of the <see cref="ModCompiler" />.
     /// </summary>
-    public abstract class CompilerPhase(ModCompiler mc)
+    public abstract class CompilerPhase
     {
-        WeakReference<ModCompiler> compiler_wr = new WeakReference<ModCompiler>(mc);
+        WeakReference<ModCompiler> compiler_wr;
 
         /// <summary>
         /// Gets the <see cref="ModCompiler" /> that started the current compile action.
@@ -36,6 +36,15 @@ namespace PoroCYon.MCT.Tools.Compiler
             {
                 return Compiler.building;
             }
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CompilerPhase" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="Compiler" /></param>
+        protected CompilerPhase(ModCompiler mc)
+        {
+            compiler_wr = new WeakReference<ModCompiler>(mc);
         }
     }
 }

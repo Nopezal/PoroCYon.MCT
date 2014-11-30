@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A projectile.
     /// </summary>
-    public class Projectile(ModCompiler mc) : EntityValidator(mc)
+    public class Projectile : EntityValidator
     {
 #pragma warning disable 1591
         // bools
@@ -47,6 +47,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 		public float[] bobberLineEnd  ;
 
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Projectile" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Projectile(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

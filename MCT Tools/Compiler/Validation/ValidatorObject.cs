@@ -14,8 +14,18 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// An object that helps with the validation of a JSON file.
     /// </summary>
-    public abstract class ValidatorObject(ModCompiler mc) : CompilerPhase(mc)
+    public abstract class ValidatorObject : CompilerPhase
     {
+        /// <summary>
+        /// Creates a new instance of the <see cref="ValidatorObject" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        protected ValidatorObject(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
+
         /// <summary>
         /// Adds a CompilerError to a List of CompilerErrors if the value is not null.
         /// </summary>
@@ -224,7 +234,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                                   ", not a " + CommonToolUtilities.JsonTypeFromType(typeof(TJsonElement)) + "."
                     };
 
-                if ((CompilerError err = DeserializeJsonPrimitive(new JsonFile(json.Path, json.Json[key][i]), ref value[i])) != null)
+                CompilerError err;
+                if ((err = DeserializeJsonPrimitive(new JsonFile(json.Path, json.Json[key][i]), ref value[i])) != null)
                     return err;
             }
 
@@ -345,7 +356,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         }
         CompilerError DeserializeJsonPrimitive(JsonFile jPrimitive, Type toType, ref object outp)
         {
-            if ((object i = ImplicitelyConvert(jPrimitive, toType)) != null)
+            object i;
+            if ((i = ImplicitelyConvert(jPrimitive, toType)) != null)
             {
                 outp = i;
 

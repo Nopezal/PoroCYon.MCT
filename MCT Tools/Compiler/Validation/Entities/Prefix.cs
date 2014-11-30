@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item prefix.
     /// </summary>
-    public class Prefix(ModCompiler mc) : ValidatorObject(mc)
+    public class Prefix : ValidatorObject
     {
 #pragma warning disable 1591
         public string internalName;
@@ -23,6 +23,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public int meleeCrit, rangedCrit, magicCrit;
         public PrefixType type;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Prefix" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Prefix(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.
@@ -79,7 +89,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
                 {
                     if (j.IsString)
                     {
-                        if (Enum.TryParse((string)j, true, out PrefixType pType))
+                        PrefixType pType;
+                        if (Enum.TryParse((string)j, true, out pType))
                             type |= pType;
                     }
                     else if (j.IsInt)

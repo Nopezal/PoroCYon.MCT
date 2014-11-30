@@ -7,7 +7,7 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
 {
-    class JScriptCompiler(ModCompiler mc) : CodeDomCompilerHelper(mc)
+    class JScriptCompiler : CodeDomCompilerHelper
     {
         readonly static string[]
             ext  = new string[] { ".js" },
@@ -34,6 +34,12 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
             {
                 return lang;
             }
+        }
+
+        public JScriptCompiler(ModCompiler mc)
+            : base(mc)
+        {
+
         }
 
         protected override CodeDomProvider CreateCompiler()

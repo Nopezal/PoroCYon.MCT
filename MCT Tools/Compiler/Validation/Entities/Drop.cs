@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An element of the npc.drop.choose array.
     /// </summary>
-    public class Choice(ModCompiler mc) : ValidatorObject(mc)
+    public class Choice : ValidatorObject
     {
 #pragma warning disable 1591
         public string item  ;
@@ -17,6 +17,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 #pragma warning restore 1591
 
         internal Drop d;
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Choice" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Choice(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.
@@ -40,7 +50,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An NPC drop.
     /// </summary>
-    public class Drop(ModCompiler mc) : ValidatorObject(mc)
+    public class Drop : ValidatorObject
     {
         readonly static int[] TwoOnes = { 1, 1 };
 
@@ -52,6 +62,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public bool usesChoose = false;
         public Choice[] choose;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Drop" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Drop(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         internal IEnumerable<CompilerError> ValidateStack(ModData Building, JsonFile json, ref int[] stack)
         {

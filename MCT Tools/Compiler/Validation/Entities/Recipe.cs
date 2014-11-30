@@ -10,13 +10,23 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item recipe.
     /// </summary>
-    public class Recipe(ModCompiler mc) : ValidatorObject(mc)
+    public class Recipe : ValidatorObject
     {
 #pragma warning disable 1591
         public Dictionary<string, int> items = new Dictionary<string, int>();
         public List<string> tiles = new List<string>();
         public int creates = 1;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Recipe" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Recipe(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

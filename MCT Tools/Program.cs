@@ -34,8 +34,8 @@ namespace PoroCYon.MCT.Tools
                     "help", () =>
                     {
                         Console.WriteLine("BUILD <tobuild>\t\tBuilds a tAPI mod from a source folder or a managed .dll file. COMPILE can be used, too.");
-                        Console.WriteLine("DECOMPILE <todecomp>\t\tDecompiles a .tapi or .tapimod file");
-                        Console.WriteLine("HELP\t\tDisplays this text. H or ? can also be used for this. H or ? can be used, too.");
+                        Console.WriteLine("DECOMPILE <todecomp>\tDecompiles a .tapi or .tapimod file");
+                        Console.WriteLine("HELP\t\t\tDisplays this text. H or ? can also be used for this. H or ? can be used, too.");
                         Console.WriteLine("INVARIANT\t\tSwitches to the Invariant Culture. INV can be used, too.");
                         Console.WriteLine("NOBANNER\t\tDon't display the 'Mod Creation Tools ...' banner. BANNER can be used, too.");
                         Console.WriteLine();
@@ -84,19 +84,25 @@ namespace PoroCYon.MCT.Tools
 
                         LoggerVerbosity verbosity = LoggerVerbosity.Quiet;
 
-                        if ((string vArg = args[argNum].TrimStart('-', '/').ToLowerInvariant()) == "v" || vArg == "verbose" || vArg == "verbosity")
+                        string vArg;
+                        if ((vArg = args[argNum].TrimStart('-', '/').ToLowerInvariant()) == "v" || vArg == "verbose" || vArg == "verbosity")
                         {
                             argNum++;
 
-                            if (Int32.TryParse(args[argNum], NumberStyles.Integer, CultureInfo.InvariantCulture, out int i))
+                            int i;
+                            if (Int32.TryParse(args[argNum], NumberStyles.Integer, CultureInfo.InvariantCulture, out i))
                             {
                                 verbosity = (LoggerVerbosity)i;
                                 argNum++;
                             }
-                            else if (Enum.TryParse(args[argNum], true, out LoggerVerbosity v))
+                            else
                             {
-                                verbosity = v;
-                                argNum++;
+                                LoggerVerbosity v;
+                                if (Enum.TryParse(args[argNum], true, out v))
+                                {
+                                    verbosity = v;
+                                    argNum++;
+                                }
                             }
                         }
 

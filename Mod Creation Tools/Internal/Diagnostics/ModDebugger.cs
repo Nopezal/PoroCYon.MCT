@@ -96,7 +96,8 @@ namespace PoroCYon.MCT.Internal.Diagnostics
 							throw new FormatException(INVALID_ARGS_SYNTAX);
 						if (i == args.Length - 2)
 						{
-							if ((string arg = TrimArg(args[i + 1].ToUpperInvariant())) == "HELP" || arg == "?")
+                            string arg;
+							if ((arg = TrimArg(args[i + 1].ToUpperInvariant())) == "HELP" || arg == "?")
 							{
 								Console.WriteLine(DEBUG_HELP_TEXT);
 								Debug  .WriteLine(DEBUG_HELP_TEXT);

@@ -16,9 +16,9 @@ using PoroCYon.MCT.Tools.Internal.Compiler.Compilers;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-    class BuildLogger(ModData md) : ILogger
+    class BuildLogger : ILogger
     {
-        ModData building = md;
+        ModData building;
 
         internal bool succeeded = true;
         internal List<CompilerError> errors = new List<CompilerError>();
@@ -34,6 +34,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
             get;
             set;
         } = LoggerVerbosity.Normal;
+
+        public BuildLogger(ModData md)
+        {
+            building = md;
+        }
 
         public void Initialize(IEventSource eventSource)
         {
@@ -132,12 +137,18 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
         public void Shutdown() { }
     }
 
-    class Builder(ModCompiler mc) : CompilerPhase(mc)
+    class Builder : CompilerPhase
     {
         internal List<ICompiler> compilers = new List<ICompiler>();
         internal string MSBOutputPath = Path.GetTempPath() + "MCT\\MSBuild";
 
         readonly static Type[] ctorTypes = { typeof(ModCompiler) };
+
+        public Builder(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         void LoadCompilers()
         {

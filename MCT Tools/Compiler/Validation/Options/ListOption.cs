@@ -7,12 +7,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A list option.
     /// </summary>
-    public class ListOption(ModCompiler mc) : Option(mc)
+    public class ListOption : Option
     {
 #pragma warning disable 1591
         public List<object> values = new List<object>();
         public object defaultValue;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ListOption" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public ListOption(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate subclass-only fields.

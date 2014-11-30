@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// An item.
     /// </summary>
-    public class Item(ModCompiler mc) : EntityValidator(mc)
+    public class Item : EntityValidator
     {
         readonly static string[] defaultAnglerText =
         {
@@ -118,6 +118,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
 #pragma warning restore 1591
         #endregion
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Item" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Item(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

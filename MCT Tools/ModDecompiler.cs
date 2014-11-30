@@ -101,7 +101,8 @@ namespace PoroCYon.MCT.Tools
             File.WriteAllText(decompPath + "\\Mod_Version.txt", (modVersion = bb.ReadUShort()).ToString());
 
             // read ModInfo.json
-            File.WriteAllText(decompPath + "\\ModInfo.json", string modInfoStr = bb.ReadString());
+            string modInfoStr;
+            File.WriteAllText(decompPath + "\\ModInfo.json", modInfoStr = bb.ReadString());
 
 			JsonData modInfo = JsonMapper.ToObject(modInfoStr);
 

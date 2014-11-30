@@ -12,7 +12,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A ModInfo JSON file (ModInfo.json)
     /// </summary>
-    public class ModInfo(ModCompiler mc) : ValidatorObject(mc)
+    public class ModInfo : ValidatorObject
     {
         internal readonly static string[] EmptyStringArr = new string[0];
 
@@ -107,6 +107,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
                 return GetModInfoFromTapiMod(File.ReadAllBytes(file));
 
             return null;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModInfo" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public ModInfo(ModCompiler mc)
+            : base(mc)
+        {
+
         }
 
         /// <summary>

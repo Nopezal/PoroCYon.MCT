@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A floating-point option
     /// </summary>
-    public class FloatOption(ModCompiler mc) : Option(mc)
+    public class FloatOption : Option
     {
 #pragma warning disable 1591
         public float minimum;
@@ -16,6 +16,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
         public float step;
         public int precision;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="FloatOption" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public FloatOption(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate subclass-only fields.

@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A wall.
     /// </summary>
-    public class Wall(ModCompiler mc) : ValidatorObject(mc)
+    public class Wall : ValidatorObject
     {
 #pragma warning disable 1591
         public string displayName;
@@ -28,6 +28,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
 
         public Union<string, int> drop = 0;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Wall" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Wall(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

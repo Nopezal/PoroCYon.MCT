@@ -8,7 +8,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A tile.
     /// </summary>
-    public class Tile(ModCompiler mc) : EntityValidator(mc)
+    public class Tile : EntityValidator
     {
 #pragma warning disable 1591
         public int frameWidth = 16;
@@ -31,6 +31,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public int sound, soundGroup, dust;
         public Union<string, int> drop =01;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Tile" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Tile(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

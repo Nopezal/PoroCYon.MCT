@@ -7,7 +7,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// An item craft group.
     /// </summary>
-    public class ItemCraftGroup(ModCompiler mc) : ValidatorObject(mc)
+    public class ItemCraftGroup : ValidatorObject
     {
 #pragma warning disable 1591
         public string name;
@@ -15,6 +15,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string displayItem = String.Empty;
         public string[] items;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ItemCraftGroup" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public ItemCraftGroup(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

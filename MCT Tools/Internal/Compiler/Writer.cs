@@ -13,13 +13,19 @@ using PoroCYon.Extensions.Collections;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-	class Writer(ModCompiler mc) : CompilerPhase(mc)
+	class Writer : CompilerPhase
     {
 		static void WritePrefixedArray(BinBuffer bb, byte[] toWrite)
 		{
 			bb.Write(toWrite.Length);
 			bb.Write(toWrite);
 		}
+
+        public Writer(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
 		/*
 		 * .tapimod file format:

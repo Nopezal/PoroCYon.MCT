@@ -11,7 +11,7 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// A mod.
     /// </summary>
-    public class ModData(ModCompiler mc)
+    public class ModData
     {
         internal List<Buff> buffs = new List<Buff>();
         internal List<Item> items = new List<Item>();
@@ -31,7 +31,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        } = new ModInfo(mc);
+        }
         /// <summary>
         /// Gets the mod options of the mod.
         /// </summary>
@@ -39,7 +39,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        } = new ModOptions(mc);
+        }
         /// <summary>
         /// Gets the craft groups of the mod.
         /// </summary>
@@ -47,7 +47,7 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
-        } = new CraftGroups(mc);
+        }
 
         /// <summary>
         /// Gets all buffs in the mod.
@@ -164,6 +164,17 @@ namespace PoroCYon.MCT.Tools.Compiler
         {
             get;
             internal set;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModData" /> class.
+        /// </summary>
+        /// <param name="mc">The <see cref="ModCompiler" /> that is compiling the mod.</param>
+        public ModData(ModCompiler mc)
+        {
+            Info = new ModInfo(mc);
+            Options = new ModOptions(mc);
+            CraftGroups = new CraftGroups(mc);
         }
     }
 }

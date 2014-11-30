@@ -10,7 +10,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A ModOptions JSON file (ModOptions.json)
     /// </summary>
-    public class ModOptions(ModCompiler mc) : ValidatorObject(mc)
+    public class ModOptions : ValidatorObject
     {
         List<Option> options = new List<Option>();
 
@@ -23,6 +23,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             {
                 return options.AsReadOnly();
             }
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModOptions" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public ModOptions(ModCompiler mc)
+            : base(mc)
+        {
+
         }
 
         /// <summary>

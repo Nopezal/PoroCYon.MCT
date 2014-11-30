@@ -14,9 +14,15 @@ using PoroCYon.MCT.Tools.Compiler.Validation.Entities;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
-	class Checker(ModCompiler mc) : CompilerPhase(mc)
+	class Checker : CompilerPhase
     {
         static bool loaded = false;
+
+        public Checker(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         internal static void LoadDefs()
         {

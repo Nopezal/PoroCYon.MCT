@@ -8,7 +8,7 @@ using PoroCYon.MCT.Tools.Compiler;
 
 namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
 {
-    class VBCompiler(ModCompiler mc) : CodeDomCompilerHelper(mc)
+    class VBCompiler : CodeDomCompilerHelper
     {
         readonly static string[]
             ext  = new string[] { ".vb", ".vbs" },
@@ -35,6 +35,12 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler.Compilers
             {
                 return lang;
             }
+        }
+
+        public VBCompiler(ModCompiler mc)
+            : base(mc)
+        {
+
         }
 
         protected override CodeDomProvider CreateCompiler()

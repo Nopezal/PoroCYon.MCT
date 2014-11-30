@@ -9,7 +9,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
     /// <summary>
     /// A buff (positive, negative, weapon or pet).
     /// </summary>
-    public class Buff(ModCompiler mc) : ValidatorObject(mc)
+    public class Buff : ValidatorObject
     {
 #pragma warning disable 1591
         public string code;
@@ -23,6 +23,16 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Entities
         public string tip;
         public bool debuff, vanityPet, lightPet, enchantment, noTimer;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="Buff" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public Buff(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         IEnumerable<CompilerError> CreateAndValidateBase(JsonFile json, string baseFolder, string baseType)
         {

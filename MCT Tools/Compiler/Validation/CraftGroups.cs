@@ -8,12 +8,22 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
     /// <summary>
     /// A CraftGroup JSON file (CraftGroups.json)
     /// </summary>
-    public class CraftGroups(ModCompiler mc) : ValidatorObject(mc)
+    public class CraftGroups : ValidatorObject
     {
 #pragma warning disable 1591
         public List<ItemCraftGroup> itemGroups = new List<ItemCraftGroup>();
         public List<TileCraftGroup> tileGroups = new List<TileCraftGroup>();
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="CraftGroups" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public CraftGroups(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate a JSON file.

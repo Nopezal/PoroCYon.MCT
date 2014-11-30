@@ -152,9 +152,11 @@ namespace PoroCYon.MCT.Tools
 
                 if (!BeginCompile(folder))
                 {
-                    LogError(Exception cause = new CompilerException("Mod already building!"));
+                    Exception cause;
+                    LogError(cause = new CompilerException("Mod already building!"));
 
-                    LogResult(var o = CreateOutput(new List<CompilerError>()
+                    CompilerOutput o;
+                    LogResult(o = CreateOutput(new List<CompilerError>()
                     {
                         new CompilerError(building)
                         {
@@ -173,9 +175,11 @@ namespace PoroCYon.MCT.Tools
                 {
                     EndCompile(folder);
 
-                    LogError(Exception cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."));
-                    
-                    LogResult(var o = new CompilerOutput()
+                    Exception cause;
+                    LogError(cause = new DirectoryNotFoundException("Directory '" + folder + "' not found."));
+
+                    CompilerOutput o;
+                    LogResult(o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
@@ -237,7 +241,8 @@ namespace PoroCYon.MCT.Tools
 
                 EndCompile(folder);
 
-                LogResult(var o = CreateOutput(new List<CompilerError>()
+                CompilerOutput o;
+                LogResult(o = CreateOutput(new List<CompilerError>()
                 {
                     new CompilerError(building)
                     {
@@ -272,9 +277,11 @@ namespace PoroCYon.MCT.Tools
 
             if (!BeginCompile(assemblyPath))
             {
-                LogError(Exception cause = new CompilerException("Mod already building!"));
+                Exception cause;
+                LogError(cause = new CompilerException("Mod already building!"));
 
-                LogResult(var o = CreateOutput(new List<CompilerError>()
+                CompilerOutput o;
+                LogResult(o = CreateOutput(new List<CompilerError>()
                 {
                     new CompilerError(building)
                     {
@@ -293,7 +300,8 @@ namespace PoroCYon.MCT.Tools
                 #region check if file exists
                 if (!File.Exists(assemblyPath))
                 {
-                    LogResult(var o = new CompilerOutput()
+                    CompilerOutput o;
+                    LogResult(o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
@@ -322,7 +330,8 @@ namespace PoroCYon.MCT.Tools
                 {
                     LogError(e);
 
-                    LogResult(var o = new CompilerOutput()
+                    CompilerOutput o;
+                    LogResult(o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
@@ -342,7 +351,8 @@ namespace PoroCYon.MCT.Tools
                 {
                     LogError(e);
 
-                    LogResult(var o = new CompilerOutput()
+                    CompilerOutput o;
+                    LogResult(o = new CompilerOutput()
                     {
                         Succeeded = false,
                         errors = new List<CompilerError>()
@@ -368,7 +378,8 @@ namespace PoroCYon.MCT.Tools
 
                 EndCompile(assemblyPath);
 
-                LogResult(var o = CreateOutput(new List<CompilerError>()
+                CompilerOutput o;
+                LogResult(o = CreateOutput(new List<CompilerError>()
                 {
                     new CompilerError(building)
                     {
@@ -404,9 +415,11 @@ namespace PoroCYon.MCT.Tools
 
             if (!BeginCompile(asm.Location))
             {
-                LogError(Exception cause = new CompilerException("Mod already building!"));
+                Exception cause;
+                LogError(cause = new CompilerException("Mod already building!"));
 
-                LogResult(var o = CreateOutput(new List<CompilerError>()
+                CompilerOutput o;
+                LogResult(o = CreateOutput(new List<CompilerError>()
                 {
                     new CompilerError(building)
                     {
@@ -453,7 +466,8 @@ namespace PoroCYon.MCT.Tools
 
                 LogError(e, "Unexpected error.");
 
-                LogResult(var o = CreateOutput(new List<CompilerError>()
+                CompilerOutput o;
+                LogResult(o = CreateOutput(new List<CompilerError>()
                 {
                     new CompilerError(building)
                     {

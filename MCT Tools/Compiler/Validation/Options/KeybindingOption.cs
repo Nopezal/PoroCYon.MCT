@@ -8,11 +8,21 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
     /// <summary>
     /// A keybinding option.
     /// </summary>
-    public class KeybindingOption(ModCompiler mc) : Option(mc)
+    public class KeybindingOption : Option
     {
 #pragma warning disable 1591
         public Keys defaultValue;
 #pragma warning restore 1591
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="KeybindingOption" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        public KeybindingOption(ModCompiler mc)
+            : base(mc)
+        {
+
+        }
 
         /// <summary>
         /// Create &amp; validate subclass-only fields.
@@ -27,7 +37,8 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation.Options
 
             AddIfNotNull(SetJsonValue(json, "default", ref def), errors);
 
-            if (Enum.TryParse(def, true, out Keys key))
+            Keys key;
+            if (Enum.TryParse(def, true, out key))
                 defaultValue = key;
             else
                 errors.Add(new CompilerError(Building)

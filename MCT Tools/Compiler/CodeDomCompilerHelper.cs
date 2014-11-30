@@ -16,7 +16,7 @@ namespace PoroCYon.MCT.Tools.Compiler
     /// <summary>
     /// An object that helps with the compilation of <see cref="System.CodeDom.Compiler.CodeDomProvider" /> compilers.
     /// </summary>
-    public abstract class CodeDomCompilerHelper(ModCompiler mc) : CompilerPhase(mc), ICompiler
+    public abstract class CodeDomCompilerHelper : CompilerPhase, ICompiler
     {
         /// <summary>
         /// Gets the mod which is being compiled.
@@ -47,6 +47,16 @@ namespace PoroCYon.MCT.Tools.Compiler
         public abstract string[] LanguageNames
         {
             get;
+        }
+
+        /// <summary>
+        /// Creates a new instance of the <see cref="ModCompiler" /> class.
+        /// </summary>
+        /// <param name="mc"><see cref="CompilerPhase.Compiler" /></param>
+        protected CodeDomCompilerHelper(ModCompiler mc)
+            : base(mc)
+        {
+
         }
 
         List<string> WriteRefAssembliesRec(ModInfo mi)
