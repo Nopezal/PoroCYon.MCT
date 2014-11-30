@@ -47,7 +47,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 			SoundDef.FillVanillaSounds();
 			ItemDef.FillVanillaCraftingGroups();
 
-			Biome.InitBiomes();
+            Main.player = new Player[1] { new Player() };
+            Biome.InitBiomes();
 
 			Main.player[Main.myPlayer] = new Player();
 
