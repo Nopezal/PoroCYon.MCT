@@ -164,7 +164,7 @@ namespace PoroCYon.MCT.Tools
                 #endregion
 
                 #region port
-                {
+                /*{
                     "port", (args) =>
                     {
                         if (args.Length <= 0)
@@ -233,7 +233,7 @@ namespace PoroCYon.MCT.Tools
                                 break;
                         }
                     }
-                },
+                },*/
                 #endregion
 
                 { "skip", /* fun _ -> () */ delegate { } }
@@ -259,14 +259,14 @@ namespace PoroCYon.MCT.Tools
         }
         static void WriteBanner(string tool)
         {
-            if (!suppressBanner)
-            {
-                Console.WriteLine();
-                Console.WriteLine("MCT Tools " + tool);
-                Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
-                Console.WriteLine("MCT Copyright © PoroCYon 2014");
-                Console.WriteLine();
-            }
+            if (suppressBanner)
+                return;
+
+            Console.WriteLine();
+            Console.WriteLine("MCT Tools " + tool);
+            Console.WriteLine("Mod Creation Tools v" + MctConstants.VERSION_STRING);
+            Console.WriteLine("MCT Copyright © PoroCYon 2014");
+            Console.WriteLine();
         }
 
         [STAThread]

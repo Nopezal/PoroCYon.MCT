@@ -29,7 +29,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
 		/*
 		 * .tapimod file format:
-		 * 
+		 *
 		 * - mod version (int)
 		 * - modinfo (string)
 		 * - icon
@@ -38,10 +38,10 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 		 *     - icon data (byte[])
 		 *   :
 		 *     - 0 (int)
-		 * 
+		 *
 		 * - assembly size (in bytes) (int)
 		 * - assembly data (byte[])
-		 * 
+		 *
 		 * - image count (ushort)
 		 * - [for each image]
 		 *     - path (string)
@@ -53,7 +53,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 		 *     - path (string)
 		 *     - file size (bytes) (int)
 		 *     - file content (byte[])
-		 * 
+		 *
 		 **/
 
 		string[] FindImages()
@@ -96,7 +96,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 				bb.Write(Path.ChangeExtension(arr[i], null));
 				WritePrefixedArray(bb, Building.Files[arr[i]]);
 			}
-			
+
             Compiler.Log("Writing files.", MessageImportance.Low);
 			         arr = FindFiles();
 			bb.Write((ushort)(arr.Length + (Building.Info.includePDB ? 1 : 0)));
@@ -115,10 +115,16 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 				}
 				catch { }
 
-			// write the PDB output
-			File.WriteAllBytes(Mods.pathCompiled + "\\" + Building.Info.outputName + ".pdb", pdb);
+            // write the PDB output
 
-			if (pdb != null)
+            if (!Directory.Exists(Mods.pathCompiled))
+                Directory.CreateDirectory(Mods.pathCompiled);
+            if (!Directory.Exists(Mods.pathPDB     ))
+                Directory.CreateDirectory(Mods.pathPDB     );
+            File.WriteAllBytes(Mods.pathCompiled + "\\" + Building.Info.outputName + ".pdb", pdb);
+            File.WriteAllBytes(Mods.pathPDB      + "\\" + Building.Info.outputName + ".pdb", pdb);
+
+            if (pdb != null)
 			{
 				Compiler.Log("Got PDB file.", MessageImportance.Low);
 
@@ -165,10 +171,10 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
 				File.Copy(Building.Assembly.Location, dll);
 
-				File.WriteAllBytes(Path.ChangeExtension(outputFile, ".pdb"), pdb);
+				File.WriteAllBytes(Path.ChangeExtension(dll, ".pdb"), pdb);
 			}
 
-			return errors;
+            return errors;
         }
     }
 }
