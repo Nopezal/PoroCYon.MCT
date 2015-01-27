@@ -1,8 +1,12 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="5" Version="2.0.2.3" String="2.0.2.3" />
+  <CurrentVersion Number="5" Version="2.0.2.4" String="2.0.2.4" />
 
   <Changelog>
+    <Release Version="2.0.2.4">
+      <Change>Fixed a bug when non-CompilerWarning warnings are reported as errors.</Change>
+      <Change>The .svn and .vs directories are now ignored, too.</Change>
+    </Release>
     <Release Version="2.0.2.3">
       <Change>Removed the file porter (An official one will be added in r15).</Change>
       <Change>PDB files are now written to a different directory (r14a).</Change>

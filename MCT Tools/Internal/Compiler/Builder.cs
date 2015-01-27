@@ -217,7 +217,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     toRemove.Add(key);
                 else if (key.Contains(".git/"))
                     toRemove.Add(key);
+                else if (key.Contains(".svn/"))
+                    toRemove.Add(key);
                 else if (key.Contains(".sln.ide/"))
+                    toRemove.Add(key);
+                else if (key.Contains(".vs/"))
                     toRemove.Add(key);
                 else if (key.EndsWith(".sdf"))
                     toRemove.Add(key);

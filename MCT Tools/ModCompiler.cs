@@ -489,7 +489,7 @@ namespace PoroCYon.MCT.Tools
             CompilerOutput outp = new CompilerOutput();
 
             for (int i = 0; i < errors.Count; i++)
-                if (!errors[i].IsWarning || !(errors[i].Cause is CompilerWarning))
+                if (!errors[i].IsWarning && !(errors[i].Cause is CompilerWarning))
                     err = true; // houston, we have a problem
 
             outp.Succeeded = !err;

@@ -27,7 +27,6 @@
     <UseVSHostingProcess>true</UseVSHostingProcess>
     <DocumentationFile>bin\Debug\PoroCYon.MCT.xml</DocumentationFile>
     <NoWarn>1591</NoWarn>
-    <LangVersion>experimental</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -41,7 +40,6 @@
     <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
     <NoWarn>
     </NoWarn>
-    <LangVersion>experimental</LangVersion>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>Logo.ico</ApplicationIcon>
@@ -179,7 +177,9 @@
     <Compile Include="World.cs" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="ModInfo.json" />
+    <EmbeddedResource Include="ModInfo.json">
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
   </ItemGroup>
   <ItemGroup>
     <Content Include="Logo.ico" />
