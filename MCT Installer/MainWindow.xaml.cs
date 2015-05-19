@@ -318,9 +318,8 @@ namespace PoroCYon.MCT.Installer
                 return "You do not have tAPI installed";
 
             Assembly a = Assembly.LoadFrom(baseFolder + "\\tAPI.exe"); // no try/catch needed, already checked at previous if-statement
-            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null) < 14u
-                    || a.GetType("TAPI.API").GetField("versionAssembly").GetValue(null).ToString()[0] < 'a') // not r14a
-                return "You do not have tAPI r14 installed";
+            if ((uint)a.GetType("TAPI.API").GetField("versionAssembly", BindingFlags.Public | BindingFlags.Static).GetValue(null) < 15u) // not r15
+                return "You do not have tAPI r15 installed";
 
             #region Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()
             Dictionary<VsVersion, string> asString = new Dictionary<VsVersion, string>()
@@ -350,13 +349,13 @@ namespace PoroCYon.MCT.Installer
                     "VisualStudio\\12.0"
                 },
                 {
-                    VsVersion.VisualStudio14CTP,
+                    VsVersion.VisualStudio14,
                     "VisualStudio\\14.0"
                 }
             };
             #endregion
 
-            for (int i = 1; i <= (int)VsVersion.VisualStudio14CTP; i *= 2)
+            for (int i = 1; i <= (int)VsVersion.VisualStudio14; i *= 2)
             {
                 try
                 {

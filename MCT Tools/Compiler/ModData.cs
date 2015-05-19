@@ -132,7 +132,7 @@ namespace PoroCYon.MCT.Tools.Compiler
             }
         }
         /// <summary>
-        /// Gets all non-JSON files in the mod.
+        /// Gets all non-code files in the mod.
         /// </summary>
         public IDictionary<string, byte[]> Files
         {

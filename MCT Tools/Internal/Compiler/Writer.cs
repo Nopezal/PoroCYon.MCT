@@ -15,6 +15,8 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
 	class Writer : CompilerPhase
     {
+        readonly static string PNG = ".png";
+
 		static void WritePrefixedArray(BinBuffer bb, byte[] toWrite)
 		{
 			bb.Write(toWrite.Length);
@@ -59,11 +61,11 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 		string[] FindImages()
 		{
 			// screw tAPI code, I'm doing it the functional way.
-			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) == ".png" select kvp.Key).ToArray();
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key).ToLowerInvariant() == PNG select kvp.Key).ToArray();
 		}
 		string[] FindFiles ()
 		{
-			return (from kvp in Building.Files where Path.GetExtension(kvp.Key) != ".png" select kvp.Key).ToArray();
+			return (from kvp in Building.Files where Path.GetExtension(kvp.Key).ToLowerInvariant() != PNG select kvp.Key).ToArray();
 		}
 
 		internal IEnumerable<CompilerError> Write()
@@ -98,7 +100,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 			}
 
             Compiler.Log("Writing files.", MessageImportance.Low);
-			         arr = FindFiles();
+			arr = FindFiles();
 			bb.Write((ushort)(arr.Length + (Building.Info.includePDB ? 1 : 0)));
 			for (int i = 0; i < arr.Length; i++)
 			{
@@ -126,7 +128,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             if (pdb != null)
 			{
-				Compiler.Log("Got PDB file.", MessageImportance.Low);
+				Compiler.Log("Writing PDB file.", MessageImportance.Low);
 
 				bb.Write("DebugInformation.pdb");
 				WritePrefixedArray(bb, pdb);
@@ -150,8 +152,9 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 					if (pdb != null)
 						zf.AddEntry("!DebugInformation.pdb", pdb);
 
-					foreach (KeyValuePair<string, byte[]> current in Building.Files)
-						zf.AddEntry(current.Key, current.Value);
+                    if (Building.Info.includeFiles)
+					    foreach (KeyValuePair<string, byte[]> current in Building.Files)
+						    zf.AddEntry(current.Key, current.Value);
 
 					Compiler.Log("Writing compressed output to disk.", MessageImportance.Low);
 					zf.Save(outputFile);

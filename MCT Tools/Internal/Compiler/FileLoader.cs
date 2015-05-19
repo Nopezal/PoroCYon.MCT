@@ -13,6 +13,17 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 {
 	class FileLoader : CompilerPhase
     {
+        readonly static string
+            JSON_EXT = ".json",
+            DOT = ".",
+
+            MODINFO = "ModInfo.json",
+            MODOPT = "ModOptions.json",
+            CGROUP = "CraftGroups.json",
+
+            L_FILE = "Loaded file ",
+            P_IS = ", path is ";
+
         public FileLoader(ModCompiler mc)
             : base(mc)
         {
@@ -65,9 +76,12 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
                 string
                     fileName         = Path.GetFileName(s),
-                    relativeFileName = s.Substring(directory.Length + 1).Replace('\\', '/');
+                    relativeFileName = s.Substring(directory.Length + 1).Replace('\\', '/'),
+                    relativeFileNameExt = Path.GetExtension(relativeFileName).ToLowerInvariant();
 
-                if (s.EndsWith(".json"))
+                relativeFileName = relativeFileName.Remove(relativeFileName.Length - relativeFileNameExt.Length) + relativeFileNameExt;
+
+                if (s.ToLowerInvariant().EndsWith(JSON_EXT))
                 {
                     JsonFile current = new JsonFile();
 
@@ -86,20 +100,20 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                         });
                     }
 
-                    if (relativeFileName == "ModInfo.json")
+                    if (relativeFileName == MODINFO)
                         modInfo = current;
-                    else if (relativeFileName == "ModOptions.json")
+                    else if (relativeFileName == MODOPT)
                         modOptions = current;
-                    else if (relativeFileName == "CraftGroups.json")
+                    else if (relativeFileName == CGROUP)
                         craftGroups = current;
                     else
                         jsons.Add(current);
                 }
 
-                if (relativeFileName != "ModInfo.json")
+                if (relativeFileName != MODINFO)
                     files.Add(Path.ChangeExtension(relativeFileName, Path.GetExtension(relativeFileName).ToLowerInvariant()), fileBin);
 
-                Compiler.Log("Loaded file " + fileName + ", path is " + relativeFileName + ".", MessageImportance.Low);
+                Compiler.Log(L_FILE + fileName + P_IS + relativeFileName + DOT, MessageImportance.Low);
             }
 
             if (modInfo.IsEmpty)

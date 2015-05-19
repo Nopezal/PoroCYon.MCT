@@ -194,7 +194,7 @@ namespace PoroCYon.MCT.Installer
 
                         UpdateProgress(-1d, t.Item1);
                         if (t.Item1.StartsWith("Templates\\"))
-                            for (VsVersion v = VsVersion.VCSExpress; v <= VsVersion.VisualStudio14CTP; v = (VsVersion)((int)v * 2))
+                            for (VsVersion v = VsVersion.VCSExpress; v <= VsVersion.VisualStudio14; v = (VsVersion)((int)v * 2))
                             {
                                 if ((VsVersions.ChosenVersions & v) == 0)
                                     continue;
@@ -204,22 +204,22 @@ namespace PoroCYon.MCT.Installer
                                 {
                                     case VsVersion.VCSExpress:
                                     case VsVersion.VisualStudio10:
-                                        version = "2010";
+                                        version = "10";
                                         break;
                                     case VsVersion.WDExpress11:
                                     case VsVersion.VisualStudio11:
-                                        version = "2012";
+                                        version = "12";
                                         break;
                                     case VsVersion.WDExpress12:
                                     case VsVersion.VisualStudio12:
-                                        version = "2013";
+                                        version = "13";
                                         break;
-                                    case VsVersion.VisualStudio14CTP:
-                                        version = "14";
+                                    case VsVersion.VisualStudio14:
+                                        version = "15";
                                         break;
                                 }
 
-                                string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Visual Studio " + version +
+                                string folder = Environment.GetFolderPath(Environment.SpecialFolder.Personal) + "\\Visual Studio 20" + version +
                                     "\\Templates\\ProjectTemplates\\Visual C#\\tAPI\\";
                                 if (!Directory.Exists(folder))
                                     Directory.CreateDirectory(folder);

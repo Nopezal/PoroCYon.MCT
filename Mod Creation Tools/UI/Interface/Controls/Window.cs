@@ -96,7 +96,6 @@ namespace PoroCYon.MCT.UI.Interface.Controls
         /// </summary>
         /// <param name="title">The title of the Window</param>
         public Window(string title)
-            : this()
         {
             Text = title;
             Font = Main.fontMouseText;

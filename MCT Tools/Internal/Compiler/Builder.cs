@@ -139,6 +139,26 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
     class Builder : CompilerPhase
     {
+        readonly static string
+            BIN = "bin/",
+            OBJ = "obj/",
+            DEBUG = "Debug/",
+            RELEASE = "Release",
+            IPCH = "ipch/",
+            GIT = ".git/",
+            SVN = ".svn/",
+            SLN_IDE = ".sln.ide/",
+            VS = ".vs/",
+
+            SDF = ".sdf",
+            O_SDF = ".opensdf",
+            SUO = ".suo",
+            USER = ".user",
+            CACHE = ".cache",
+            GIT_IGN = ".gitignore",
+            GIT_ATTR = ".gitattibutes",
+            DB = ".db";
+
         internal List<ICompiler> compilers = new List<ICompiler>();
         internal string MSBOutputPath = Path.GetTempPath() + "MCT\\MSBuild";
 
@@ -205,39 +225,10 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
 
             foreach (string key in mod.Files.Keys)
             {
-                if (key.Contains("bin/"))
-                    toRemove.Add(key);
-                else if (key.Contains("obj/"))
-                    toRemove.Add(key);
-                else if (key.Contains("Debug/"))
-                    toRemove.Add(key);
-                else if (key.Contains("Release/"))
-                    toRemove.Add(key);
-                else if (key.Contains("ipch/"))
-                    toRemove.Add(key);
-                else if (key.Contains(".git/"))
-                    toRemove.Add(key);
-                else if (key.Contains(".svn/"))
-                    toRemove.Add(key);
-                else if (key.Contains(".sln.ide/"))
-                    toRemove.Add(key);
-                else if (key.Contains(".vs/"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".sdf"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".opensdf"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".suo"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".user"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".cache"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".gitignore"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".gitattributes"))
-                    toRemove.Add(key);
-                else if (key.EndsWith(".db"))
+                if (key.Contains(BIN) || key.Contains(OBJ) || key.Contains(DEBUG) || key.Contains(RELEASE) || key.Contains(IPCH) ||
+                        key.Contains(GIT) || key.Contains(SVN) || key.Contains(SLN_IDE) || key.Contains(VS) ||
+                        key.EndsWith(SDF) || key.EndsWith(O_SDF) || key.EndsWith(SUO) || key.EndsWith(USER) || key.EndsWith(CACHE) ||
+                        key.EndsWith(GIT_IGN) || key.EndsWith(GIT_ATTR) || key.EndsWith(DB))
                     toRemove.Add(key);
 
                 else if (!File.Exists(mod.OriginPath))
@@ -279,6 +270,7 @@ namespace PoroCYon.MCT.Tools.Internal.Compiler
                     }
                 }
             }
+
             foreach (string r in toRemove)
                 mod.files.Remove(r);
 

@@ -19,7 +19,7 @@ namespace PoroCYon.MCT.Installer
         WDExpress12 = 16,
         VisualStudio12 = 32,
 
-        VisualStudio14CTP = 64
+        VisualStudio14 = 64
     }
 
     public partial class VsVersions : UserControl
@@ -35,7 +35,7 @@ namespace PoroCYon.MCT.Installer
             ChosenVersions = 0;
 
             VsVersion latest = 0, latestExpress = 0;
-            for (VsVersion ver = VsVersion.VCSExpress; ver <= VsVersion.VisualStudio14CTP; ver = (VsVersion)((byte)ver * 2))
+            for (VsVersion ver = VsVersion.VCSExpress; ver <= VsVersion.VisualStudio14; ver = (VsVersion)((byte)ver * 2))
                 if (FromVsVersion(ver).IsEnabled = ((PossibleVersions & ver) != 0))
                 {
                     latest = ver;
@@ -61,8 +61,8 @@ namespace PoroCYon.MCT.Installer
             Vs12.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio12;
             Vs12.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio12;
 
-            Vs14CTP.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio14CTP;
-            Vs14CTP.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio14CTP;
+            Vs14.Checked += (s, e) => ChosenVersions |= VsVersion.VisualStudio14;
+            Vs14.Unchecked += (s, e) => ChosenVersions ^= VsVersion.VisualStudio14;
 
             if (latest != 0)
                 FromVsVersion(latest).IsChecked = true;
@@ -86,8 +86,8 @@ namespace PoroCYon.MCT.Installer
                     return WdE12;
                 case VsVersion.VisualStudio12:
                     return Vs12;
-                case VsVersion.VisualStudio14CTP:
-                    return Vs14CTP;
+                case VsVersion.VisualStudio14:
+                    return Vs14;
             }
 
             throw new ArgumentOutOfRangeException("version");

@@ -36,11 +36,12 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         public string author = "<unknown>";
         public Version version = new Version(1, 0);
         public string info = String.Empty;
-		public string icon = null;
+        public string icon = null;
 
         // new compiler stuff
         public string language = null;
         public bool compress = true;
+        public bool includeFiles = true;
         public bool includeSource = false;
         public bool validate = true; // even if false, ModInfo will always be validated
         public bool check = true;
@@ -120,7 +121,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
         }
 
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="ref">.tapi or .tapimod file.</param>
         /// <returns></returns>
@@ -140,7 +141,7 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
             return CheckCircularModRef(mi);
         }
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="info"></param>
         /// <returns></returns>
@@ -369,25 +370,26 @@ namespace PoroCYon.MCT.Tools.Compiler.Validation
 
             AddIfNotNull(SetJsonValue(json, "info", ref info, "Mod " + displayName + " v" + version + " by " + author), errors);
 
-			AddIfNotNull(SetJsonValue(json, "icon", ref icon, null), errors);
-			if (icon != null && !Building.Files.ContainsKey(icon + ".png"))
-				errors.Add(new CompilerError(Building)
-				{
-					Cause = new FileNotFoundException(),
-					FilePath = json.Path,
-					IsWarning = false,
-					Message = "Icon '" + icon + ".png' not found."
-				});
+            AddIfNotNull(SetJsonValue(json, "icon", ref icon, null), errors);
+            if (icon != null && !Building.Files.ContainsKey(icon + ".png"))
+                errors.Add(new CompilerError(Building)
+                {
+                    Cause = new FileNotFoundException(),
+                    FilePath = json.Path,
+                    IsWarning = false,
+                    Message = "Icon '" + icon + ".png' not found."
+                });
 
-			// ---
+            // ---
 
-			AddIfNotNull(SetJsonValue(json, "language",      ref language,      "C#" ), errors);
-            AddIfNotNull(SetJsonValue(json, "compress",      ref compress,      true ), errors);
-            AddIfNotNull(SetJsonValue(json, "validate",      ref validate,      true ), errors);
+            AddIfNotNull(SetJsonValue(json, "language", ref language, "C#"), errors);
+            AddIfNotNull(SetJsonValue(json, "compress", ref compress, true), errors);
+            AddIfNotNull(SetJsonValue(json, "validate", ref validate, true), errors);
+            AddIfNotNull(SetJsonValue(json, "includeFiles", ref includeFiles, true), errors);
             AddIfNotNull(SetJsonValue(json, "includeSource", ref includeSource, false), errors);
-            AddIfNotNull(SetJsonValue(json, "check",         ref check,         true ), errors);
-            AddIfNotNull(SetJsonValue(json, "warningLevel",  ref warningLevel,  4    ), errors);
-            AddIfNotNull(SetJsonValue(json, "ignore", ref ignore, EmptyStringArr     ), errors);
+            AddIfNotNull(SetJsonValue(json, "check", ref check, true), errors);
+            AddIfNotNull(SetJsonValue(json, "warningLevel", ref warningLevel, 4), errors);
+            AddIfNotNull(SetJsonValue(json, "ignore", ref ignore, EmptyStringArr), errors);
             if (warningLevel < 0 || warningLevel > 4)
                 errors.Add(new CompilerError(Building)
                 {

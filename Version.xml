@@ -1,8 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Version>
-  <CurrentVersion Number="5" Version="2.0.2.4" String="2.0.2.4" />
+  <CurrentVersion Number="5" Version="2.0.2.5" String="2.0.2.5" />
 
   <Changelog>
+    <Release Version="2.0.2.5">
+      <Change>Added 'includeFiles' field for ModInfo.json files: whether to include files in .tapi archive or not.</Change>
+    </Release>
     <Release Version="2.0.2.4">
       <Change>Fixed a bug when non-CompilerWarning warnings are reported as errors.</Change>
       <Change>The .svn and .vs directories are now ignored, too.</Change>

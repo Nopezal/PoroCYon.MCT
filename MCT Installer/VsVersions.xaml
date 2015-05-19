@@ -16,6 +16,6 @@
         <CheckBox Name="WdE12" Content="Microsoft Visual Studio 2013 Express for Windows Desktop" HorizontalAlignment="Left" Margin="10,0,0,50" VerticalAlignment="Bottom" Background="{x:Null}" />
         <CheckBox Name="Vs12" Content="Microsoft Visual Studio 2013" HorizontalAlignment="Left" Margin="10,0,0,29" VerticalAlignment="Bottom" Background="{x:Null}" />
 
-        <CheckBox Name="Vs14CTP" Content="Microsoft Visual Studio 14 CTP" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Background="{x:Null}" />
+        <CheckBox Name="Vs14" Content="Microsoft Visual Studio 2015" HorizontalAlignment="Left" Margin="10,0,0,10" VerticalAlignment="Bottom" Background="{x:Null}" />
     </Grid>
 </UserControl>

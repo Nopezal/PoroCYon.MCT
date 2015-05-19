@@ -15,12 +15,12 @@ namespace PoroCYon.MCT.Installer
             {
                 App.Main();
             }
-            catch (Exception e) if (!Debugger.IsAttached)
+            catch (Exception e) when (!Debugger.IsAttached)
             {
                 DisplayError(e);
             }
         }
-        
+
         internal static void DisplayError(Exception e)
         {
             MessageBox.Show("An error has occured.\nPlease show this message to PoroCYon, but make sure\n"
